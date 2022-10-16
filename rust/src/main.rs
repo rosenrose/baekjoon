@@ -13,6 +13,10 @@ fn parse_int_vec(buf: &String) -> Vec<i32> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
 
+fn parse_str_vec(buf: &String) -> Vec<&str> {
+    buf.split_whitespace().collect()
+}
+
 fn print_type_of<T>(_: &T) {
     println!("{}", std::any::type_name::<T>())
 }
