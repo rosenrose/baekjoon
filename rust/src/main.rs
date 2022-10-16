@@ -13,6 +13,10 @@ fn parse_int_vec(buf: &String) -> Vec<i32> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
 
+fn print_type_of<T>(_: &T) {
+    println!("{}", std::any::type_name::<T>())
+}
+
 /* use std::io::{stdout, stdin, BufWriter, Write, BufRead};
 let stdin = stdin();
 let stdout = stdout();
