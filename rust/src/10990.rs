@@ -12,6 +12,6 @@ fn main() {
             continue;
         }
 
-        println!("{:>left$}{}*", "*", " ".repeat(i * 2 - 3), left = n - i + 1);
+        println!("{:left$}*{}*", "", " ".repeat(i * 2 - 3), left = n - i);
     }
 }
