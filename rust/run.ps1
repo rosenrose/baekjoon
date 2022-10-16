@@ -5,6 +5,7 @@ cd $PSScriptRoot
 
 ren "src/main.rs" "main_.rs"
 ren "src/$num.rs" "main.rs"
+
 cargo run
 
 ren "src/main.rs" "$num.rs"
