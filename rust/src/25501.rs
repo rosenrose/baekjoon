@@ -1,0 +1,38 @@
+use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+
+fn main() {
+    let stdin = stdin();
+    let stdout = stdout();
+    let mut stdin = stdin.lock();
+    let mut stdout = BufWriter::new(stdout.lock());
+
+    let mut buf = String::new();
+    stdin.read_line(&mut buf).unwrap();
+
+    let n: i32 = buf.trim().parse().unwrap();
+
+    for _ in 0..n {
+        buf.clear();
+        stdin.read_line(&mut buf).unwrap();
+
+        let mut count = 0;
+        let result = is_palindrome(buf.trim(), &mut count);
+
+        writeln!(stdout, "{result} {count}").unwrap();
+    }
+}
+
+fn is_palindrome(word: &str, count: &mut i32) -> i32 {
+    *count += 1;
+
+    let len = word.len();
+    if len <= 1 {
+        return 1;
+    }
+
+    if word.chars().nth(0) != word.chars().nth(len - 1) {
+        return 0;
+    }
+
+    is_palindrome(&word[1..len - 1], count)
+}
