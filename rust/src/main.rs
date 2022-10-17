@@ -1,4 +1,6 @@
-fn main() {}
+fn main() {
+    let mut buf = String::new();
+}
 
 fn read_line(buf: &mut String) {
     buf.clear();
