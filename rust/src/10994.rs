@@ -10,7 +10,6 @@ fn main() {
     stdin.read_line(&mut buf).unwrap();
 
     let n: usize = buf.trim().parse().unwrap();
-
     let result: Vec<String> = print(n);
 
     writeln!(stdout, "{}", result.join("\n")).unwrap();
@@ -27,19 +26,14 @@ fn print(n: usize) -> Vec<String> {
     let mut result = Vec::new();
 
     result.push("*".repeat(size));
-    for _ in 0..size - 2 {
-        result.push(format!("*{:blank$}*", "", blank = size - 2));
-    }
-    result.push("*".repeat(size));
+    result.push(format!("*{:blank$}*", "", blank = size - 2));
 
-    for i in 2..size - 2 {
-        result[i] = format!(
-            "{}{}{}",
-            &result[i][..2],
-            inner[i - 2],
-            &result[i][size - 2..]
-        );
+    for i in 0..inner.len() {
+        result.push(format!("* {} *", inner[i]));
     }
+
+    result.push(format!("*{:blank$}*", "", blank = size - 2));
+    result.push("*".repeat(size));
 
     result
 }
