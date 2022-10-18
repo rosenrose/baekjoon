@@ -12,17 +12,19 @@ fn main() {
     buf.clear();
     stdin.read_line(&mut buf).unwrap();
 
-    let card_set: HashSet<i32> = buf.split_whitespace().map(|s| s.parse().unwrap()).collect();
+    let parse_int = |s: &str| s.parse::<i32>().unwrap();
+    let card_set: HashSet<i32> = buf.split_whitespace().map(parse_int).collect();
+
     stdin.read_line(&mut buf).unwrap();
     buf.clear();
     stdin.read_line(&mut buf).unwrap();
 
-    let nums = buf.split_whitespace().map(|s| s.parse::<i32>().unwrap());
+    for num in buf.split_whitespace().map(parse_int) {
+        let has_card = match card_set.contains(&num) {
+            true => 1,
+            false => 0,
+        };
 
-    for num in nums {
-        match card_set.contains(&num) {
-            true => write!(stdout, "1 ").unwrap(),
-            false => write!(stdout, "0 ").unwrap(),
-        }
+        write!(stdout, "{has_card} ").unwrap();
     }
 }

@@ -43,12 +43,10 @@ fn main() {
             stdin.read_line(&mut buf).unwrap();
             let input = buf.trim();
 
-            let answer: Answer;
-
-            match input.parse::<usize>() {
-                Ok(index) => answer = Answer::Name(&pokemons_arr[index - 1]),
-                Err(_) => answer = Answer::Index(*pokemons_map.get(input).unwrap()),
-            }
+            let answer = match input.parse::<usize>() {
+                Ok(index) => Answer::Name(&pokemons_arr[index - 1]),
+                Err(_) => Answer::Index(*pokemons_map.get(input).unwrap()),
+            };
 
             writeln!(stdout, "{answer}").unwrap();
         }
