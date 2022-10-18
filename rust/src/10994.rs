@@ -22,17 +22,18 @@ fn print(n: usize) -> Vec<String> {
 
     let inner = print(n - 1);
     let size = 4 * n - 3;
+    let blank = size - 2;
 
     let mut result = Vec::new();
 
     result.push("*".repeat(size));
-    result.push(format!("*{:blank$}*", "", blank = size - 2));
+    result.push(format!("*{:blank$}*", ""));
 
     for i in 0..inner.len() {
         result.push(format!("* {} *", inner[i]));
     }
 
-    result.push(format!("*{:blank$}*", "", blank = size - 2));
+    result.push(format!("*{:blank$}*", ""));
     result.push("*".repeat(size));
 
     result
