@@ -19,20 +19,21 @@ fn print(n: usize) -> Vec<String> {
           ];
     }
 
-    let star = print(n / 3);
-    let blank = vec![" ".repeat(n / 3); n / 3];
+    let inner = print(n / 3);
+    let inner_size = n / 3;
+
     let mut result = Vec::new();
 
-    for i in 0..n / 3 {
-        result.push(star[i].repeat(3));
+    for i in 0..inner_size {
+        result.push(inner[i].repeat(3));
     }
 
-    for i in 0..n / 3 {
-        result.push(format!("{}{}{}", star[i], blank[i], star[i]));
+    for i in 0..inner_size {
+        result.push(format!("{}{:inner_size$}{}", inner[i], "", inner[i]));
     }
 
-    for i in 0..n / 3 {
-        result.push(result[i].clone());
+    for i in 0..inner_size {
+        result.push(inner[i].repeat(3));
     }
 
     result
