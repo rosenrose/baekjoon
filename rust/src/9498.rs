@@ -5,10 +5,10 @@ fn main() {
     let score: i32 = buf.trim().parse().unwrap();
 
     match score {
-        s if (90..=100).contains(&s) => println!("A"),
-        s if (80..90).contains(&s) => println!("B"),
-        s if (70..80).contains(&s) => println!("C"),
-        s if (60..70).contains(&s) => println!("D"),
+        90..=100 => println!("A"),
+        80..=89 => println!("B"),
+        70..=79 => println!("C"),
+        60..=69 => println!("D"),
         _ => println!("F"),
     }
 }

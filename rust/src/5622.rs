@@ -9,14 +9,14 @@ fn main() {
         let mut time = DEFAULT_TIME;
 
         match letter {
-            l if ('A'..='C').contains(&l) => time += 1,
-            l if ('D'..='F').contains(&l) => time += 2,
-            l if ('G'..='I').contains(&l) => time += 3,
-            l if ('J'..='L').contains(&l) => time += 4,
-            l if ('M'..='O').contains(&l) => time += 5,
-            l if ('P'..='S').contains(&l) => time += 6,
-            l if ('T'..='V').contains(&l) => time += 7,
-            l if ('W'..='Z').contains(&l) => time += 8,
+            'A'..='C' => time += 1,
+            'D'..='F' => time += 2,
+            'G'..='I' => time += 3,
+            'J'..='L' => time += 4,
+            'M'..='O' => time += 5,
+            'P'..='S' => time += 6,
+            'T'..='V' => time += 7,
+            'W'..='Z' => time += 8,
             _ => (),
         }
 
