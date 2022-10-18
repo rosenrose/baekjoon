@@ -8,10 +8,16 @@ fn main() {
     let mut count = 0;
 
     loop {
-        let chars: Vec<char> = num.to_string().chars().collect();
+        let mut six_count = 0;
 
-        for i in 0..chars.len() - 2 {
-            if (chars[i], chars[i + 1], chars[i + 2]) == ('6', '6', '6') {
+        for digit in num.to_string().chars() {
+            if digit == '6' {
+                six_count += 1;
+            } else {
+                six_count = 0;
+            }
+
+            if six_count == 3 {
                 count += 1;
                 break;
             }
