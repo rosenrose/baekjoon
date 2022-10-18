@@ -7,6 +7,7 @@ fn main() {
     let mut stdout = BufWriter::new(stdout.lock());
 
     let mut buf = String::new();
+    std::io::stdin().read_line(&mut buf).unwrap();
 
     stdin.read_line(&mut buf).unwrap();
     writeln!(stdout, "").unwrap();
