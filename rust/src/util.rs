@@ -1,3 +1,4 @@
+use std::collections::{HashMap, HashSet};
 use std::io::{stdin, stdout, BufRead, BufWriter, Write};
 
 fn main() {
@@ -28,6 +29,10 @@ fn parse_int_vec(buf: &String) -> Vec<i32> {
 
 fn parse_str_vec(buf: &String) -> Vec<&str> {
     buf.split_whitespace().collect()
+}
+
+fn parse_int_set(buf: &String) -> HashSet<i32> {
+    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
 
 fn print_type_of<T>(_: &T) {
