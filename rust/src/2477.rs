@@ -8,11 +8,14 @@ fn main() {
     read_line(&mut buf);
 
     let k: i32 = buf.trim().parse().unwrap();
+    let mut direction_counts = [0; 5];
 
     let mut sides: Vec<_> = (0..6)
         .map(|_| {
             read_line(&mut buf);
             let nums = parse_int_vec(&buf);
+
+            direction_counts[nums[0] as usize] += 1;
 
             Side {
                 direction: nums[0],
@@ -21,15 +24,16 @@ fn main() {
         })
         .collect();
 
-    let directions: Vec<i32> = sides.iter().map(|side| side.direction).collect();
-    let mut outers: Vec<&i32> = directions
+    let mut outers: Vec<usize> = direction_counts
         .iter()
-        .filter(|&direction| directions.iter().filter(|&d| d == direction).count() == 1)
+        .enumerate()
+        .filter(|(_, &c)| c == 1)
+        .map(|(d, _)| d)
         .collect();
 
     outers.sort();
 
-    let (init_direction, outer_width_idx, outer_height_idx, inner_width_idx, inner_height_idx) =
+    let (init_direction, out_width_idx, out_height_idx, in_width_idx, in_height_idx) =
         match (outers[0], outers[1]) {
             (1, 3) => (1, 0, 5, 2, 3),
             (1, 4) => (1, 0, 1, 4, 3),
@@ -43,8 +47,8 @@ fn main() {
         sides.insert(0, temp);
     }
 
-    let outer_area = sides[outer_width_idx].length * sides[outer_height_idx].length;
-    let inner_area = sides[inner_width_idx].length * sides[inner_height_idx].length;
+    let outer_area = sides[out_width_idx].length * sides[out_height_idx].length;
+    let inner_area = sides[in_width_idx].length * sides[in_height_idx].length;
     let count = (outer_area - inner_area) * k;
 
     println!("{count}");
