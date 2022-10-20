@@ -35,6 +35,15 @@ fn parse_int_set(buf: &String) -> HashSet<i32> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
 
+fn parse_matrix(buf: &mut String, rows: i32) -> Vec<Vec<i32>> {
+    (0..rows)
+        .map(|_| {
+            read_line(buf);
+            parse_int_vec(buf)
+        })
+        .collect()
+}
+
 fn print_type_of<T>(_: &T) {
     println!("{}", std::any::type_name::<T>())
 }
