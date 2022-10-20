@@ -4,18 +4,19 @@ fn main() {
 
     let m = parse_int(&buf);
     read_line(&mut buf);
-
     let n = parse_int(&buf);
 
-    let prime_nums = (m..=n).filter(|&n| is_prime(n));
+    let prime_nums: Vec<i32> = (m..=n).filter(|&n| is_prime(n)).collect();
 
-    if prime_nums.clone().count() == 0 {
+    if prime_nums.len() == 0 {
         println!("{}", -1);
         return;
     }
 
-    println!("{}", prime_nums.clone().sum::<i32>());
-    println!("{}", prime_nums.min().unwrap());
+    let sum: i32 = prime_nums.iter().sum();
+    let min = prime_nums.iter().min().unwrap();
+
+    println!("{sum}\n{min}");
 }
 
 fn is_prime(num: i32) -> bool {

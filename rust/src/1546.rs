@@ -3,16 +3,20 @@ fn main() {
     read_line(&mut buf);
     read_line(&mut buf);
 
-    let score = buf.split_whitespace().map(|s| s.parse::<i32>().unwrap());
-    let max = score.clone().max().unwrap();
+    let scores = parse_int_vec(&buf);
+    let max = *scores.iter().max().unwrap();
 
-    let new_score = score.clone().map(|s| (s as f64 / max as f64) * 100.0);
-    let sum: f64 = new_score.sum();
+    let new_scores = scores.iter().map(|&s| (s as f64 / max as f64) * 100.0);
+    let sum: f64 = new_scores.sum();
 
-    println!("{:.10}", sum / score.count() as f64);
+    println!("{:.10}", sum / scores.len() as f64);
 }
 
 fn read_line(buf: &mut String) {
     buf.clear();
     std::io::stdin().read_line(buf).unwrap();
+}
+
+fn parse_int_vec(buf: &String) -> Vec<i32> {
+    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

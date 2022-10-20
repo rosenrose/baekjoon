@@ -7,16 +7,17 @@ fn main() {
     for _ in 0..n {
         read_line(&mut buf);
 
-        let scores = buf
+        let scores: Vec<i32> = buf
             .split_whitespace()
             .skip(1)
-            .map(|s| s.parse::<i32>().unwrap());
-        let len = scores.clone().count();
+            .map(|s| s.parse().unwrap())
+            .collect();
+        let len = scores.len();
 
-        let sum: i32 = scores.clone().sum();
+        let sum: i32 = scores.iter().sum();
         let avg = sum as f64 / len as f64;
 
-        let over_avg_count = scores.filter(|&s| s as f64 > avg).count();
+        let over_avg_count = scores.iter().filter(|&s| *s as f64 > avg).count();
         let over_avg_ratio = over_avg_count as f64 / len as f64;
 
         println!("{:.3}%", over_avg_ratio * 100.0);
