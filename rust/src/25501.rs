@@ -36,3 +36,27 @@ fn is_palindrome(word: &str, count: &mut i32) -> i32 {
 
     is_palindrome(&word[1..len - 1], count)
 }
+
+/*
+let mut count = 0;
+let mut result = 1;
+let (mut i, mut j) = (0, word.len() - 1);
+
+loop {
+    count += 1;
+
+    if i >= j {
+        break;
+    }
+
+    if word.chars().nth(i) != word.chars().nth(j) {
+        result = 0;
+        break;
+    }
+
+    i += 1;
+    j -= 1;
+}
+
+println!("{} {}", result, count);
+*/
