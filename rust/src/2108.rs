@@ -33,6 +33,7 @@ fn main() {
 
     for &num in arr.iter() {
         sum += num;
+
         if num < min {
             min = num;
         }
@@ -45,12 +46,12 @@ fn main() {
 
     let avg = sum as f64 / len as f64;
 
-    let max_count = counts.values().max().unwrap();
+    let max_count = *counts.values().max().unwrap();
     let mut max_counts: Vec<(&i32, &i32)> =
-        counts.iter().filter(|&(_, c)| c == max_count).collect();
+        counts.iter().filter(|(_, &c)| c == max_count).collect();
 
     let (most, _) = if max_counts.len() > 1 {
-        max_counts.sort_by_key(|i| i.0);
+        max_counts.sort_by_key(|(&num, _)| num);
         max_counts[1]
     } else {
         max_counts[0]

@@ -19,10 +19,12 @@ fn main() {
             let ((height2, weight2), _) = volumes[j];
 
             if height1 > height2 && weight1 > weight2 {
-                volumes[j].1 += 1;
+                let (_, order2) = &mut volumes[j];
+                *order2 += 1;
             }
             if height1 < height2 && weight1 < weight2 {
-                volumes[i].1 += 1;
+                let (_, order1) = &mut volumes[i];
+                *order1 += 1;
             }
         }
     }
