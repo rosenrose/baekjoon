@@ -23,7 +23,7 @@ fn main() {
                 };
             }
 
-            println!("{}", step);
+            println!("{step}");
         }
     }
 }

@@ -16,7 +16,7 @@ fn main() {
         }
     }
 
-    println!("{}", 0);
+    println!("0");
 }
 
 fn d(n: i32) -> i32 {

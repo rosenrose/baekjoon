@@ -6,15 +6,14 @@ fn main() {
 
     for _ in 0..n {
         read_line(&mut buf);
-        let mut input = buf.trim().chars();
 
-        let first = input.next().unwrap();
-        let last = match input.next_back() {
-            Some(c) => c,
-            None => first,
-        };
+        let sum: i32 = buf
+            .trim()
+            .split(',')
+            .map(|s| s.parse::<i32>().unwrap())
+            .sum();
 
-        println!("{first}{last}");
+        println!("{sum}");
     }
 }
 

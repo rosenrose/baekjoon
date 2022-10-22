@@ -8,12 +8,12 @@ fn main() {
 
     for prime_num in prime_nums {
         while n % prime_num == 0 {
-            println!("{}", prime_num);
+            println!("{prime_num}");
             n /= prime_num;
         }
 
         if is_prime(n) {
-            println!("{}", n);
+            println!("{n}");
             return;
         }
 
