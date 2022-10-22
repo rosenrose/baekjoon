@@ -4,13 +4,5 @@ fn main() {
 
     let n: i32 = buf.trim().parse().unwrap();
 
-    println!("{}", factorial(n));
-}
-
-fn factorial(n: i32) -> i32 {
-    if n <= 1 {
-        1
-    } else {
-        n * factorial(n - 1)
-    }
+    println!("{}", (1..=n).product::<i32>());
 }
