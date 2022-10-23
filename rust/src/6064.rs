@@ -42,10 +42,6 @@ fn get_lcm(a: usize, b: usize) -> usize {
 }
 
 fn get_gcd(mut a: usize, mut b: usize) -> usize {
-    if a < b {
-        (a, b) = (b, a);
-    }
-
     loop {
         (a, b) = (b, a % b);
 
