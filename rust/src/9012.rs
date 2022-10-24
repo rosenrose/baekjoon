@@ -23,7 +23,7 @@ fn main() {
             };
         }
 
-        println!("{}", if stack.len() == 0 { "YES" } else { "NO" });
+        println!("{}", if stack.is_empty() { "YES" } else { "NO" });
     }
 }
 

@@ -27,7 +27,7 @@ fn group_by_o(input: &String) -> Vec<Vec<char>> {
         match ox {
             'O' => arr.push(ox),
             'X' => {
-                if arr.len() > 0 {
+                if !arr.is_empty() {
                     group_of_o.push(arr.clone());
                     arr.clear();
                 }
@@ -36,7 +36,7 @@ fn group_by_o(input: &String) -> Vec<Vec<char>> {
         }
     }
 
-    if arr.len() > 0 {
+    if !arr.is_empty() {
         group_of_o.push(arr);
     }
 

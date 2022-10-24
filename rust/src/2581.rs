@@ -8,7 +8,7 @@ fn main() {
 
     let prime_nums: Vec<i32> = (m..=n).filter(|&n| is_prime(n)).collect();
 
-    if prime_nums.len() == 0 {
+    if prime_nums.is_empty() {
         println!("{}", -1);
         return;
     }
