@@ -29,7 +29,9 @@ fn main() {
     const N: i32 = 4000;
     let mut sum = 0;
     let (mut min, mut max) = (N, -N);
+
     let mut counts = HashMap::new();
+    let mut max_count = 0;
 
     for &num in arr.iter() {
         sum += num;
@@ -41,12 +43,21 @@ fn main() {
             max = num;
         }
 
-        counts.entry(num).and_modify(|c| *c += 1).or_insert(1);
+        counts
+            .entry(num)
+            .and_modify(|c| {
+                let count = *c + 1;
+                if count > max_count {
+                    max_count = count;
+                }
+
+                count
+            })
+            .or_insert(1);
     }
 
     let avg = sum as f64 / len as f64;
 
-    let max_count = *counts.values().max().unwrap();
     let mut max_counts: Vec<(&i32, &i32)> =
         counts.iter().filter(|(_, &c)| c == max_count).collect();
 
