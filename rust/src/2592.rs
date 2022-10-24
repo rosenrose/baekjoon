@@ -10,15 +10,12 @@ fn main() {
 
     let avg = nums.iter().sum::<usize>() / nums.len();
 
-    let counts: Vec<(usize, usize)> = nums
-        .iter()
-        .map(|&num| {
-            let count = nums.iter().filter(|&n| *n == num).count();
-            (num, count)
-        })
-        .collect();
+    let counts = nums.iter().map(|&num| {
+        let count = nums.iter().filter(|&n| *n == num).count();
+        (num, count)
+    });
 
-    let (mode, _) = counts.iter().max_by_key(|(_, c)| c).unwrap();
+    let (mode, _) = counts.max_by_key(|&(_, c)| c).unwrap();
 
     println!("{avg}\n{mode}");
 }
