@@ -1,13 +1,13 @@
 fn main() {
-    let mut str = String::new();
-    read_line(&mut str);
+    let mut buf = String::new();
+    read_line(&mut buf);
 
-    let n = parse_int(&str);
+    let n = parse_int(&buf);
 
     let mut arr: Vec<i32> = (0..n)
         .map(|_| {
-            read_line(&mut str);
-            parse_int(&str)
+            read_line(&mut buf);
+            parse_int(&buf)
         })
         .collect();
 

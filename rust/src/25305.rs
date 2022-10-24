@@ -1,11 +1,11 @@
 fn main() {
-    let mut str = String::new();
-    read_line(&mut str);
+    let mut buf = String::new();
+    read_line(&mut buf);
 
-    let k = parse_int_vec(&str)[1];
-    read_line(&mut str);
+    let k = parse_int_vec(&buf)[1];
+    read_line(&mut buf);
 
-    let mut arr = parse_int_vec(&str);
+    let mut arr = parse_int_vec(&buf);
 
     arr.sort_by(|a, b| b.cmp(a));
 
