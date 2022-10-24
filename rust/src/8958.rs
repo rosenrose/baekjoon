@@ -7,31 +7,35 @@ fn main() {
     for _ in 0..n {
         read_line(&mut buf);
 
-        let group_of_o = group_by_o(&buf);
-        // println!("{group_of_o:?}");
-        let scores = group_of_o
-            .iter()
-            .map(|arr| arr.iter().enumerate().map(|(i, _)| i as i32 + 1));
+        let group_of_o = buf.trim().split(|c| c == 'X').filter(|c| !c.is_empty());
 
-        let total = scores.fold(0, |a, b| a + b.sum::<i32>());
+        let scores = group_of_o.map(|o_str| o_str.chars().enumerate().map(|(i, _)| i + 1));
+
+        let total = scores.fold(0, |a, b| a + b.sum::<usize>());
 
         println!("{total}");
     }
 }
 
-fn group_by_o(input: &String) -> Vec<Vec<char>> {
+fn read_line(buf: &mut String) {
+    buf.clear();
+    std::io::stdin().read_line(buf).unwrap();
+}
+
+/*
+fn group_by_o(str: &String) -> Vec<Vec<char>> {
     let mut group_of_o = Vec::new();
     let mut arr = Vec::new();
 
-    for ox in input.chars() {
-        match ox {
-            'O' => arr.push(ox),
+    for char in str.chars() {
+        match char {
+            'O' => arr.push(char),
             'X' => {
                 if !arr.is_empty() {
                     group_of_o.push(arr.clone());
                     arr.clear();
                 }
-            }
+            },
             _ => (),
         }
     }
@@ -42,8 +46,4 @@ fn group_by_o(input: &String) -> Vec<Vec<char>> {
 
     group_of_o
 }
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
+*/
