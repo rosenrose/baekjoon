@@ -1,6 +1,6 @@
 fn main() {
-    println!("\\    /\\");
-    println!(" )  ( ')");
-    println!("(  /  )");
-    println!(" \\(__)|");
+    println!(r"\    /\");
+    println!(r" )  ( ')");
+    println!(r"(  /  )");
+    println!(r" \(__)|");
 }

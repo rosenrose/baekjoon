@@ -1,8 +1,8 @@
 fn main() {
-    println!("         ,r'\"7");
-    println!("r`-_   ,'  ,/");
-    println!(" \\. \". L_r'");
-    println!("   `~\\/");
-    println!("      |");
-    println!("      |");
+    println!(r#"         ,r'"7"#);
+    println!(r#"r`-_   ,'  ,/"#);
+    println!(r#" \. ". L_r'"#);
+    println!(r#"   `~\/"#);
+    println!(r#"      |"#);
+    println!(r#"      |"#);
 }

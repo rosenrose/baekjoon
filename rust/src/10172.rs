@@ -1,7 +1,7 @@
 fn main() {
-    println!("|\\_/|");
-    println!("|q p|   /}}");
-    println!("( 0 )\"\"\"\\");
-    println!("|\"^\"`    |");
-    println!("||_/=\\\\__|");
+    println!(r#"|\_/|"#);
+    println!(r#"|q p|   /}}"#);
+    println!(r#"( 0 )"""\"#);
+    println!(r#"|"^"`    |"#);
+    println!(r#"||_/=\\__|"#);
 }
