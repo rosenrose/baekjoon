@@ -7,11 +7,7 @@ fn main() {
     for _ in 0..n {
         read_line(&mut buf);
 
-        let scores: Vec<i32> = buf
-            .split_whitespace()
-            .skip(1)
-            .map(|s| s.parse().unwrap())
-            .collect();
+        let scores = &parse_int_vec(&buf)[1..];
         let len = scores.len();
 
         let sum: i32 = scores.iter().sum();
@@ -27,4 +23,8 @@ fn main() {
 fn read_line(buf: &mut String) {
     buf.clear();
     std::io::stdin().read_line(buf).unwrap();
+}
+
+fn parse_int_vec(buf: &String) -> Vec<i32> {
+    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
