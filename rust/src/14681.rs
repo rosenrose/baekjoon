@@ -8,11 +8,11 @@ fn main() {
         })
         .collect();
 
-    match (nums[0], nums[1]) {
-        (x, y) if x > 0 && y > 0 => println!("1"),
-        (x, y) if x < 0 && y > 0 => println!("2"),
-        (x, y) if x < 0 && y < 0 => println!("3"),
-        (x, y) if x > 0 && y < 0 => println!("4"),
+    match nums[..] {
+        [x, y] if x > 0 && y > 0 => println!("1"),
+        [x, y] if x < 0 && y > 0 => println!("2"),
+        [x, y] if x < 0 && y < 0 => println!("3"),
+        [x, y] if x > 0 && y < 0 => println!("4"),
         _ => (),
     }
 }

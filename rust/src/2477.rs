@@ -10,7 +10,7 @@ fn main() {
     let k: i32 = buf.trim().parse().unwrap();
     let mut direction_counts = [0; 5];
 
-    let mut sides: Vec<_> = (0..6)
+    let mut sides: Vec<Side> = (0..6)
         .map(|_| {
             read_line(&mut buf);
             let nums = parse_int_vec(&buf);
@@ -34,11 +34,11 @@ fn main() {
     outers.sort();
 
     let (init_direction, out_width_idx, out_height_idx, in_width_idx, in_height_idx) =
-        match (outers[0], outers[1]) {
-            (1, 3) => (1, 0, 5, 2, 3),
-            (1, 4) => (1, 0, 1, 4, 3),
-            (2, 3) => (2, 0, 1, 4, 3),
-            (2, 4) => (2, 0, 5, 2, 3),
+        match outers[..] {
+            [1, 3] => (1, 0, 5, 2, 3),
+            [1, 4] => (1, 0, 1, 4, 3),
+            [2, 3] => (2, 0, 1, 4, 3),
+            [2, 4] => (2, 0, 5, 2, 3),
             _ => (0, 0, 0, 0, 0),
         };
 
