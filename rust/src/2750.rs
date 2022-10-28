@@ -1,13 +1,22 @@
-fn main() {
-    let mut buf = String::new();
-    read_line(&mut buf);
+use std::io::{stdin, stdout, BufRead, BufWriter, Write};
 
-    let n = parse_int(&buf);
+fn main() {
+    let stdin = stdin();
+    let stdout = stdout();
+    let mut stdin = stdin.lock();
+    let mut stdout = BufWriter::new(stdout.lock());
+
+    let mut buf = String::new();
+    stdin.read_line(&mut buf).unwrap();
+
+    let n: i32 = buf.trim().parse().unwrap();
 
     let mut arr: Vec<i32> = (0..n)
         .map(|_| {
-            read_line(&mut buf);
-            parse_int(&buf)
+            buf.clear();
+            stdin.read_line(&mut buf).unwrap();
+
+            buf.trim().parse().unwrap()
         })
         .collect();
 
@@ -17,7 +26,7 @@ fn main() {
     quick_sort(&mut arr[..], n);
 
     for num in arr {
-        println!("{num}");
+        writeln!(stdout, "{num}").unwrap();
     }
 }
 
@@ -87,13 +96,4 @@ fn quick_sort(arr: &mut [i32], len: i32) {
 
     quick_sort(&mut arr[..=j as usize], j + 1);
     quick_sort(&mut arr[i as usize..], len - i);
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

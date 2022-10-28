@@ -3,12 +3,7 @@ fn main() {
     read_line(&mut buf);
 
     if let [n, m] = parse_int_vec(&buf)[..] {
-        let board: Vec<String> = (0..n)
-            .map(|_| {
-                read_line(&mut buf);
-                buf.trim().to_string()
-            })
-            .collect();
+        let board = parse_str_vec_lines(&mut buf, n);
 
         let mut min = 32;
 
@@ -69,6 +64,15 @@ fn read_line(buf: &mut String) {
 
 fn parse_int_vec(buf: &String) -> Vec<i32> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+}
+
+fn parse_str_vec_lines(buf: &mut String, n: i32) -> Vec<String> {
+    (0..n)
+        .map(|_| {
+            read_line(buf);
+            buf.trim().to_string()
+        })
+        .collect()
 }
 
 /*

@@ -16,7 +16,7 @@ fn main() {
             buf.clear();
             stdin.read_line(&mut buf).unwrap();
 
-            buf.trim().parse::<i32>().unwrap()
+            buf.trim().parse().unwrap()
         })
         .collect();
 

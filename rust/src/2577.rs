@@ -6,8 +6,7 @@ fn main() {
             read_line(&mut buf);
             buf.trim().parse::<i32>().unwrap()
         })
-        .reduce(|a, b| a * b)
-        .unwrap()
+        .product::<i32>()
         .to_string();
 
     for digit in '0'..='9' {

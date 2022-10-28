@@ -1,14 +1,9 @@
 fn main() {
     let mut buf = String::new();
 
-    let nums: Vec<usize> = (0..10)
-        .map(|_| {
-            read_line(&mut buf);
-            parse_int(&buf)
-        })
-        .collect();
+    let nums = parse_int_vec_lines(&mut buf, 10);
 
-    let avg = nums.iter().sum::<usize>() / nums.len();
+    let avg = nums.iter().sum::<i32>() / nums.len() as i32;
 
     let counts = nums.iter().map(|&num| {
         let count = nums.iter().filter(|&n| *n == num).count();
@@ -25,6 +20,15 @@ fn read_line(buf: &mut String) {
     std::io::stdin().read_line(buf).unwrap();
 }
 
-fn parse_int(buf: &String) -> usize {
+fn parse_int(buf: &String) -> i32 {
     buf.trim().parse().unwrap()
+}
+
+fn parse_int_vec_lines(buf: &mut String, n: i32) -> Vec<i32> {
+    (0..n)
+        .map(|_| {
+            read_line(buf);
+            parse_int(buf)
+        })
+        .collect()
 }
