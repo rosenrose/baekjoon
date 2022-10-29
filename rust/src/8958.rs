@@ -11,7 +11,7 @@ fn main() {
 
         let scores = group_of_o.map(|o_str| o_str.chars().enumerate().map(|(i, _)| i + 1));
 
-        let total = scores.flatten().sum::<usize>();
+        let total: usize = scores.flatten().sum();
 
         println!("{total}");
     }
