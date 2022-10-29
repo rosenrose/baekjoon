@@ -24,12 +24,12 @@ fn main() {
                 continue;
             }
 
-            let multiply = (y - x) / gcd;
+            let multiple = (y - x) / gcd;
 
-            a *= multiply;
+            a *= multiple;
             a %= n / gcd;
 
-            b *= -multiply;
+            b *= -multiple;
             b %= m / gcd;
 
             let mut left = m * a + x;
