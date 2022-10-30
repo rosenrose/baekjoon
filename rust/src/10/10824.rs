@@ -5,8 +5,8 @@ fn main() {
     if let [a, b, c, d] = parse_str_vec(&buf)[..] {
         let parse_int = |s: String| s.parse::<i64>().unwrap();
 
-        let ab = parse_int([a, b].join(""));
-        let cd = parse_int([c, d].join(""));
+        let ab = parse_int([a, b].concat());
+        let cd = parse_int([c, d].concat());
 
         println!("{}", ab + cd);
     }

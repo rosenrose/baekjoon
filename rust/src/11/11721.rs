@@ -5,6 +5,6 @@ fn main() {
     let chars: Vec<String> = buf.trim().chars().map(|c| c.to_string()).collect();
 
     for word in chars.chunks(10) {
-        println!("{}", word.join(""));
+        println!("{}", word.concat());
     }
 }

@@ -11,7 +11,7 @@ fn main() {
             let r: usize = r.parse().unwrap();
 
             let p: Vec<String> = s.chars().map(|c| c.to_string().repeat(r)).collect();
-            let p = p.join("");
+            let p = p.concat();
 
             println!("{p}");
         }

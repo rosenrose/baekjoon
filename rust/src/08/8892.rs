@@ -31,7 +31,7 @@ fn main() {
                     continue;
                 }
 
-                let merged = [&words[i][..], &words[j][..]].join("");
+                let merged = [&words[i][..], &words[j][..]].concat();
 
                 if is_palindrome(&merged[..]) {
                     writeln!(stdout, "{merged}").unwrap();
