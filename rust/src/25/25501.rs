@@ -16,22 +16,26 @@ fn main() {
         stdin.read_line(&mut buf).unwrap();
 
         let mut count = 0;
-        let result = is_palindrome(buf.trim(), &mut count);
+        let result = if is_palindrome(buf.trim(), &mut count) {
+            1
+        } else {
+            0
+        };
 
         writeln!(stdout, "{result} {count}").unwrap();
     }
 }
 
-fn is_palindrome(word: &str, count: &mut i32) -> i32 {
+fn is_palindrome(word: &str, count: &mut i32) -> bool {
     *count += 1;
 
     let len = word.len();
     if len <= 1 {
-        return 1;
+        return true;
     }
 
     if word.chars().nth(0) != word.chars().nth(len - 1) {
-        return 0;
+        return false;
     }
 
     is_palindrome(&word[1..len - 1], count)

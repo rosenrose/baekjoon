@@ -8,19 +8,26 @@ fn main() {
             return;
         }
 
-        println!("{}", is_palindrome(buf.trim()));
+        println!(
+            "{}",
+            if is_palindrome(buf.trim()) {
+                "yes"
+            } else {
+                "no"
+            }
+        );
     }
 }
 
-fn is_palindrome(word: &str) -> &str {
+fn is_palindrome(word: &str) -> bool {
     let len = word.len();
 
     if len <= 1 {
-        return "yes";
+        return true;
     }
 
     if word.chars().nth(0) != word.chars().nth(len - 1) {
-        return "no";
+        return false;
     }
 
     is_palindrome(&word[1..len - 1])
