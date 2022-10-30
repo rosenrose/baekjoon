@@ -26,29 +26,12 @@ fn get_paint_count(board: &Vec<String>, i: usize, j: usize) -> i32 {
 
     for y in 0..8 {
         for (x, bw) in board[y + i].chars().skip(j).take(8).enumerate() {
-            match (y % 2, x % 2) {
-                (0, 0) => {
-                    if bw == 'W' {
-                        paint_start_from_black += 1;
-                    }
-                }
-                (0, 1) => {
-                    if bw == 'B' {
-                        paint_start_from_black += 1;
-                    }
-                }
-                (1, 0) => {
-                    if bw == 'B' {
-                        paint_start_from_black += 1;
-                    }
-                }
-                (1, 1) => {
-                    if bw == 'W' {
-                        paint_start_from_black += 1;
-                    }
+            match (y % 2, x % 2, bw) {
+                (0, 0, 'W') | (0, 1, 'B') | (1, 0, 'B') | (1, 1, 'W') => {
+                    paint_start_from_black += 1
                 }
                 _ => (),
-            }
+            };
         }
     }
 
