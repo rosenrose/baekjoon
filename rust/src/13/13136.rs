@@ -1,0 +1,15 @@
+fn main() {
+    let mut buf = String::new();
+    std::io::stdin().read_line(&mut buf).unwrap();
+
+    if let [r, c, n] = parse_float_vec(&buf)[..] {
+        let rows = (r / n).ceil() as i64;
+        let cols = (c / n).ceil() as i64;
+
+        println!("{}", rows * cols);
+    }
+}
+
+fn parse_float_vec(buf: &String) -> Vec<f64> {
+    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+}
