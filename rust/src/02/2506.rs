@@ -8,7 +8,7 @@ fn main() {
         .replace(' ', "")
         .split(|c| c == '0')
         .filter(|c| !c.is_empty())
-        .map(|one_str| one_str.chars().enumerate().map(|(i, _)| i + 1))
+        .map(|one_str| one_str.char_indices().map(|(i, _)| i + 1))
         .flatten()
         .sum();
 

@@ -9,7 +9,7 @@ fn main() {
 
         let group_of_o = buf.trim().split(|c| c == 'X').filter(|c| !c.is_empty());
 
-        let scores = group_of_o.map(|o_str| o_str.chars().enumerate().map(|(i, _)| i + 1));
+        let scores = group_of_o.map(|o_str| o_str.char_indices().map(|(i, _)| i + 1));
 
         let total: usize = scores.flatten().sum();
 
