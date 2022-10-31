@@ -82,6 +82,18 @@ fn parse_matrix(buf: &mut String, rows: i32) -> Vec<Vec<i32>> {
         .collect()
 }
 
+use std::string::ToString;
+
+fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String
+where
+    T: ToString,
+{
+    vec.iter()
+        .map(ToString::to_string)
+        .collect::<Vec<String>>()
+        .join(seperator)
+}
+
 fn print_type_of<T>(_: &T) {
     println!("{}", std::any::type_name::<T>())
 }

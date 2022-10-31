@@ -1,3 +1,5 @@
+use std::string::ToString;
+
 fn main() {
     let mut buf = String::new();
 
@@ -16,14 +18,7 @@ fn main() {
         let sum: i32 = divisors.iter().sum();
 
         if sum == num {
-            println!(
-                "{num} = {}",
-                divisors
-                    .iter()
-                    .map(|n| n.to_string())
-                    .collect::<Vec<String>>()
-                    .join(" + ")
-            );
+            println!("{num} = {}", vec_join(&divisors, " + "));
             continue;
         }
 
@@ -58,4 +53,14 @@ fn read_line(buf: &mut String) {
 
 fn parse_int(buf: &String) -> i32 {
     buf.trim().parse().unwrap()
+}
+
+fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String
+where
+    T: ToString,
+{
+    vec.iter()
+        .map(ToString::to_string)
+        .collect::<Vec<String>>()
+        .join(seperator)
 }
