@@ -29,9 +29,9 @@ fn main() {
     let (mut min, mut max) = (N, -N);
 
     let mut counts = HashMap::new();
-    let mut max_count = 0;
+    let mut max_count = 1;
 
-    for &num in arr.iter() {
+    for num in arr {
         sum += num;
 
         if num < min {
@@ -43,13 +43,12 @@ fn main() {
 
         counts
             .entry(num)
-            .and_modify(|c| {
-                let count = *c + 1;
-                if count > max_count {
-                    max_count = count;
-                }
+            .and_modify(|count| {
+                *count += 1;
 
-                count
+                if *count > max_count {
+                    max_count = *count;
+                }
             })
             .or_insert(1);
     }

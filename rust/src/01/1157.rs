@@ -10,8 +10,8 @@ fn main() {
     let (mut most_used, mut max) = (' ', 0);
     let mut is_duplicate = false;
 
-    for letter in letters.iter() {
-        let count = word.chars().filter(|c| c == letter).count();
+    for letter in letters {
+        let count = word.chars().filter(|&c| c == letter).count();
 
         if count == max {
             is_duplicate = true;
@@ -19,7 +19,7 @@ fn main() {
 
         if count > max {
             is_duplicate = false;
-            (most_used, max) = (*letter, count);
+            (most_used, max) = (letter, count);
         }
     }
 

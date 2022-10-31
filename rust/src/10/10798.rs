@@ -2,10 +2,10 @@ fn main() {
     let mut buf = String::new();
 
     let words = parse_str_vec_lines(&mut buf, 5);
-    let longest = words.iter().max_by_key(|word| word.len()).unwrap().len();
+    let longest = words.iter().map(|word| word.len()).max().unwrap();
 
     for i in 0..longest {
-        for word in words.iter() {
+        for word in &words {
             if let Some(c) = word.chars().nth(i) {
                 print!("{c}");
             }
