@@ -4,8 +4,8 @@ fn main() {
     let mut buf = String::new();
     stdin().read_to_string(&mut buf).unwrap();
 
-    for line in buf.split('\n') {
-        if line.is_empty() || line == "\r" {
+    for line in buf.lines() {
+        if line.is_empty() {
             continue;
         }
 
