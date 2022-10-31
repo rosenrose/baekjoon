@@ -1,10 +1,8 @@
 use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 fn main() {
-    let stdin = stdin();
-    let stdout = stdout();
-    let mut stdin = stdin.lock();
-    let mut stdout = BufWriter::new(stdout.lock());
+    let (stdin, stdout) = (stdin(), stdout());
+    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
