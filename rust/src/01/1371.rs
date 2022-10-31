@@ -7,7 +7,7 @@ fn main() {
     let mut max_count = 0;
     let counts: Vec<(char, usize)> = ('a'..='z')
         .map(|letter| {
-            let count = buf.trim().chars().filter(|&c| c == letter).count();
+            let count = buf.matches(letter).count();
             if count > max_count {
                 max_count = count;
             }
