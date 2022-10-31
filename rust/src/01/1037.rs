@@ -6,7 +6,7 @@ fn main() {
     let mut nums = parse_int_vec(&buf);
     nums.sort();
 
-    println!("{}", nums[0] * nums[nums.len() - 1]);
+    println!("{}", nums[0] * nums.last().unwrap());
 }
 
 fn read_line(buf: &mut String) {
