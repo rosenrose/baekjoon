@@ -1,4 +1,4 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 fn main() {
     let stdin = stdin();
@@ -7,18 +7,16 @@ fn main() {
     let mut stdout = BufWriter::new(stdout.lock());
 
     let mut buf = String::new();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    'outer: loop {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
-        if buf == ".\n" || buf == ".\r\n" {
+    'outer: for line in buf.lines() {
+        if line == "." {
             return;
         }
 
         let mut open_close = Vec::new();
 
-        for c in buf.trim().chars() {
+        for c in line.chars() {
             match c {
                 '(' | '[' => open_close.push(c),
                 ')' | ']' => match open_close.pop() {
