@@ -6,11 +6,11 @@ fn main() {
         let mut days = y;
 
         for i in 1..x {
-            match i {
-                i if [1, 3, 5, 7, 8, 10, 12].contains(&i) => days += 31,
-                i if [4, 6, 9, 11].contains(&i) => days += 30,
-                2 => days += 28,
-                _ => (),
+            days += match i {
+                1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+                4 | 6 | 9 | 11 => 30,
+                2 => 28,
+                _ => 0,
             };
         }
 

@@ -26,8 +26,8 @@ fn main() {
 
     for m in 1..=12 {
         let day_count = match m {
-            m if [1, 3, 5, 7, 8, 10, 12].contains(&m) => 31,
-            m if [4, 6, 9, 11].contains(&m) => 30,
+            1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+            4 | 6 | 9 | 11 => 30,
             #[rustfmt::skip]
             2 => if is_leap(year) { 29 } else { 28 },
             _ => 0,

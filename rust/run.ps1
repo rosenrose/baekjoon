@@ -4,11 +4,11 @@ $cwd = pwd
 cd $PSScriptRoot
 
 ren "src/main.rs" "main_.rs"
-ren "src/$num.rs" "main.rs"
+cp "src/$num.rs" "src/main.rs"
 
 cargo run
 
-ren "src/main.rs" "$num.rs"
+rm "src/main.rs"
 ren "src/main_.rs" "main.rs"
 
 cd $cwd
