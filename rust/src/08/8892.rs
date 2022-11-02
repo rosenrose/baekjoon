@@ -49,9 +49,20 @@ fn is_palindrome(word: &str) -> bool {
         return true;
     }
 
-    if word.chars().nth(0) != word.chars().nth(len - 1) {
-        return false;
+    let (mut i, mut j) = (0, len - 1);
+
+    loop {
+        if i >= j {
+            break;
+        }
+
+        if word.chars().nth(i) != word.chars().nth(j) {
+            return false;
+        }
+
+        i += 1;
+        j -= 1;
     }
 
-    is_palindrome(&word[1..len - 1])
+    true
 }

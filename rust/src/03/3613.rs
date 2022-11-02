@@ -14,11 +14,9 @@ fn main() {
     if first.is_uppercase() {
         println!("Error!");
         return;
-    }
+    };
 
-    let format;
-
-    if name.contains('_') {
+    let format = if name.contains('_') {
         let last = name.chars().last().unwrap();
 
         if first == '_' || last == '_' {
@@ -34,35 +32,34 @@ fn main() {
             return;
         }
 
-        format = "cpp";
+        "cpp"
     } else {
-        format = "java";
-    }
+        "java"
+    };
 
-    let converted: Vec<String> = match format {
-        "cpp" => name
-            .split('_')
-            .enumerate()
-            .map(|(i, s)| {
+    match format {
+        "cpp" => {
+            let converted = name.split('_').enumerate().map(|(i, s)| {
                 if i == 0 {
                     s.to_string()
                 } else {
                     format!("{}{}", s.chars().nth(0).unwrap().to_uppercase(), &s[1..])
                 }
-            })
-            .collect(),
-        "java" => name
-            .chars()
-            .map(|c| {
+            });
+
+            println!("{}", String::from_iter(converted));
+        }
+        "java" => {
+            let converted = name.chars().map(|c| {
                 if c.is_uppercase() {
                     format!("_{}", c.to_lowercase())
                 } else {
                     c.to_string()
                 }
-            })
-            .collect(),
-        _ => Vec::new(),
-    };
+            });
 
-    println!("{}", converted.concat());
+            println!("{}", String::from_iter(converted));
+        }
+        _ => (),
+    };
 }

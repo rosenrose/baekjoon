@@ -4,19 +4,16 @@ fn main() {
 
     let oct = buf.trim();
 
-    let bin: Vec<String> = oct
-        .chars()
-        .enumerate()
-        .map(|(i, c)| {
-            let digit = c.to_digit(10).unwrap();
+    let bin = oct.char_indices().map(|(i, c)| {
+        let digit = c.to_digit(10).unwrap();
 
-            if i == 0 {
-                format!("{digit:b}")
-            } else {
-                format!("{digit:03b}")
-            }
-        })
-        .collect();
+        if i == 0 {
+            format!("{digit:b}")
+        } else {
+            format!("{digit:03b}")
+        }
+    });
+    let bin = String::from_iter(bin);
 
-    println!("{}", bin.concat());
+    println!("{bin}");
 }

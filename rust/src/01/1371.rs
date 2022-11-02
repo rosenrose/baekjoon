@@ -16,13 +16,13 @@ fn main() {
         })
         .collect();
 
-    let mut max_counts: Vec<String> = counts
+    let mut max_counts: Vec<char> = counts
         .iter()
         .filter(|(_, count)| *count == max_count)
-        .map(|(c, _)| c.to_string())
+        .map(|&(c, _)| c)
         .collect();
 
     max_counts.sort();
 
-    println!("{}", max_counts.concat());
+    println!("{}", String::from_iter(max_counts));
 }

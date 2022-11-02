@@ -45,12 +45,12 @@ fn print(n: usize) -> Vec<String> {
         result.push(point);
 
         for i in 1..=inner_size {
-            result[i] = format!(
-                "{}{}{}",
+            result[i] = [
                 &result[i][..rest_width],
-                inner[i - 1],
-                &result[i][width - rest_width..]
-            );
+                &inner[i - 1][..],
+                &result[i][width - rest_width..],
+            ]
+            .concat();
         }
     } else {
         result = side.collect();
@@ -58,12 +58,12 @@ fn print(n: usize) -> Vec<String> {
         result.push(horizontal);
 
         for i in inner_size..size - 1 {
-            result[i] = format!(
-                "{}{}{}",
+            result[i] = [
                 &result[i][..rest_width],
-                inner[i - inner_size],
-                &result[i][width - rest_width..]
-            );
+                &inner[i - inner_size][..],
+                &result[i][width - rest_width..],
+            ]
+            .concat();
         }
     }
 

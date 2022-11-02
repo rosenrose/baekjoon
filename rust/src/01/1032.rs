@@ -10,20 +10,22 @@ fn main() {
         return;
     }
 
-    let pattern: Vec<String> = (0..file_names[0].len())
-        .map(|i| {
-            let letter = file_names[0].chars().nth(i);
+    let pattern = (0..file_names[0].len()).map(|i| {
+        let letter = file_names[0].chars().nth(i);
 
-            let is_same = file_names[1..]
-                .iter()
-                .map(|file_name| file_name.chars().nth(i))
-                .all(|c| c == letter);
+        let is_same = file_names[1..]
+            .iter()
+            .map(|file_name| file_name.chars().nth(i))
+            .all(|c| c == letter);
 
-            (if is_same { letter.unwrap() } else { '?' }).to_string()
-        })
-        .collect();
+        if is_same {
+            letter.unwrap()
+        } else {
+            '?'
+        }
+    });
 
-    println!("{}", pattern.concat());
+    println!("{}", String::from_iter(pattern));
 }
 
 fn read_line(buf: &mut String) {
