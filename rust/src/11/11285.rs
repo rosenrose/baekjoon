@@ -19,16 +19,14 @@ fn main() {
     let medial = buf.trim().chars().nth(0).unwrap();
     read_line(&mut buf);
 
-    let last = buf.trim().chars().nth(0);
-
     let mut code = '가' as u32;
 
     code += FIRSTS.iter().position(|&c| c == first).unwrap() as u32 * (MEDIAL_COUNT * LAST_COUNT);
 
     code += (medial as u32 - 'ㅏ' as u32) * LAST_COUNT;
 
-    code += match last {
-        Some(letter) => LASTS.iter().position(|&c| c == letter).unwrap() as u32 + 1,
+    code += match buf.trim().chars().nth(0) {
+        Some(last) => LASTS.iter().position(|&c| c == last).unwrap() as u32 + 1,
         None => 0,
     };
 

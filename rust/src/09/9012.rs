@@ -12,9 +12,9 @@ fn main() {
 
         for c in input {
             match c {
-                '(' => stack.push(0),
+                '(' => stack.push(c),
                 ')' => {
-                    if let None = stack.pop() {
+                    if stack.pop().is_none() {
                         println!("NO");
                         continue 'outer;
                     }

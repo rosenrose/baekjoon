@@ -45,7 +45,7 @@ fn main() {
                         arr.pop_front()
                     };
 
-                    if let None = removed {
+                    if removed.is_none() {
                         writeln!(stdout, "error").unwrap();
                         continue 'outer;
                     }

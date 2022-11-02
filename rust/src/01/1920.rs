@@ -18,12 +18,7 @@ fn main() {
     let nums2 = buf.split_whitespace().map(|s| s.parse::<i32>().unwrap());
 
     for num in nums2 {
-        let has_num = match nums1.get(&num) {
-            Some(_) => 1,
-            None => 0,
-        };
-
-        writeln!(stdout, "{has_num}").unwrap();
+        writeln!(stdout, "{}", if nums1.contains(&num) { 1 } else { 0 }).unwrap();
     }
 }
 

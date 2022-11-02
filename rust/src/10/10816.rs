@@ -22,10 +22,7 @@ fn main() {
     stdin.read_line(&mut buf).unwrap();
 
     for num in buf.split_whitespace().map(parse_int) {
-        let count = match counts.get(&num) {
-            Some(c) => *c,
-            None => 0,
-        };
+        let count = counts.get(&num).unwrap_or(&0);
 
         write!(stdout, "{count} ").unwrap();
     }
