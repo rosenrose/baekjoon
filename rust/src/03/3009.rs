@@ -7,27 +7,29 @@ fn main() {
 
     for i in 0..N {
         read_line(&mut buf);
-        let mut nums = buf.split_whitespace().map(|s| s.parse::<i32>().unwrap());
 
-        x_points[i] = nums.next().unwrap();
-        y_points[i] = nums.next().unwrap();
-    }
-
-    for x in x_points {
-        if x_points.iter().filter(|&n| *n == x).count() == 1 {
-            print!("{x} ");
-            break;
+        if let [x, y] = parse_int_vec(&buf)[..] {
+            (x_points[i], y_points[i]) = (x, y);
         }
     }
-    for y in y_points {
-        if y_points.iter().filter(|&n| *n == y).count() == 1 {
-            println!("{y}");
-            return;
-        }
-    }
+
+    let get_unique = |points: [i32; 3]| match points {
+        [a, b, c] if a == b => Some(c),
+        [a, b, c] if a == c => Some(b),
+        [a, b, c] if b == c => Some(a),
+        _ => None,
+    };
+
+    let (x, y) = (get_unique(x_points).unwrap(), get_unique(y_points).unwrap());
+
+    println!("{x} {y}");
 }
 
 fn read_line(buf: &mut String) {
     buf.clear();
     std::io::stdin().read_line(buf).unwrap();
+}
+
+fn parse_int_vec(buf: &String) -> Vec<i32> {
+    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

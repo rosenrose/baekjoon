@@ -7,15 +7,13 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut nums = buf.split_whitespace().map(|s| s.parse::<i32>().unwrap());
-    let m: i32 = nums.next().unwrap();
-    let n: i32 = nums.next().unwrap();
+    if let [m, n] = parse_int_vec(&buf)[..] {
+        let prime_sieve = get_prime_sieve(n);
+        let prime_nums = (m..=n).filter(|&i| prime_sieve[i as usize]);
 
-    let prime_sieve = get_prime_sieve(n);
-    let prime_nums = (m..=n).filter(|&i| prime_sieve[i as usize]);
-
-    for prime_num in prime_nums {
-        writeln!(stdout, "{prime_num}").unwrap();
+        for prime_num in prime_nums {
+            writeln!(stdout, "{prime_num}").unwrap();
+        }
     }
 }
 
@@ -35,4 +33,8 @@ fn get_prime_sieve(num: i32) -> Vec<bool> {
     }
 
     prime_sieve
+}
+
+fn parse_int_vec(buf: &String) -> Vec<i32> {
+    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
