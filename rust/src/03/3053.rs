@@ -6,9 +6,5 @@ fn main() {
 
     let r: i32 = buf.trim().parse().unwrap();
 
-    println!(
-        "{:.6}\n{:.6}",
-        (r.pow(2) as f64) * PI,
-        (r.pow(2) as f64) * 2.0
-    );
+    println!("{:.6}\n{:.6}", (r * r as f64) * PI, (r * r as f64) * 2.0);
 }
