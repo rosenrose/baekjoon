@@ -3,7 +3,7 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     if let [n, m] = parse_int_vec(&buf)[..] {
-        println!("{}", (n - m).abs());
+        println!("{}", n.abs_diff(m));
     }
 }
 

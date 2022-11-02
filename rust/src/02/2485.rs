@@ -5,16 +5,16 @@ fn main() {
     let n = parse_int(&buf);
     let nums = parse_int_vec_lines(&mut buf, n);
 
-    let mut gcd = (nums[0] - nums[1]).abs();
+    let mut gcd = nums[0].abs_diff(nums[1]);
 
     for i in 1..nums.len() - 1 {
-        gcd = get_gcd((nums[i] - nums[i + 1]).abs(), gcd);
+        gcd = get_gcd(nums[i].abs_diff(nums[i + 1]), gcd);
     }
 
     let mut count = 0;
 
     for i in 0..nums.len() - 1 {
-        let gap = (nums[i] - nums[i + 1]).abs();
+        let gap = nums[i].abs_diff(nums[i + 1]);
 
         count += (gap / gcd) - 1;
     }
@@ -22,7 +22,7 @@ fn main() {
     println!("{count}");
 }
 
-fn get_gcd(mut a: i32, mut b: i32) -> i32 {
+fn get_gcd(mut a: u32, mut b: u32) -> u32 {
     loop {
         (a, b) = (b, a % b);
 

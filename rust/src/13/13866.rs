@@ -3,7 +3,7 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let levels = parse_int_vec(&buf);
-    let mut min_diff = i32::MAX;
+    let mut min_diff = u32::MAX;
 
     for i in 1..levels.len() {
         let team1 = levels[0] + levels[i];
@@ -14,7 +14,7 @@ fn main() {
             .map(|(_, level)| level)
             .sum();
 
-        let diff = (team1 - team2).abs();
+        let diff = team1.abs_diff(team2);
         if diff < min_diff {
             min_diff = diff;
         }

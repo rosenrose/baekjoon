@@ -21,7 +21,7 @@ fn main() {
             let is_inscribed = dist < bigger;
 
             if is_inscribed {
-                if (smaller - (bigger - dist)).abs() < f64::EPSILON {
+                if (smaller - (bigger - dist)).abs() < 1e-10 {
                     joints = 1;
                 } else {
                     joints = if smaller < bigger - dist { 0 } else { 2 };
@@ -29,7 +29,7 @@ fn main() {
             } else {
                 let radius_sum = r1 as f64 + r2 as f64;
 
-                if (radius_sum - dist).abs() < f64::EPSILON {
+                if (radius_sum - dist).abs() < 1e-10 {
                     joints = 1;
                 } else {
                     joints = if radius_sum < dist { 0 } else { 2 };

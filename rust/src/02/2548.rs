@@ -15,12 +15,12 @@ fn main() {
         nums_set.insert(num);
     }
 
-    let mut min_diff_sum = i32::MAX;
+    let mut min_diff_sum = u32::MAX;
 
-    let diff_sums: Vec<(i32, i32)> = nums_set
+    let diff_sums: Vec<(i32, u32)> = nums_set
         .iter()
         .map(|&num| {
-            let diff_sum = nums.iter().map(|n| (n - num).abs()).sum::<i32>();
+            let diff_sum = nums.iter().map(|n| n.abs_diff(num)).sum::<u32>();
             if diff_sum < min_diff_sum {
                 min_diff_sum = diff_sum;
             }
@@ -29,9 +29,12 @@ fn main() {
         })
         .collect();
 
-    let represents = diff_sums.iter().filter(|(_, diff)| *diff == min_diff_sum);
+    let represents = diff_sums
+        .iter()
+        .filter(|(_, diff)| *diff == min_diff_sum)
+        .map(|(num, _)| num);
 
-    let (represent, _) = represents.min_by_key(|(num, _)| num).unwrap();
+    let represent = represents.min().unwrap();
 
     println!("{represent}");
 }
