@@ -9,10 +9,10 @@ fn main() {
         arr[i] = parse_int(&buf);
     }
 
-    let max = arr.iter().max().unwrap();
-    let index = arr.iter().position(|n| n == max).unwrap();
+    let (index, max) = arr.iter().enumerate().max_by_key(|(_, &n)| n).unwrap();
+    let index = index + 1;
 
-    println!("{max}\n{}", index + 1);
+    println!("{max}\n{index}");
 }
 
 fn read_line(buf: &mut String) {

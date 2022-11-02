@@ -20,17 +20,17 @@ fn main() {
 
     for (i, (pos, _)) in order.iter_mut().enumerate() {
         let original_pos;
-        let t = time.min(ants1.len() + ants2.len() - 1) as i32;
+        let t = time.min(ants1.len() + ants2.len() - 1);
         let offset;
 
         if i < ants1.len() {
             original_pos = (ants1.len() - 1) - i;
-            offset = ((t - original_pos as i32).max(0) as usize).min(ants2.len());
+            offset = t.saturating_sub(original_pos).min(ants2.len());
 
             *pos += offset;
         } else {
             original_pos = i - ants1.len();
-            offset = ((t - original_pos as i32).max(0) as usize).min(ants1.len());
+            offset = t.saturating_sub(original_pos).min(ants1.len());
 
             *pos -= offset;
         }
