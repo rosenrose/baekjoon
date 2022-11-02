@@ -7,14 +7,7 @@ fn main() {
     for _ in 0..n {
         read_line(&mut buf);
 
-        let last = buf
-            .trim()
-            .chars()
-            .rev()
-            .nth(0)
-            .unwrap()
-            .to_digit(10)
-            .unwrap();
+        let last = buf.trim().chars().last().unwrap().to_digit(10).unwrap();
 
         println!("{}", if last % 2 == 0 { "even" } else { "odd" });
     }

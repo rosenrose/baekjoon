@@ -4,7 +4,7 @@ fn main() {
     loop {
         read_line(&mut buf);
 
-        if buf.trim().chars().nth(0).unwrap() == '0' {
+        if buf.trim() == "0" {
             return;
         }
 

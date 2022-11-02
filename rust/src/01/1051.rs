@@ -9,10 +9,11 @@ fn main() {
         for size in (1..=max_size).rev() {
             for y in 0..=n - size {
                 for x in 0..=m - size {
-                    let top_left = matrix[y].chars().nth(x);
-                    let top_right = matrix[y].chars().nth(x + size - 1);
-                    let bottom_left = matrix[y + size - 1].chars().nth(x);
-                    let bottom_right = matrix[y + size - 1].chars().nth(x + size - 1);
+                    let top_bytes = matrix[y].as_bytes();
+                    let bottom_bytes = matrix[y + size - 1].as_bytes();
+
+                    let (top_left, top_right) = (top_bytes[x], top_bytes[x + size - 1]);
+                    let (bottom_left, bottom_right) = (bottom_bytes[x], bottom_bytes[x + size - 1]);
 
                     if top_left == top_right
                         && top_right == bottom_left
