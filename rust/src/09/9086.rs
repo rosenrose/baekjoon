@@ -6,14 +6,9 @@ fn main() {
 
     for _ in 0..n {
         read_line(&mut buf);
-        let mut input = buf.trim().chars();
 
-        let first = input.next().unwrap();
-
-        let last = match input.next_back() {
-            Some(c) => c,
-            None => first,
-        };
+        let first = buf.trim().chars().nth(0).unwrap();
+        let last = buf.trim().chars().last().unwrap();
 
         println!("{first}{last}");
     }

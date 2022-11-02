@@ -2,26 +2,25 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut score = 0.0;
-    let mut record = buf.trim().chars();
+    let record = buf.trim().as_bytes();
 
-    match record.next().unwrap() {
-        'A' => score = 4.0,
-        'B' => score = 3.0,
-        'C' => score = 2.0,
-        'D' => score = 1.0,
+    let mut score = match record[0] as char {
+        'A' => 4.0,
+        'B' => 3.0,
+        'C' => 2.0,
+        'D' => 1.0,
         'F' => {
             println!("0.0");
             return;
         }
-        _ => (),
+        _ => 0.0,
     };
 
-    match record.next().unwrap() {
-        '+' => score += 0.3,
-        '-' => score -= 0.3,
-        _ => (),
-    }
+    score += match record[1] as char {
+        '+' => 0.3,
+        '-' => -0.3,
+        _ => 0.0,
+    };
 
     println!("{score:.1}");
 }

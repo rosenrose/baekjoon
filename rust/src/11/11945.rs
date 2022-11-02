@@ -5,11 +5,7 @@ fn main() {
     if let [n, _] = parse_int_vec(&buf)[..] {
         for _ in 0..n {
             read_line(&mut buf);
-
-            for c in buf.trim().chars().rev() {
-                print!("{c}");
-            }
-            println!("");
+            println!("{}", buf.trim().chars().rev().collect::<String>());
         }
     }
 }
