@@ -5,8 +5,7 @@ fn main() {
     let radix = buf.trim().chars().count() as i32;
     let n: i32 = buf.trim().parse().unwrap();
 
-    let min = n - (9 * radix);
-    let min = if min <= 0 { 1 } else { min };
+    let min = (n - (9 * radix)).max(1);
     let max = n - 1;
 
     for i in min..=max {
