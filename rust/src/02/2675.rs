@@ -9,9 +9,9 @@ fn main() {
 
         if let [r, s] = parse_str_vec(&buf)[..] {
             let r: usize = r.parse().unwrap();
-            let p = s.chars().map(|c| c.to_string().repeat(r));
+            let p: String = s.chars().map(|c| c.to_string().repeat(r)).collect();
 
-            println!("{}", String::from_iter(p));
+            println!("{p}");
         }
     }
 }

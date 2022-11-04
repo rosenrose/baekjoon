@@ -37,29 +37,30 @@ fn main() {
         "java"
     };
 
-    match format {
-        "cpp" => {
-            let converted = name.split('_').enumerate().map(|(i, s)| {
+    let converted: String = match format {
+        "cpp" => name
+            .split('_')
+            .enumerate()
+            .map(|(i, s)| {
                 if i == 0 {
                     s.to_string()
                 } else {
                     format!("{}{}", s.chars().nth(0).unwrap().to_uppercase(), &s[1..])
                 }
-            });
-
-            println!("{}", String::from_iter(converted));
-        }
-        "java" => {
-            let converted = name.chars().map(|c| {
+            })
+            .collect(),
+        "java" => name
+            .chars()
+            .map(|c| {
                 if c.is_uppercase() {
                     format!("_{}", c.to_lowercase())
                 } else {
                     c.to_string()
                 }
-            });
-
-            println!("{}", String::from_iter(converted));
-        }
-        _ => (),
+            })
+            .collect(),
+        _ => String::new(),
     };
+
+    println!("{converted}");
 }
