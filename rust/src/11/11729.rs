@@ -29,12 +29,11 @@ fn hanoi(n: i32, src: usize, dst: usize, count: &mut i32, order: &mut Vec<(usize
 
     *count += 1;
 
-    let child_dst = if (src, dst) == (0, 1) || (src, dst) == (1, 0) {
-        2
-    } else if (src, dst) == (0, 2) || (src, dst) == (2, 0) {
-        1
-    } else {
-        0
+    let child_dst = match (src, dst) {
+        (0, 1) | (1, 0) => 2,
+        (0, 2) | (2, 0) => 1,
+        (1, 2) | (2, 1) => 0,
+        _ => 0,
     };
 
     hanoi(n - 1, src, child_dst, count, order);
