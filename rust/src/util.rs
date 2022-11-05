@@ -92,6 +92,25 @@ where
         .join(seperator)
 }
 
+use std::fmt::Debug;
+use std::str::FromStr;
+
+fn parse_num<T>(buf: &String) -> T
+where
+    T: FromStr,
+    <T as FromStr>::Err: Debug,
+{
+    buf.trim().parse().unwrap()
+}
+
+fn parse_numbers<T>(buf: &String) -> impl Iterator<Item = T> + '_
+where
+    T: FromStr,
+    <T as FromStr>::Err: Debug,
+{
+    buf.split_whitespace().map(|s| s.parse::<T>().unwrap())
+}
+
 fn print_type_of<T>(_: &T) {
     println!("{}", std::any::type_name::<T>())
 }
