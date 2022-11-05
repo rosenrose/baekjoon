@@ -5,7 +5,7 @@ fn main() {
 
     let arr = buf.split_whitespace().map(|s| s.parse::<i32>().unwrap());
 
-    const N: i32 = 1000000;
+    const N: i32 = 1_000_000;
     let (mut min, mut max) = (N, -N);
 
     for num in arr {
