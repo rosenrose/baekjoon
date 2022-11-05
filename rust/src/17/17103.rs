@@ -1,17 +1,23 @@
-fn main() {
-    let mut buf = String::new();
-    read_line(&mut buf);
+use std::io::{stdin, stdout, BufRead, BufWriter, Write};
 
-    let n = parse_int(&buf);
+fn main() {
+    let (stdin, stdout) = (stdin(), stdout());
+    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+
+    let mut buf = String::new();
+    stdin.read_line(&mut buf).unwrap();
+
+    let n: i32 = buf.trim().parse().unwrap();
     let preime_sieve = get_prime_sieve(1_000_000);
 
     for _ in 0..n {
-        read_line(&mut buf);
+        buf.clear();
+        stdin.read_line(&mut buf).unwrap();
 
-        let num = parse_int(&buf);
+        let num: i32 = buf.trim().parse().unwrap();
         let count = get_goldbach_partition_count(num, &preime_sieve);
 
-        println!("{count}");
+        writeln!(stdout, "{count}").unwrap();
     }
 }
 
@@ -53,13 +59,4 @@ fn get_prime_sieve(num: i32) -> Vec<bool> {
     }
 
     prime_sieve
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }
