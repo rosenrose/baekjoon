@@ -8,12 +8,17 @@ fn main() {
     stdin.read_line(&mut buf).unwrap();
 
     let n = buf.split_whitespace().map(parse_int).next().unwrap();
-    let arr: Vec<Vec<i32>> = (0..n)
+    let arr: Vec<Vec<_>> = (0..n)
         .map(|_| {
             buf.clear();
             stdin.read_line(&mut buf).unwrap();
+            let mut row = vec![0];
 
-            parse_int_vec(&buf)
+            buf.split_whitespace().map(parse_int).for_each(|num| {
+                row.push(row.last().unwrap() + num);
+            });
+
+            row
         })
         .collect();
     buf.clear();
@@ -26,17 +31,9 @@ fn main() {
         stdin.read_line(&mut buf).unwrap();
 
         if let [i, j, x, y] = parse_int_vec(&buf)[..] {
-            let (i, j, x, y) = (
-                i as usize - 1,
-                j as usize - 1,
-                x as usize - 1,
-                y as usize - 1,
-            );
+            let (i, j) = (i - 1, j - 1);
 
-            let sum: i32 = arr[i..=x]
-                .iter()
-                .map(|row| row[j..=y].iter().sum::<i32>())
-                .sum();
+            let sum: i32 = arr[i..x].iter().map(|row| row[y] - row[j]).sum();
 
             writeln!(stdout, "{sum}").unwrap();
         }
@@ -47,6 +44,6 @@ fn parse_int(buf: &str) -> i32 {
     buf.parse().unwrap()
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(parse_int).collect()
+fn parse_int_vec(buf: &String) -> Vec<usize> {
+    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
