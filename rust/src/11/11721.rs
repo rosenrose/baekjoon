@@ -1,16 +1,10 @@
-use std::{io, str};
-
 fn main() {
     let mut buf = String::new();
-    io::stdin().read_line(&mut buf).unwrap();
+    std::io::stdin().read_line(&mut buf).unwrap();
 
-    let words = buf
-        .trim()
-        .as_bytes()
-        .chunks(10)
-        .map(|s| str::from_utf8(s).unwrap());
+    let words: Vec<char> = buf.trim().chars().collect();
 
-    for word in words {
-        println!("{word}");
+    for word in words.chunks(10) {
+        println!("{}", String::from_iter(word));
     }
 }

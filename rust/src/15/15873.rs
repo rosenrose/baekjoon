@@ -8,13 +8,7 @@ fn main() {
 
     let sum = match ab.len() {
         2 => first + last,
-        3 => {
-            if ab[1] as char == '0' {
-                10 + last
-            } else {
-                first + 10
-            }
-        }
+        3 => 10 + if ab[1] as char == '0' { last } else { first },
         4 => 20,
         _ => 0,
     };
