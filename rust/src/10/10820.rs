@@ -21,7 +21,7 @@ fn main() {
             if c.is_digit(10) {
                 digit += 1;
             }
-            if c == ' ' {
+            if c.is_whitespace() {
                 blank += 1;
             }
         });

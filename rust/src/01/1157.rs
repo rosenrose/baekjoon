@@ -7,7 +7,7 @@ fn main() {
     let word = buf.trim().to_uppercase();
     let letters: HashSet<char> = word.chars().collect();
 
-    let (mut most_used, mut max) = (' ', 0);
+    let (mut most_used, mut max) = ('\0', 0);
     let mut is_duplicate = false;
 
     for letter in letters {
