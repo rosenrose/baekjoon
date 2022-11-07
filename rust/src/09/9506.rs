@@ -27,23 +27,17 @@ fn main() {
 }
 
 fn get_divisors(num: i32) -> Vec<i32> {
-    let mut divisors = Vec::new();
+    (1..)
+        .take_while(|i| i * i <= num)
+        .filter(|i| num % i == 0)
+        .map(|i| {
+            let mut divisor = vec![i, num / i];
+            divisor.dedup();
 
-    for i in 1..=(num as f64).sqrt() as i32 {
-        if num % i != 0 {
-            continue;
-        }
-
-        divisors.push(i);
-
-        let n = num / i;
-
-        if n != i {
-            divisors.push(n);
-        }
-    }
-
-    divisors
+            divisor
+        })
+        .flatten()
+        .collect()
 }
 
 fn read_line(buf: &mut String) {

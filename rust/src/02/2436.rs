@@ -14,16 +14,17 @@ fn main() {
 fn get_pairs(gcd: i64, lcm: i64) -> Vec<(i64, i64)> {
     let product = gcd * lcm;
 
-    (gcd..=(product as f64).sqrt() as i64)
+    (gcd..)
+        .take_while(|i| i * i <= product)
         .step_by(gcd as usize)
-        .filter(|&a| {
-            if product % a != 0 {
+        .filter(|&i| {
+            if product % i != 0 {
                 return false;
             }
 
-            get_gcd(a, product / a) == gcd
+            get_gcd(i, product / i) == gcd
         })
-        .map(|a| (a, product / a))
+        .map(|i| (i, product / i))
         .collect()
 }
 

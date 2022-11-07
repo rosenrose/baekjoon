@@ -13,22 +13,20 @@ fn main() {
         return;
     }
 
-    let sum: i32 = prime_nums.iter().sum();
-    let min = prime_nums.iter().min().unwrap();
-
-    println!("{sum}\n{min}");
+    println!(
+        "{}\n{}",
+        prime_nums.iter().sum::<i32>(),
+        prime_nums.iter().min().unwrap()
+    );
 }
 
 fn is_prime(num: i32) -> bool {
     if num == 1 {
         return false;
     }
-    if num == 2 {
-        return true;
-    }
 
-    for n in 2..=(num as f64).sqrt() as i32 {
-        if num % n == 0 {
+    for i in (2..).take_while(|i| i * i <= num) {
+        if num % i == 0 {
             return false;
         }
     }

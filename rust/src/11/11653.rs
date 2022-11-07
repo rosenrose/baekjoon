@@ -3,7 +3,6 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let mut n: i32 = buf.trim().parse().unwrap();
-
     let prime_nums = (2..=n).filter(|&i| is_prime(i));
 
     for prime_num in prime_nums {
@@ -27,12 +26,9 @@ fn is_prime(num: i32) -> bool {
     if num == 1 {
         return false;
     }
-    if num == 2 {
-        return true;
-    }
 
-    for n in 2..=(num as f64).sqrt() as i32 {
-        if num % n == 0 {
+    for i in (2..).take_while(|i| i * i <= num) {
+        if num % i == 0 {
             return false;
         }
     }
