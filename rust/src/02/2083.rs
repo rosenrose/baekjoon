@@ -3,13 +3,17 @@ fn main() {
 
     loop {
         read_line(&mut buf);
-        let name = buf.split_whitespace().next().unwrap();
+        let mut tokens = buf.split_whitespace();
+        let name = tokens.next().unwrap();
 
         if name == "#" {
             return;
         }
 
-        if let [age, weight] = parse_int_vec(&buf[name.len()..])[..] {
+        if let [age, weight] = tokens
+            .map(|s| s.parse::<i32>().unwrap())
+            .collect::<Vec<_>>()[..]
+        {
             let class = if age > 17 || weight >= 80 {
                 "Senior"
             } else {
@@ -24,8 +28,4 @@ fn main() {
 fn read_line(buf: &mut String) {
     buf.clear();
     std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
