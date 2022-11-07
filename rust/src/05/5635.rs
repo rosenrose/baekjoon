@@ -8,9 +8,10 @@ fn main() {
     let infos: Vec<_> = (0..n)
         .map(|_| {
             read_line(&mut buf);
-            let name = buf.split_whitespace().next().unwrap().to_string();
+            let mut tokens = buf.split_whitespace();
+            let name = tokens.next().unwrap().to_string();
 
-            match parse_int_vec(&buf[name.len()..])[..] {
+            match tokens.map(parse_int).collect::<Vec<_>>()[..] {
                 [d, m, y] => (name, (y, m, d)),
                 _ => Default::default(),
             }
@@ -26,8 +27,4 @@ fn main() {
 fn read_line(buf: &mut String) {
     buf.clear();
     std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
