@@ -1,14 +1,14 @@
-use std::io::{stdout, BufWriter, Write};
+use std::io::{stdin, stdout, BufRead, BufWriter, Write};
 
 fn main() {
-    let stdout = stdout();
-    let mut stdout = BufWriter::new(stdout.lock());
+    let (stdin, stdout) = (stdin(), stdout());
+    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    stdin.read_line(&mut buf).unwrap();
 
     if let [m, n] = parse_int_vec(&buf)[..] {
-        let prime_sieve = get_prime_sieve(n);
+        let prime_sieve = get_prime_sieve(n as usize);
         let prime_nums = (m..=n).filter(|&i| prime_sieve[i as usize]);
 
         for prime_num in prime_nums {
@@ -17,20 +17,20 @@ fn main() {
     }
 }
 
-fn get_prime_sieve(num: i32) -> Vec<bool> {
-    let mut prime_sieve = vec![true; (num + 1) as usize];
+fn get_prime_sieve(num: usize) -> Vec<bool> {
+    let mut prime_sieve = vec![true; num + 1];
     prime_sieve[0] = false;
     prime_sieve[1] = false;
 
-    for i in 2..=(num as f64).sqrt() as usize {
+    (2..).take_while(|i| i * i <= num).for_each(|i| {
         if !prime_sieve[i] {
-            continue;
+            return;
         }
 
-        for j in ((i * i)..=num as usize).step_by(i) {
+        for j in ((i * i)..=num).step_by(i) {
             prime_sieve[j] = false;
         }
-    }
+    });
 
     prime_sieve
 }

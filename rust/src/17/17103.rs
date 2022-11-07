@@ -43,20 +43,20 @@ fn get_goldbach_partition_count(num: i32, prime_sieve: &Vec<bool>) -> i32 {
     count
 }
 
-fn get_prime_sieve(num: i32) -> Vec<bool> {
-    let mut prime_sieve = vec![true; (num + 1) as usize];
+fn get_prime_sieve(num: usize) -> Vec<bool> {
+    let mut prime_sieve = vec![true; num + 1];
     prime_sieve[0] = false;
     prime_sieve[1] = false;
 
-    for i in 2..=(num as f64).sqrt() as usize {
+    (2..).take_while(|i| i * i <= num).for_each(|i| {
         if !prime_sieve[i] {
-            continue;
+            return;
         }
 
-        for j in ((i * i)..=num as usize).step_by(i) {
+        for j in ((i * i)..=num).step_by(i) {
             prime_sieve[j] = false;
         }
-    }
+    });
 
     prime_sieve
 }
