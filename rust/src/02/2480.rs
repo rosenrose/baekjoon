@@ -4,28 +4,13 @@ fn main() {
 
     let nums = parse_int_vec(&buf);
 
-    let counts: Vec<(i32, usize)> = nums
-        .iter()
-        .map(|&num| {
-            let count = nums.iter().filter(|&n| *n == num).count();
-            (num, count)
-        })
-        .collect();
-
-    let mut prize = 0;
-
-    if counts.iter().all(|&(_, c)| c == 3) {
-        prize = 10000 + nums[0] * 1000;
-    } else if counts.iter().all(|&(_, c)| c == 1) {
-        prize = nums.iter().max().unwrap() * 100;
-    } else {
-        for (num, count) in counts {
-            if count == 2 {
-                prize = 1000 + num * 100;
-                break;
-            }
-        }
-    }
+    let prize = match nums[..] {
+        [a, b, c] if a == b && b == c => 10000 + a * 1000,
+        [a, b, _] if a == b => 1000 + a * 100,
+        [_, b, c] if b == c => 1000 + b * 100,
+        [a, _, c] if c == a => 1000 + c * 100,
+        _ => nums.iter().max().unwrap() * 100,
+    };
 
     println!("{prize}");
 }
