@@ -6,8 +6,9 @@ fn main() {
     read_line(&mut buf);
 
     let pattern = buf.trim().to_string();
-    let mut tokens = pattern.split('*');
-    let (prefix, suffix) = (tokens.next().unwrap(), tokens.next().unwrap());
+    let mut pattern = pattern.split('*');
+
+    let (prefix, suffix) = (pattern.next().unwrap(), pattern.next().unwrap());
 
     for _ in 0..n {
         read_line(&mut buf);
