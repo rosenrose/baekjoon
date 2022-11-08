@@ -114,3 +114,13 @@ where
 fn print_type_of<T>(_: &T) {
     println!("{}", std::any::type_name::<T>())
 }
+
+fn from_range<R>(range: R) -> i32
+where
+    R: RangeBounds<i32> + std::iter::Iterator,
+    <R as Iterator>::Item: DivAssign<i32>,
+    <R as Iterator>::Item: Rem<i32>,
+    <<R as Iterator>::Item as Rem<i32>>::Output: PartialEq<i32>,
+    <R as Iterator>::Item: Copy,
+{
+}
