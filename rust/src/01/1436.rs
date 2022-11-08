@@ -9,12 +9,10 @@ fn main() {
 
     loop {
         let mut six_count = 0;
-        let mut check = num;
+        let mut i = num;
 
-        while check > 0 {
-            let digit = check % 10;
-
-            if digit == 6 {
+        while i > 0 {
+            if i % 10 == 6 {
                 six_count += 1;
             } else {
                 six_count = 0;
@@ -25,7 +23,7 @@ fn main() {
                 break;
             }
 
-            check /= 10;
+            i /= 10;
         }
 
         if count == n {
