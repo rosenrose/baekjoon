@@ -11,7 +11,7 @@ fn main() {
         end[0] += 24;
     }
 
-    let delta: Vec<i32> = end.iter().zip(current.iter()).map(|(e, c)| e - c).collect();
+    let delta: Vec<i32> = end.iter().zip(current).map(|(e, c)| e - c).collect();
 
     if let [mut left_hour, mut left_minute, mut left_second] = delta[..] {
         if left_second < 0 {

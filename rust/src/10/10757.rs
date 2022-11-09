@@ -30,7 +30,7 @@ fn add_by_array(mut a: VecDeque<i32>, mut b: VecDeque<i32>) -> VecDeque<i32> {
         b.push_front(0);
     }
 
-    let mut sum: VecDeque<i32> = a.iter().zip(b.iter()).map(|(a, b)| a + b).collect();
+    let mut sum: VecDeque<i32> = a.iter().zip(b).map(|(a, b)| a + b).collect();
 
     for i in (1..longer).rev() {
         if sum[i] < 10 {
