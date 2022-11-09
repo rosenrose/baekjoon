@@ -12,22 +12,30 @@ fn main() {
     let mut right = String::new();
     lines.next();
 
-    for line in lines {
+    lines.for_each(|line| {
         let mut command = line.split_whitespace();
 
         match command.next().unwrap() {
-            "L" if !left.is_empty() => right.push(left.pop().unwrap()),
-            "D" if !right.is_empty() => left.push(right.pop().unwrap()),
-            "B" if !left.is_empty() => {
+            "L" => {
+                if let Some(c) = left.pop() {
+                    right.push(c);
+                }
+            }
+            "D" => {
+                if let Some(c) = right.pop() {
+                    left.push(c);
+                }
+            }
+            "B" => {
                 left.pop();
             }
             "P" => {
-                let letter = command.next().unwrap().chars().next().unwrap();
-                left.push(letter);
+                let c = command.next().unwrap().chars().next().unwrap();
+                left.push(c);
             }
             _ => (),
         };
-    }
+    });
 
     right = right.chars().rev().collect();
 
