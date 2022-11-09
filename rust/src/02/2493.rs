@@ -1,17 +1,21 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 fn main() {
     let (stdin, stdout) = (stdin(), stdout());
     let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
-    buf.clear();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
+
+    let mut lines = buf.lines();
+    lines.next();
 
     let mut towers = Vec::new();
 
-    buf.split_whitespace()
+    lines
+        .next()
+        .unwrap()
+        .split_whitespace()
         .map(|s| s.parse::<i32>().unwrap())
         .for_each(|height| {
             if towers.is_empty() {

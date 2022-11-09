@@ -1,20 +1,19 @@
 use std::cmp::Ordering;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 fn main() {
     let (stdin, stdout) = (stdin(), stdout());
     let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim());
+    let mut lines = buf.lines();
+    lines.next();
 
-    let (a, b) = (0..n)
-        .map(|_| {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
-            let mut tokens = buf.split_whitespace();
+    let (a, b) = lines
+        .map(|line| {
+            let mut tokens = line.split_whitespace();
 
             let a = parse_int(tokens.next().unwrap());
             let b = parse_int(tokens.next().unwrap());

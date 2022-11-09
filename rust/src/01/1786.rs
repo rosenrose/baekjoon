@@ -1,17 +1,15 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 fn main() {
     let (stdin, stdout) = (stdin(), stdout());
     let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let t = buf.replace(['\r', '\n'], "");
-    buf.clear();
-    stdin.read_line(&mut buf).unwrap();
-
-    let p = buf.replace(['\r', '\n'], "");
+    let mut lines = buf.lines();
+    let t = lines.next().unwrap();
+    let p = lines.next().unwrap();
     let p_chars: Vec<char> = p.chars().collect();
 
     let partial_match = get_partial_match(&p_chars);

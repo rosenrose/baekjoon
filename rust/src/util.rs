@@ -11,6 +11,7 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
     writeln!(stdout, "").unwrap();
 }
 
