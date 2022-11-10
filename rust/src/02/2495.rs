@@ -13,17 +13,12 @@ fn main() {
                 continue;
             }
 
-            if count > max_count {
-                max_count = count;
-            }
-
+            max_count = count.max(max_count);
             count = 1;
             current = next;
         }
 
-        if count > max_count {
-            max_count = count;
-        }
+        max_count = count.max(max_count);
 
         println!("{max_count}");
     }

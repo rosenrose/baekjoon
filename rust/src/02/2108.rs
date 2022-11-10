@@ -1,62 +1,47 @@
 use std::collections::HashMap;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 fn main() {
     let (stdin, stdout) = (stdin(), stdout());
     let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut lines = buf.lines();
+    lines.next();
 
-    let mut arr: Vec<i32> = (0..n)
-        .map(|_| {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
+    let mut sum = 0;
+    let mut counts = HashMap::new();
+    let mut max_count = 1;
 
-            buf.trim().parse().unwrap()
+    let mut arr: Vec<_> = lines
+        .map(|line| {
+            let num: i32 = line.parse().unwrap();
+            sum += num;
+
+            counts
+                .entry(num)
+                .and_modify(|count: &mut i32| {
+                    *count += 1;
+                    max_count = (*count).max(max_count);
+                })
+                .or_insert(1);
+
+            num
         })
         .collect();
 
     arr.sort();
 
+    let min = arr[0];
+    let max = arr.last().unwrap();
+
     let len = arr.len();
     let middle = arr[len / 2];
-
-    const N: i32 = 4000;
-    let mut sum = 0;
-    let (mut min, mut max) = (N, -N);
-
-    let mut counts = HashMap::new();
-    let mut max_count = 1;
-
-    for num in arr {
-        sum += num;
-
-        if num < min {
-            min = num;
-        }
-        if num > max {
-            max = num;
-        }
-
-        counts
-            .entry(num)
-            .and_modify(|count| {
-                *count += 1;
-
-                if *count > max_count {
-                    max_count = *count;
-                }
-            })
-            .or_insert(1);
-    }
-
     let avg = sum as f64 / len as f64;
 
-    let mut max_counts: Vec<(&i32, &i32)> =
-        counts.iter().filter(|(_, &c)| c == max_count).collect();
+    let mut max_counts: Vec<_> = counts.iter().filter(|(_, &c)| c == max_count).collect();
 
     let (most, _) = if max_counts.len() > 1 {
         max_counts.sort_by_key(|(&num, _)| num);

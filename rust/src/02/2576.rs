@@ -9,9 +9,7 @@ fn main() {
         })
         .filter(|i| i % 2 == 1)
         .fold(0, |sum, i| {
-            if i < min {
-                min = i;
-            }
+            min = i.min(min);
 
             sum + i
         });

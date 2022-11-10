@@ -15,9 +15,7 @@ fn main() {
                 score *= 2;
             }
 
-            if score > max_score {
-                max_score = score;
-            }
+            max_score = score.max(max_score);
         }
     }
 

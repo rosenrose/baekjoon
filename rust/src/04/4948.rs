@@ -19,10 +19,7 @@ fn main() {
         }
 
         nums.push(n);
-
-        if n > max {
-            max = n;
-        }
+        max = n.max(max);
     }
 
     let prime_sieve = get_prime_sieve((max * 2) as usize);

@@ -10,13 +10,8 @@ fn main() {
     // let (mut min, mut max) = (1000, 0);
     // buf.split_whitespace().for_each(|s| {
     //     let score: i32 = s.parse().unwrap();
-
-    //     if score < min {
-    //         min = score;
-    //     }
-    //     if score > max {
-    //         max = score;
-    //     }
+    //     min = score.min(min);
+    //     max = score.max(max);
     // });
 
     println!("{}", max - min);

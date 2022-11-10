@@ -10,9 +10,7 @@ fn main() {
         .iter()
         .map(|title| {
             let count = titles.iter().filter(|&t| t == title).count();
-            if count > max_count {
-                max_count = count;
-            }
+            max_count = count.max(max_count);
 
             (title, count)
         })

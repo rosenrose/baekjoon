@@ -5,19 +5,15 @@ fn main() {
     if let [n, m] = parse_int_vec(&buf)[..] {
         let board = parse_str_vec_lines(&mut buf, n);
 
-        let mut min = 32;
+        let mut min_paint = 32;
 
         for i in 0..=n - 8 {
             for j in 0..=m - 8 {
-                let paint = get_paint_count(&board, i as usize, j as usize);
-
-                if paint < min {
-                    min = paint;
-                }
+                min_paint = get_paint_count(&board, i as usize, j as usize).min(min_paint);
             }
         }
 
-        println!("{min}");
+        println!("{min_paint}");
     }
 }
 

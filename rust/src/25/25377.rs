@@ -14,9 +14,7 @@ fn main() {
             }
 
             let time = a.max(b);
-            if time < min_time {
-                min_time = time;
-            }
+            min_time = time.min(min_time);
         }
     }
 

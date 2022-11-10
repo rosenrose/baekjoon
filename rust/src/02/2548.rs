@@ -21,9 +21,7 @@ fn main() {
         .iter()
         .map(|&num| {
             let diff_sum = nums.iter().map(|n| n.abs_diff(num)).sum::<u32>();
-            if diff_sum < min_diff_sum {
-                min_diff_sum = diff_sum;
-            }
+            min_diff_sum = diff_sum.min(min_diff_sum);
 
             (num, diff_sum)
         })

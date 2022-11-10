@@ -1,26 +1,27 @@
-fn main() {
-    let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+use std::io::{stdin, stdout, BufWriter, Read, Write};
 
-    let arr = buf.split_whitespace().map(|s| s.parse::<i32>().unwrap());
+fn main() {
+    let (stdin, stdout) = (stdin(), stdout());
+    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+
+    let mut buf = String::new();
+    stdin.read_to_string(&mut buf).unwrap();
+
+    let mut lines = buf.lines();
+    lines.next();
 
     const N: i32 = 1_000_000;
     let (mut min, mut max) = (N, -N);
 
-    for num in arr {
-        if num < min {
-            min = num;
-        }
-        if num > max {
-            max = num;
-        }
-    }
+    lines
+        .next()
+        .unwrap()
+        .split_whitespace()
+        .map(|s| s.parse::<i32>().unwrap())
+        .for_each(|num| {
+            min = num.min(min);
+            max = num.max(max);
+        });
 
-    println!("{min} {max}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
+    writeln!(stdout, "{min} {max}").unwrap();
 }

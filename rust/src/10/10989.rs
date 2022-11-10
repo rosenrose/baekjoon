@@ -19,13 +19,8 @@ fn main() {
         let num: usize = buf.trim().parse().unwrap();
 
         count[num] += 1;
-
-        if num > max {
-            max = num;
-        }
-        if num < min {
-            min = num;
-        }
+        min = num.min(min);
+        max = num.max(max);
     }
 
     for num in min..=max {

@@ -8,9 +8,7 @@ fn main() {
     let counts: Vec<(char, usize)> = ('a'..='z')
         .map(|letter| {
             let count = buf.matches(letter).count();
-            if count > max_count {
-                max_count = count;
-            }
+            max_count = count.max(max_count);
 
             (letter, count)
         })

@@ -13,10 +13,7 @@ fn main() {
         })
         .fold(0, |current, (off, on)| {
             let next = (current - off + on).min(FULL);
-
-            if next > max_count {
-                max_count = next;
-            }
+            max_count = next.max(max_count);
 
             next
         });

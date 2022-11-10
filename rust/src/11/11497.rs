@@ -29,11 +29,7 @@ fn main() {
         let mut max_diff = new_logs[0].abs_diff(new_logs[len - 1]);
 
         for i in 0..len - 1 {
-            let diff = new_logs[i].abs_diff(new_logs[i + 1]);
-
-            if diff > max_diff {
-                max_diff = diff;
-            }
+            max_diff = new_logs[i].abs_diff(new_logs[i + 1]).max(max_diff);
         }
 
         println!("{max_diff}");

@@ -9,10 +9,7 @@ fn main() {
     for c1 in &class1 {
         for c2 in &class2 {
             let sum = (class1.iter().sum::<i32>() - c1) + c2;
-
-            if sum > max_sum {
-                max_sum = sum;
-            }
+            max_sum = sum.max(max_sum);
         }
     }
 

@@ -25,12 +25,9 @@ fn main() {
                 .for_each(|c| {
                     atgc_count
                         .entry(c)
-                        .and_modify(|count| {
+                        .and_modify(|count: &mut i32| {
                             *count += 1;
-
-                            if *count > max_count {
-                                max_count = *count;
-                            }
+                            max_count = (*count).max(max_count);
                         })
                         .or_insert(1);
                 });

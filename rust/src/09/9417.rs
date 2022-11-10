@@ -8,19 +8,15 @@ fn main() {
         read_line(&mut buf);
         let nums = parse_int_vec(&buf);
 
-        let mut max = 0;
+        let mut max_gcd = 0;
 
         for i in 0..nums.len() - 1 {
             for j in i + 1..nums.len() {
-                let gcd = get_gcd(nums[i], nums[j]);
-
-                if gcd > max {
-                    max = gcd;
-                }
+                max_gcd = get_gcd(nums[i], nums[j]).max(max_gcd);
             }
         }
 
-        println!("{max}");
+        println!("{max_gcd}");
     }
 }
 

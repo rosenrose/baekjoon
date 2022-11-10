@@ -21,10 +21,7 @@ fn main() {
             .filter(|num| num % 2 == 0)
             .for_each(|num| {
                 sum += num;
-
-                if num < min {
-                    min = num;
-                }
+                min = num.min(min);
             });
 
         writeln!(stdout, "{sum} {min}").unwrap();

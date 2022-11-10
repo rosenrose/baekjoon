@@ -14,10 +14,7 @@ fn main() {
             .map(|(_, level)| level)
             .sum();
 
-        let diff = team1.abs_diff(team2);
-        if diff < min_diff {
-            min_diff = diff;
-        }
+        min_diff = team1.abs_diff(team2).min(min_diff);
     }
 
     println!("{min_diff}");
