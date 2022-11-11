@@ -34,21 +34,16 @@ fn sanitize(input: &String) -> String {
     }
 
     cleaned = cleaned
-        .replace('[', "(")
-        .replace('{', "(")
-        .replace(']', ")")
-        .replace('}', ")")
+        .replace(['[', '{'], "(")
+        .replace([']', '}'], ")")
         .replace(';', ",");
 
     for sp in ["(", ")", ".", ",", ":"] {
         let left = format!(" {sp}");
         let right = format!("{sp} ");
 
-        while cleaned.contains(&left) {
-            cleaned = cleaned.replace(&left, sp)
-        }
-        while cleaned.contains(&right) {
-            cleaned = cleaned.replace(&right, sp)
+        while cleaned.contains(&left) || cleaned.contains(&right) {
+            cleaned = cleaned.replace(&left, sp).replace(&right, sp);
         }
     }
 
