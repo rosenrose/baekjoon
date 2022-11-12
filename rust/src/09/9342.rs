@@ -34,12 +34,11 @@ fn main() {
 #[rustfmt::skip]
 fn get_state(state: Option<i32>, input: char) -> Option<i32> {
   match (state, input) {
-      (Some(1), 'A') => Some(2), (Some(1), _) => Some(3),
-      (Some(2), 'A') => Some(2), (Some(2), 'F') => Some(4), (Some(2), _) => None,
-      (Some(3), 'A') => Some(2), (Some(3), _) => None,
-      (Some(4), 'C') => Some(5), (Some(4), 'F') => Some(4), (Some(4), _) => None,
-      (Some(5), 'C') => Some(5), (Some(5), _) => Some(6),
-      (Some(6), _) => None,
+      (Some(1), 'A') => Some(2), (Some(1), _)   => Some(3),
+      (Some(2), 'A') => Some(2), (Some(2), 'F') => Some(4),
+      (Some(3), 'A') => Some(2),
+      (Some(4), 'C') => Some(5), (Some(4), 'F') => Some(4),
+      (Some(5), 'C') => Some(5), (Some(5), _)   => Some(6),
       _ => None,
   }
 }

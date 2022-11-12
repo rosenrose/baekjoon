@@ -35,10 +35,10 @@ fn main() {
 fn get_state(state: Option<i32>, input: char) -> Option<i32> {
     match (state, input) {
         (Some(1), '0') => Some(2), (Some(1), '1') => Some(3),
-        (Some(2), '0') => None,    (Some(2), '1') => Some(4),
-        (Some(3), '0') => Some(5), (Some(3), '1') => None,
+        (Some(2), '1') => Some(4),
+        (Some(3), '0') => Some(5),
         (Some(4), '0') => Some(2), (Some(4), '1') => Some(3),
-        (Some(5), '0') => Some(6), (Some(5), '1') => None,
+        (Some(5), '0') => Some(6),
         (Some(6), '0') => Some(6), (Some(6), '1') => Some(7),
         (Some(7), '0') => Some(2), (Some(7), '1') => Some(8),
         (Some(8), '0') => Some(9), (Some(8), '1') => Some(8),
