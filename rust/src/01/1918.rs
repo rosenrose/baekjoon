@@ -6,7 +6,23 @@ fn main() {
 
     for c in buf.trim().chars() {
         match c {
-            '*' | '/' | '(' => stack.push(c),
+            '(' => stack.push(c),
+            ')' => loop {
+                match stack.pop() {
+                    Some('(') | None => break,
+                    Some(c) => print!("{c}"),
+                }
+            },
+            '*' | '/' => {
+                loop {
+                    match stack.last() {
+                        Some('*' | '/') => print!("{}", stack.pop().unwrap()),
+                        _ => break,
+                    }
+                }
+
+                stack.push(c);
+            }
             '+' | '-' => {
                 loop {
                     match stack.last() {
@@ -17,24 +33,7 @@ fn main() {
 
                 stack.push(c);
             }
-            ')' => loop {
-                let temp = stack.pop().unwrap();
-                if temp == '(' {
-                    if stack.last() == Some(&'*') || stack.last() == Some(&'/') {
-                        print!("{}", stack.pop().unwrap());
-                    }
-                    break;
-                }
-
-                print!("{temp}");
-            },
-            _ => {
-                print!("{c}");
-
-                if stack.last() == Some(&'*') || stack.last() == Some(&'/') {
-                    print!("{}", stack.pop().unwrap());
-                }
-            }
+            _ => print!("{c}"),
         };
     }
 
