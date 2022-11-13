@@ -2,99 +2,100 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let (a, b) = get_ab(&buf.trim()).unwrap();
+    let s = buf.trim();
+    let s_len = s.len();
 
-    println!("{a} {b}");
-}
+    if s_len <= 2 {
+        let num: i32 = buf.trim().parse().unwrap();
 
-fn get_ab(s: &str) -> Option<(usize, usize)> {
-    let len = s.len();
-
-    if len <= 2 {
-        let num = s.parse().unwrap();
-
-        return match len {
-            1 => Some((num, num)),
+        match s_len {
+            1 => println!("{num} {num}"),
             2 => {
-                let arr: Vec<usize> = s
-                    .chars()
-                    .map(|c| c.to_digit(10).unwrap() as usize)
-                    .collect();
-                let (first, second) = (arr[0], arr[1]);
+                let mut digits = s.chars().map(|c| c.to_digit(10).unwrap());
+                let (a, b) = (digits.next().unwrap(), digits.next().unwrap());
 
-                if second as i32 - first as i32 == 1 {
-                    Some((first, second))
+                if b - a == 1 {
+                    println!("{a} {b}");
                 } else {
-                    Some((num, num))
+                    println!("{num} {num}")
                 }
             }
-            _ => None,
-        };
+            _ => (),
+        }
+
+        return;
     }
 
-    'a_loop: for a_size in 1..=3.min(len) {
-        let a: usize = s[..a_size].parse().unwrap();
+    let (mut a, mut b) = (0, 0);
+    let mut index;
 
-        for i in 1..=(4 - a_size) {
-            let after_a_size = (a + i).to_string().chars().count();
-            let after_a_start = (a..a + i).map(|n| n.to_string().chars().count()).sum();
+    'a_size: for a_len in 1..=3 {
+        a = s[0..a_len].parse().unwrap();
+        index = a_len;
 
-            if after_a_start + after_a_size > len {
-                continue;
+        if a_len == 3 {
+            break;
+        }
+
+        for i in 1..=4 - a_len {
+            let after_a = a + i;
+            let after_a_len = after_a.to_string().len();
+
+            let check: usize = s[index..(index + after_a_len).min(s_len)].parse().unwrap();
+
+            if check != after_a {
+                continue 'a_size;
             }
-            // println!("a: {a} {after_a_start} {}", after_a_start + after_a_size);
-            let after_a: usize = s[after_a_start..after_a_start + after_a_size]
+
+            index += after_a_len;
+
+            if index >= s_len {
+                break;
+            }
+        }
+
+        break;
+    }
+
+    let a_len = a.to_string().len();
+
+    if a_len == s_len {
+        println!("{a} {a}");
+        return;
+    }
+
+    'b_size: for b_len in a_len..=3.min(s_len - a_len) {
+        index = s_len - b_len;
+        b = s[index..index + b_len].parse().unwrap();
+
+        if b < a {
+            continue;
+        }
+        if b_len == 3 {
+            break;
+        }
+
+        for i in 1..=4 - b_len {
+            let before_b = b - i;
+            let before_b_len = before_b.to_string().len();
+
+            let check: usize = s[index.saturating_sub(before_b_len)..index]
                 .parse()
                 .unwrap();
 
-            if after_a != a + i {
-                continue 'a_loop;
-            }
-        }
-
-        if a_size == len {
-            return Some((a, a));
-        }
-
-        'b_loop: for b_size in a_size..=3.min(len - a_size) {
-            let b_start = len - b_size;
-            let b: usize = s[b_start..len].parse().unwrap();
-
-            if b < a {
-                continue;
+            if check != before_b {
+                continue 'b_size;
             }
 
-            for i in 1..=(4 - b_size) {
-                if i > b {
-                    continue 'b_loop;
-                }
-
-                let before_b_size = (b - i).to_string().chars().count();
-                let before_b_start: usize =
-                    (b - i + 1..=b).map(|n| n.to_string().chars().count()).sum();
-                let before_b_start = len as i32 - before_b_start as i32 - before_b_size as i32;
-
-                if before_b_start < 0 {
-                    break;
-                }
-                // println!(
-                //     "b: {b} {before_b_start} {}",
-                //     before_b_start as usize + before_b_size
-                // );
-
-                let before_b: usize = s
-                    [before_b_start as usize..before_b_start as usize + before_b_size]
-                    .parse()
-                    .unwrap();
-
-                if before_b != b - i {
-                    continue 'b_loop;
-                }
+            if index as i32 - (before_b_len as i32) <= 0 {
+                break;
             }
 
-            return Some((a, b));
+            index -= before_b_len;
         }
+
+        break;
     }
 
-    None
+    println!("{a} {b}");
 }
