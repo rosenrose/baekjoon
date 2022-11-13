@@ -17,13 +17,13 @@ fn main() {
             stdout,
             "{}",
             if is_palin {
+                0
+            } else {
                 if is_pseudo_palin {
                     1
                 } else {
-                    0
+                    2
                 }
-            } else {
-                2
             }
         )
         .unwrap();
@@ -52,7 +52,7 @@ fn is_palindrome(word: &str) -> (bool, bool) {
         }
 
         if is_palindrome_recur(&chars[i + 1..=j]) || is_palindrome_recur(&chars[i..=j - 1]) {
-            return (true, true);
+            return (false, true);
         }
 
         return (false, false);
