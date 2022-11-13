@@ -8,8 +8,7 @@ fn main() {
     stdin.read_line(&mut buf).unwrap();
 
     let n: usize = buf.trim().parse().unwrap();
-
-    let result: Vec<String> = print(n);
+    let result = print(n);
 
     writeln!(stdout, "{}", result.join("\n")).unwrap();
 }
