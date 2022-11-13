@@ -13,12 +13,12 @@ const sanatize = (str) => {
 
 const N = parseInt(input.shift());
 
-for (let i = 0; i < N; i++) {
-  const [s1, s2] = input.slice(i * 2, (i + 1) * 2);
+for (let i = 1; i <= N; i++) {
+  console.log(
+    `Data Set ${i}: ${sanatize(input.shift()) === sanatize(input.shift()) ? "equal" : "not equal"}`
+  );
 
-  console.log(`Data Set ${i + 1}: ${sanatize(s1) === sanatize(s2) ? "equal" : "not equal"}`);
-
-  if (i < N - 1) {
+  if (i < N) {
     console.log("");
   }
 }
