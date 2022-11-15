@@ -20,6 +20,7 @@ fn main() {
     for num in a {
         if num > *lis.last().unwrap() {
             lis.push(num);
+            continue;
         }
 
         let pos = match lis.binary_search(&num) {
