@@ -2,7 +2,7 @@ fn main() {
     let mut buf = String::new();
     read_line(&mut buf);
 
-    let s: Vec<_> = buf.trim().chars().collect();
+    let s = buf.trim().to_string();
     read_line(&mut buf);
 
     let t = buf.trim();
@@ -12,8 +12,8 @@ fn main() {
     // let (mut x, mut y) = (0, 0);
 
     for (i, t_char) in t.char_indices() {
-        for j in 0..s.len() {
-            if t_char != s[j] {
+        for (j, s_char) in s.char_indices() {
+            if t_char != s_char {
                 continue;
             }
 
