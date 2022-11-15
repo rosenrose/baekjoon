@@ -22,7 +22,7 @@ fn main() {
         }
     }
 
-    let mut lc_sequence = String::new();
+    let mut lcs = String::new();
     let (mut i, mut j) = (t.len(), s.len());
 
     loop {
@@ -40,17 +40,17 @@ fn main() {
         }
 
         assert_eq!(s[j - 1], t.chars().nth(i - 1).unwrap());
-        lc_sequence.push(s[j - 1]);
+        lcs.push(s[j - 1]);
         i -= 1;
         j -= 1;
     }
 
     println!("{max_len}");
 
-    if !lc_sequence.is_empty() {
-        lc_sequence = lc_sequence.chars().rev().collect();
+    if !lcs.is_empty() {
+        lcs = lcs.chars().rev().collect();
 
-        println!("{lc_sequence}");
+        println!("{lcs}");
     }
 }
 

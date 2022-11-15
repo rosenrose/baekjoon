@@ -22,32 +22,6 @@ fn main() {
         }
     }
 
-    // let mut lc_sequence = String::new();
-    // let (mut i, mut j) = (t.len(), s.len());
-
-    // loop {
-    //     if table[i][j] == 0 {
-    //         break;
-    //     }
-
-    //     if table[i][j] == table[i - 1][j] {
-    //         i -= 1;
-    //         continue;
-    //     }
-    //     if table[i][j] == table[i][j - 1] {
-    //         j -= 1;
-    //         continue;
-    //     }
-
-    //     assert_eq!(s[j - 1], t.chars().nth(i - 1).unwrap());
-    //     lc_sequence.push(s[j - 1]);
-    //     i -= 1;
-    //     j -= 1;
-    // }
-
-    // lc_sequence = lc_sequence.chars().rev().collect();
-    // println!("{lc_sequence}");
-
     println!("{max_len}");
 }
 
