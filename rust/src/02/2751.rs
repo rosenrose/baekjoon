@@ -1,24 +1,18 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 fn main() {
     let (stdin, stdout) = (stdin(), stdout());
     let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut lines = buf.lines();
+    let n: usize = lines.next().unwrap().parse().unwrap();
 
-    let mut arr: Vec<i32> = (0..n)
-        .map(|_| {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
+    let mut arr: Vec<i32> = lines.map(|line| line.parse().unwrap()).collect();
 
-            buf.trim().parse().unwrap()
-        })
-        .collect();
-
-    merge_sort(&mut arr[..], n as usize);
+    merge_sort(&mut arr[..], n);
 
     for num in arr {
         writeln!(stdout, "{num}").unwrap();
@@ -59,7 +53,5 @@ fn merge_sort(arr: &mut [i32], len: usize) {
         }
     }
 
-    for (i, num) in temp.iter().enumerate() {
-        arr[i] = *num;
-    }
+    arr.clone_from_slice(&temp[..]);
 }
