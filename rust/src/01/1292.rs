@@ -4,8 +4,8 @@ struct Sequence {
 }
 
 impl Sequence {
-    fn new() -> Sequence {
-        Sequence { num: 1, counter: 1 }
+    fn new() -> Self {
+        Self { num: 1, counter: 1 }
     }
 }
 
