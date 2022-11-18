@@ -1,7 +1,7 @@
 import subprocess
 from pathlib import Path
 
-base = Path(__file__) / "../../../rust/target/Debug"
+base = Path(__file__) / "../../rust/target/Debug"
 # with open(base / "input.txt", encoding="utf-8") as f:
 save = set()
 
