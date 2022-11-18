@@ -1,3 +1,4 @@
+use std::collections::BinaryHeap;
 use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 struct Heap<T> {
@@ -37,13 +38,13 @@ where
         (left, right)
     }
 
-    fn insert(&mut self, value: T) {
+    fn push(&mut self, value: T) {
         self.tree.push(value);
 
         Self::up_heapify(self, self.tree.len() - 1, value);
     }
 
-    fn remove(&mut self) -> Option<T> {
+    fn pop(&mut self) -> Option<T> {
         if self.tree.is_empty() {
             return None;
         }
@@ -117,16 +118,18 @@ fn main() {
     //     writeln!(stdout, "{num}").unwrap();
     // }
 
-    let mut arr = Heap::new();
-    lines.for_each(|line| arr.insert(line.parse::<i32>().unwrap()));
+    let mut heap = Heap::new();
+    lines.for_each(|line| heap.push(line.parse::<i32>().unwrap()));
 
-    let mut sorted = Vec::new();
+    // let mut heap: BinaryHeap<i32> = lines.map(|line| line.parse().unwrap()).collect();
 
-    while !arr.is_empty() {
-        sorted.push(arr.remove().unwrap());
+    let mut arr = Vec::new();
+
+    while !heap.is_empty() {
+        arr.push(heap.pop().unwrap());
     }
 
-    for num in sorted.iter().rev() {
+    for num in arr.iter().rev() {
         writeln!(stdout, "{num}").unwrap();
     }
 }
