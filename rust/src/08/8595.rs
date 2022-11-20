@@ -1,18 +1,17 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let hidden_nums = buf
-        .trim()
+    let mut lines = buf.lines();
+    lines.next();
+
+    let hidden_nums = lines
+        .next()
+        .unwrap()
         .split(char::is_alphabetic)
-        .filter(|c| !c.is_empty())
-        .map(|s| s.parse::<i64>().unwrap());
+        .filter_map(|s| s.parse::<i64>().ok());
 
     println!("{}", hidden_nums.sum::<i64>());
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }
