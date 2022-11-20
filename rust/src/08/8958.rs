@@ -7,13 +7,20 @@ fn main() {
     for _ in 0..n {
         read_line(&mut buf);
 
-        let group_of_o = buf.trim().split(|c| c == 'X').filter(|c| !c.is_empty());
+        let score: usize = buf
+            .trim()
+            .split(|c| c == 'X')
+            .filter_map(|s| {
+                if s.is_empty() {
+                    None
+                } else {
+                    Some(s.char_indices().map(|(i, _)| i + 1))
+                }
+            })
+            .flatten()
+            .sum();
 
-        let scores = group_of_o.map(|o_str| o_str.char_indices().map(|(i, _)| i + 1));
-
-        let total: usize = scores.flatten().sum();
-
-        println!("{total}");
+        println!("{score}");
     }
 }
 
