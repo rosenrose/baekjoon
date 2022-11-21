@@ -8,8 +8,13 @@ fn main() {
         read_line(&mut buf);
 
         let sum: u32 = ('A'..='Z')
-            .filter(|&c| !buf.contains(c))
-            .map(|c| c as u32)
+            .filter_map(|c| {
+                if buf.contains(c) {
+                    None
+                } else {
+                    Some(c as u32)
+                }
+            })
             .sum();
 
         println!("{sum}");

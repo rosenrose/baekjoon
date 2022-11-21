@@ -7,18 +7,22 @@ fn main() {
 
     let mut split_reversed: Vec<String> = (1..=word.len() - 2)
         .map(|i| word.split_at(i))
-        .filter(|&(first, _)| first.chars().last().unwrap() == most_ahead)
-        .map(|(first, rest)| {
-            (1..=rest.len() - 1).map(move |j| {
-                let (second, third) = rest.split_at(j);
-                [first, second, third]
-            })
+        .filter_map(|(first, rest)| {
+            if first.chars().last().unwrap() == most_ahead {
+                Some((1..=rest.len() - 1).map(move |j| {
+                    let (second, third) = rest.split_at(j);
+                    [first, second, third]
+                }))
+            } else {
+                None
+            }
         })
         .flatten()
         .map(|splitted| {
-            let reversed = splitted.map(|piece| piece.chars().rev().collect::<String>());
-
-            String::from_iter(reversed)
+            splitted
+                .map(|token| token.chars().rev().collect::<String>())
+                .into_iter()
+                .collect()
         })
         .collect();
 

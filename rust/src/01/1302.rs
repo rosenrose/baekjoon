@@ -6,7 +6,7 @@ fn main() {
     let titles = parse_str_vec_lines(&mut buf, n);
 
     let mut max_count = 0;
-    let counts: Vec<(&String, usize)> = titles
+    let counts: Vec<_> = titles
         .iter()
         .map(|title| {
             let count = titles.iter().filter(|&t| t == title).count();
@@ -16,10 +16,15 @@ fn main() {
         })
         .collect();
 
-    let mut best_sellers: Vec<&String> = counts
+    let mut best_sellers: Vec<_> = counts
         .iter()
-        .filter(|(_, count)| *count == max_count)
-        .map(|&(title, _)| title)
+        .filter_map(|&(title, count)| {
+            if count == max_count {
+                Some(title)
+            } else {
+                None
+            }
+        })
         .collect();
 
     best_sellers.sort();

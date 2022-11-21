@@ -14,12 +14,15 @@ fn main() {
 fn get_divisors(num: i32) -> Vec<i32> {
     (1..)
         .take_while(|i| i * i <= num)
-        .filter(|i| num % i == 0)
-        .map(|i| {
-            let mut divisor = vec![i, num / i];
-            divisor.dedup();
+        .filter_map(|i| {
+            if num % i == 0 {
+                let mut divisor = vec![i, num / i];
+                divisor.dedup();
 
-            divisor
+                Some(divisor)
+            } else {
+                None
+            }
         })
         .flatten()
         .collect()

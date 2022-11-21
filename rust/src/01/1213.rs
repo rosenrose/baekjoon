@@ -12,8 +12,7 @@ fn main() {
 
     let odds: Vec<_> = counts
         .iter()
-        .filter(|(_, &c)| c % 2 == 1)
-        .map(|(ch, _)| ch)
+        .filter_map(|(ch, &count)| if count % 2 == 1 { Some(ch) } else { None })
         .collect();
 
     if odds.len() > 1 {

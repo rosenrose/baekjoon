@@ -14,8 +14,7 @@ fn main() {
     let absent = is_submit
         .iter()
         .enumerate()
-        .filter(|(_, &s)| !s)
-        .map(|(num, _)| num + 1);
+        .filter_map(|(num, &s)| if s { None } else { Some(num + 1) });
 
     for num in absent {
         println!("{num}");

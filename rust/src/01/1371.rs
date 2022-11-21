@@ -5,7 +5,7 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut max_count = 0;
-    let counts: Vec<(char, usize)> = ('a'..='z')
+    let counts: Vec<_> = ('a'..='z')
         .map(|letter| {
             let count = buf.matches(letter).count();
             max_count = count.max(max_count);
@@ -14,10 +14,9 @@ fn main() {
         })
         .collect();
 
-    let mut max_counts: Vec<char> = counts
+    let mut max_counts: Vec<_> = counts
         .iter()
-        .filter(|(_, count)| *count == max_count)
-        .map(|&(c, _)| c)
+        .filter_map(|&(ch, count)| if count == max_count { Some(ch) } else { None })
         .collect();
 
     max_counts.sort();

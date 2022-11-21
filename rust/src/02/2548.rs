@@ -27,10 +27,13 @@ fn main() {
         })
         .collect();
 
-    let represents = diff_sums
-        .iter()
-        .filter(|(_, diff)| *diff == min_diff_sum)
-        .map(|(num, _)| num);
+    let represents = diff_sums.iter().filter_map(|&(num, diff)| {
+        if diff == min_diff_sum {
+            Some(num)
+        } else {
+            None
+        }
+    });
 
     let represent = represents.min().unwrap();
 

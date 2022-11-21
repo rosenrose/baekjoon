@@ -10,7 +10,7 @@ fn main() {
     let k: i32 = buf.trim().parse().unwrap();
     let mut direction_counts = [0; 5];
 
-    let mut sides: Vec<Side> = (0..6)
+    let mut sides: Vec<_> = (0..6)
         .map(|_| {
             read_line(&mut buf);
             let nums = parse_int_vec(&buf);
@@ -24,11 +24,10 @@ fn main() {
         })
         .collect();
 
-    let mut outers: Vec<usize> = direction_counts
+    let mut outers: Vec<_> = direction_counts
         .iter()
         .enumerate()
-        .filter(|(_, &c)| c == 1)
-        .map(|(d, _)| d)
+        .filter_map(|(d, &c)| if c == 1 { Some(d) } else { None })
         .collect();
 
     outers.sort();
