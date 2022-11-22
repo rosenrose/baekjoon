@@ -1,4 +1,3 @@
-use std::collections::VecDeque;
 use std::io::{stdin, stdout, BufRead, BufWriter, Write};
 
 fn main() {
@@ -12,50 +11,39 @@ fn main() {
 
     let fibo_num = fibo(n);
 
-    for i in fibo_num {
+    for i in fibo_num.iter().rev() {
         write!(stdout, "{i}").unwrap();
     }
 }
 
-fn fibo(n: i32) -> VecDeque<i32> {
+fn fibo(n: i32) -> Vec<i32> {
     if n <= 1 {
-        return VecDeque::from([n]);
+        return Vec::from([n]);
     }
 
-    let (mut a, mut b) = (VecDeque::from([1]), VecDeque::from([1]));
+    let (mut a, mut b) = (Vec::from([1]), Vec::from([1]));
 
     for _ in 2..n {
-        let next = add_by_array(&mut a, &mut b);
+        let next = add(&mut a, &mut b);
         (a, b) = (b, next);
     }
 
     b
 }
 
-fn add_by_array(a: &mut VecDeque<i32>, b: &mut VecDeque<i32>) -> VecDeque<i32> {
-    let longer = a.len().max(b.len());
+fn add(a: &mut Vec<i32>, b: &mut Vec<i32>) -> Vec<i32> {
+    let mut carry = 0;
+    let mut sum: Vec<_> = (0..a.len().max(b.len()))
+        .map(|i| {
+            let temp = carry + a.get(i).unwrap_or(&0) + b.get(i).unwrap_or(&0);
+            carry = temp / 10;
 
-    while a.len() < longer {
-        a.push_front(0);
-    }
-    while b.len() < longer {
-        b.push_front(0);
-    }
+            temp % 10
+        })
+        .collect();
 
-    let mut sum: VecDeque<i32> = a.iter().zip(b.iter()).map(|(a, b)| a + b).collect();
-
-    for i in (1..longer).rev() {
-        if sum[i] < 10 {
-            continue;
-        }
-
-        sum[i - 1] += sum[i] / 10;
-        sum[i] %= 10;
-    }
-
-    while sum[0] >= 10 {
-        sum.push_front(sum[0] / 10);
-        sum[1] %= 10;
+    if carry > 0 {
+        sum.push(carry);
     }
 
     sum
