@@ -1,115 +1,136 @@
 #include <iostream>
-#include <deque>
+#include <vector>
+#include <complex>
 
 using namespace std;
+const double PI = acos(-1);
+typedef complex<double> cpx;
 
-deque<int> addByArray(deque<int>& A, deque<int>& B);
-deque<int> multiplyByArray(deque<int>& A, deque<int>& B);
-bool isZero(deque<int>& arr);
+vector<int> multiply(vector<cpx>& f, vector<cpx>& g);
+void print(vector<int>& arr);
 
 int main()
 {
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios_base::sync_with_stdio(false);
+
     string str;
-    deque<int> A, B;
+    vector<cpx> f, g;
 
     cin >> str;
-    for (char c : str) {
-        A.push_back(c - '0');
+    for (int i = (int)str.size() - 1; i >= 0; i--) {
+        f.push_back(cpx(str[i] - '0', 0));
     }
 
     cin >> str;
-    for (char c : str) {
-        B.push_back(c - '0');
+    for (int i = (int)str.size() - 1; i >= 0; i--) {
+        g.push_back(cpx(str[i] - '0', 0));
     }
 
-    deque<int> result = multiplyByArray(A, B);
+    vector<int> result = multiply(f, g);
 
-    if (isZero(result)) {
-        cout << 0;
-    }
-    else {
-        for (int c : result) {
-            cout << c;
-        }
-    }
-
-    cout << endl;
+    print(result);
 
     return 0;
 }
 
-bool isZero(deque<int>& arr) {
-    bool is_zero = true;
+void print(vector<int>& arr) {
+    for (int i = (int)arr.size() - 1; i >= 0; i--) {
+        cout << arr[i];
+    }
+}
 
-    for (size_t i = 0; i < arr.size(); i++) {
-        if (arr[i] != 0) {
-            return false;
+void fast_fourier_transform(vector<cpx>& v, bool is_inverse) {
+    size_t len = v.size();
+
+    for (size_t i = 1, j = 0; i < len; i++) {
+        size_t bit = len / 2;
+
+        while (j >= bit) {
+            j -= bit;
+            bit /= 2;
+        }
+
+        j += bit;
+
+        if (i < j) {
+            swap(v[i], v[j]);
         }
     }
 
-    return is_zero;
-}
+    for (size_t k = 1; k < len; k *= 2) {
+        double angle = is_inverse ? PI / k : -PI / k;
+        cpx direction(cos(angle), sin(angle));
 
-deque<int> flatten(deque<int>& arr) {
-    for (size_t i = arr.size() - 1; i > 0; i--) {
-        if (arr[i] < 10) {
-            continue;
+        for (size_t i = 0; i < len; i += k * 2) {
+            cpx unit(1, 0);
+
+            for (size_t j = 0; j < k; j++) {
+                cpx even = v[i + j];
+                cpx odd = v[i + j + k] * unit;
+
+                v[i + j] = even + odd;
+                v[i + j + k] = even - odd;
+
+                unit *= direction;
+            }
         }
-
-        arr[i - 1] += arr[i] / 10;
-        arr[i] %= 10;
     }
 
-    while (arr[0] >= 10) {
-        arr.push_front(arr[0] / 10);
-        arr[1] %= 10;
+    if (is_inverse) {
+        for (size_t i = 0; i < len; i++) {
+            v[i] /= cpx((double)len, 0);
+        }
     }
-
-    return arr;
 }
 
-deque<int> addByArray(deque<int>& A, deque<int>& B) {
-    deque<int> sum;
-    size_t longer = max(A.size(), B.size());
+vector<int> flatten(vector<cpx>& v) {
+    size_t len = v.size();
+    vector<int> result(len);
+    int carry = 0;
 
-    while (A.size() < longer) {
-        A.push_front(0);
-    }
-    while (B.size() < longer) {
-        B.push_front(0);
+    for (size_t i = 0; i < len; i++) {
+        result[i] = carry + (int)round(v[i].real());
+
+        carry = result[i] / 10;
+
+        if (result[i] >= 10) {
+            result[i] %= 10;
+        }
     }
 
-    for (size_t i = 0; i < longer; i++) {
-        sum.push_back(A[i] + B[i]);
+    if (carry > 0) {
+        result.push_back(carry);
     }
 
-    return flatten(sum);
+    while (result.size() > 1 && result.back() == 0) {
+        result.pop_back();
+    }
+
+    return result;
 }
 
-deque<int> multiplyByArray(deque<int>& A, int B, int radix) {
-    deque<int> result;
+vector<int> multiply(vector<cpx>& f, vector<cpx>& g) {
+    size_t len = 2;
 
-    for (size_t i = 0; i < A.size(); i++) {
-        result.push_back(A[i] * B);
+    while (len < f.size() + g.size()) {
+        len *= 2;
     }
 
-    for (int i = 0; i < radix - 1; i++) {
-        result.push_back(0);
+    f.resize(len);
+    g.resize(len);
+
+    fast_fourier_transform(f, false);
+    fast_fourier_transform(g, false);
+
+    vector<cpx> w(len);
+
+    for (size_t i = 0; i < w.size(); i++) {
+        w[i] = f[i] * g[i];
     }
 
-    return flatten(result);
-}
+    fast_fourier_transform(w, true);
 
-deque<int> multiplyByArray(deque<int>& A, deque<int>& B) {
-    int radix = 1;
-    deque<int> sum = { 0 };
-
-    for (int i = (int)B.size() - 1; i >= 0; i--) {
-        deque<int> multiply = multiplyByArray(A, B[i], radix);
-
-        sum = addByArray(sum, multiply);
-        radix += 1;
-    }
-
-    return flatten(sum);
+    return flatten(w);
 }
