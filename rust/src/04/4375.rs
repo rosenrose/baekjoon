@@ -11,8 +11,8 @@ fn main() {
         let mut count = 1;
 
         while remainder != 0 {
-            exp_remainder = (exp_remainder % n * 10 % n) % n;
-            remainder = (exp_remainder % n + remainder % n) % n;
+            exp_remainder = ((exp_remainder % n) * (10 % n)) % n;
+            remainder = ((remainder % n) + (exp_remainder % n)) % n;
 
             count += 1;
         }
