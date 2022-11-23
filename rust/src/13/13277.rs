@@ -103,7 +103,7 @@ fn multiply(a: &mut Vec<Complex>, b: &mut Vec<Complex>) -> Vec<u32> {
 
     fast_fourier_transform(&mut result, true);
 
-    flatten(result)
+    normalize(result)
 }
 
 fn fast_fourier_transform(v: &mut Vec<Complex>, is_inverse: bool) {
@@ -161,7 +161,7 @@ fn fast_fourier_transform(v: &mut Vec<Complex>, is_inverse: bool) {
     }
 }
 
-fn flatten(v: Vec<Complex>) -> Vec<u32> {
+fn normalize(v: Vec<Complex>) -> Vec<u32> {
     let mut carry = 0;
     let mut result: Vec<_> = v
         .iter()

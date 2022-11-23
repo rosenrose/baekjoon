@@ -6,8 +6,9 @@ fn main() {
     let most_ahead = word.chars().min().unwrap();
 
     let mut split_reversed: Vec<String> = (1..=word.len() - 2)
-        .map(|i| word.split_at(i))
-        .filter_map(|(first, rest)| {
+        .filter_map(|i| {
+            let (first, rest) = word.split_at(i);
+
             if first.chars().last().unwrap() == most_ahead {
                 Some((1..=rest.len() - 1).map(move |j| {
                     let (second, third) = rest.split_at(j);

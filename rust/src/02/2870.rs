@@ -4,7 +4,7 @@ fn main() {
 
     let n: i32 = buf.trim().parse().unwrap();
     let mut nums: Vec<String> = (0..n)
-        .map(|_| {
+        .flat_map(|_| {
             read_line(&mut buf);
 
             buf.trim()
@@ -30,7 +30,6 @@ fn main() {
                 })
                 .collect::<Vec<_>>()
         })
-        .flatten()
         .collect();
 
     nums.sort_by(|a, b| {

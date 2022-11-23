@@ -8,8 +8,7 @@ fn main() {
 
     let mut seats: String = seats
         .split_inclusive("LL")
-        .map(|s| s.split_inclusive('S'))
-        .flatten()
+        .flat_map(|s| s.split_inclusive('S'))
         .map(|s| format!("*{s}"))
         .collect();
 
