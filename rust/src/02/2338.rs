@@ -1,4 +1,5 @@
 use std::collections::VecDeque;
+use std::fmt;
 const BILLION_SQUARE: i128 = 1_000_000_000_000_000_000;
 
 struct BigInt {
@@ -7,11 +8,18 @@ struct BigInt {
 }
 
 impl BigInt {
-    fn new(abs: VecDeque<i64>, sign: i8) -> Self {
+    fn new() -> Self {
+        Self {
+            abs: VecDeque::from([0]),
+            sign: 1,
+        }
+    }
+
+    fn from(abs: VecDeque<i64>, sign: i8) -> Self {
         Self { abs, sign }
     }
 
-    fn from(input: &str) -> Self {
+    fn parse(input: &str) -> Self {
         let mut abs = VecDeque::new();
         let mut sign = 1;
 
@@ -43,34 +51,38 @@ impl BigInt {
     }
 }
 
+impl fmt::Display for BigInt {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut buf = String::new();
+
+        if self.sign == -1 {
+            buf.push('-');
+        }
+
+        self.abs.iter().rev().enumerate().for_each(|(i, num)| {
+            buf.push_str(&if i == 0 {
+                num.to_string()
+            } else {
+                format!("{num:018}")
+            });
+        });
+
+        write!(f, "{buf}")
+    }
+}
+
 fn main() {
     let mut buf = String::new();
     read_line(&mut buf);
 
-    let a = BigInt::from(buf.trim());
+    let a = BigInt::parse(buf.trim());
     read_line(&mut buf);
 
-    let b = BigInt::from(buf.trim());
+    let b = BigInt::parse(buf.trim());
 
-    print(&add(&a, &b));
-    println!("");
-    print(&sub(&a, &b));
-    println!("");
-    print(&karatsuba_multiply(&a, &b));
-}
-
-fn print(bigint: &BigInt) {
-    if bigint.sign == -1 {
-        print!("-");
-    }
-
-    bigint.abs.iter().rev().enumerate().for_each(|(i, num)| {
-        if i == 0 {
-            print!("{num}");
-        } else {
-            print!("{num:018}");
-        }
-    })
+    println!("{}", add(&a, &b));
+    println!("{}", sub(&a, &b));
+    println!("{}", karatsuba_multiply(&a, &b));
 }
 
 fn karatsuba_multiply(a: &BigInt, b: &BigInt) -> BigInt {
@@ -81,7 +93,7 @@ fn karatsuba_multiply(a: &BigInt, b: &BigInt) -> BigInt {
     let is_zero = |bigint: &BigInt| bigint.abs.iter().all(|&i| i == 0);
 
     if is_zero(a) || is_zero(b) {
-        return BigInt::new(VecDeque::from([0]), 1);
+        return BigInt::new();
     }
     if a.len() == 1 && b.len() == 1 {
         return multiply(a, b);
@@ -90,26 +102,20 @@ fn karatsuba_multiply(a: &BigInt, b: &BigInt) -> BigInt {
     let m = a.len().max(b.len()) / 2;
     let mut half = m.min(a.len());
 
-    let y = BigInt::new(a.abs.range(0..half).copied().collect(), 1);
-    let x = BigInt::new(
-        if half < a.len() {
-            a.abs.range(half..).copied().collect()
-        } else {
-            VecDeque::from([0])
-        },
-        1,
-    );
+    let y = BigInt::from(a.abs.range(0..half).copied().collect(), 1);
+    let x = if half < a.len() {
+        BigInt::from(a.abs.range(half..).copied().collect(), 1)
+    } else {
+        BigInt::new()
+    };
 
     half = m.min(b.len());
-    let z = BigInt::new(b.abs.range(0..half).copied().collect(), 1);
-    let w = BigInt::new(
-        if half < b.len() {
-            b.abs.range(half..).copied().collect()
-        } else {
-            VecDeque::from([0])
-        },
-        1,
-    );
+    let z = BigInt::from(b.abs.range(0..half).copied().collect(), 1);
+    let w = if half < b.len() {
+        BigInt::from(b.abs.range(half..).copied().collect(), 1)
+    } else {
+        BigInt::new()
+    };
 
     let mut xw = karatsuba_multiply(&x, &w);
     let yz = karatsuba_multiply(&y, &z);
@@ -127,7 +133,7 @@ fn karatsuba_multiply(a: &BigInt, b: &BigInt) -> BigInt {
         }
     }
 
-    BigInt::new(add(&add(&xw, &xz_plus_yw), &yz).abs, a.sign * b.sign)
+    BigInt::from(add(&add(&xw, &xz_plus_yw), &yz).abs, a.sign * b.sign)
 }
 
 fn multiply(a: &BigInt, b: &BigInt) -> BigInt {
@@ -143,15 +149,15 @@ fn multiply(a: &BigInt, b: &BigInt) -> BigInt {
         carry /= BILLION_SQUARE;
     }
 
-    BigInt::new(mul, a.sign * b.sign)
+    BigInt::from(mul, a.sign * b.sign)
 }
 
 fn add(a: &BigInt, b: &BigInt) -> BigInt {
     if a.sign * b.sign == -1 {
         return if a.sign == 1 {
-            sub(a, &BigInt::new(b.abs.clone(), 1))
+            sub(a, &BigInt::from(b.abs.clone(), 1))
         } else {
-            sub(b, &BigInt::new(a.abs.clone(), 1))
+            sub(b, &BigInt::from(a.abs.clone(), 1))
         };
     }
 
@@ -170,15 +176,15 @@ fn add(a: &BigInt, b: &BigInt) -> BigInt {
         sum.push_back(carry as i64);
     }
 
-    BigInt::new(sum, a.sign)
+    BigInt::from(sum, a.sign)
 }
 
 fn sub(a: &BigInt, b: &BigInt) -> BigInt {
     if a.sign * b.sign == -1 {
         return if a.sign == 1 {
-            add(a, &BigInt::new(b.abs.clone(), 1))
+            add(a, &BigInt::from(b.abs.clone(), 1))
         } else {
-            let mut result = add(b, &BigInt::new(a.abs.clone(), 1));
+            let mut result = add(b, &BigInt::from(a.abs.clone(), 1));
             result.sign = -1;
 
             result
@@ -211,7 +217,7 @@ fn sub(a: &BigInt, b: &BigInt) -> BigInt {
         diff.pop_back();
     }
 
-    let mut result = BigInt::new(diff, a.sign);
+    let mut result = BigInt::from(diff, a.sign);
 
     if result.len() == 1 && result.abs[0] == 0 {
         result.sign = 1;

@@ -8,7 +8,7 @@ struct Fraction {
 }
 
 impl Fraction {
-    fn new(numerator: i64, denominator: i64) -> Self {
+    fn from(numerator: i64, denominator: i64) -> Self {
         Self {
             numerator,
             denominator,
@@ -26,10 +26,7 @@ impl AddAssign for Fraction {
 
         let gcd = get_gcd(numerator, denominator);
 
-        *self = Self {
-            numerator: numerator / gcd,
-            denominator: denominator / gcd,
-        }
+        *self = Self::from(numerator / gcd, denominator / gcd);
     }
 }
 
@@ -45,7 +42,7 @@ fn main() {
 
     for line in buf.lines() {
         let mut number = line.split('.');
-        let integer = Fraction::new(number.next().unwrap().parse().unwrap(), 1);
+        let integer = Fraction::from(number.next().unwrap().parse().unwrap(), 1);
         let decimal = number.next().unwrap();
 
         let mut tokens = decimal.split(['(', ')']);
@@ -55,10 +52,10 @@ fn main() {
         let mut fraction = integer;
 
         for (i, c) in non_repeat.char_indices() {
-            fraction += Fraction::new(c.to_digit(10).unwrap() as i64, 10_i64.pow(i as u32 + 1));
+            fraction += Fraction::from(c.to_digit(10).unwrap() as i64, 10_i64.pow(i as u32 + 1));
         }
 
-        fraction += Fraction::new(
+        fraction += Fraction::from(
             repeating.parse().unwrap(),
             format!(
                 "{}{}",

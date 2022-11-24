@@ -1,3 +1,4 @@
+use std::fmt;
 const BILLION_SQUARE: i128 = 1_000_000_000_000_000_000;
 
 struct BigInt {
@@ -6,11 +7,11 @@ struct BigInt {
 }
 
 impl BigInt {
-    fn new(abs: Vec<i64>, sign: i8) -> Self {
+    fn from(abs: Vec<i64>, sign: i8) -> Self {
         Self { abs, sign }
     }
 
-    fn from(input: &str) -> Self {
+    fn parse(input: &str) -> Self {
         let mut abs = Vec::new();
         let mut sign = 1;
 
@@ -42,37 +43,43 @@ impl BigInt {
     }
 }
 
+impl fmt::Display for BigInt {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut buf = String::new();
+
+        if self.sign == -1 {
+            buf.push('-');
+        }
+
+        self.abs.iter().rev().enumerate().for_each(|(i, num)| {
+            buf.push_str(&if i == 0 {
+                num.to_string()
+            } else {
+                format!("{num:018}")
+            });
+        });
+
+        write!(f, "{buf}")
+    }
+}
+
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let mut nums = buf.split_whitespace();
-    let a = BigInt::from(nums.next().unwrap());
-    let b = BigInt::from(nums.next().unwrap());
+    let a = BigInt::parse(nums.next().unwrap());
+    let b = BigInt::parse(nums.next().unwrap());
 
-    print(&add(&a, &b));
-}
-
-fn print(bigint: &BigInt) {
-    if bigint.sign == -1 {
-        print!("-");
-    }
-
-    bigint.abs.iter().rev().enumerate().for_each(|(i, num)| {
-        if i == 0 {
-            print!("{num}");
-        } else {
-            print!("{num:018}");
-        }
-    })
+    println!("{}", add(&a, &b));
 }
 
 fn add(a: &BigInt, b: &BigInt) -> BigInt {
     if a.sign * b.sign == -1 {
         return if a.sign == 1 {
-            sub(a, &BigInt::new(b.abs.clone(), 1))
+            sub(a, &BigInt::from(b.abs.clone(), 1))
         } else {
-            sub(b, &BigInt::new(a.abs.clone(), 1))
+            sub(b, &BigInt::from(a.abs.clone(), 1))
         };
     }
 
@@ -91,15 +98,15 @@ fn add(a: &BigInt, b: &BigInt) -> BigInt {
         sum.push(carry as i64);
     }
 
-    BigInt::new(sum, a.sign)
+    BigInt::from(sum, a.sign)
 }
 
 fn sub(a: &BigInt, b: &BigInt) -> BigInt {
     if a.sign * b.sign == -1 {
         return if a.sign == 1 {
-            add(a, &BigInt::new(b.abs.clone(), 1))
+            add(a, &BigInt::from(b.abs.clone(), 1))
         } else {
-            let mut result = add(b, &BigInt::new(a.abs.clone(), 1));
+            let mut result = add(b, &BigInt::from(a.abs.clone(), 1));
             result.sign = -1;
 
             result
@@ -132,7 +139,7 @@ fn sub(a: &BigInt, b: &BigInt) -> BigInt {
         diff.pop();
     }
 
-    let mut result = BigInt::new(diff, a.sign);
+    let mut result = BigInt::from(diff, a.sign);
 
     if result.len() == 1 && result.abs[0] == 0 {
         result.sign = 1;
