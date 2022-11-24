@@ -61,10 +61,9 @@ fn print(bigint: &BigInt) {
     bigint.abs.iter().rev().enumerate().for_each(|(i, num)| {
         if i == 0 {
             print!("{num}");
-            return;
+        } else {
+            print!("{num:018}");
         }
-
-        print!("{num:018}");
     })
 }
 
