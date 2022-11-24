@@ -1,33 +1,85 @@
+use std::fmt;
+use std::ops::{Add, Div, Mul, Sub};
+
+#[derive(Copy, Clone)]
+struct Real {
+    a: i64,
+    b: i64,
+    c: i64,
+    d: i64,
+}
+
+impl Real {
+    fn from(args: Vec<i64>) -> Self {
+        let (a, b, c, d) = (args[0], args[1], args[2], args[3]);
+        Self { a, b, c, d }
+    }
+}
+impl Add for Real {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        Self::from(normalize(
+            self.a * other.a,
+            other.a * self.b + self.a * other.b,
+            other.a * self.c + self.a * other.c,
+            self.d,
+        ))
+    }
+}
+impl Sub for Real {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        Self::from(normalize(
+            self.a * other.a,
+            other.a * self.b - self.a * other.b,
+            other.a * self.c - self.a * other.c,
+            self.d,
+        ))
+    }
+}
+impl Mul for Real {
+    type Output = Self;
+
+    fn mul(self, other: Self) -> Self {
+        Self::from(normalize(
+            self.a * other.a,
+            self.b * other.b + self.c * other.c * self.d,
+            other.b * self.c + self.b * other.c,
+            self.d,
+        ))
+    }
+}
+impl Div for Real {
+    type Output = Self;
+
+    fn div(self, other: Self) -> Self {
+        Self::from(normalize(
+            self.a * (other.b.pow(2) - other.c.pow(2) * self.d),
+            other.a * (self.b * other.b - self.c * other.c * self.d),
+            other.a * (other.b * self.c - self.b * other.c),
+            self.d,
+        ))
+    }
+}
+
+impl fmt::Display for Real {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{} {} {} {}", self.a, self.b, self.c, self.d)
+    }
+}
+
 fn main() {
     let mut buf = String::new();
     read_line(&mut buf);
 
-    let a = parse_int_vec(&buf);
+    let a = Real::from(parse_int_vec(&buf));
     read_line(&mut buf);
 
-    let b = parse_int_vec(&buf);
+    let b = Real::from(parse_int_vec(&buf));
 
-    if let [a1, b1, c1, d, a2, b2, c2, _] = [a, b].concat()[..] {
-        let a1a2 = a1 * a2;
-        let (a2b1, a1b2, a2c1, a1c2) = (a2 * b1, a1 * b2, a2 * c1, a1 * c2);
-        let (b1b2, c1c2d, b2c1, b1c2) = (b1 * b2, c1 * c2 * d, b2 * c1, b1 * c2);
-
-        println!(
-            "{}\n{}\n{}\n{}",
-            vec_join(&normalize(a1a2, a2b1 + a1b2, a2c1 + a1c2, d), " "),
-            vec_join(&normalize(a1a2, a2b1 - a1b2, a2c1 - a1c2, d), " "),
-            vec_join(&normalize(a1a2, b1b2 + c1c2d, b2c1 + b1c2, d), " "),
-            vec_join(
-                &normalize(
-                    a1 * (b2 * b2 - c2 * c2 * d),
-                    a2 * (b1b2 - c1c2d),
-                    a2 * (b2c1 - b1c2),
-                    d
-                ),
-                " "
-            )
-        );
-    }
+    println!("{}\n{}\n{}\n{}", a + b, a - b, a * b, a / b);
 }
 
 fn normalize(mut a: i64, mut b: i64, mut c: i64, mut d: i64) -> Vec<i64> {
@@ -71,14 +123,4 @@ fn read_line(buf: &mut String) {
 
 fn parse_int_vec(buf: &String) -> Vec<i64> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
-}
-
-fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String
-where
-    T: ToString,
-{
-    vec.iter()
-        .map(ToString::to_string)
-        .collect::<Vec<String>>()
-        .join(seperator)
 }
