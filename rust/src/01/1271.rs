@@ -44,8 +44,8 @@ fn divide(a: &VecDeque<i8>, b: &VecDeque<i8>) -> (VecDeque<i8>, VecDeque<i8>) {
     let mut divisor_multiples = vec![b.clone()];
 
     for _ in 0..8 {
-        let multiple = divisor_multiples.last().unwrap();
-        divisor_multiples.push(add(multiple, &b));
+        let multiple = divisor_multiples.last().unwrap().clone();
+        divisor_multiples.push(add(&multiple, &b));
     }
 
     let (mut dividend, mut quotient) = (VecDeque::new(), VecDeque::new());
