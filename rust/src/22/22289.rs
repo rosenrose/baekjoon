@@ -41,20 +41,20 @@ impl Mul for Complex {
 
 impl MulAssign for Complex {
     fn mul_assign(&mut self, other: Self) {
-        (self.re, self.im) = (
-            self.re * other.re - self.im * other.im,
-            self.re * other.im + self.im * other.re,
-        );
+        *self = Self {
+            re: self.re * other.re - self.im * other.im,
+            im: self.re * other.im + self.im * other.re,
+        };
     }
 }
 impl DivAssign for Complex {
     fn div_assign(&mut self, other: Self) {
         let denominator = other.re.powi(2) + other.im.powi(2);
 
-        (self.re, self.im) = (
-            (self.re * other.re + self.im * other.im) / denominator,
-            (self.im * other.re - self.re * other.im) / denominator,
-        );
+        *self = Self {
+            re: (self.re * other.re + self.im * other.im) / denominator,
+            im: (self.im * other.re - self.re * other.im) / denominator,
+        };
     }
 }
 
