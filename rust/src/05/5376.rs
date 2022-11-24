@@ -75,7 +75,6 @@ fn main() {
 }
 
 fn get_lcm(a: i128, b: i128) -> i128 {
-    println!("{}", a * b);
     (a * b) / get_gcd(a, b)
 }
 
