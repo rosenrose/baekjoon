@@ -45,21 +45,19 @@ impl BigInt {
 
 impl fmt::Display for BigInt {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut buf = String::new();
-
         if self.sign == -1 {
-            buf.push('-');
+            write!(f, "-").unwrap();
         }
 
         self.abs.iter().rev().enumerate().for_each(|(i, num)| {
-            buf.push_str(&if i == 0 {
-                num.to_string()
+            if i == 0 {
+                write!(f, "{num}").unwrap();
             } else {
-                format!("{num:018}")
-            });
+                write!(f, "{num:018}").unwrap();
+            }
         });
 
-        write!(f, "{buf}")
+        write!(f, "")
     }
 }
 
