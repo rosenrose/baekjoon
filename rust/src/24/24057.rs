@@ -10,9 +10,15 @@ struct Real {
 }
 
 impl Real {
-    fn from(args: Vec<i64>) -> Self {
-        let (a, b, c, d) = (args[0], args[1], args[2], args[3]);
+    fn from(a: i64, b: i64, c: i64, d: i64) -> Self {
         Self { a, b, c, d }
+    }
+
+    fn parse(input: &str) -> Self {
+        match parse_int_vec(input)[..] {
+            [a, b, c, d] => Self::from(a, b, c, d),
+            _ => Self::from(1, 0, 0, 0),
+        }
     }
 
     fn normalized(self) -> Self {
@@ -97,10 +103,10 @@ fn main() {
     let mut buf = String::new();
     read_line(&mut buf);
 
-    let a = Real::from(parse_int_vec(&buf));
+    let a = Real::parse(buf.trim());
     read_line(&mut buf);
 
-    let b = Real::from(parse_int_vec(&buf));
+    let b = Real::parse(buf.trim());
 
     println!("{}\n{}\n{}\n{}", a + b, a - b, a * b, a / b);
 }
@@ -124,6 +130,6 @@ fn read_line(buf: &mut String) {
     std::io::stdin().read_line(buf).unwrap();
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i64> {
+fn parse_int_vec(buf: &str) -> Vec<i64> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

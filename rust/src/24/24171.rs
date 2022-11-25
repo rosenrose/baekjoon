@@ -10,8 +10,7 @@ struct Real {
 }
 
 impl Real {
-    fn from(args: &[i64]) -> Self {
-        let (a, b, c, d) = (args[0], args[1], args[2], args[3]);
+    fn from(a: i64, b: i64, c: i64, d: i64) -> Self {
         Self { a, b, c, d }
     }
 
@@ -90,10 +89,16 @@ struct Complex {
 }
 
 impl Complex {
-    fn from(args: Vec<i64>) -> Self {
-        Self {
-            re: Real::from(&args[..4]),
-            im: Real::from(&args[4..]),
+    fn from(re: Real, im: Real) -> Self {
+        Self { re, im }
+    }
+
+    fn parse(input: &str) -> Self {
+        match parse_int_vec(input)[..] {
+            [a0, b0, c0, d0, a1, b1, c1, d1] => {
+                Self::from(Real::from(a0, b0, c0, d0), Real::from(a1, b1, c1, d1))
+            }
+            _ => Self::from(Real::from(1, 0, 0, 0), Real::from(1, 0, 0, 0)),
         }
     }
 }
@@ -155,10 +160,10 @@ fn main() {
     let mut buf = String::new();
     read_line(&mut buf);
 
-    let a = Complex::from(parse_int_vec(&buf));
+    let a = Complex::parse(buf.trim());
     read_line(&mut buf);
 
-    let b = Complex::from(parse_int_vec(&buf));
+    let b = Complex::parse(buf.trim());
 
     println!("{}\n{}\n{}\n{}", a + b, a - b, a * b, a / b);
 }
@@ -182,6 +187,6 @@ fn read_line(buf: &mut String) {
     std::io::stdin().read_line(buf).unwrap();
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i64> {
+fn parse_int_vec(buf: &str) -> Vec<i64> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
