@@ -38,13 +38,9 @@ impl Mul for Complex {
         }
     }
 }
-
 impl MulAssign for Complex {
     fn mul_assign(&mut self, other: Self) {
-        *self = Self {
-            re: self.re * other.re - self.im * other.im,
-            im: self.re * other.im + self.im * other.re,
-        };
+        *self = Self::mul(*self, other);
     }
 }
 impl DivAssign for Complex {
