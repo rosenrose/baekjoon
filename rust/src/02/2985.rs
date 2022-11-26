@@ -6,11 +6,11 @@ fn main() {
         [a, b, c] if a + b == c => println!("{a}+{b}={c}"),
         [a, b, c] if a - b == c => println!("{a}-{b}={c}"),
         [a, b, c] if a * b == c => println!("{a}*{b}={c}"),
-        [a, b, c] if ((a as f64 / b as f64) - c as f64).abs() < 1e-10 => println!("{a}/{b}={c}"),
+        [a, b, c] if a / b == c && a % b == 0 => println!("{a}/{b}={c}"),
         [a, b, c] if a == b + c => println!("{a}={b}+{c}"),
         [a, b, c] if a == b - c => println!("{a}={b}-{c}"),
         [a, b, c] if a == b * c => println!("{a}={b}*{c}"),
-        [a, b, c] if (a as f64 - (b as f64 / c as f64)).abs() < 1e-10 => println!("{a}={b}/{c}"),
+        [a, b, c] if a == b / c && b % c == 0 => println!("{a}={b}/{c}"),
         _ => (),
     }
 }
