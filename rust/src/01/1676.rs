@@ -5,19 +5,17 @@ fn main() {
     let n: i32 = buf.trim().parse().unwrap();
     let (mut count_2, mut count_5) = (0, 0);
 
-    (2..=n).step_by(2).for_each(|mut i| {
-        while i % 2 == 0 {
-            i /= 2;
-            count_2 += 1;
-        }
-    });
+    let mut exp = 2;
+    while exp <= n {
+        count_2 += n / exp;
+        exp *= 2;
+    }
 
-    (5..=n).step_by(5).for_each(|mut i| {
-        while i % 5 == 0 {
-            i /= 5;
-            count_5 += 1;
-        }
-    });
+    exp = 5;
+    while exp <= n {
+        count_5 += n / exp;
+        exp *= 5;
+    }
 
     println!("{}", count_2.min(count_5));
 }
