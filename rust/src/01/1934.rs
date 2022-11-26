@@ -8,7 +8,7 @@ fn main() {
         read_line(&mut buf);
 
         if let [a, b] = parse_int_vec(&buf)[..] {
-            println!("{}", (a * b) / get_gcd(a, b));
+            println!("{}", a / get_gcd(a, b) * b);
         }
     }
 }

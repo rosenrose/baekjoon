@@ -15,7 +15,7 @@ fn main() {
 
         if let [a, b] = parse_int_vec(&buf)[..] {
             let gcd = get_gcd(a, b);
-            let lcm = (a * b) / gcd;
+            let lcm = a / gcd * b;
 
             writeln!(stdout, "{lcm} {gcd}").unwrap();
         }

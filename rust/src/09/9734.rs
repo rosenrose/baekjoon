@@ -3,12 +3,12 @@ use std::io::{stdin, Read};
 use std::ops::AddAssign;
 
 struct Fraction {
-    numerator: i64,
-    denominator: i64,
+    numerator: i32,
+    denominator: i32,
 }
 
 impl Fraction {
-    fn from(numerator: i64, denominator: i64) -> Self {
+    fn from(numerator: i32, denominator: i32) -> Self {
         Self {
             numerator,
             denominator,
@@ -52,7 +52,7 @@ fn main() {
         let mut fraction = integer;
 
         for (i, c) in non_repeat.char_indices() {
-            fraction += Fraction::from(c.to_digit(10).unwrap() as i64, 10_i64.pow(i as u32 + 1));
+            fraction += Fraction::from(c.to_digit(10).unwrap() as i32, 10_i32.pow(i as u32 + 1));
         }
 
         fraction += Fraction::from(
@@ -70,11 +70,11 @@ fn main() {
     }
 }
 
-fn get_lcm(a: i64, b: i64) -> i64 {
-    (a * b) / get_gcd(a, b)
+fn get_lcm(a: i32, b: i32) -> i32 {
+    a / get_gcd(a, b) * b
 }
 
-fn get_gcd(mut a: i64, mut b: i64) -> i64 {
+fn get_gcd(mut a: i32, mut b: i32) -> i32 {
     loop {
         (a, b) = (b, a % b);
 

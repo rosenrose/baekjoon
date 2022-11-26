@@ -55,7 +55,7 @@ fn main() {
 }
 
 fn get_lcm(a: i32, b: i32) -> i32 {
-    (a * b) / get_gcd(a, b)
+    a / get_gcd(a, b) * b
 }
 
 fn get_gcd(mut a: i32, mut b: i32) -> i32 {

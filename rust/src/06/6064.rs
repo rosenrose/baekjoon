@@ -32,6 +32,7 @@ fn main() {
 
             let mut left = m * a + x;
             let mut right = n * b + y;
+
             while left <= 0 {
                 left += lcm;
             }
@@ -47,7 +48,7 @@ fn main() {
 }
 
 fn get_lcm(a: i32, b: i32) -> i32 {
-    (a * b) / get_gcd(a, b)
+    a / get_gcd(a, b) * b
 }
 
 fn get_gcd(mut a: i32, mut b: i32) -> i32 {
@@ -125,7 +126,7 @@ fn main() {
 }
 
 fn get_lcm(a: usize, b: usize) -> usize {
-    (a * b) / get_gcd(a, b)
+    a / get_gcd(a, b) * b
 }
 
 fn get_gcd(mut a: usize, mut b: usize) -> usize {

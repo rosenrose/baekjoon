@@ -2,7 +2,7 @@ fn main() {
     let mut buf = String::new();
     read_line(&mut buf);
 
-    let n: i64 = buf.trim().parse().unwrap();
+    let n: i32 = buf.trim().parse().unwrap();
 
     for _ in 0..n {
         read_line(&mut buf);
@@ -13,11 +13,11 @@ fn main() {
     }
 }
 
-fn get_lcm(a: i64, b: i64) -> i64 {
-    (a * b) / get_gcd(a, b)
+fn get_lcm(a: i32, b: i32) -> i32 {
+    a / get_gcd(a, b) * b
 }
 
-fn get_gcd(mut a: i64, mut b: i64) -> i64 {
+fn get_gcd(mut a: i32, mut b: i32) -> i32 {
     loop {
         (a, b) = (b, a % b);
 
@@ -32,6 +32,6 @@ fn read_line(buf: &mut String) {
     std::io::stdin().read_line(buf).unwrap();
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i64> {
+fn parse_int_vec(buf: &String) -> Vec<i32> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

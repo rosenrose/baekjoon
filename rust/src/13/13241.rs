@@ -8,7 +8,7 @@ fn main() {
 }
 
 fn get_lcm(a: i64, b: i64) -> i64 {
-    (a * b) / get_gcd(a, b)
+    a / get_gcd(a, b) * b
 }
 
 fn get_gcd(mut a: i64, mut b: i64) -> i64 {
