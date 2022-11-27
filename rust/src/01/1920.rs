@@ -12,9 +12,7 @@ fn main() {
     lines.next();
 
     let nums1 = parse_int_set(lines.next().unwrap());
-    lines.next();
-
-    let nums2 = lines.next().unwrap().split_whitespace().map(parse_int);
+    let nums2 = lines.next_back().unwrap().split_whitespace().map(parse_int);
 
     for num in nums2 {
         writeln!(stdout, "{}", if nums1.contains(&num) { 1 } else { 0 }).unwrap();

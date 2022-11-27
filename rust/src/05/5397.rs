@@ -7,13 +7,10 @@ fn main() {
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    lines.next();
-
     let mut left = String::new();
     let mut right = String::new();
 
-    lines.for_each(|line| {
+    buf.lines().skip(1).for_each(|line| {
         line.chars().for_each(|c| {
             match c {
                 '-' => {

@@ -7,10 +7,7 @@ fn main() {
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    lines.next();
-
-    lines.for_each(|line| {
+    buf.lines().skip(1).for_each(|line| {
         let (is_palin, is_pseudo_palin) = is_palindrome(line);
 
         writeln!(

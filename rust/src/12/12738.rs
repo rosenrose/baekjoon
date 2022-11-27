@@ -7,14 +7,13 @@ fn main() {
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    lines.next();
-
-    let mut a = lines
-        .next()
+    let mut a = buf
+        .lines()
+        .next_back()
         .unwrap()
         .split_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+
     let mut lis = vec![a.next().unwrap()];
 
     for num in a {

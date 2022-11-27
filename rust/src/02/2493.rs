@@ -7,13 +7,10 @@ fn main() {
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    lines.next();
-
     let mut towers = Vec::new();
 
-    lines
-        .next()
+    buf.lines()
+        .next_back()
         .unwrap()
         .split_whitespace()
         .map(|s| s.parse::<i32>().unwrap())

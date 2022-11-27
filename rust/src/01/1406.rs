@@ -10,9 +10,8 @@ fn main() {
 
     let mut left = lines.next().unwrap().to_string();
     let mut right = String::new();
-    lines.next();
 
-    lines.for_each(|line| {
+    lines.skip(1).for_each(|line| {
         let mut command = line.split_whitespace();
 
         match command.next().unwrap() {

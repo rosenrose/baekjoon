@@ -7,14 +7,11 @@ fn main() {
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    lines.next();
-
     const N: i32 = 1_000_000;
     let (mut min, mut max) = (N, -N);
 
-    lines
-        .next()
+    buf.lines()
+        .next_back()
         .unwrap()
         .split_whitespace()
         .map(|s| s.parse::<i32>().unwrap())

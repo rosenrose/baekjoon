@@ -8,10 +8,9 @@ fn main() {
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    lines.next();
-
-    let (a, b) = lines
+    let (a, b) = buf
+        .lines()
+        .skip(1)
         .map(|line| {
             let mut tokens = line.split_whitespace();
 

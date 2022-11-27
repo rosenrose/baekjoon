@@ -8,14 +8,13 @@ fn main() {
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    lines.next();
-
     let mut sum = 0;
     let mut counts = HashMap::new();
     let mut max_count = 1;
 
-    let mut arr: Vec<_> = lines
+    let mut arr: Vec<_> = buf
+        .lines()
+        .skip(1)
         .map(|line| {
             let num: i32 = line.parse().unwrap();
             sum += num;

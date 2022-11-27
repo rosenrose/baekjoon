@@ -40,10 +40,7 @@ fn main() {
     let mut buf = String::new();
     stdin().read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    lines.next();
-
-    for line in lines {
+    for line in buf.lines().skip(1) {
         let mut fraction = Fraction::from(0, 1);
         let decimal = line.split('.').next_back().unwrap();
 
