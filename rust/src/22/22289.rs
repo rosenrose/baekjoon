@@ -40,7 +40,7 @@ impl Mul for Complex {
 }
 impl MulAssign for Complex {
     fn mul_assign(&mut self, other: Self) {
-        *self = Self::mul(*self, other);
+        *self = *self * other;
     }
 }
 impl DivAssign for Complex {
