@@ -26,16 +26,11 @@ impl Fraction {
 
     fn reduced(self) -> Self {
         let gcd = get_gcd(self.numerator, self.denominator);
-        let (mut numerator, mut denominator) = (self.numerator / gcd, self.denominator / gcd);
-
-        if denominator < 0 {
-            numerator *= -1;
-            denominator *= -1;
-        }
+        let gcd = if gcd < 0 { -gcd } else { gcd };
 
         Self {
-            numerator,
-            denominator,
+            numerator: self.numerator / gcd,
+            denominator: self.denominator / gcd,
         }
     }
 
