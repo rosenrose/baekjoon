@@ -9,7 +9,9 @@ fn main() {
         }
 
         if let [b, n] = parse_int_vec(&buf)[..] {
-            for m in (1..=2 * n).filter(|&m| m != n).rev() {
+            let step = n / get_gcd(b, n);
+
+            for m in (step..=2 * n).rev().step_by(step).filter(|&m| m != n) {
                 let dividend = b * m * (2 * n - m);
                 let divisor = n * n;
 
@@ -23,6 +25,16 @@ fn main() {
         }
 
         println!("");
+    }
+}
+
+fn get_gcd(mut a: usize, mut b: usize) -> usize {
+    loop {
+        (a, b) = (b, a % b);
+
+        if b == 0 {
+            return a;
+        }
     }
 }
 
