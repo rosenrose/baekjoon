@@ -8,16 +8,16 @@ fn main() {
             prime_sieve
                 .iter()
                 .enumerate()
-                .filter_map(|(i, &is_prime)| if is_prime { Some(i) } else { None });
+                .filter_map(|(i, &is_prime)| if is_prime { Some(i as i64) } else { None });
 
         let mut square_free_num_sieve = vec![true; (max - min + 1) as usize];
 
         for p in prime_nums {
-            let p_square = (p * p) as i64;
+            let p_square = p * p;
             let start = p_square * (min / p_square);
             let start = if start < min { start + p_square } else { start };
 
-            for square_num in (start..=max).step_by(p * p) {
+            for square_num in (start..=max).step_by(p_square as usize) {
                 square_free_num_sieve[(square_num - min) as usize] = false;
             }
         }
