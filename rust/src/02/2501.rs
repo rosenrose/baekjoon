@@ -1,31 +1,25 @@
+use std::collections::BTreeSet;
+
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
     if let [n, k] = parse_int_vec(&buf)[..] {
-        let mut divisors = get_divisors(n);
+        let divisors = (1..)
+            .take_while(|i| i * i <= n)
+            .fold(BTreeSet::new(), |mut acc, i| {
+                if n % i == 0 {
+                    acc.insert(i);
+                    acc.insert(n / i);
+                }
 
-        divisors.sort();
+                acc
+            });
+
+        let divisors: Vec<_> = divisors.into_iter().collect();
 
         println!("{}", divisors.get(k as usize - 1).unwrap_or(&0));
     }
-}
-
-fn get_divisors(num: i32) -> Vec<i32> {
-    (1..)
-        .take_while(|i| i * i <= num)
-        .filter_map(|i| {
-            if num % i == 0 {
-                let mut divisor = vec![i, num / i];
-                divisor.dedup();
-
-                Some(divisor)
-            } else {
-                None
-            }
-        })
-        .flatten()
-        .collect()
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i32> {

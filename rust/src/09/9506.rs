@@ -1,3 +1,4 @@
+use std::collections::BTreeSet;
 use std::string::ToString;
 
 fn main() {
@@ -11,36 +12,32 @@ fn main() {
             return;
         }
 
-        let mut divisors = get_divisors(num);
-        divisors.sort();
-        divisors.pop();
+        let divisors = (1..)
+            .take_while(|i| i * i <= num)
+            .fold(BTreeSet::new(), |mut acc, i| {
+                if num % i != 0 {
+                    return acc;
+                }
+
+                if i != num {
+                    acc.insert(i);
+                }
+                if i != 1 {
+                    acc.insert(num / i);
+                }
+
+                acc
+            });
 
         let sum: i32 = divisors.iter().sum();
 
         if sum == num {
-            println!("{num} = {}", vec_join(&divisors, " + "));
+            println!("{num} = {}", set_join(&divisors, " + "));
             continue;
         }
 
         println!("{num} is NOT perfect.");
     }
-}
-
-fn get_divisors(num: i32) -> Vec<i32> {
-    (1..)
-        .take_while(|i| i * i <= num)
-        .filter_map(|i| {
-            if num % i == 0 {
-                let mut divisor = vec![i, num / i];
-                divisor.dedup();
-
-                Some(divisor)
-            } else {
-                None
-            }
-        })
-        .flatten()
-        .collect()
 }
 
 fn read_line(buf: &mut String) {
@@ -52,7 +49,7 @@ fn parse_int(buf: &String) -> i32 {
     buf.trim().parse().unwrap()
 }
 
-fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String
+fn set_join<T>(vec: &BTreeSet<T>, seperator: &str) -> String
 where
     T: ToString,
 {
