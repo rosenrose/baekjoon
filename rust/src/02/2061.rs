@@ -6,14 +6,23 @@ fn main() {
     let p: Vec<_> = nums
         .next()
         .unwrap()
-        .chars()
-        .rev()
-        .map(|c| c.to_digit(10).unwrap() as i32)
+        .as_bytes()
+        .rchunks(3)
+        .map(|chunk| {
+            let mut exp = 1;
+
+            chunk.iter().rev().fold(0, |acc, ch| {
+                let num = (ch - '0' as u8) as i32 * exp;
+                exp *= 10;
+
+                acc + num
+            })
+        })
         .collect();
 
-    let k: i32 = nums.next().unwrap().parse().unwrap();
+    let k: usize = nums.next().unwrap().parse().unwrap();
 
-    for prime in get_prime_nums((k - 1) as usize) {
+    for prime in get_prime_nums(k - 1) {
         if bigint_mod(&p, prime) == 0 {
             println!("BAD {prime}");
             return;
@@ -28,7 +37,10 @@ fn bigint_mod(bigint: &Vec<i32>, m: i32) -> i32 {
 
     bigint.iter().fold(0, |acc, num| {
         let rem = (num % m * exp_rem % m) % m;
-        exp_rem = (exp_rem % m * 10 % m) % m;
+
+        for _ in 0..3 {
+            exp_rem = (exp_rem % m * 10 % m) % m;
+        }
 
         (acc % m + rem % m) % m
     })
