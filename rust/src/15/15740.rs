@@ -12,24 +12,26 @@ impl BigInt {
     }
 
     fn parse(input: &str) -> Self {
-        let mut abs = Vec::new();
         let mut sign = 1;
+        let mut abs: Vec<_> = input
+            .as_bytes()
+            .rchunks(18)
+            .map(|chunk| {
+                let mut exp = 1;
 
-        input.as_bytes().rchunks(18).for_each(|chunk| {
-            let (mut num, mut exp) = (0, 1);
+                chunk.iter().rev().fold(0, |acc, &ch| {
+                    if ch as char == '-' {
+                        sign = -1;
+                        return acc;
+                    }
 
-            for &c in chunk.iter().rev() {
-                if c as char == '-' {
-                    sign = -1;
-                    continue;
-                }
+                    let num = (ch - '0' as u8) as i64 * exp;
+                    exp *= 10;
 
-                num += (c - '0' as u8) as i64 * exp;
-                exp *= 10;
-            }
-
-            abs.push(num);
-        });
+                    acc + num
+                })
+            })
+            .collect();
 
         if abs.len() > 1 && *abs.last().unwrap() == 0 {
             abs.pop();
