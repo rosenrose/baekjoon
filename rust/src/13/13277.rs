@@ -62,24 +62,38 @@ fn main() {
     stdin.read_to_string(&mut buf).unwrap();
 
     let mut nums = buf.lines().next().unwrap().split_whitespace();
-    let parse_vec = |s: &str| {
-        s.chars()
-            .rev()
-            .map(|c| Complex {
-                re: c.to_digit(10).unwrap() as f64,
-                im: 0.0,
-            })
-            .collect::<Vec<_>>()
-    };
-
-    let mut a = parse_vec(nums.next().unwrap());
-    let mut b = parse_vec(nums.next().unwrap());
+    let mut a = parse_bigint(nums.next().unwrap());
+    let mut b = parse_bigint(nums.next().unwrap());
 
     let result = multiply(&mut a, &mut b);
 
-    for r in result.iter().rev() {
-        write!(stdout, "{r}").unwrap();
+    for (i, r) in result.iter().rev().enumerate() {
+        if i == 0 {
+            write!(stdout, "{r}").unwrap();
+        } else {
+            write!(stdout, "{r:02}").unwrap();
+        }
     }
+}
+
+fn parse_bigint(input: &str) -> Vec<Complex> {
+    input
+        .as_bytes()
+        .rchunks(2)
+        .map(|chunk| {
+            let mut exp = 1;
+
+            Complex {
+                re: chunk.iter().rev().fold(0.0, |acc, ch| {
+                    let num = (ch - '0' as u8) as i32 * exp;
+                    exp *= 10;
+
+                    acc + num as f64
+                }),
+                im: 0.0,
+            }
+        })
+        .collect()
 }
 
 fn multiply(a: &mut Vec<Complex>, b: &mut Vec<Complex>) -> Vec<u32> {
@@ -163,9 +177,9 @@ fn normalize(v: Vec<Complex>) -> Vec<u32> {
         .iter()
         .map(|complex| {
             let temp = carry + complex.re.round() as u32;
-            carry = temp / 10;
+            carry = temp / 100;
 
-            temp % 10
+            temp % 100
         })
         .collect();
 
