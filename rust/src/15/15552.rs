@@ -1,23 +1,18 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 fn main() {
     let (stdin, stdout) = (stdin(), stdout());
     let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-
-    for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
-        let sum: i32 = buf
+    buf.lines().skip(1).for_each(|line| {
+        let sum: i32 = line
             .split_whitespace()
             .map(|s| s.parse::<i32>().unwrap())
             .sum();
 
         writeln!(stdout, "{sum}").unwrap();
-    }
+    });
 }
