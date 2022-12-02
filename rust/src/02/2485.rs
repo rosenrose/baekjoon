@@ -24,11 +24,11 @@ fn main() {
 
 fn get_gcd(mut a: u32, mut b: u32) -> u32 {
     loop {
-        (a, b) = (b, a % b);
-
         if b == 0 {
             return a;
         }
+
+        (a, b) = (b, a % b);
     }
 }
 

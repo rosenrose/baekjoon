@@ -76,10 +76,10 @@ fn get_lcm(a: i32, b: i32) -> i32 {
 
 fn get_gcd(mut a: i32, mut b: i32) -> i32 {
     loop {
-        (a, b) = (b, a % b);
-
         if b == 0 {
             return a;
         }
+
+        (a, b) = (b, a % b);
     }
 }

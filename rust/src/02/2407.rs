@@ -17,11 +17,11 @@ fn main() {
 
 fn get_gcd(mut a: i128, mut b: i128) -> i128 {
     loop {
-        (a, b) = (b, a % b);
-
         if b == 0 {
             return a;
         }
+
+        (a, b) = (b, a % b);
     }
 }
 

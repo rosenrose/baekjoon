@@ -52,11 +52,11 @@ where
     I: Iterator<Item = i64>,
 {
     nums.reduce(|mut a, mut b| loop {
-        (a, b) = (b, a % b);
-
         if b == 0 {
             return a;
         }
+
+        (a, b) = (b, a % b);
     })
     .unwrap()
 }

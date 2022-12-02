@@ -32,11 +32,11 @@ fn get_pairs(gcd: i64, lcm: i64) -> Vec<(i64, i64)> {
 
 fn get_gcd(mut a: i64, mut b: i64) -> i64 {
     loop {
-        (a, b) = (b, a % b);
-
         if b == 0 {
             return a;
         }
+
+        (a, b) = (b, a % b);
     }
 }
 

@@ -30,11 +30,11 @@ fn main() {
 
 fn get_gcd(mut a: usize, mut b: usize) -> usize {
     loop {
-        (a, b) = (b, a % b);
-
         if b == 0 {
             return a;
         }
+
+        (a, b) = (b, a % b);
     }
 }
 

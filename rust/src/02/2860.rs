@@ -69,11 +69,11 @@ fn main() {
 
 fn get_gcd(mut a: i64, mut b: i64) -> i64 {
     loop {
-        (a, b) = (b, a % b);
-
         if b == 0 {
             return a;
         }
+
+        (a, b) = (b, a % b);
     }
 }
 
