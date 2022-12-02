@@ -1,37 +1,31 @@
+use std::collections::HashSet;
+
 fn main() {
     let mut buf = String::new();
     read_line(&mut buf);
 
-    if let [n, k] = parse_int_vec(&buf)[..] {
-        read_line(&mut buf);
+    let n = parse_int(buf.split_whitespace().next().unwrap());
+    read_line(&mut buf);
 
-        let nums = parse_int_vec(&buf);
-        let mut count = 0;
+    let nums = parse_int_set(&buf);
+    let mut count = 0;
+    let mut lcm_accum = vec![(1, -1)];
 
-        for bit in 1..1 << k {
-            let indices: Vec<_> = (0..k).filter(|index| bit & (1 << index) != 0).collect();
-            // println!("{indices:?}");
-            let mut lcm = 1;
+    for num in nums {
+        for i in 0..lcm_accum.len() {
+            let (lcm, sign) = lcm_accum[i];
+            let lcm = get_lcm(lcm, num);
 
-            for num in indices.iter().map(|&i| nums[i as usize]) {
-                lcm = get_lcm(lcm, num);
-
-                if lcm > n {
-                    break;
-                }
+            if lcm > n {
+                continue;
             }
 
-            let multiple_count = n / lcm;
-
-            count += if indices.len() % 2 == 1 {
-                multiple_count
-            } else {
-                -multiple_count
-            };
+            count += (n / lcm) * -sign;
+            lcm_accum.push((lcm, -sign));
         }
-
-        println!("{count}");
     }
+
+    println!("{count}");
 }
 
 fn get_lcm(a: i64, b: i64) -> i64 {
@@ -53,6 +47,10 @@ fn read_line(buf: &mut String) {
     std::io::stdin().read_line(buf).unwrap();
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i64> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+fn parse_int(buf: &str) -> i64 {
+    buf.parse().unwrap()
+}
+
+fn parse_int_set(buf: &String) -> HashSet<i64> {
+    buf.split_whitespace().map(parse_int).collect()
 }
