@@ -20,9 +20,8 @@ fn main() {
     }
 
     let gcd = get_gcd(coin_a, coin_b);
-    let (coin_a, coin_b) = (coin_a / gcd, coin_b / gcd);
 
-    println!("{coin_a} {coin_b}");
+    println!("{} {}", coin_a / gcd, coin_b / gcd);
 }
 
 fn get_lcm(a: i64, b: i64) -> i64 {
