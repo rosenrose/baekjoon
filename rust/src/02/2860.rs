@@ -15,8 +15,7 @@ impl Fraction {
     }
 
     fn reduced(self) -> Self {
-        let gcd = get_gcd(self.numerator, self.denominator);
-        let gcd = if gcd < 0 { -gcd } else { gcd };
+        let gcd = get_gcd(self.numerator, self.denominator).abs();
 
         Self {
             numerator: self.numerator / gcd,
