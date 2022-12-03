@@ -8,31 +8,33 @@ fn main() {
     stdin.read_line(&mut buf).unwrap();
 
     if let [m, n] = parse_int_vec(&buf)[..] {
-        let prime_sieve = get_prime_sieve(n as usize);
-        let prime_nums = (m..=n).filter(|&i| prime_sieve[i as usize]);
+        let prime_nums = get_prime_nums(n as usize);
 
-        for prime_num in prime_nums {
+        for prime_num in prime_nums.iter().filter(|&&p| p >= m) {
             writeln!(stdout, "{prime_num}").unwrap();
         }
     }
 }
 
-fn get_prime_sieve(num: usize) -> Vec<bool> {
-    let mut prime_sieve = vec![true; num + 1];
-    prime_sieve[0] = false;
-    prime_sieve[1] = false;
+fn get_prime_nums(num: usize) -> Vec<i32> {
+    let mut sieve = vec![true; num + 1];
+    let mut prime_nums = Vec::new();
 
-    (2..).take_while(|i| i * i <= num).for_each(|i| {
-        if !prime_sieve[i] {
-            return;
+    for i in 2..=num {
+        if sieve[i] {
+            prime_nums.push(i as i32);
         }
 
-        for j in ((i * i)..=num).step_by(i) {
-            prime_sieve[j] = false;
-        }
-    });
+        for &p in prime_nums.iter().take_while(|&&p| i * p as usize <= num) {
+            sieve[i * p as usize] = false;
 
-    prime_sieve
+            if i as i32 % p == 0 {
+                break;
+            }
+        }
+    }
+
+    prime_nums
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i32> {

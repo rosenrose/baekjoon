@@ -3,13 +3,7 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     if let [min, max] = parse_int_vec(&buf)[..] {
-        let prime_sieve = get_prime_sieve((max as f64).sqrt() as usize);
-        let prime_nums =
-            prime_sieve
-                .iter()
-                .enumerate()
-                .filter_map(|(i, &is_prime)| if is_prime { Some(i as i64) } else { None });
-
+        let prime_nums = get_prime_nums((max as f64).sqrt() as usize);
         let mut square_free_num_sieve = vec![true; (max - min + 1) as usize];
 
         for p in prime_nums {
@@ -26,21 +20,25 @@ fn main() {
     }
 }
 
-fn get_prime_sieve(num: usize) -> Vec<bool> {
+fn get_prime_nums(num: usize) -> Vec<i64> {
     let mut sieve = vec![true; num + 1];
-    (sieve[0], sieve[1]) = (false, false);
+    let mut prime_nums = Vec::new();
 
-    for i in (2..).take_while(|i| i * i <= num) {
-        if !sieve[i] {
-            continue;
+    for i in 2..=num {
+        if sieve[i] {
+            prime_nums.push(i as i64);
         }
 
-        for j in ((i * i)..=num).step_by(i) {
-            sieve[j] = false;
+        for &p in prime_nums.iter().take_while(|&&p| i * p as usize <= num) {
+            sieve[i * p as usize] = false;
+
+            if i as i64 % p == 0 {
+                break;
+            }
         }
     }
 
-    sieve
+    prime_nums
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i64> {

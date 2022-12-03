@@ -1,56 +1,61 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 fn main() {
     let (stdin, stdout) = (stdin(), stdout());
     let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let t: i32 = buf.trim().parse().unwrap();
+    let (prime_nums, sieve) = get_prime_nums(10000);
 
-    for _ in 0..t {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
+    buf.lines()
+        .skip(1)
+        .map(|s| s.parse::<i32>().unwrap())
+        .for_each(|n| {
+            let (a, b) = get_goldbach_partition(n, &prime_nums, &sieve).unwrap();
 
-        let n: i32 = buf.trim().parse().unwrap();
-        let (a, b) = get_goldbach_partition(n).unwrap();
-
-        writeln!(stdout, "{a} {b}").unwrap();
-    }
+            writeln!(stdout, "{a} {b}").unwrap();
+        });
 }
 
-fn get_goldbach_partition(num: i32) -> Option<(i32, i32)> {
+fn get_goldbach_partition(
+    num: i32,
+    prime_nums: &Vec<i32>,
+    sieve: &Vec<bool>,
+) -> Option<(i32, i32)> {
     if num == 4 {
         return Some((2, 2));
     }
 
-    let half = num / 2;
-    let half = if half % 2 == 0 { half - 1 } else { half };
-
-    let prime_nums = (3..=half).rev().step_by(2).filter(|&n| is_prime(n));
-
-    for a in prime_nums {
-        let b = num - a;
-
-        if is_prime(b) {
-            return Some((a, b));
+    for &p in prime_nums.iter().skip_while(|&&p| p < num / 2) {
+        if sieve[(num - p) as usize] {
+            return Some((num - p, p));
         }
     }
 
     None
 }
 
-fn is_prime(num: i32) -> bool {
-    if num == 1 {
-        return false;
-    }
+fn get_prime_nums(num: usize) -> (Vec<i32>, Vec<bool>) {
+    let mut sieve = vec![true; num + 1];
+    (sieve[0], sieve[1]) = (false, false);
 
-    for i in (2..).take_while(|i| i * i <= num) {
-        if num % i == 0 {
-            return false;
+    let mut prime_nums = Vec::new();
+
+    for i in 2..=num {
+        if sieve[i] {
+            prime_nums.push(i as i32);
+        }
+
+        for &p in prime_nums.iter().take_while(|&&p| i * p as usize <= num) {
+            sieve[i * p as usize] = false;
+
+            if i as i32 % p == 0 {
+                break;
+            }
         }
     }
 
-    true
+    (prime_nums, sieve)
 }

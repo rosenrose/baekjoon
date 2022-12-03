@@ -48,21 +48,21 @@ fn bigint_mod(bigint: &Vec<i32>, m: i32) -> i32 {
 
 fn get_prime_nums(num: usize) -> Vec<i32> {
     let mut sieve = vec![true; num + 1];
-    (sieve[0], sieve[1]) = (false, false);
+    let mut prime_nums = Vec::new();
 
-    for i in (2..).take_while(|i| i * i <= num) {
-        if !sieve[i] {
-            continue;
+    for i in 2..=num {
+        if sieve[i] {
+            prime_nums.push(i as i32);
         }
 
-        for j in (i * i..=num).step_by(i) {
-            sieve[j] = false;
+        for &p in prime_nums.iter().take_while(|&&p| i * p as usize <= num) {
+            sieve[i * p as usize] = false;
+
+            if i as i32 % p == 0 {
+                break;
+            }
         }
     }
 
-    sieve
-        .iter()
-        .enumerate()
-        .filter_map(|(i, &s)| if s { Some(i as i32) } else { None })
-        .collect()
+    prime_nums
 }

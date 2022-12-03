@@ -1,62 +1,53 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, stdout, BufWriter, Read, Write};
 
 fn main() {
     let (stdin, stdout) = (stdin(), stdout());
     let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    let preime_sieve = get_prime_sieve(1_000_000);
+    let (prime_nums, sieve) = get_prime_nums(1_000_000);
 
-    for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
-        let num: i32 = buf.trim().parse().unwrap();
-        let count = get_goldbach_partition_count(num, &preime_sieve);
+    buf.lines().skip(1).for_each(|line| {
+        let num: i32 = line.parse().unwrap();
+        let count = get_goldbach_partition_count(num, &prime_nums, &sieve);
 
         writeln!(stdout, "{count}").unwrap();
-    }
+    });
 }
 
-fn get_goldbach_partition_count(num: i32, prime_sieve: &Vec<bool>) -> i32 {
+fn get_goldbach_partition_count(num: i32, prime_nums: &Vec<i32>, sieve: &Vec<bool>) -> usize {
     if num == 4 {
         return 1;
     }
 
-    let mut count = 0;
-    let half = num / 2;
-    let half = if half % 2 == 0 { half - 1 } else { half };
+    prime_nums
+        .iter()
+        .take_while(|&&p| p <= num / 2)
+        .filter(|&&p| sieve[(num - p) as usize])
+        .count()
+}
 
-    let prime_nums = (3..=half).step_by(2).filter(|&n| prime_sieve[n as usize]);
+fn get_prime_nums(num: usize) -> (Vec<i32>, Vec<bool>) {
+    let mut sieve = vec![true; num + 1];
+    (sieve[0], sieve[1]) = (false, false);
 
-    for a in prime_nums {
-        let b = num - a;
+    let mut prime_nums = Vec::new();
 
-        if prime_sieve[b as usize] {
-            count += 1;
+    for i in 2..=num {
+        if sieve[i] {
+            prime_nums.push(i as i32);
+        }
+
+        for &p in prime_nums.iter().take_while(|&&p| i * p as usize <= num) {
+            sieve[i * p as usize] = false;
+
+            if i as i32 % p == 0 {
+                break;
+            }
         }
     }
 
-    count
-}
-
-fn get_prime_sieve(num: usize) -> Vec<bool> {
-    let mut prime_sieve = vec![true; num + 1];
-    prime_sieve[0] = false;
-    prime_sieve[1] = false;
-
-    (2..).take_while(|i| i * i <= num).for_each(|i| {
-        if !prime_sieve[i] {
-            return;
-        }
-
-        for j in ((i * i)..=num).step_by(i) {
-            prime_sieve[j] = false;
-        }
-    });
-
-    prime_sieve
+    (prime_nums, sieve)
 }
