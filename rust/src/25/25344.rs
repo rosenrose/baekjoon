@@ -4,9 +4,9 @@ fn main() {
     read_line(&mut buf);
 
     let periods = parse_int_vec(&buf);
-    let total_period = periods.windows(3).fold(1, |lcm, chunk| {
-        get_lcm(chunk.iter().map(|i| *i).chain([lcm]))
-    });
+    let total_period = periods
+        .windows(3)
+        .fold(1, |lcm, chunk| get_lcm(chunk.iter().copied().chain([lcm])));
 
     println!("{total_period}");
 }
