@@ -1,39 +1,30 @@
-use std::collections::HashSet;
-use std::io::{stdin, Read};
-
 fn main() {
     let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
+    read_line(&mut buf);
+    read_line(&mut buf);
 
-    let input = buf
-        .split_ascii_whitespace()
-        .map(|s| s.parse::<i32>().unwrap());
+    let mut nums = parse_int_vec(&buf);
+    nums.sort();
 
-    let mut nums = Vec::new();
-    let mut nums_set = HashSet::new();
+    let len = nums.len();
 
-    for num in input.skip(1) {
-        nums.push(num);
-        nums_set.insert(num);
+    if len % 2 == 1 {
+        println!("{}", nums[len / 2]);
+        return;
     }
 
-    let mut min_diff_sum = u32::MAX;
+    let (a, b) = (nums[len / 2 - 1], nums[len / 2]);
+    let diff_a = nums.iter().map(|num| num.abs_diff(a)).sum::<u32>();
+    let diff_b = nums.iter().map(|num| num.abs_diff(b)).sum::<u32>();
 
-    let diff_sums: Vec<(i32, u32)> = nums_set
-        .iter()
-        .map(|&num| {
-            let diff_sum = nums.iter().map(|n| n.abs_diff(num)).sum::<u32>();
-            min_diff_sum = diff_sum.min(min_diff_sum);
+    println!("{}", if diff_a <= diff_b { a } else { b });
+}
 
-            (num, diff_sum)
-        })
-        .collect();
+fn read_line(buf: &mut String) {
+    buf.clear();
+    std::io::stdin().read_line(buf).unwrap();
+}
 
-    let represents = diff_sums
-        .iter()
-        .filter_map(|&(num, diff)| (diff == min_diff_sum).then(|| num));
-
-    let represent = represents.min().unwrap();
-
-    println!("{represent}");
+fn parse_int_vec(buf: &String) -> Vec<i32> {
+    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

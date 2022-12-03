@@ -1,16 +1,25 @@
+use std::fmt::Write;
+use std::io::{stdin, Read};
+
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    for _ in 0..n {
-        read_line(&mut buf);
+    for _ in 0..input.next().unwrap() {
+        let (a, b) = (input.next().unwrap(), input.next().unwrap());
 
-        if let [a, b] = parse_int_vec(&buf)[..] {
-            println!("{}", a / get_gcd(a, b) * b);
-        }
+        writeln!(output, "{}", a / get_gcd(a, b) * b).unwrap();
     }
+
+    print!("{output}");
 }
 
 fn get_gcd(mut a: i32, mut b: i32) -> i32 {
@@ -21,13 +30,4 @@ fn get_gcd(mut a: i32, mut b: i32) -> i32 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

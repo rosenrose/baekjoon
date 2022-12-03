@@ -1,28 +1,26 @@
 use std::collections::HashSet;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
-    buf.clear();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
-    let card_set: HashSet<i32> = buf.split_whitespace().map(parse_int).collect();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    stdin.read_line(&mut buf).unwrap();
-    buf.clear();
-    stdin.read_line(&mut buf).unwrap();
+    let card_set: HashSet<_> = (0..input.next().unwrap())
+        .map(|_| input.next().unwrap())
+        .collect();
 
-    for num in buf.split_whitespace().map(parse_int) {
-        let has_card = match card_set.contains(&num) {
-            true => 1,
-            false => 0,
-        };
-
-        write!(stdout, "{has_card} ").unwrap();
+    for num in input.skip(1) {
+        write!(output, "{} ", if card_set.contains(&num) { 1 } else { 0 }).unwrap();
     }
+
+    print!("{output}");
 }

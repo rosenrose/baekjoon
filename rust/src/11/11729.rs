@@ -1,47 +1,38 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
-
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    std::io::stdin().read_line(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut output = String::new();
+    let n: u32 = buf.trim().parse().unwrap();
 
-    let mut count = 0;
     // let mut tower: [Vec<i32>; 3] = [(1..=n).rev().collect(), Vec::new(), Vec::new()];
-    let mut order: Vec<(usize, usize)> = Vec::new();
+    writeln!(output, "{}", 2_i32.pow(n) - 1).unwrap();
 
-    hanoi(n, 0, 2, &mut count, &mut order);
+    hanoi(n, 1, 3, &mut output);
 
-    writeln!(stdout, "{count}").unwrap();
-
-    for (a, b) in order {
-        writeln!(stdout, "{a} {b}").unwrap();
-    }
+    print!("{output}");
 }
 
-fn hanoi(n: i32, src: usize, dst: usize, count: &mut i32, order: &mut Vec<(usize, usize)>) {
+fn hanoi(n: u32, src: usize, dst: usize, output: &mut String) {
     if n == 0 {
         return;
     }
 
-    *count += 1;
-
     let child_dst = match (src, dst) {
-        (0, 1) | (1, 0) => 2,
-        (0, 2) | (2, 0) => 1,
-        (1, 2) | (2, 1) => 0,
+        (1, 2) | (2, 1) => 3,
+        (1, 3) | (3, 1) => 2,
+        (2, 3) | (3, 2) => 1,
         _ => 0,
     };
 
-    hanoi(n - 1, src, child_dst, count, order);
+    hanoi(n - 1, src, child_dst, output);
 
     //let top = tower[src].pop().unwrap();
     //tower[dst].push(top);
     // println!("{tower:?}");
-    order.push((src + 1, dst + 1));
+    writeln!(output, "{src} {dst}").unwrap();
 
-    hanoi(n - 1, child_dst, dst, count, order);
+    hanoi(n - 1, child_dst, dst, output);
 }

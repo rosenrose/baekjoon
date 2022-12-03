@@ -4,8 +4,8 @@ use std::io::{stdin, stdout, BufRead, BufWriter, Write};
 use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
@@ -14,6 +14,9 @@ fn main() {
     stdin.read_line(&mut buf).unwrap();
     stdin.read_to_string(&mut buf).unwrap();
     writeln!(stdout, "").unwrap();
+
+    let stdout = stdout();
+    let mut stdout = BufWriter::new(stdout.lock());
 }
 
 fn read_line(buf: &mut String) {

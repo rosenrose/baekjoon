@@ -1,29 +1,32 @@
 use std::collections::HashMap;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
-    buf.clear();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
+
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
     let mut counts = HashMap::new();
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
+    let n = input.next().unwrap();
 
-    for num in buf.split_whitespace().map(parse_int) {
-        counts.entry(num).and_modify(|c| *c += 1).or_insert(1);
+    for _ in 0..n {
+        counts
+            .entry(input.next().unwrap())
+            .and_modify(|c| *c += 1)
+            .or_insert(1);
     }
 
-    stdin.read_line(&mut buf).unwrap();
-    buf.clear();
-    stdin.read_line(&mut buf).unwrap();
-
-    for num in buf.split_whitespace().map(parse_int) {
-        let count = counts.get(&num).unwrap_or(&0);
-
-        write!(stdout, "{count} ").unwrap();
+    for num in input.skip(1) {
+        write!(output, "{} ", counts.get(&num).unwrap_or(&0)).unwrap();
     }
+
+    print!("{output}");
 }

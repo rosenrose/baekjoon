@@ -1,56 +1,59 @@
 use std::collections::HashMap;
-use std::fmt;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
-
-enum Answer<'a> {
-    Name(&'a String),
-    Index(usize),
-}
-
-impl fmt::Display for Answer<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Answer::Name(name) => write!(f, "{name}"),
-            Answer::Index(index) => write!(f, "{index}"),
-        }
-    }
-}
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    if let [n, m] = parse_int_vec(&buf)[..] {
-        let mut pokemons_map = HashMap::new();
-        let mut pokemons_arr = Vec::new();
+    let mut input = buf.split_ascii_whitespace();
+    let mut output = String::new();
 
-        for i in 1..=n {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
-            let name = buf.trim();
+    let mut pokemon_name = HashMap::new();
+    let mut pokemon_index = Vec::new();
 
-            pokemons_map.insert(name.to_string(), i as usize);
-            pokemons_arr.push(name.to_string());
-        }
+    let n = parse_int(input.next().unwrap());
+    input.next();
 
-        for _ in 0..m {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
-            let input = buf.trim();
+    for i in 1..=n {
+        let name = input.next().unwrap();
 
-            let answer = match input.parse::<usize>() {
-                Ok(index) => Answer::Name(&pokemons_arr[index - 1]),
-                Err(_) => Answer::Index(*pokemons_map.get(input).unwrap()),
-            };
+        pokemon_name.insert(name, i);
+        pokemon_index.push(name);
+    }
 
-            writeln!(stdout, "{answer}").unwrap();
+    for query in input {
+        match query.parse::<usize>() {
+            Ok(i) => writeln!(output, "{}", pokemon_index[i - 1]).unwrap(),
+            _ => writeln!(output, "{}", pokemon_name.get(query).unwrap()).unwrap(),
         }
     }
+
+    print!("{output}");
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }
+
+// enum Answer<'a> {
+//     Name(&'a String),
+//     Index(usize),
+// }
+
+// impl fmt::Display for Answer<'_> {
+//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+//         match self {
+//             Answer::Name(name) => write!(f, "{name}"),
+//             Answer::Index(index) => write!(f, "{index}"),
+//         }
+//     }
+// }
+
+// let answer = match input.parse::<usize>() {
+//     Ok(index) => Answer::Name(&pokemons_arr[index - 1]),
+//     Err(_) => Answer::Index(*pokemons_map.get(input).unwrap()),
+// };

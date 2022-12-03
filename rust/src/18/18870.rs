@@ -1,34 +1,39 @@
-use std::collections::{BTreeSet, HashMap};
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    buf.clear();
-    stdin.read_line(&mut buf).unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    let mut nums = Vec::new();
-    let mut nums_sorted_set = BTreeSet::new();
+    let n = input.next().unwrap() as usize;
+    let mut num_indices: Vec<_> = input.enumerate().collect();
 
-    for token in buf.split_whitespace() {
-        let n: i32 = token.parse().unwrap();
+    num_indices.sort_by_key(|&(_, num)| num);
 
-        nums.push(n);
-        nums_sorted_set.insert(n);
+    let mut compressed = vec![0; n];
+    let mut unique_count = 0;
+
+    for i in 1..n {
+        let (index, num) = num_indices[i];
+
+        if num != num_indices[i - 1].1 {
+            unique_count += 1;
+        }
+
+        compressed[index] = unique_count;
     }
 
-    let compressed: HashMap<i32, usize> = nums_sorted_set
-        .iter()
-        .enumerate()
-        .map(|(i, &num)| (num, i))
-        .collect();
-
-    for num in nums {
-        write!(stdout, "{} ", compressed.get(&num).unwrap()).unwrap();
+    for c in compressed {
+        write!(output, "{c} ").unwrap();
     }
+
+    print!("{output}");
 }

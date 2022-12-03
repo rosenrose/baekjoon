@@ -1,42 +1,33 @@
 use std::collections::HashSet;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    if let [n, m] = parse_int_vec(&buf)[..] {
-        let not_heard: HashSet<String> = (0..n)
-            .map(|_| {
-                buf.clear();
-                stdin.read_line(&mut buf).unwrap();
+    let mut input = buf.split_ascii_whitespace();
+    let mut output = String::new();
 
-                buf.trim().to_string()
-            })
-            .collect();
+    let n = parse_int(input.next().unwrap());
+    input.next();
 
-        let mut not_heard_seen = Vec::new();
+    let not_heard: HashSet<_> = (0..n).map(|_| input.next().unwrap()).collect();
+    let mut not_heard_seen: Vec<_> = input
+        .filter(|not_seen| not_heard.contains(not_seen))
+        .collect();
 
-        for _ in 0..m {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
-            let not_seen = buf.trim().to_string();
+    not_heard_seen.sort();
 
-            if not_heard.contains(&not_seen) {
-                not_heard_seen.push(not_seen);
-            }
-        }
+    writeln!(output, "{}", not_heard_seen.len()).unwrap();
+    writeln!(output, "{}", not_heard_seen.join("\n")).unwrap();
 
-        not_heard_seen.sort();
-
-        writeln!(stdout, "{}", not_heard_seen.len()).unwrap();
-        writeln!(stdout, "{}", not_heard_seen.join("\n")).unwrap();
-    }
+    print!("{output}");
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }

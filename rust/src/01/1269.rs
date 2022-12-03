@@ -1,26 +1,28 @@
 use std::collections::HashSet;
+use std::io::{stdin, Read};
 
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let n = input.next().unwrap();
 
-    let mut diff: HashSet<i32> = buf.split_whitespace().map(parse_int).collect();
-    read_line(&mut buf);
+    input.next();
+    let mut diff: HashSet<_> = (0..n).map(|_| input.next().unwrap()).collect();
 
-    for num in buf.split_whitespace().map(parse_int) {
-        match diff.contains(&num) {
-            true => diff.remove(&num),
-            false => diff.insert(num),
-        };
+    for num in input {
+        if diff.contains(&num) {
+            diff.remove(&num);
+        } else {
+            diff.insert(num);
+        }
     }
 
     println!("{}", diff.len());
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

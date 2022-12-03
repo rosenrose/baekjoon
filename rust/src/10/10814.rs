@@ -1,24 +1,22 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf.split_ascii_whitespace();
+    let mut output = String::new();
 
-    let mut members: Vec<(i32, String, i32)> = (0..n)
+    let mut members: Vec<_> = (0..parse_int(input.next().unwrap()))
         .map(|order| {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
-            let mut tokens = buf.split_whitespace();
+            let age = parse_int(input.next().unwrap());
+            let name = input.next().unwrap();
 
-            let age: i32 = tokens.next().unwrap().parse().unwrap();
-            let name = tokens.next().unwrap();
-
-            (age, name.to_string(), order)
+            (age, name, order)
         })
         .collect();
 
@@ -31,6 +29,12 @@ fn main() {
     });
 
     for (age, name, _) in members {
-        writeln!(stdout, "{age} {name}").unwrap();
+        writeln!(output, "{age} {name}").unwrap();
     }
+
+    print!("{output}");
+}
+
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }

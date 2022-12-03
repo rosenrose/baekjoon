@@ -1,40 +1,24 @@
 use std::collections::HashSet;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    if let [n, m] = parse_int_vec(&buf)[..] {
-        let word_set: HashSet<String> = (0..n)
-            .map(|_| {
-                buf.clear();
-                stdin.read_line(&mut buf).unwrap();
+    let mut input = buf.split_ascii_whitespace();
 
-                buf.trim().to_string()
-            })
-            .collect();
+    let n = parse_int(input.next().unwrap());
+    input.next();
 
-        let mut count = 0;
+    let word_set: HashSet<_> = (0..n).map(|_| input.next().unwrap()).collect();
+    let count = input.filter(|word| word_set.contains(word)).count();
 
-        for _ in 0..m {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
-
-            let word = buf.trim();
-
-            if word_set.contains(word) {
-                count += 1;
-            }
-        }
-
-        writeln!(stdout, "{count}").unwrap();
-    }
+    println!("{count}");
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }

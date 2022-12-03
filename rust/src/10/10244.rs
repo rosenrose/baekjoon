@@ -1,27 +1,31 @@
 use std::collections::HashSet;
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
     loop {
-        let n = parse_int(lines.next().unwrap());
+        let n = input.next().unwrap();
 
         if n == 0 {
-            return;
+            break;
         }
 
         let mut gcd_set = HashSet::<i32>::new();
         let mut gcd_accum = HashSet::new();
 
         for _ in 0..n {
-            let num = parse_int(lines.next().unwrap());
+            let num = input.next().unwrap();
 
             gcd_accum = gcd_accum.iter().map(|&g| gcd(g, num)).collect();
             gcd_accum.insert(num);
@@ -29,8 +33,10 @@ fn main() {
             gcd_set.extend(&gcd_accum);
         }
 
-        writeln!(stdout, "{}", gcd_set.len()).unwrap();
+        writeln!(output, "{}", gcd_set.len()).unwrap();
     }
+
+    print!("{output}");
 }
 
 fn gcd(mut a: i32, mut b: i32) -> i32 {
@@ -41,8 +47,4 @@ fn gcd(mut a: i32, mut b: i32) -> i32 {
             return a;
         }
     }
-}
-
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
 }

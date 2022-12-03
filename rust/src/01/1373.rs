@@ -1,22 +1,21 @@
-use std::{io, str};
+use std::fmt::Write;
 
 fn main() {
     let mut buf = String::new();
-    io::stdin().read_line(&mut buf).unwrap();
+    std::io::stdin().read_line(&mut buf).unwrap();
 
-    let bin = buf.trim();
+    let mut output = String::new();
 
-    let oct: String = bin
-        .as_bytes()
-        .rchunks(3)
-        .rev()
-        .map(|chunk| {
-            let s = str::from_utf8(chunk).unwrap();
-            let digit = u32::from_str_radix(s, 2).unwrap();
+    buf.trim().as_bytes().rchunks(3).rev().for_each(|chunk| {
+        let digit: u8 = chunk
+            .iter()
+            .rev()
+            .enumerate()
+            .map(|(i, &c)| if c as char == '1' { 1 << i } else { 0 })
+            .sum();
 
-            char::from_digit(digit, 8).unwrap()
-        })
-        .collect();
+        write!(output, "{digit}").unwrap();
+    });
 
-    println!("{oct}");
+    print!("{output}");
 }

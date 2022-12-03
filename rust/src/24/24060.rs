@@ -1,17 +1,20 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [n, mut k] = parse_int_vec(&buf)[..] {
-        read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let (n, mut k) = (input.next().unwrap(), input.next().unwrap());
 
-        let mut arr = parse_int_vec(&buf);
-        let mut num = 0;
+    let mut arr: Vec<_> = input.collect();
+    let mut num = 0;
 
-        merge_sort(&mut arr[..], n as usize, &mut k, &mut num);
+    merge_sort(&mut arr[..], n as usize, &mut k, &mut num);
 
-        println!("{}", if k > 0 { -1 } else { num });
-    }
+    println!("{}", if k > 0 { -1 } else { num });
 }
 
 fn merge_sort(arr: &mut [i32], len: usize, k: &mut i32, num: &mut i32) {
@@ -56,13 +59,4 @@ fn merge_sort(arr: &mut [i32], len: usize, k: &mut i32, num: &mut i32) {
             *num = n;
         }
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

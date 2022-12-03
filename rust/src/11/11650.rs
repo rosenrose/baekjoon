@@ -1,22 +1,20 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    let mut coords: Vec<(i32, i32)> = (0..n)
-        .map(|_| {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
-            let mut coord = buf.split_whitespace().map(|s| s.parse::<i32>().unwrap());
-
-            (coord.next().unwrap(), coord.next().unwrap())
-        })
+    let mut coords: Vec<_> = (0..input.next().unwrap())
+        .map(|_| (input.next().unwrap(), input.next().unwrap()))
         .collect();
 
     coords.sort_by(
@@ -30,6 +28,8 @@ fn main() {
     );
 
     for (x, y) in coords {
-        writeln!(stdout, "{x} {y}").unwrap();
+        writeln!(output, "{x} {y}").unwrap();
     }
+
+    print!("{output}");
 }
