@@ -11,16 +11,17 @@ fn main() {
     for _ in 0..n {
         read_line(&mut buf);
 
-        if let [x_gap, y_gap] = parse_int_vec(&buf)[..] {
-            for y in y_gap..y_gap + SIZE {
-                for x in x_gap..x_gap + SIZE {
-                    if board[y][x] {
-                        continue;
-                    }
+        let gap = parse_int_vec(&buf);
+        let (x_gap, y_gap) = (gap[0], gap[1]);
 
-                    board[y][x] = true;
-                    count += 1;
+        for y in y_gap..y_gap + SIZE {
+            for x in x_gap..x_gap + SIZE {
+                if board[y][x] {
+                    continue;
                 }
+
+                board[y][x] = true;
+                count += 1;
             }
         }
     }
