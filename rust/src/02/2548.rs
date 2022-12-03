@@ -1,16 +1,18 @@
 use std::collections::HashSet;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
+
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
     let mut nums = Vec::new();
     let mut nums_set = HashSet::new();
 
-    for token in buf.split_whitespace() {
-        let num: i32 = token.parse().unwrap();
-
+    for num in input.skip(1) {
         nums.push(num);
         nums_set.insert(num);
     }
@@ -27,20 +29,11 @@ fn main() {
         })
         .collect();
 
-    let represents = diff_sums.iter().filter_map(|&(num, diff)| {
-        if diff == min_diff_sum {
-            Some(num)
-        } else {
-            None
-        }
-    });
+    let represents = diff_sums
+        .iter()
+        .filter_map(|&(num, diff)| (diff == min_diff_sum).then(|| num));
 
     let represent = represents.min().unwrap();
 
     println!("{represent}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

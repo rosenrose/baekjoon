@@ -27,7 +27,7 @@ fn main() {
     let mut outers: Vec<_> = direction_counts
         .iter()
         .enumerate()
-        .filter_map(|(d, &c)| if c == 1 { Some(d) } else { None })
+        .filter_map(|(d, &c)| (c == 1).then(|| d))
         .collect();
 
     outers.sort();

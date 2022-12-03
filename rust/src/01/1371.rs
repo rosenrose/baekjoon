@@ -16,7 +16,7 @@ fn main() {
 
     let mut max_counts: Vec<_> = counts
         .iter()
-        .filter_map(|&(ch, count)| if count == max_count { Some(ch) } else { None })
+        .filter_map(|&(ch, count)| (count == max_count).then(|| ch))
         .collect();
 
     max_counts.sort();

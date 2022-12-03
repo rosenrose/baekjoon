@@ -10,13 +10,7 @@ fn main() {
         let score: usize = buf
             .trim()
             .split(|c| c == 'X')
-            .filter_map(|s| {
-                if s.is_empty() {
-                    None
-                } else {
-                    Some(s.char_indices().map(|(i, _)| i + 1))
-                }
-            })
+            .filter_map(|s| (!s.is_empty()).then(|| s.char_indices().map(|(i, _)| i + 1)))
             .flatten()
             .sum();
 

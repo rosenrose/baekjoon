@@ -40,11 +40,7 @@ fn main() {
                     }
                 }
 
-                if blocks < 0 {
-                    return None;
-                }
-
-                Some((time, height))
+                (blocks >= 0).then(|| (time, height))
             })
             .collect();
 

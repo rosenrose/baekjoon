@@ -7,13 +7,7 @@ fn main() {
 
     let digit_sum = |s: &String| {
         s.chars()
-            .filter_map(|c| {
-                if c.is_numeric() {
-                    Some(c.to_digit(10).unwrap())
-                } else {
-                    None
-                }
-            })
+            .filter_map(|c| c.is_numeric().then(|| c.to_digit(10).unwrap()))
             .sum::<u32>()
     };
 

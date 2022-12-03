@@ -5,13 +5,7 @@ fn main() {
     if let [a, b] = parse_str_vec(&buf)[..] {
         let (a_index, b_index) = a
             .char_indices()
-            .filter_map(|(a_idx, ch)| {
-                if b.contains(ch) {
-                    Some((a_idx, b.find(ch).unwrap()))
-                } else {
-                    None
-                }
-            })
+            .filter_map(|(a_idx, ch)| b.contains(ch).then(|| (a_idx, b.find(ch).unwrap())))
             .next()
             .unwrap();
 
