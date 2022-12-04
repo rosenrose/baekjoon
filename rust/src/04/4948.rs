@@ -1,38 +1,31 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    let mut nums = Vec::new();
-    let mut max = 0;
+    stdin.read_to_string(&mut buf).unwrap();
 
-    loop {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-        let n: i32 = buf.trim().parse().unwrap();
+    let prime_nums = get_prime_nums(123456 * 2);
 
-        if n == 0 {
-            break;
-        }
-
-        nums.push(n);
-        max = n.max(max);
-    }
-
-    let prime_nums = get_prime_nums((max * 2) as usize);
-
-    for num in nums {
+    for num in input.take_while(|&num| num != 0) {
         let count = prime_nums
             .iter()
             .skip_while(|&&p| p <= num)
             .take_while(|&&p| p <= 2 * num)
             .count();
 
-        writeln!(stdout, "{count}").unwrap();
+        writeln!(output, "{count}").unwrap();
     }
+
+    print!("{output}");
 }
 
 fn get_prime_nums(num: usize) -> Vec<i32> {

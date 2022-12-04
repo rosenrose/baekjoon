@@ -1,69 +1,60 @@
-use std::collections::HashMap;
+use std::io::{stdin, Read};
 
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    if let [n, _, b] = parse_int_vec(&buf)[..] {
-        let mut height_counts = HashMap::new();
-        let (mut min, mut max) = (256, 0);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    input.next();
+    input.next();
 
-        (0..n).for_each(|_| {
-            read_line(&mut buf);
-            buf.split_whitespace().for_each(|s| {
-                let height = parse_int(s);
+    let b = input.next().unwrap();
+    let (mut min, mut max) = (256, 0);
+    let mut height_counts = [0; 257];
 
-                height_counts
-                    .entry(height)
-                    .and_modify(|c| *c += 1)
-                    .or_insert(1);
-                min = height.min(min);
-                max = height.max(max);
-            });
-        });
-
-        let time_heights: Vec<_> = (min..=max)
-            .filter_map(|height| {
-                let mut blocks = b;
-                let mut time = 0;
-
-                for (&h, &c) in height_counts.iter() {
-                    let diff = h.abs_diff(height);
-
-                    if h > height {
-                        time += diff * c * 2;
-                        blocks += (diff * c) as i32;
-                    }
-                    if h < height {
-                        time += diff * c;
-                        blocks -= (diff * c) as i32;
-                    }
-                }
-
-                (blocks >= 0).then(|| (time, height))
-            })
-            .collect();
-
-        let (min_time, _) = time_heights.iter().min_by_key(|(t, _)| t).unwrap();
-        let (time, height) = time_heights
-            .iter()
-            .filter(|(t, _)| t == min_time)
-            .max_by_key(|(_, h)| h)
-            .unwrap();
-
-        println!("{time} {height}");
+    for height in input {
+        height_counts[height as usize] += 1;
+        min = height.min(min);
+        max = height.max(max);
     }
-}
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
+    let mut min_time = u32::MAX;
 
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
-}
+    let height_times: Vec<_> = (min..=max)
+        .filter_map(|height| {
+            let (mut time, mut blocks) = (0, b);
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(parse_int).collect()
+            for h in min..=max {
+                let c = height_counts[h as usize];
+                let diff = h.abs_diff(height);
+
+                if h > height {
+                    time += diff * c * 2;
+                    blocks += (diff * c) as i32;
+                }
+                if h < height {
+                    time += diff * c;
+                    blocks -= (diff * c) as i32;
+                }
+            }
+
+            (blocks >= 0).then(|| {
+                min_time = time.min(min_time);
+                (height, time)
+            })
+        })
+        .collect();
+
+    let (height, time) = height_times
+        .iter()
+        .filter(|(_, t)| *t == min_time)
+        .max_by_key(|(h, _)| h)
+        .unwrap();
+
+    println!("{time} {height}");
 }

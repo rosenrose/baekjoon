@@ -16,7 +16,7 @@ fn main() {
     let n = input.next().unwrap() as usize;
     let mut num_indices: Vec<_> = input.enumerate().collect();
 
-    num_indices.sort_by_key(|&(_, num)| num);
+    num_indices.sort_unstable_by_key(|&(_, num)| num);
 
     let mut compressed = vec![0; n];
     let mut unique_count = 0;

@@ -1,8 +1,8 @@
-use std::io::{stdin, stdout, BufReader, BufWriter, Read, Write};
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (BufReader::new(stdin.lock()), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
@@ -27,7 +27,7 @@ fn main() {
         })
         .collect();
 
-    arr.sort();
+    arr.sort_unstable();
 
     let (min, max, middle) = (arr[0], arr[len - 1], arr[len / 2]);
     let avg = (sum as f64 / len as f64).round() as i32;
@@ -46,6 +46,6 @@ fn main() {
     };
 
     for value in [avg, middle, most, max - min] {
-        writeln!(stdout, "{value}").unwrap();
+        println!("{value}");
     }
 }

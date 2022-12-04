@@ -17,7 +17,7 @@ fn main() {
         .map(|_| (input.next().unwrap(), input.next().unwrap()))
         .collect();
 
-    coords.sort_by(
+    coords.sort_unstable_by(
         |(x1, y1), (x2, y2)| {
             if y1 == y2 {
                 x1.cmp(x2)

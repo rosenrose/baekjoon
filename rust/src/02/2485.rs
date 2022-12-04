@@ -9,9 +9,10 @@ fn main() {
 
     let nums: Vec<_> = buf
         .split_ascii_whitespace()
-        .map(|s| s.parse::<u32>().unwrap())
         .skip(1)
+        .map(|s| s.parse::<u32>().unwrap())
         .collect();
+
     let mut gcd = nums[0].abs_diff(nums[1]);
 
     for i in 1..nums.len() - 1 {

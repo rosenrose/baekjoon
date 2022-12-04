@@ -1,13 +1,19 @@
 use std::collections::HashSet;
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    let words = parse_str_set_lines(&mut buf, n);
+    let input = buf.split_ascii_whitespace();
+    let mut output = String::new();
 
-    let mut words: Vec<String> = words.into_iter().collect();
+    let words: HashSet<_> = input.skip(1).collect();
+    let mut words: Vec<_> = words.iter().collect();
 
     words.sort_by(|a, b| {
         if a.len() == b.len() {
@@ -17,19 +23,9 @@ fn main() {
         }
     });
 
-    println!("{}", words.join("\n"));
-}
+    for word in words {
+        writeln!(output, "{word}").unwrap();
+    }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_str_set_lines(buf: &mut String, n: i32) -> HashSet<String> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            buf.trim().to_string()
-        })
-        .collect()
+    print!("{output}");
 }

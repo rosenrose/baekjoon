@@ -20,7 +20,7 @@ fn main() {
     }
 
     let mut ext_count: Vec<_> = ext_count.iter().collect();
-    ext_count.sort_by_key(|(&ext, _)| ext);
+    ext_count.sort_unstable_by_key(|(&ext, _)| ext);
 
     for (ext, count) in ext_count {
         writeln!(output, "{ext} {count}").unwrap();

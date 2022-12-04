@@ -20,7 +20,7 @@ fn main() {
         })
         .collect();
 
-    members.sort_by(|(age1, _, order1), (age2, _, order2)| {
+    members.sort_unstable_by(|(age1, _, order1), (age2, _, order2)| {
         if age1 == age2 {
             order1.cmp(order2)
         } else {

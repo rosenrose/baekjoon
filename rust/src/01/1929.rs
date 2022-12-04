@@ -1,19 +1,23 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
-
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [m, n] = parse_int_vec(&buf)[..] {
-        let prime_nums = get_prime_nums(n as usize);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-        for prime_num in prime_nums.iter().filter(|&&p| p >= m) {
-            writeln!(stdout, "{prime_num}").unwrap();
-        }
+    let (m, n) = (input.next().unwrap(), input.next().unwrap());
+    let prime_nums = get_prime_nums(n as usize);
+
+    for prime_num in prime_nums.iter().filter(|&&p| p >= m) {
+        writeln!(output, "{prime_num}").unwrap();
     }
+
+    print!("{output}");
 }
 
 fn get_prime_nums(num: usize) -> Vec<i32> {
@@ -35,8 +39,4 @@ fn get_prime_nums(num: usize) -> Vec<i32> {
     }
 
     prime_nums
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

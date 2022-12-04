@@ -1,20 +1,27 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
+
     let (prime_nums, sieve) = get_prime_nums(1_000_000);
 
-    buf.lines().skip(1).for_each(|line| {
-        let num: i32 = line.parse().unwrap();
-        let count = get_goldbach_partition_count(num, &prime_nums, &sieve);
+    for n in input.skip(1) {
+        let count = get_goldbach_partition_count(n, &prime_nums, &sieve);
 
-        writeln!(stdout, "{count}").unwrap();
-    });
+        writeln!(output, "{count}").unwrap();
+    }
+
+    print!("{output}");
 }
 
 fn get_goldbach_partition_count(num: i32, prime_nums: &Vec<i32>, sieve: &Vec<bool>) -> usize {

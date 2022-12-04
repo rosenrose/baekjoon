@@ -1,23 +1,28 @@
 use std::collections::VecDeque;
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    for _ in 0..n {
-        read_line(&mut buf);
-        read_line(&mut buf);
+    for _ in 0..input.next().unwrap() {
+        let n = input.next().unwrap();
 
-        let mut logs = parse_int_vec(&buf);
-        logs.sort();
+        let mut logs: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
+        logs.sort_unstable();
 
         let mut new_logs = VecDeque::new();
 
-        while !logs.is_empty() {
-            let log = logs.pop().unwrap();
-
+        for log in logs {
             if new_logs.len() % 2 == 0 {
                 new_logs.push_back(log);
             } else {
@@ -32,15 +37,8 @@ fn main() {
             max_diff = new_logs[i].abs_diff(new_logs[i + 1]).max(max_diff);
         }
 
-        println!("{max_diff}");
+        writeln!(output, "{max_diff}").unwrap();
     }
-}
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    print!("{output}");
 }

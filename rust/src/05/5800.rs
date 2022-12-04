@@ -1,15 +1,23 @@
+use std::fmt::Write;
+use std::io::{stdin, Read};
+
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
-    let n = parse_int(buf.trim());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    for i in 1..=n {
-        read_line(&mut buf);
+    for i in 1..=input.next().unwrap() {
+        let n = input.next().unwrap();
 
-        let mut scores: Vec<_> = buf.split_whitespace().skip(1).map(parse_int).collect();
-        scores.sort();
+        let mut scores: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
+        scores.sort_unstable();
 
         let min = scores[0];
         let max = scores.last().unwrap();
@@ -18,11 +26,12 @@ fn main() {
             .max()
             .unwrap();
 
-        println!("Class {i}\nMax {max}, Min {min}, Largest gap {largest_gap}");
+        writeln!(
+            output,
+            "Class {i}\nMax {max}, Min {min}, Largest gap {largest_gap}"
+        )
+        .unwrap();
     }
-}
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
+    print!("{output}");
 }

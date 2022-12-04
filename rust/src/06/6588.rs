@@ -1,26 +1,28 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
+
     let (prime_nums, sieve) = get_prime_nums(1_000_000);
 
-    buf.lines()
-        .map(|s| s.parse::<i32>().unwrap())
-        .for_each(|n| {
-            if n == 0 {
-                return;
-            }
+    for n in input.take_while(|&n| n != 0) {
+        match get_goldbach_partition(n, &prime_nums, &sieve) {
+            Some((a, b)) => writeln!(output, "{n} = {a} + {b}").unwrap(),
+            None => writeln!(output, "Goldbach's conjecture is wrong.").unwrap(),
+        };
+    }
 
-            match get_goldbach_partition(n, &prime_nums, &sieve) {
-                Some((a, b)) => writeln!(stdout, "{n} = {a} + {b}").unwrap(),
-                None => writeln!(stdout, "Goldbach's conjecture is wrong.").unwrap(),
-            };
-        });
+    print!("{output}");
 }
 
 fn get_goldbach_partition(

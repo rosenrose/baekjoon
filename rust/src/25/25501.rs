@@ -1,22 +1,28 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    buf.lines().skip(1).for_each(|line| {
+    let input = buf.split_ascii_whitespace();
+    let mut output = String::new();
+
+    for word in input.skip(1) {
         let mut count = 0;
-        let result = if is_palindrome(line.as_bytes(), &mut count) {
+        let result = if is_palindrome(word.as_bytes(), &mut count) {
             1
         } else {
             0
         };
 
-        writeln!(stdout, "{result} {count}").unwrap();
-    })
+        writeln!(output, "{result} {count}").unwrap();
+    }
+
+    print!("{output}");
 }
 
 fn is_palindrome(word: &[u8], count: &mut i32) -> bool {
