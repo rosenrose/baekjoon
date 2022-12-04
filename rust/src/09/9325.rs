@@ -1,37 +1,28 @@
+use std::fmt::Write;
+use std::io::{stdin, Read};
+
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(&buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    for _ in 0..n {
-        read_line(&mut buf);
+    for _ in 0..input.next().unwrap() {
+        let mut price = input.next().unwrap();
+        let options = input.next().unwrap();
 
-        let mut s = parse_int(&buf);
-        read_line(&mut buf);
-
-        let options = parse_int(&buf);
-
-        s += (0..options)
-            .map(|_| {
-                read_line(&mut buf);
-                parse_int_vec(&buf).iter().product::<i32>()
-            })
+        price += (0..options)
+            .map(|_| input.next().unwrap() * input.next().unwrap())
             .sum::<i32>();
 
-        println!("{s}");
+        writeln!(output, "{price}").unwrap();
     }
-}
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    print!("{output}");
 }

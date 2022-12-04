@@ -1,18 +1,20 @@
+use std::io::{stdin, Read};
+
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i64>().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
 
-    let nums = buf.to_string();
-    let nums = nums.split_whitespace().map(parse_int);
-    read_line(&mut buf);
-
-    let x: i64 = parse_int(buf.trim());
+    let x = input.next_back().unwrap();
     let (mut sum, mut count) = (0, 0);
 
-    for num in nums {
+    for num in input.skip(1) {
         if get_gcd(num, x) == 1 {
             sum += num;
             count += 1;
@@ -30,9 +32,4 @@ fn get_gcd(mut a: i64, mut b: i64) -> i64 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

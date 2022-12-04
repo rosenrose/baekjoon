@@ -6,12 +6,11 @@ fn main() {
 
     for _ in 0..n {
         read_line(&mut buf);
-        let tokens = parse_str_vec(&buf);
 
-        let mut num: f64 = tokens[0].parse().unwrap();
-        let operators = &tokens[1..];
+        let mut operators = buf.split_whitespace();
+        let mut num: f64 = operators.next().unwrap().parse().unwrap();
 
-        for &op in operators {
+        for op in operators {
             match op {
                 "@" => num *= 3.0,
                 "%" => num += 5.0,
@@ -27,8 +26,4 @@ fn main() {
 fn read_line(buf: &mut String) {
     buf.clear();
     std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_str_vec(buf: &String) -> Vec<&str> {
-    buf.split_whitespace().collect()
 }

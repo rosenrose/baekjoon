@@ -1,24 +1,30 @@
-use std::collections::BTreeMap;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::collections::HashMap;
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    let mut ext_count = BTreeMap::new();
+    let input = buf.split_ascii_whitespace();
+    let mut output = String::new();
 
-    for _ in 0..n {
-        stdin.read_line(&mut buf).unwrap();
-        let ext = buf.trim().split('.').next_back().unwrap().to_string();
+    let mut ext_count = HashMap::new();
 
+    for filename in input.skip(1) {
+        let ext = filename.split('.').next_back().unwrap();
         ext_count.entry(ext).and_modify(|c| *c += 1).or_insert(1);
     }
 
+    let mut ext_count: Vec<_> = ext_count.iter().collect();
+    ext_count.sort_by_key(|(&ext, _)| ext);
+
     for (ext, count) in ext_count {
-        writeln!(stdout, "{ext} {count}").unwrap();
+        writeln!(output, "{ext} {count}").unwrap();
     }
+
+    print!("{output}");
 }

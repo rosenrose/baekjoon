@@ -1,25 +1,19 @@
+use std::io::{stdin, Read};
+
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let counts = parse_int_vec(&buf);
-    read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
+    input.next();
 
-    if let [b, c] = parse_int_vec(&buf)[..] {
-        let watchers = counts
-            .iter()
-            .map(|&count| 1 + ((count - b).max(0) as f64 / c as f64).ceil() as i64);
+    let (c, b) = (input.next_back().unwrap(), input.next_back().unwrap());
+    let watchers = input.map(|count| 1 + ((count - b).max(0) as f64 / c as f64).ceil() as i64);
 
-        println!("{}", watchers.sum::<i64>());
-    }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i64> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    println!("{}", watchers.sum::<i64>());
 }

@@ -1,29 +1,33 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
-    let n = parse_int(buf.trim());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
+    for _ in 0..input.next().unwrap() {
         let (mut sum, mut min) = (0, 100);
 
-        buf.split_whitespace()
-            .map(parse_int)
-            .filter(|num| num % 2 == 0)
+        (0..7)
+            .filter_map(|_| {
+                let num = input.next().unwrap();
+                (num % 2 == 0).then(|| num)
+            })
             .for_each(|num| {
                 sum += num;
                 min = num.min(min);
             });
 
-        writeln!(stdout, "{sum} {min}").unwrap();
+        writeln!(output, "{sum} {min}").unwrap();
     }
+
+    print!("{output}");
 }

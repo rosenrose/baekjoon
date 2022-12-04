@@ -1,10 +1,17 @@
+use std::io::{stdin, Read};
+
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(&buf);
-    let nums = parse_int_vec_lines(&mut buf, n);
-
+    let nums: Vec<_> = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<u32>().unwrap())
+        .skip(1)
+        .collect();
     let mut gcd = nums[0].abs_diff(nums[1]);
 
     for i in 1..nums.len() - 1 {
@@ -30,22 +37,4 @@ fn get_gcd(mut a: u32, mut b: u32) -> u32 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
-}
-
-fn parse_int_vec_lines(buf: &mut String, n: i32) -> Vec<i32> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            parse_int(buf)
-        })
-        .collect()
 }

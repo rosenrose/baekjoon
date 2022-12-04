@@ -1,21 +1,23 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
-    let n: i32 = parse_int(buf.trim());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    for i in 1..=n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
+    for i in 1..=input.next().unwrap() {
+        let sum = input.next().unwrap() + input.next().unwrap();
 
-        let sum: i32 = buf.split_whitespace().map(parse_int).sum();
-
-        writeln!(stdout, "Case {i}: {sum}").unwrap();
+        writeln!(output, "Case {i}: {sum}").unwrap();
     }
+
+    print!("{output}");
 }

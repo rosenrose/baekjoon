@@ -1,30 +1,34 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
-        let mut cents: i32 = buf.trim().parse().unwrap();
-
+    for mut cents in input.skip(1) {
         let mut counts = [0, 0, 0, 0];
-        let charges = [25, 10, 5, 1];
+        let values = [25, 10, 5, 1];
 
-        for (i, charge) in counts.iter_mut().enumerate() {
-            *charge += cents / charges[i];
-            cents %= charges[i];
+        for (i, value) in counts.iter_mut().enumerate() {
+            *value += cents / values[i];
+            cents %= values[i];
         }
 
-        if let [quarter, dime, nickel, penny] = counts[..] {
-            writeln!(stdout, "{quarter} {dime} {nickel} {penny}").unwrap();
-        }
+        writeln!(
+            output,
+            "{} {} {} {}",
+            counts[0], counts[1], counts[2], counts[3]
+        )
+        .unwrap();
     }
+
+    print!("{output}");
 }

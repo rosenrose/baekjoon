@@ -1,24 +1,18 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    let mut count = 0;
+    let count = buf
+        .split_ascii_whitespace()
+        .skip(1)
+        .map(|s| s.parse::<i32>().unwrap() - 1)
+        .sum::<i32>()
+        + 1;
 
-    for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-        let tab: i32 = buf.trim().parse().unwrap();
-
-        count += tab - 1;
-    }
-
-    count += 1;
-
-    writeln!(stdout, "{count}").unwrap();
+    print!("{count}");
 }

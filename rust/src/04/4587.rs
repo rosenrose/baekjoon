@@ -1,3 +1,5 @@
+use std::fmt::Write;
+use std::io::{stdin, Read};
 use std::ops::Sub;
 
 #[derive(Copy, Clone)]
@@ -14,18 +16,12 @@ impl Fraction {
         }
     }
 
-    fn parse(input: &str) -> Self {
-        let mut nums = input.split_whitespace().map(|s| s.parse::<i64>().unwrap());
-        Self::from(nums.next().unwrap(), nums.next().unwrap())
-    }
-
     fn unit(int: i64) -> Self {
         Self::from(1, int)
     }
 
     fn reduced(self) -> Self {
-        let gcd = get_gcd(self.numerator, self.denominator);
-        let gcd = if gcd < 0 { -gcd } else { gcd };
+        let gcd = get_gcd(self.numerator, self.denominator).abs();
 
         Self {
             numerator: self.numerator / gcd,
@@ -47,16 +43,25 @@ impl Sub for Fraction {
 }
 
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
+    stdin.read_to_string(&mut buf).unwrap();
+
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
+    let mut output = String::new();
 
     loop {
-        read_line(&mut buf);
+        let (m, n) = (input.next().unwrap(), input.next().unwrap());
 
-        if buf.trim() == "0 0" {
-            return;
+        if (m, n) == (0, 0) {
+            break;
         }
 
-        let mut fraction = Fraction::parse(buf.trim());
+        let mut fraction = Fraction::from(m, n);
 
         while fraction.numerator > 1 {
             for i in (fraction.denominator / fraction.numerator) + 1.. {
@@ -64,14 +69,16 @@ fn main() {
 
                 if next.numerator > 0 && next.denominator < 1_000_000 {
                     fraction = next;
-                    print!("{i} ");
+                    write!(output, "{i} ").unwrap();
                     break;
                 }
             }
         }
 
-        println!("{}", fraction.denominator);
+        writeln!(output, "{}", fraction.denominator).unwrap();
     }
+
+    print!("{output}");
 }
 
 fn get_gcd(mut a: i64, mut b: i64) -> i64 {
@@ -82,9 +89,4 @@ fn get_gcd(mut a: i64, mut b: i64) -> i64 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

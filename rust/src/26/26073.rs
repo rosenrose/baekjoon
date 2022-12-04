@@ -1,42 +1,33 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    let n = parse_int(lines.next().unwrap());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    for _ in 0..n {
-        if let [x, y] = parse_int_vec(lines.next().unwrap())[..] {
-            let gcd = get_gcd(
-                lines
-                    .next()
-                    .unwrap()
-                    .split_whitespace()
-                    .skip(1)
-                    .map(parse_int),
-            );
+    for _ in 0..input.next().unwrap() {
+        let (x, y) = (input.next().unwrap(), input.next().unwrap());
+        let k = input.next().unwrap();
 
-            if x % gcd != 0 || y % gcd != 0 {
-                writeln!(stdout, "Gave up").unwrap();
-                continue;
-            }
+        let gcd = get_gcd((0..k).map(|_| input.next().unwrap()));
 
-            writeln!(stdout, "Ta-da").unwrap();
+        if x % gcd != 0 || y % gcd != 0 {
+            writeln!(output, "Gave up").unwrap();
+            continue;
         }
+
+        writeln!(output, "Ta-da").unwrap();
     }
-}
 
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().map(parse_int).collect()
+    print!("{output}");
 }
 
 fn get_gcd<I>(nums: I) -> i32

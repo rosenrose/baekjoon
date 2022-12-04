@@ -1,46 +1,41 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    let first_prize = [500, 300, 200, 50, 30, 10];
-    let first_ranks = [1, 3, 6, 10, 15, 21];
+    let first_prize_rank = [(500, 1), (300, 3), (200, 6), (50, 10), (30, 15), (10, 21)];
+    let second_prize_rank = [(512, 1), (256, 3), (128, 7), (64, 15), (32, 31)];
 
-    let second_prize = [512, 256, 128, 64, 32];
-    let second_ranks = [1, 3, 7, 15, 31];
-
-    for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
+    for _ in 0..input.next().unwrap() {
+        let (a, b) = (input.next().unwrap(), input.next().unwrap());
         let mut total_prize = 0;
 
-        if let [a, b] = parse_int_vec(&buf)[..] {
-            for (i, &rank) in first_ranks.iter().enumerate() {
-                if a > 0 && a <= rank {
-                    total_prize += first_prize[i];
-                    break;
-                }
-            }
-
-            for (i, &rank) in second_ranks.iter().enumerate() {
-                if b > 0 && b <= rank {
-                    total_prize += second_prize[i];
-                    break;
-                }
+        for (prize, rank) in first_prize_rank {
+            if a > 0 && a <= rank {
+                total_prize += prize;
+                break;
             }
         }
 
-        writeln!(stdout, "{}", total_prize * 10000).unwrap();
-    }
-}
+        for (prize, rank) in second_prize_rank {
+            if b > 0 && b <= rank {
+                total_prize += prize;
+                break;
+            }
+        }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+        writeln!(output, "{}", total_prize * 10000).unwrap();
+    }
+
+    print!("{output}");
 }
