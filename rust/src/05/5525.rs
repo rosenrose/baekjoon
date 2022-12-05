@@ -1,26 +1,28 @@
+use std::io::{stdin, Read};
+
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: usize = buf.trim().parse().unwrap();
-    read_line(&mut buf);
-    read_line(&mut buf);
-
-    let s = buf.trim();
+    let mut input = buf.split_ascii_whitespace();
+    let n: usize = input.next().unwrap().parse().unwrap();
+    let s = input.next_back().unwrap().as_bytes();
 
     let pn = format!("I{}", "OI".repeat(n));
-    let pn_chars: Vec<char> = pn.chars().collect();
-    let partial_match = get_partial_match(&pn_chars);
+    let pn = pn.as_bytes();
+    let partial_match = get_partial_match(&pn);
 
-    let mut count = 0;
-    let mut start = 0;
+    let (mut count, mut start) = (0, 0);
 
-    for s_char in s.chars() {
-        while pn_chars[start] != s_char && start > 0 {
+    for &s_char in s {
+        while pn[start] != s_char && start > 0 {
             start = partial_match[start - 1];
         }
 
-        if pn_chars[start] == s_char {
+        if pn[start] == s_char {
             if start < pn.len() - 1 {
                 start += 1;
             } else {
@@ -33,7 +35,7 @@ fn main() {
     println!("{count}");
 }
 
-fn get_partial_match(chars: &Vec<char>) -> Vec<usize> {
+fn get_partial_match(chars: &[u8]) -> Vec<usize> {
     let mut partial_match = vec![0; chars.len()];
     let mut start = 0;
 
@@ -49,9 +51,4 @@ fn get_partial_match(chars: &Vec<char>) -> Vec<usize> {
     }
 
     partial_match
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

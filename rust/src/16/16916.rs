@@ -1,15 +1,11 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
-
     let mut buf = String::new();
-    stdin.read_to_string(&mut buf).unwrap();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    let s = lines.next().unwrap();
-    let p = lines.next().unwrap();
+    let mut input = buf.split_ascii_whitespace();
+    let (s, p) = (input.next().unwrap(), input.next().unwrap());
 
-    writeln!(stdout, "{}", if s.contains(p) { 1 } else { 0 }).unwrap();
+    println!("{}", if s.contains(p) { 1 } else { 0 });
 }

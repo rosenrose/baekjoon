@@ -1,14 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    read_line(&mut buf);
+    let mut input = buf.split_ascii_whitespace();
 
-    let before = buf.trim().to_string();
-    read_line(&mut buf);
-
-    let after = buf.trim().to_string();
+    let n: i32 = input.next().unwrap().parse().unwrap();
+    let (before, after) = (input.next().unwrap(), input.next().unwrap());
 
     for (x, y) in before.chars().zip(after.chars()) {
         match (n % 2, x == y) {
@@ -21,9 +20,4 @@ fn main() {
     }
 
     println!("Deletion succeeded");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

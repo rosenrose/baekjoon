@@ -1,5 +1,5 @@
-use std::fmt;
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::io::{stdin, Read};
+use std::{fmt, fmt::Write};
 
 struct MixedFraction {
     integer: i32,
@@ -13,13 +13,6 @@ impl MixedFraction {
             integer,
             numerator,
             denominator,
-        }
-    }
-
-    fn parse(input: &str) -> Self {
-        match parse_int_vec(input)[..] {
-            [a, b] => Self::from(0, a, b),
-            _ => Self::from(0, 0, 1),
         }
     }
 
@@ -43,21 +36,26 @@ impl fmt::Display for MixedFraction {
 }
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    for line in buf.lines() {
-        if line == "0 0" {
-            return;
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
+
+    loop {
+        let (n, d) = (input.next().unwrap(), input.next().unwrap());
+
+        if (n, d) == (0, 0) {
+            break;
         }
 
-        writeln!(stdout, "{}", MixedFraction::parse(line).to_mixed()).unwrap();
+        writeln!(output, "{}", MixedFraction::from(0, n, d).to_mixed()).unwrap();
     }
-}
 
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    print!("{output}");
 }

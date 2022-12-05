@@ -7,11 +7,7 @@ fn main() {
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    'outer: for line in buf.lines() {
-        if line == "." {
-            return;
-        }
-
+    'outer: for line in buf.lines().take_while(|&line| line != ".") {
         let mut open_close = Vec::new();
 
         for c in line.chars() {

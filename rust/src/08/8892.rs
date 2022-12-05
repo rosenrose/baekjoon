@@ -1,27 +1,21 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf.split_ascii_whitespace();
+    let mut output = String::new();
+
+    let n = parse_int(input.next().unwrap());
 
     'outer: for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
-        let k: i32 = buf.trim().parse().unwrap();
-        let words: Vec<String> = (0..k)
-            .map(|_| {
-                buf.clear();
-                stdin.read_line(&mut buf).unwrap();
-
-                buf.trim().to_string()
-            })
-            .collect();
+        let k = parse_int(input.next().unwrap());
+        let words: Vec<_> = (0..k).map(|_| input.next().unwrap()).collect();
 
         for i in 0..words.len() {
             for j in 0..words.len() {
@@ -29,20 +23,23 @@ fn main() {
                     continue;
                 }
 
+                // let merged = format!("{}{}", words[i], words[j]);
                 let merged = [&words[i][..], &words[j][..]].concat();
 
-                if is_palindrome(&merged[..]) {
-                    writeln!(stdout, "{merged}").unwrap();
+                if is_palindrome(merged.as_bytes()) {
+                    writeln!(output, "{merged}").unwrap();
                     continue 'outer;
                 }
             }
         }
 
-        writeln!(stdout, "0").unwrap();
+        writeln!(output, "0").unwrap();
     }
+
+    print!("{output}");
 }
 
-fn is_palindrome(word: &str) -> bool {
+fn is_palindrome(word: &[u8]) -> bool {
     let len = word.len();
 
     if len <= 1 {
@@ -56,7 +53,7 @@ fn is_palindrome(word: &str) -> bool {
             break;
         }
 
-        if word.chars().nth(i) != word.chars().nth(j) {
+        if word[i] != word[j] {
             return false;
         }
 
@@ -65,4 +62,8 @@ fn is_palindrome(word: &str) -> bool {
     }
 
     true
+}
+
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }

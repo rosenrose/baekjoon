@@ -6,21 +6,16 @@ fn main() {
     const R: i64 = 31;
     const M: i64 = 1234567891;
 
-    let hash = buf
-        .trim()
-        .char_indices()
-        .map(|(i, c)| {
-            let num = (c as u8 - 'a' as u8 + 1) as i64;
-            let mut remainder = num % M;
+    let hash = buf.trim().char_indices().fold(0, |acc, (i, c)| {
+        let num = (c as u8 - 'a' as u8 + 1) as i64;
+        let mut rem = num % M;
 
-            for _ in 0..i {
-                remainder = ((remainder % M) * (R % M)) % M;
-            }
+        for _ in 0..i {
+            rem = ((rem % M) * (R % M)) % M;
+        }
 
-            remainder
-        })
-        .sum::<i64>()
-        % M;
+        (acc % M + rem % M) % M
+    });
 
     println!("{hash}");
 }

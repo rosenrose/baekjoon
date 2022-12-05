@@ -1,23 +1,24 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    let t = lines.next().unwrap();
-    let p = lines.next().unwrap();
+    let mut input = buf.lines();
+    let mut output = String::new();
+
+    let (t, p) = (input.next().unwrap(), input.next().unwrap());
     let p_chars: Vec<char> = p.chars().collect();
 
     let partial_match = get_partial_match(&p_chars);
     // println!("{partial_match:?}");
 
-    let mut count = 0;
+    let (mut count, mut start) = (0, 0);
     let mut indices = Vec::new();
-    let mut start = 0;
 
     for (index, t_char) in t.char_indices() {
         while p_chars[start] != t_char && start > 0 {
@@ -36,11 +37,13 @@ fn main() {
         }
     }
 
-    writeln!(stdout, "{count}").unwrap();
+    writeln!(output, "{count}").unwrap();
 
     for i in indices {
-        write!(stdout, "{} ", i + 1).unwrap();
+        write!(output, "{} ", i + 1).unwrap();
     }
+
+    print!("{output}");
 }
 
 fn get_partial_match(chars: &Vec<char>) -> Vec<usize> {

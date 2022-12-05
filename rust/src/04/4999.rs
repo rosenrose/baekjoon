@@ -1,11 +1,11 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let ah = buf.trim().to_string();
-    read_line(&mut buf);
-
-    let require = buf.trim().to_string();
+    let mut input = buf.split_ascii_whitespace();
+    let (ah, require) = (input.next().unwrap(), input.next().unwrap());
 
     println!(
         "{}",
@@ -15,9 +15,4 @@ fn main() {
             "no"
         }
     );
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -8,26 +8,13 @@ fn main() {
     let cd = parse_int_vec(&buf);
 
     if let [a, b, c, d] = [ab, cd].concat()[..] {
-        let mut rotate_sums = Vec::new();
+        let numerator = a * d + b * c;
+        let denominators = [c * d, b * d, a * b, a * c];
 
-        while rotate_sums.len() < 4 {
-            let sum = (
-                a * d + b * c,
-                match rotate_sums.len() {
-                    0 => c * d,
-                    1 => b * d,
-                    2 => a * b,
-                    3 => a * c,
-                    _ => 0,
-                },
-            );
-
-            rotate_sums.push((rotate_sums.len(), sum));
-        }
-
-        let (min_rotate, _) = rotate_sums
+        let (min_rotate, _) = denominators
             .iter()
-            .max_by(|(_, a), (_, b)| (a.0 * b.1).cmp(&(b.0 * a.1)))
+            .enumerate()
+            .max_by(|(_, &a), (_, &b)| (numerator * b).cmp(&(numerator * a)))
             .unwrap();
 
         println!("{min_rotate}");

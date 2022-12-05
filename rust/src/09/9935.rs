@@ -1,12 +1,14 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let input = buf.trim().to_string();
-    read_line(&mut buf);
+    let mut input = buf.split_ascii_whitespace();
 
-    let bomb = buf.trim();
+    let bomb = input.next_back().unwrap();
     let bomb_len = bomb.len();
+    let input = input.next().unwrap();
 
     let mut stack = String::new();
 
@@ -30,9 +32,4 @@ fn main() {
             stack
         }
     );
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

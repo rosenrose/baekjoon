@@ -1,14 +1,15 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let a = buf.trim().to_string();
-    read_line(&mut buf);
-
-    let b = buf.trim().to_string();
-    read_line(&mut buf);
-
-    let c = buf.trim();
+    let mut input = buf.split_ascii_whitespace();
+    let (a, b, c) = (
+        input.next().unwrap(),
+        input.next().unwrap(),
+        input.next().unwrap(),
+    );
 
     let mut table = vec![vec![vec![0; a.len() + 1]; b.len() + 1]; c.len() + 1];
     let mut max_len = 0;
@@ -28,9 +29,4 @@ fn main() {
     }
 
     println!("{max_len}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -1,23 +1,27 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let input = buf.split_ascii_whitespace();
+    let mut output = String::new();
 
-    for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
-        let is_valid = match buf.trim().len() {
-            6..=9 => "yes",
-            _ => "no",
-        };
-
-        writeln!(stdout, "{is_valid}").unwrap();
+    for password in input.skip(1) {
+        writeln!(
+            output,
+            "{}",
+            match password.len() {
+                6..=9 => "yes",
+                _ => "no",
+            }
+        )
+        .unwrap();
     }
+
+    print!("{output}");
 }

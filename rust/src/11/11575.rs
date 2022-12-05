@@ -6,29 +6,32 @@ fn main() {
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
-    let mut lines = buf.lines();
 
-    let n: i32 = lines.next().unwrap().parse().unwrap();
+    let mut input = buf.split_ascii_whitespace();
+    let n = parse_int(input.next().unwrap());
     let offset = 'A' as u8;
 
     for _ in 0..n {
-        if let [a, b] = parse_int_vec(lines.next().unwrap())[..] {
-            let convert_table: Vec<_> = ('A'..='Z')
-                .map(|c| (((a * (c as u8 - offset) as i32 + b) % 26) as u8 + offset) as char)
-                .collect();
+        let (a, b, s) = (
+            parse_int(input.next().unwrap()),
+            parse_int(input.next().unwrap()),
+            input.next().unwrap(),
+        );
 
-            let encrypted: String = lines
-                .next()
-                .unwrap()
-                .chars()
-                .map(|c| convert_table[(c as u8 - offset) as usize])
-                .collect();
+        let convert_table: Vec<_> = (0..26)
+            .map(|x| (((a * x + b) % 26) as u8 + offset) as char)
+            .collect();
 
-            writeln!(stdout, "{encrypted}").unwrap();
-        }
+        let encrypted: String = s
+            .as_bytes()
+            .iter()
+            .map(|c| convert_table[(c - offset) as usize])
+            .collect();
+
+        writeln!(stdout, "{encrypted}").unwrap();
     }
 }
 
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }

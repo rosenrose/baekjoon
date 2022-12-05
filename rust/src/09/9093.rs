@@ -1,21 +1,21 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut output = String::new();
 
-    for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
-        let words = buf.split_whitespace();
+    for line in buf.lines().skip(1) {
+        let words = line.split_whitespace();
         let reversed: Vec<String> = words.map(|word| word.chars().rev().collect()).collect();
 
-        writeln!(stdout, "{}", reversed.join(" ")).unwrap();
+        writeln!(output, "{}", reversed.join(" ")).unwrap();
     }
+
+    print!("{output}");
 }

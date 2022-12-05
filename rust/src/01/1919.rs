@@ -1,22 +1,17 @@
 use std::collections::HashMap;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
+    let mut input = buf.split_ascii_whitespace();
     let char_count = |s: &str| -> HashMap<char, usize> {
-        s.chars()
-            .map(|letter| {
-                let count = s.chars().filter(|&c| c == letter).count();
-                (letter, count)
-            })
-            .collect()
+        s.chars().map(|c| (c, s.matches(c).count())).collect()
     };
 
-    let a_count_map = char_count(buf.trim());
-    read_line(&mut buf);
-
-    let mut b_count_map = char_count(buf.trim());
+    let a_count_map = char_count(input.next().unwrap());
+    let mut b_count_map = char_count(input.next().unwrap());
     // println!("{a_count_map:?} {b_count_map:?}");
 
     let map_sub = |a: &mut HashMap<_, usize>, b: &HashMap<_, usize>| {
@@ -33,9 +28,4 @@ fn main() {
     let b_delete_count: usize = b_count_map.values().sum();
 
     println!("{}", a_delete_count + b_delete_count);
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

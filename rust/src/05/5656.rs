@@ -1,20 +1,22 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
+    let mut input = buf.split_ascii_whitespace();
+    let mut output = String::new();
 
-    for (i, line) in buf.lines().enumerate() {
-        let mut tokens = line.split_whitespace();
-
-        let a = parse_int(tokens.next().unwrap());
-        let op = tokens.next().unwrap();
-        let b = parse_int(tokens.next().unwrap());
+    for i in 1.. {
+        let (a, op, b) = (
+            parse_int(input.next().unwrap()),
+            input.next().unwrap(),
+            parse_int(input.next().unwrap()),
+        );
 
         let cmp = match op {
             ">" => a > b,
@@ -23,9 +25,17 @@ fn main() {
             "<=" => a <= b,
             "==" => a == b,
             "!=" => a != b,
-            _ => return,
+            _ => {
+                break;
+            }
         };
 
-        writeln!(stdout, "Case {}: {cmp}", i + 1).unwrap();
+        writeln!(output, "Case {i}: {cmp}").unwrap();
     }
+
+    print!("{output}");
+}
+
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }
