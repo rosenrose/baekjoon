@@ -1,23 +1,18 @@
 use std::collections::VecDeque;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<usize>().unwrap();
-    let n = parse_int(buf.trim());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<usize>().unwrap());
 
-    'outer: for _ in 0..n {
-        read_line(&mut buf);
+    for _ in 0..input.next().unwrap() {
+        let (n, m) = (input.next().unwrap(), input.next().unwrap());
 
-        let m = buf.split_whitespace().map(parse_int).next_back().unwrap();
-        read_line(&mut buf);
-
-        let mut docs: VecDeque<_> = buf
-            .split_whitespace()
-            .enumerate()
-            .map(|(i, s)| (parse_int(s), i))
-            .collect();
+        let mut docs: VecDeque<_> = (0..n).map(|i| (input.next().unwrap(), i)).collect();
 
         if docs.len() == 1 {
             println!("1");
@@ -27,7 +22,7 @@ fn main() {
         let target = docs[m];
         let mut order = 1;
 
-        while !docs.is_empty() {
+        loop {
             let (mut first_importance, _) = docs[0];
 
             while docs.iter().skip(1).any(|doc| doc.0 > first_importance) {
@@ -39,15 +34,10 @@ fn main() {
 
             if docs.pop_front().unwrap() == target {
                 println!("{order}");
-                continue 'outer;
+                break;
             }
 
             order += 1;
         }
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

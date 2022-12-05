@@ -1,9 +1,14 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let mut a = buf.split_whitespace().map(|s| s.parse::<i32>().unwrap());
+    let mut a = buf
+        .split_ascii_whitespace()
+        .skip(1)
+        .map(|s| s.parse::<i32>().unwrap());
+
     let mut lis = vec![a.next().unwrap()];
 
     for num in a {
@@ -12,18 +17,9 @@ fn main() {
             continue;
         }
 
-        let pos = match lis.binary_search(&num) {
-            Ok(i) => i,
-            Err(i) => i,
-        };
-
+        let pos = lis.binary_search(&num).unwrap_or_else(|i| i);
         lis[pos] = num;
     }
 
     println!("{}", lis.len());
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -1,17 +1,15 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
     let mut a = buf
-        .lines()
-        .next_back()
-        .unwrap()
-        .split_whitespace()
+        .split_ascii_whitespace()
+        .skip(1)
         .map(|s| s.parse::<i32>().unwrap());
 
     let mut lis = vec![a.next().unwrap()];
@@ -22,13 +20,9 @@ fn main() {
             continue;
         }
 
-        let pos = match lis.binary_search(&num) {
-            Ok(i) => i,
-            Err(i) => i,
-        };
-
+        let pos = lis.binary_search(&num).unwrap_or_else(|i| i);
         lis[pos] = num;
     }
 
-    writeln!(stdout, "{}", lis.len()).unwrap();
+    println!("{}", lis.len());
 }
