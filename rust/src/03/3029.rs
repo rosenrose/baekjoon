@@ -7,7 +7,7 @@ fn main() {
 
     let mut end = parse_int_vec(&buf);
 
-    if end < current {
+    if end <= current {
         end[0] += 24;
     }
 
