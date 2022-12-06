@@ -1,27 +1,19 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    loop {
-        read_line(&mut buf);
-
-        if buf.trim() == "#" {
-            return;
-        }
-
-        let vowels = buf
-            .trim()
+    for input in buf.lines().take_while(|&input| input != "#") {
+        let vowels = input
+            .to_lowercase()
             .chars()
             .filter(|c| match c {
-                'a' | 'e' | 'i' | 'o' | 'u' | 'A' | 'E' | 'I' | 'O' | 'U' => true,
+                'a' | 'e' | 'i' | 'o' | 'u' => true,
                 _ => false,
             })
             .count();
 
         println!("{vowels}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

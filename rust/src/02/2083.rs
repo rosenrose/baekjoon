@@ -1,31 +1,32 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
+
+    let mut input = buf.split_ascii_whitespace();
 
     loop {
-        read_line(&mut buf);
-        let mut tokens = buf.split_whitespace();
-        let name = tokens.next().unwrap();
+        let (name, age, weight) = (
+            input.next().unwrap(),
+            parse_int(input.next().unwrap()),
+            parse_int(input.next().unwrap()),
+        );
 
         if name == "#" {
             return;
         }
 
-        if let [age, weight] = tokens
-            .map(|s| s.parse::<i32>().unwrap())
-            .collect::<Vec<_>>()[..]
-        {
-            let class = if age > 17 || weight >= 80 {
-                "Senior"
-            } else {
-                "Junior"
-            };
+        let class = if age > 17 || weight >= 80 {
+            "Senior"
+        } else {
+            "Junior"
+        };
 
-            println!("{name} {class}");
-        }
+        println!("{name} {class}");
     }
 }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }

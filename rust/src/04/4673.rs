@@ -1,18 +1,18 @@
 use std::collections::HashSet;
-use std::io::{stdout, BufWriter, Write};
+use std::fmt::Write;
 
 fn main() {
-    let stdout = stdout();
-    let mut stdout = BufWriter::new(stdout.lock());
-
+    let mut output = String::new();
     const N: i32 = 10000;
 
-    let d_nums: HashSet<i32> = (1..N).map(|n| d(n)).collect();
+    let d_nums: HashSet<_> = (1..N).map(|n| d(n)).collect();
     let self_nums = (1..=N).filter(|n| !d_nums.contains(n));
 
     for num in self_nums {
-        writeln!(stdout, "{num}").unwrap();
+        writeln!(output, "{num}").unwrap();
     }
+
+    print!("{output}");
 }
 
 fn d(n: i32) -> i32 {

@@ -3,12 +3,12 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: usize = buf.trim().parse().unwrap();
-    let result = print(n);
+    let result = star(n).join("\n");
 
-    println!("{}", result.join("\n"));
+    print!("{result}");
 }
 
-fn print(n: usize) -> Vec<String> {
+fn star(n: usize) -> Vec<String> {
     if n == 3 {
         #[rustfmt::skip]
         return vec![
@@ -18,21 +18,22 @@ fn print(n: usize) -> Vec<String> {
           ];
     }
 
-    let inner = print(n / 3);
+    let inner = star(n / 3);
     let inner_size = n / 3;
 
-    let mut result = Vec::new();
+    let mut result = Vec::with_capacity(n);
+    let blank = " ".repeat(inner_size);
 
-    for i in 0..inner_size {
-        result.push(inner[i].repeat(3));
+    for i in inner.iter() {
+        result.push(i.repeat(3));
     }
 
-    for i in 0..inner_size {
-        result.push(format!("{}{:inner_size$}{}", inner[i], "", inner[i]));
+    for i in inner.iter() {
+        result.push(format!("{i}{blank}{i}"));
     }
 
-    for i in 0..inner_size {
-        result.push(inner[i].repeat(3));
+    for i in inner {
+        result.push(i.repeat(3));
     }
 
     result

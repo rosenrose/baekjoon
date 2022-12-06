@@ -1,19 +1,14 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
-
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
-
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: usize = buf.trim().parse().unwrap();
-    let result = print(n);
+    let result = star(n).join("\n");
 
-    writeln!(stdout, "{}", result.join("\n")).unwrap();
+    print!("{result}");
 }
 
-fn print(n: usize) -> Vec<String> {
+fn star(n: usize) -> Vec<String> {
     if n == 3 {
         return vec![
             "  *  ".to_string(),
@@ -22,16 +17,18 @@ fn print(n: usize) -> Vec<String> {
         ];
     }
 
-    let inner = print(n / 2);
-    let inner_size = n / 2;
-    let mut result = Vec::new();
+    let inner = star(n / 2);
+    let inner_width = inner[0].len();
 
-    for i in 0..inner_size {
-        result.push(format!("{:inner_size$}{}{:inner_size$}", "", inner[i], ""));
+    let mut result = Vec::with_capacity(n);
+    let blank = " ".repeat(inner_width / 2 + 1);
+
+    for i in inner.iter() {
+        result.push(format!("{blank}{i}{blank}"));
     }
 
-    for i in 0..inner_size {
-        result.push(format!("{} {}", inner[i], inner[i]));
+    for i in inner {
+        result.push(format!("{i} {i}"));
     }
 
     result

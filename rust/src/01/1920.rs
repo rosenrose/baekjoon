@@ -1,28 +1,26 @@
 use std::collections::HashSet;
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    lines.next();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    let nums1 = parse_int_set(lines.next().unwrap());
-    let nums2 = lines.next_back().unwrap().split_whitespace().map(parse_int);
+    let n = input.next().unwrap();
+    let nums1: HashSet<_> = (0..n).map(|_| input.next().unwrap()).collect();
+    let nums2 = input.skip(1);
 
     for num in nums2 {
-        writeln!(stdout, "{}", if nums1.contains(&num) { 1 } else { 0 }).unwrap();
+        writeln!(output, "{}", if nums1.contains(&num) { 1 } else { 0 }).unwrap();
     }
-}
 
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
-}
-
-fn parse_int_set(buf: &str) -> HashSet<i32> {
-    buf.split_whitespace().map(parse_int).collect()
+    print!("{output}");
 }

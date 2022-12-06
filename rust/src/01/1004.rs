@@ -1,45 +1,52 @@
+use std::fmt::Write;
+use std::io::{stdin, Read};
+
 fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(&buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    for _ in 0..n {
-        read_line(&mut buf);
+    for _ in 0..input.next().unwrap() {
+        let (start, end) = (
+            (input.next().unwrap(), input.next().unwrap()),
+            (input.next().unwrap(), input.next().unwrap()),
+        );
 
-        if let [x1, y1, x2, y2] = parse_int_vec(&buf)[..] {
-            let (start, end) = ((x1, y1), (x2, y2));
+        let n = input.next().unwrap();
+        let mut count = 0;
 
-            read_line(&mut buf);
-            let planet_count = parse_int(&buf);
+        for _ in 0..n {
+            let planet = (
+                (input.next().unwrap(), input.next().unwrap()),
+                input.next().unwrap() as f64,
+            );
 
-            let mut count = 0;
+            let is_start_inside_planet = is_point_inside_circle(start, planet);
+            let is_end_inside_planet = is_point_inside_circle(end, planet);
 
-            for _ in 0..planet_count {
-                read_line(&mut buf);
-
-                if let [cx, cy, r] = parse_int_vec(&buf)[..] {
-                    let planet = ((cx, cy), r as f64);
-
-                    let is_start_inside_planet = is_point_inside_circle(start, planet);
-                    let is_end_inside_planet = is_point_inside_circle(end, planet);
-
-                    if is_start_inside_planet {
-                        count += 1;
-                    }
-                    if is_end_inside_planet {
-                        count += 1;
-                    }
-
-                    if is_start_inside_planet && is_end_inside_planet {
-                        count -= 2;
-                    }
-                }
+            if is_start_inside_planet {
+                count += 1;
+            }
+            if is_end_inside_planet {
+                count += 1;
             }
 
-            println!("{count}");
+            if is_start_inside_planet && is_end_inside_planet {
+                count -= 2;
+            }
         }
+
+        writeln!(output, "{count}").unwrap();
     }
+
+    print!("{output}");
 }
 
 fn distance_of_points(p1: (i32, i32), p2: (i32, i32)) -> f64 {
@@ -53,17 +60,4 @@ fn is_point_inside_circle(point: (i32, i32), circle: ((i32, i32), f64)) -> bool 
     let (center, radius) = circle;
 
     distance_of_points(point, center) < radius
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

@@ -1,8 +1,8 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
@@ -10,15 +10,13 @@ fn main() {
     const N: i32 = 1_000_000;
     let (mut min, mut max) = (N, -N);
 
-    buf.lines()
-        .next_back()
-        .unwrap()
-        .split_whitespace()
+    buf.split_ascii_whitespace()
+        .skip(1)
         .map(|s| s.parse::<i32>().unwrap())
         .for_each(|num| {
             min = num.min(min);
             max = num.max(max);
         });
 
-    writeln!(stdout, "{min} {max}").unwrap();
+    println!("{min} {max}");
 }

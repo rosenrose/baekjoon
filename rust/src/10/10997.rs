@@ -1,46 +1,41 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
-
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
-
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: usize = buf.trim().parse().unwrap();
-    let result = print(n);
+    let result = star(n).join("\n");
 
-    for r in result {
-        writeln!(stdout, "{}", r.trim_end()).unwrap();
-    }
+    print!("{result}");
 }
 
-fn print(n: usize) -> Vec<String> {
+fn star(n: usize) -> Vec<String> {
     if n == 1 {
         return vec!["*".to_string()];
     }
 
-    let mut inner = print(n - 1);
+    let mut inner = star(n - 1);
+
     if n == 2 {
         inner.push("*".to_string());
         inner.push("*".to_string());
     }
 
     let width = 4 * n - 3;
-    let mut result = Vec::new();
+    let mut result = Vec::with_capacity(4 * n - 1);
+    let blank = " ".repeat(width - 2);
 
     result.push("*".repeat(width));
-    result.push(format!("{:width$}", "*"));
+    result.push("*".to_string());
 
-    for i in 0..inner.len() {
-        result.push(format!(
-            "* {}{}",
-            inner[i],
-            if i == 0 { "**" } else { " *" }
-        ));
+    for (idx, i) in inner.iter().enumerate() {
+        result.push(match idx {
+            0 => format!("* {i}**",),
+            1 => format!("* {i}{}*", &blank[..width - 4]),
+            _ => format!("* {i} *"),
+        });
     }
 
-    result.push(format!("*{:blank$}*", "", blank = width - 2));
+    result.push(format!("*{blank}*"));
     result.push("*".repeat(width));
 
     result

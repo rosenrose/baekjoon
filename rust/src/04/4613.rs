@@ -1,15 +1,11 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    loop {
-        read_line(&mut buf);
-
-        if buf.trim() == "#" {
-            return;
-        }
-
-        let checksum: usize = buf
-            .trim()
+    for input in buf.lines().take_while(|&input| input != "#") {
+        let checksum: usize = input
             .char_indices()
             .map(|(i, c)| match c {
                 'A'..='Z' => (i + 1) * (c as u8 - 'A' as u8 + 1) as usize,
@@ -19,9 +15,4 @@ fn main() {
 
         println!("{checksum}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

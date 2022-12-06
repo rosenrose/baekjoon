@@ -1,3 +1,5 @@
+use std::fmt::Write;
+
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
@@ -9,19 +11,21 @@ fn main() {
         return;
     }
 
-    let mut result: String;
+    let mut output = String::new();
 
     for i in 1..=n * 2 {
-        if n % 2 == 0 {
-            result = (if i % 2 == 0 { " *" } else { "* " }).repeat(n / 2);
+        let star = if n % 2 == 0 {
+            (if i % 2 == 0 { " *" } else { "* " }).repeat(n / 2)
         } else {
-            result = if i % 2 == 0 {
+            if i % 2 == 0 {
                 " *".repeat(n / 2)
             } else {
                 "* ".repeat((n + 1) / 2)
-            };
-        }
+            }
+        };
 
-        println!("{}", result.trim_end());
+        writeln!(output, "{}", star.trim_end()).unwrap();
     }
+
+    print!("{output}");
 }

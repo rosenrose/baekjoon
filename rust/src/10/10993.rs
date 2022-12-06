@@ -1,38 +1,43 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
-
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    std::io::stdin().read_line(&mut buf).unwrap();
 
+    let mut output = String::new();
     let n: usize = buf.trim().parse().unwrap();
-    let result = print(n);
+    let result = star(n);
 
     for r in result {
-        writeln!(stdout, "{}", r.trim_end()).unwrap();
+        writeln!(output, "{}", r.trim_end()).unwrap();
     }
+
+    print!("{output}");
 }
 
-fn print(n: usize) -> Vec<String> {
+fn star(n: usize) -> Vec<String> {
     if n == 1 {
         return vec!["*".to_string()];
     }
 
-    let inner = print(n - 1);
-    let inner_size = inner.len();
+    let inner = star(n - 1);
+    let inner_height = inner.len();
     let inner_width = inner[0].len();
 
-    let size = inner_size * 2 + 1;
-    let width = inner_width + (size + 1);
+    let height = inner_height * 2 + 1;
+    let width = inner_width * 2 + 3;
 
+    let blank = " ".repeat(inner_width * 2 - 1);
     let horizontal = "*".repeat(width);
     let point = format!("{:^width$}", "*");
-    let side = (2..=size - 1).map(|i| {
-        let pad = size - i;
-        let blank = i * 2 - 3;
-        format!("{:pad$}*{:blank$}*{:pad$}", "", "", "")
+
+    let side = (1..height - 1).map(|i| {
+        format!(
+            "{}*{}*{}",
+            &blank[..height - 1 - i],
+            &blank[..i * 2 - 1],
+            &blank[..height - 1 - i],
+        )
     });
 
     let mut result: Vec<String>;
@@ -43,7 +48,7 @@ fn print(n: usize) -> Vec<String> {
         result.insert(0, horizontal);
         result.push(point);
 
-        for i in 1..=inner_size {
+        for i in 1..=inner_height {
             result[i] = [
                 &result[i][..rest_width],
                 &inner[i - 1][..],
@@ -56,10 +61,10 @@ fn print(n: usize) -> Vec<String> {
         result.insert(0, point);
         result.push(horizontal);
 
-        for i in inner_size..size - 1 {
+        for i in inner_height..height - 1 {
             result[i] = [
                 &result[i][..rest_width],
-                &inner[i - inner_size][..],
+                &inner[i - inner_height][..],
                 &result[i][width - rest_width..],
             ]
             .concat();

@@ -1,7 +1,10 @@
+use std::fmt::Write;
+
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
+    let mut output = String::new();
     let n: usize = buf.trim().parse().unwrap();
 
     for i in (1..=n).chain((1..n).rev()) {
@@ -9,7 +12,7 @@ fn main() {
 
         if i == 1 {
             let star = "*".repeat(n);
-            println!("{star}{:blank$}{star}", "");
+            writeln!(output, "{star}{:blank$}{star}", "").unwrap();
             continue;
         }
 
@@ -17,10 +20,17 @@ fn main() {
         let gap = n - 2;
 
         if i == n {
-            println!("{:left$}*{:gap$}*{:gap$}*", "", "", "");
+            writeln!(output, "{:left$}*{:gap$}*{:gap$}*", "", "", "").unwrap();
             continue;
         }
 
-        println!("{:left$}*{:gap$}*{:blank$}*{:gap$}*", "", "", "", "");
+        writeln!(
+            output,
+            "{:left$}*{:gap$}*{:blank$}*{:gap$}*",
+            "", "", "", ""
+        )
+        .unwrap();
     }
+
+    print!("{output}");
 }

@@ -1,24 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let mbti = buf.trim().to_string();
-    read_line(&mut buf);
+    let mut input = buf.split_ascii_whitespace();
 
-    let n: i32 = buf.trim().parse().unwrap();
-
-    let count = (0..n)
-        .map(|_| {
-            read_line(&mut buf);
-            buf.trim().to_string()
-        })
-        .filter(|s| s == &mbti)
-        .count();
+    let mbti = input.next().unwrap();
+    let count = input.skip(1).filter(|&friend| friend == mbti).count();
 
     println!("{count}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }
