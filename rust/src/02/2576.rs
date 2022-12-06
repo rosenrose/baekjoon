@@ -1,18 +1,19 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
+
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+
     let mut min = 100;
+    let sum = input.filter(|num| num % 2 == 1).fold(0, |sum, num| {
+        min = num.min(min);
 
-    let sum = (0..7)
-        .map(|_| {
-            read_line(&mut buf);
-            parse_int(&buf)
-        })
-        .filter(|i| i % 2 == 1)
-        .fold(0, |sum, i| {
-            min = i.min(min);
-
-            sum + i
-        });
+        sum + num
+    });
 
     if sum == 0 {
         println!("-1");
@@ -20,13 +21,4 @@ fn main() {
     }
 
     println!("{sum}\n{min}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

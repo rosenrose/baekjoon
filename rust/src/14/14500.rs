@@ -1,6 +1,8 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
     const TETROMINOES: [[(usize, usize); 4]; 19] = [
         // I
@@ -31,10 +33,16 @@ fn main() {
         [(0, 1), (1, 0), (1, 1), (2, 1)],
     ];
     // print_tetrominos(TETROMINOES);
-    let size = parse_int_vec(&buf);
-    let (n, m) = (size[0], size[1]);
 
-    let paper = parse_matrix(&mut buf, n);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<usize>().unwrap());
+
+    let (n, m) = (input.next().unwrap(), input.next().unwrap());
+    let paper: Vec<Vec<_>> = (0..n)
+        .map(|_| (0..m).map(|_| input.next().unwrap()).collect())
+        .collect();
+
     let mut max_sum = 0;
 
     for (i, row) in paper.iter().enumerate() {
@@ -56,24 +64,6 @@ fn main() {
     }
 
     println!("{max_sum}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<usize> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
-}
-
-fn parse_matrix(buf: &mut String, rows: usize) -> Vec<Vec<usize>> {
-    (0..rows)
-        .map(|_| {
-            read_line(buf);
-            parse_int_vec(buf)
-        })
-        .collect()
 }
 
 fn print_tetrominos(tetrominos: [[(usize, usize); 4]; 19]) {

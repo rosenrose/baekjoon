@@ -1,16 +1,20 @@
 use std::collections::HashMap;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: usize = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<usize>().unwrap());
+    let mut output = String::new();
 
-    let digit_cycle: HashMap<usize, Vec<usize>> = (0..=9)
+    let digit_cycle: HashMap<_, _> = (0..=9)
         .map(|i| {
             let mut cycle = vec![i];
             let mut next = (i * i) % 10;
@@ -28,19 +32,14 @@ fn main() {
         })
         .collect();
 
-    for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
+    for _ in 0..input.next().unwrap() {
+        let (a, b) = (input.next().unwrap(), input.next().unwrap());
 
-        if let [a, b] = parse_int_vec(&buf)[..] {
-            let cycle = digit_cycle.get(&(a % 10)).unwrap();
-            let number = cycle[(b - 1) % cycle.len()];
+        let cycle = digit_cycle.get(&(a % 10)).unwrap();
+        let number = cycle[(b - 1) % cycle.len()];
 
-            writeln!(stdout, "{}", if number == 0 { 10 } else { number }).unwrap();
-        }
+        writeln!(output, "{}", if number == 0 { 10 } else { number }).unwrap();
     }
-}
 
-fn parse_int_vec(buf: &String) -> Vec<usize> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    print!("{output}");
 }

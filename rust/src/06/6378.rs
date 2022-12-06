@@ -1,14 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    loop {
-        read_line(&mut buf);
+    let input = buf.split_ascii_whitespace();
 
-        if buf.trim() == "0" {
-            return;
-        }
-
-        let mut sum: u32 = buf.trim().chars().map(|c| c.to_digit(10).unwrap()).sum();
+    for num in input.take_while(|&num| num != "0") {
+        let mut sum: u32 = num.chars().map(|c| c.to_digit(10).unwrap()).sum();
 
         if sum < 10 {
             println!("{sum}");
@@ -32,9 +31,4 @@ fn main() {
 
         println!("{digital_root}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

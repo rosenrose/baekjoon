@@ -1,15 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    loop {
-        read_line(&mut buf);
+    let input = buf.split_ascii_whitespace();
 
-        if buf.trim() == "0" {
-            return;
-        }
-
-        let width = buf
-            .trim()
+    for num in input.take_while(|&num| num != "0") {
+        let width = num
             .chars()
             .map(|c| {
                 (match c {
@@ -23,9 +21,4 @@ fn main() {
 
         println!("{width}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

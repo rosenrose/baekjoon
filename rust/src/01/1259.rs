@@ -1,21 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    loop {
-        read_line(&mut buf);
+    let input = buf.split_ascii_whitespace();
 
-        if buf.trim() == "0" {
-            return;
-        }
-
-        println!(
-            "{}",
-            if is_palindrome(buf.trim()) {
-                "yes"
-            } else {
-                "no"
-            }
-        );
+    for num in input.take_while(|&num| num != "0") {
+        println!("{}", if is_palindrome(num) { "yes" } else { "no" });
     }
 }
 
@@ -31,9 +23,4 @@ fn is_palindrome(word: &str) -> bool {
     }
 
     is_palindrome(&word[1..len - 1])
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -1,69 +1,72 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    if let [n, m, x, y, _] = parse_int_vec(&buf)[..] {
-        let (mut x, mut y) = (y, x);
-        let mut map: Vec<_> = (0..n)
-            .map(|_| {
-                buf.clear();
-                stdin.read_line(&mut buf).unwrap();
-                parse_int_vec(&buf)
-            })
-            .collect();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<usize>().unwrap());
+    let mut output = String::new();
 
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
+    let (n, m, x, y) = (
+        input.next().unwrap(),
+        input.next().unwrap(),
+        input.next().unwrap(),
+        input.next().unwrap(),
+    );
+    input.next();
 
-        let (mut top, mut bottom, mut east, mut west, mut south, mut north) = (0, 0, 0, 0, 0, 0);
+    let (mut x, mut y) = (y, x);
+    let mut map: Vec<Vec<_>> = (0..n)
+        .map(|_| (0..m).map(|_| input.next().unwrap()).collect())
+        .collect();
 
-        for command in parse_int_vec(&buf) {
-            match (command, x, y) {
-                (1, i, _) if i == m - 1 => continue,
-                (2, 0, _) | (3, _, 0) => continue,
-                (4, _, i) if i == n - 1 => continue,
-                _ => (),
-            }
+    let (mut top, mut bottom, mut east, mut west, mut south, mut north) = (0, 0, 0, 0, 0, 0);
 
-            match command {
-                1 => {
-                    x += 1;
-                    (top, bottom, east, west) = (west, east, top, bottom);
-                }
-                2 => {
-                    x -= 1;
-                    (top, bottom, east, west) = (east, west, bottom, top);
-                }
-                3 => {
-                    y -= 1;
-                    (top, bottom, north, south) = (south, north, top, bottom);
-                }
-                4 => {
-                    y += 1;
-                    (top, bottom, north, south) = (north, south, bottom, top);
-                }
-                _ => (),
-            }
-
-            if map[y][x] == 0 {
-                map[y][x] = bottom;
-            } else {
-                bottom = map[y][x];
-                map[y][x] = 0;
-            }
-
-            writeln!(stdout, "{top}").unwrap();
+    for command in input {
+        match (command, x, y) {
+            (1, i, _) if i == m - 1 => continue,
+            (2, 0, _) | (3, _, 0) => continue,
+            (4, _, i) if i == n - 1 => continue,
+            _ => (),
         }
-    }
-}
 
-fn parse_int_vec(buf: &String) -> Vec<usize> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+        match command {
+            1 => {
+                x += 1;
+                (top, bottom, east, west) = (west, east, top, bottom);
+            }
+            2 => {
+                x -= 1;
+                (top, bottom, east, west) = (east, west, bottom, top);
+            }
+            3 => {
+                y -= 1;
+                (top, bottom, north, south) = (south, north, top, bottom);
+            }
+            4 => {
+                y += 1;
+                (top, bottom, north, south) = (north, south, bottom, top);
+            }
+            _ => (),
+        }
+
+        if map[y][x] == 0 {
+            map[y][x] = bottom;
+        } else {
+            bottom = map[y][x];
+            map[y][x] = 0;
+        }
+
+        writeln!(output, "{top}").unwrap();
+    }
+
+    print!("{output}");
 }
 
 /*

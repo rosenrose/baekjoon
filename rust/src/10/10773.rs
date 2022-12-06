@@ -1,28 +1,25 @@
-fn main() {
-    let mut buf = String::new();
-    read_line(&mut buf);
+use std::io::{stdin, Read};
 
-    let n = parse_int(&buf);
+fn main() {
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+
+    let mut buf = String::new();
+    stdin.read_to_string(&mut buf).unwrap();
+
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+
     let mut stack = Vec::new();
 
-    for _ in 0..n {
-        read_line(&mut buf);
-
-        if buf.trim() == "0" {
+    for num in input.skip(1) {
+        if num == 0 {
             stack.pop();
         } else {
-            stack.push(parse_int(&buf));
+            stack.push(num);
         }
     }
 
     println!("{}", stack.iter().sum::<i32>());
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

@@ -1,31 +1,24 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
+
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
     loop {
-        read_line(&mut buf);
+        let a = input.next().unwrap();
 
-        if buf.trim() == "0" {
+        if a == 0 {
             return;
         }
 
-        let mut tokens = buf.split_whitespace().map(parse_int);
-        let mut leaves = 1;
-        let levels = tokens.next().unwrap();
-
-        for _ in 0..levels {
-            leaves *= tokens.next().unwrap();
-            leaves -= tokens.next().unwrap();
-        }
+        let leaves = (0..a).fold(1, |leaf, _| {
+            (leaf * input.next().unwrap()) - input.next().unwrap()
+        });
 
         println!("{leaves}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
 }

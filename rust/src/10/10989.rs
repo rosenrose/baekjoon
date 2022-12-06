@@ -7,7 +7,7 @@ fn main() {
     let mut buf = String::new();
     stdin.read_line(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let n: i32 = buf.trim_end().parse().unwrap();
     const MAX_NUM: usize = 10000;
 
     let mut count = [0; MAX_NUM + 1];
@@ -16,9 +16,10 @@ fn main() {
     for _ in 0..n {
         buf.clear();
         stdin.read_line(&mut buf).unwrap();
-        let num: usize = buf.trim().parse().unwrap();
 
+        let num: usize = buf.trim_end().parse().unwrap();
         count[num] += 1;
+
         min = num.min(min);
         max = num.max(max);
     }

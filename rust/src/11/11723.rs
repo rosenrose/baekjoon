@@ -7,14 +7,14 @@ fn main() {
     let mut buf = String::new();
     stdin.read_line(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim());
+    let n = parse_int(buf.trim_end());
     let mut s = 0;
 
     for _ in 0..n {
         buf.clear();
         stdin.read_line(&mut buf).unwrap();
 
-        let mut operation = buf.split_whitespace();
+        let mut operation = buf.split_ascii_whitespace();
         let op = operation.next().unwrap();
         let x = parse_int(operation.next().unwrap_or("0"));
 
