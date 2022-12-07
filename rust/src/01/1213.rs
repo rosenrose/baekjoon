@@ -1,18 +1,21 @@
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut counts = BTreeMap::new();
+    let input = buf.trim();
+    let counts: HashMap<_, _> = input
+        .chars()
+        .map(|c| (c, input.matches(c).count()))
+        .collect();
 
-    buf.trim().chars().for_each(|ch| {
-        counts.entry(ch).and_modify(|c| *c += 1).or_insert(1);
-    });
+    let mut counts: Vec<_> = counts.into_iter().collect();
+    counts.sort();
 
     let odds: Vec<_> = counts
         .iter()
-        .filter_map(|(ch, &count)| (count % 2 == 1).then(|| ch))
+        .filter_map(|(ch, count)| (count % 2 == 1).then(|| ch))
         .collect();
 
     if odds.len() > 1 {
@@ -25,7 +28,7 @@ fn main() {
         None => String::new(),
     };
 
-    for (&ch, &count) in counts.iter().rev() {
+    for &(ch, count) in counts.iter().rev() {
         for _ in 0..count / 2 {
             palindrome.insert(0, ch);
             palindrome.push(ch);

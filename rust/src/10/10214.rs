@@ -1,22 +1,18 @@
 use std::cmp::Ordering;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
-    let n = parse_int(buf.trim());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    for _ in 0..n {
-        let (y, k) = (0..9)
-            .map(|_| {
-                read_line(&mut buf);
-                let mut nums = buf.split_whitespace().map(parse_int);
-
-                (nums.next().unwrap(), nums.next().unwrap())
-            })
-            .reduce(|a, b| (a.0 + b.0, a.1 + b.1))
-            .unwrap();
+    for _ in 0..input.next().unwrap() {
+        let (y, k) = (0..9).fold((0, 0), |acc, _| {
+            (acc.0 + input.next().unwrap(), acc.1 + input.next().unwrap())
+        });
 
         match y.cmp(&k) {
             Ordering::Greater => println!("Yonsei"),
@@ -24,9 +20,4 @@ fn main() {
             Ordering::Equal => println!("Draw"),
         };
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

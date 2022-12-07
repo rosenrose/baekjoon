@@ -1,27 +1,22 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(&buf);
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    for _ in 0..n {
-        read_line(&mut buf);
-        let dec = parse_int(&buf);
+    for n in input.skip(1) {
+        for i in (0..).take_while(|i| (1 << i) <= n) {
+            let shifted = 1 << i;
 
-        format!("{dec:b}")
-            .chars()
-            .rev()
-            .enumerate()
-            .filter(|&(_, c)| c == '1')
-            .for_each(|(i, _)| print!("{i} "));
+            if shifted & n == shifted {
+                print!("{i} ");
+            }
+        }
+
+        println!("");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

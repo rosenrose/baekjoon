@@ -9,15 +9,15 @@ fn main() {
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let input = buf.split_ascii_whitespace();
+    let input = buf.lines();
     let mut output = String::new();
 
-    let mut ext_count = HashMap::new();
-
-    for filename in input.skip(1) {
+    let ext_count = input.skip(1).fold(HashMap::new(), |mut acc, filename| {
         let ext = filename.split('.').next_back().unwrap();
-        ext_count.entry(ext).and_modify(|c| *c += 1).or_insert(1);
-    }
+        acc.entry(ext).and_modify(|c| *c += 1).or_insert(1);
+
+        acc
+    });
 
     let mut ext_count: Vec<_> = ext_count.iter().collect();
     ext_count.sort_unstable_by_key(|(&ext, _)| ext);

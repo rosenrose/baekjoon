@@ -1,9 +1,14 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(&buf);
-    let mut bars = parse_int_vec_lines(&mut buf, n);
+    let mut bars: Vec<_> = buf
+        .split_ascii_whitespace()
+        .skip(1)
+        .map(|s| s.parse::<i32>().unwrap())
+        .collect();
 
     let (mut max, mut count) = (bars.pop().unwrap(), 1);
 
@@ -17,22 +22,4 @@ fn main() {
     }
 
     println!("{count}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
-}
-
-fn parse_int_vec_lines(buf: &mut String, n: i32) -> Vec<i32> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            parse_int(buf)
-        })
-        .collect()
 }

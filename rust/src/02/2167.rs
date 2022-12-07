@@ -1,49 +1,41 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n = buf.split_whitespace().map(parse_int).next().unwrap();
-    let arr: Vec<Vec<_>> = (0..n)
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
+
+    let (n, m) = (input.next().unwrap(), input.next().unwrap());
+    let sum_arr: Vec<Vec<_>> = (0..n)
         .map(|_| {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
-            let mut row = vec![0];
-
-            buf.split_whitespace().map(parse_int).for_each(|num| {
-                row.push(row.last().unwrap() + num);
-            });
-
-            row
+            (0..m).fold(vec![0], |mut row, _| {
+                row.push(row.last().unwrap() + input.next().unwrap());
+                row
+            })
         })
         .collect();
-    buf.clear();
-    stdin.read_line(&mut buf).unwrap();
 
-    let k = parse_int(buf.trim());
+    for _ in 0..input.next().unwrap() {
+        let (i, j, x, y) = (
+            input.next().unwrap() as usize,
+            input.next().unwrap() as usize,
+            input.next().unwrap() as usize,
+            input.next().unwrap() as usize,
+        );
+        let (i, j) = (i - 1, j - 1);
 
-    for _ in 0..k {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
+        let sum: i32 = sum_arr[i..x].iter().map(|row| row[y] - row[j]).sum();
 
-        if let [i, j, x, y] = parse_int_vec(&buf)[..] {
-            let (i, j) = (i - 1, j - 1);
-
-            let sum: i32 = arr[i..x].iter().map(|row| row[y] - row[j]).sum();
-
-            writeln!(stdout, "{sum}").unwrap();
-        }
+        writeln!(output, "{sum}").unwrap();
     }
-}
 
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
-}
-
-fn parse_int_vec(buf: &String) -> Vec<usize> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    print!("{output}");
 }

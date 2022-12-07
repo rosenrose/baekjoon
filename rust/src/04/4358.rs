@@ -10,12 +10,13 @@ fn main() {
     stdin.read_to_string(&mut buf).unwrap();
 
     let mut output = String::new();
-    let mut tree_counts = HashMap::new();
     let mut total = 0;
 
-    buf.lines().for_each(|tree| {
-        tree_counts.entry(tree).and_modify(|c| *c += 1).or_insert(1);
+    let tree_counts = buf.lines().fold(HashMap::new(), |mut acc, name| {
+        acc.entry(name).and_modify(|c| *c += 1).or_insert(1);
         total += 1;
+
+        acc
     });
 
     let mut tree_counts: Vec<_> = tree_counts.iter().collect();

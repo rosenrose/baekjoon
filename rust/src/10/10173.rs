@@ -1,25 +1,17 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    loop {
-        read_line(&mut buf);
-
-        if buf.trim() == "EOI" {
-            return;
-        }
-
+    for input in buf.lines().take_while(|&input| input != "EOI") {
         println!(
             "{}",
-            if buf.trim().to_lowercase().contains("nemo") {
+            if input.to_lowercase().contains("nemo") {
                 "Found"
             } else {
                 "Missing"
             }
         );
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -1,25 +1,25 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [mut n, b] = parse_int_vec(&buf)[..] {
-        let mut b_nums = Vec::new();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-        while n != 0 {
-            b_nums.push(n % b);
-            n /= b;
-        }
+    let (mut n, b) = (input.next().unwrap(), input.next().unwrap());
+    let mut b_nums = Vec::new();
 
-        b_nums.iter().rev().for_each(|&b_num| {
-            match b_num {
-                0..=9 => print!("{b_num}"),
-                10.. => print!("{}", ('A' as u8 + (b_num as u8 - 10)) as char),
-                _ => (),
-            };
-        });
+    while n != 0 {
+        b_nums.push((n % b) as u8);
+        n /= b;
     }
-}
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    b_nums.iter().rev().for_each(|&b_num| {
+        match b_num {
+            0..=9 => print!("{b_num}"),
+            _ => print!("{}", ('A' as u8 + (b_num - 10)) as char),
+        };
+    });
 }

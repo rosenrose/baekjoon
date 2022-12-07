@@ -1,38 +1,34 @@
-use std::collections::BTreeSet;
+use std::io::{stdin, Read};
 use std::string::ToString;
 
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    loop {
-        read_line(&mut buf);
-        let num = parse_int(&buf);
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-        if num == -1 {
-            return;
-        }
-
-        let divisors = (1..)
+    for num in input.take_while(|&num| num != -1) {
+        let mut divisors = (1..)
             .take_while(|i| i * i <= num)
-            .fold(BTreeSet::new(), |mut acc, i| {
-                if num % i != 0 {
-                    return acc;
-                }
-
-                if i != num {
-                    acc.insert(i);
-                }
-                if i != 1 {
-                    acc.insert(num / i);
+            .fold(Vec::new(), |mut acc, i| {
+                if num % i == 0 {
+                    acc.push(i);
+                    acc.push(num / i);
                 }
 
                 acc
             });
 
+        divisors.dedup();
+        divisors.sort();
+        divisors.pop();
+
         let sum: i32 = divisors.iter().sum();
 
         if sum == num {
-            println!("{num} = {}", set_join(&divisors, " + "));
+            println!("{num} = {}", vec_join(&divisors, " + "));
             continue;
         }
 
@@ -40,16 +36,7 @@ fn main() {
     }
 }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
-}
-
-fn set_join<T>(vec: &BTreeSet<T>, seperator: &str) -> String
+fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String
 where
     T: ToString,
 {

@@ -1,21 +1,20 @@
-use std::collections::BTreeSet;
+use std::collections::HashSet;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let nums: BTreeSet<_> = buf
-        .split_whitespace()
+    let nums: HashSet<_> = buf
+        .split_ascii_whitespace()
+        .skip(1)
         .map(|s| s.parse::<i32>().unwrap())
         .collect();
+
+    let mut nums: Vec<_> = nums.iter().collect();
+    nums.sort_unstable();
 
     for num in nums {
         print!("{num} ");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -1,18 +1,10 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    loop {
-        read_line(&mut buf);
-
-        if buf.trim() == "END" {
-            return;
-        }
-
-        println!("{}", buf.trim().chars().rev().collect::<String>());
+    for input in buf.lines().take_while(|&input| input != "END") {
+        println!("{}", input.chars().rev().collect::<String>());
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -1,32 +1,38 @@
-use std::collections::BTreeSet;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [a, b, lcm2] = parse_int_vec(&buf)[..] {
-        let lcm1 = get_lcm(a, b);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
 
-        let divisors = (1..)
-            .take_while(|i| i * i <= lcm2)
-            .fold(BTreeSet::new(), |mut acc, i| {
-                if lcm2 % i == 0 {
-                    acc.insert(i);
-                    acc.insert(lcm2 / i);
-                }
+    let lcm1 = get_lcm(input.next().unwrap(), input.next().unwrap());
+    let lcm2 = input.next().unwrap();
 
-                acc
-            });
-
-        for c in divisors {
-            if get_lcm(lcm1, c) == lcm2 {
-                println!("{c}");
-                return;
+    let mut divisors = (1..)
+        .take_while(|i| i * i <= lcm2)
+        .fold(Vec::new(), |mut acc, i| {
+            if lcm2 % i == 0 {
+                acc.push(i);
+                acc.push(lcm2 / i);
             }
-        }
 
-        println!("-1");
+            acc
+        });
+
+    divisors.dedup();
+    divisors.sort();
+
+    for c in divisors {
+        if get_lcm(lcm1, c) == lcm2 {
+            println!("{c}");
+            return;
+        }
     }
+
+    println!("-1");
 }
 
 fn get_lcm(a: i64, b: i64) -> i64 {
@@ -41,8 +47,4 @@ fn get_gcd(mut a: i64, mut b: i64) -> i64 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i64> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
