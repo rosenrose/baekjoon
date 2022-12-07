@@ -1,34 +1,49 @@
 use std::collections::VecDeque;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim());
+    let mut input = buf.split_ascii_whitespace();
+    let mut output = String::new();
+
+    let n = parse_int(input.next().unwrap());
     let mut deque = VecDeque::new();
 
     for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
-        let mut operation = buf.split_whitespace();
-
-        match operation.next().unwrap() {
-            "push_front" => deque.push_front(parse_int(operation.next().unwrap())),
-            "push_back" => deque.push_back(parse_int(operation.next().unwrap())),
-            "pop_front" => writeln!(stdout, "{}", deque.pop_front().unwrap_or(-1)).unwrap(),
-            "pop_back" => writeln!(stdout, "{}", deque.pop_back().unwrap_or(-1)).unwrap(),
-            "size" => writeln!(stdout, "{}", deque.len()).unwrap(),
-            "empty" => writeln!(stdout, "{}", if deque.is_empty() { 1 } else { 0 }).unwrap(),
-            "front" => writeln!(stdout, "{}", deque.front().unwrap_or(&-1)).unwrap(),
-            "back" => writeln!(stdout, "{}", deque.back().unwrap_or(&-1)).unwrap(),
-            _ => (),
+        let result = match input.next().unwrap() {
+            "pop_front" => deque.pop_front().unwrap_or(-1),
+            "pop_back" => deque.pop_back().unwrap_or(-1),
+            "size" => deque.len() as i32,
+            "empty" => {
+                if deque.is_empty() {
+                    1
+                } else {
+                    0
+                }
+            }
+            "front" => *deque.front().unwrap_or(&-1),
+            "back" => *deque.back().unwrap_or(&-1),
+            "push_front" => {
+                deque.push_front(parse_int(input.next().unwrap()));
+                continue;
+            }
+            "push_back" => {
+                deque.push_back(parse_int(input.next().unwrap()));
+                continue;
+            }
+            _ => 0,
         };
+
+        writeln!(output, "{result}").unwrap();
     }
+
+    print!("{output}");
 }
 
 fn parse_int(buf: &str) -> i32 {

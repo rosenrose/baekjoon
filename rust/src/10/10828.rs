@@ -1,30 +1,41 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim());
+    let mut input = buf.split_ascii_whitespace();
+    let mut output = String::new();
+
+    let n = parse_int(input.next().unwrap());
     let mut stack = Vec::new();
 
     for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
-        let mut operation = buf.split_whitespace();
-
-        match operation.next().unwrap() {
-            "push" => stack.push(parse_int(operation.next().unwrap())),
-            "pop" => writeln!(stdout, "{}", stack.pop().unwrap_or(-1)).unwrap(),
-            "size" => writeln!(stdout, "{}", stack.len()).unwrap(),
-            "empty" => writeln!(stdout, "{}", if stack.is_empty() { 1 } else { 0 }).unwrap(),
-            "top" => writeln!(stdout, "{}", stack.last().unwrap_or(&-1)).unwrap(),
-            _ => (),
+        let result = match input.next().unwrap() {
+            "pop" => stack.pop().unwrap_or(-1),
+            "size" => stack.len() as i32,
+            "empty" => {
+                if stack.is_empty() {
+                    1
+                } else {
+                    0
+                }
+            }
+            "top" => *stack.last().unwrap_or(&-1),
+            _ => {
+                stack.push(parse_int(input.next().unwrap()));
+                continue;
+            }
         };
+
+        writeln!(output, "{result}").unwrap();
     }
+
+    print!("{output}");
 }
 
 fn parse_int(buf: &str) -> i32 {

@@ -4,8 +4,8 @@ fn main() {
 
     let nums = parse_int_vec(&buf);
     let (r1, c1, r2, c2) = (nums[0], nums[1], nums[2], nums[3]);
-
     let mut max = 0;
+
     let vortex: Vec<Vec<_>> = (r1..=r2)
         .map(|y| {
             (c1..=c2)
@@ -39,11 +39,10 @@ fn main() {
 
     for row in vortex {
         for (i, cell) in row.iter().enumerate() {
-            print!("{cell:width$}");
-
-            if i < row.len() - 1 {
+            if i > 0 {
                 print!(" ");
             }
+            print!("{cell:width$}");
         }
         println!("");
     }
