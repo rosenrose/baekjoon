@@ -21,8 +21,8 @@ fn main() {
 
         let min = scores[0];
         let max = scores.last().unwrap();
-        let largest_gap = (0..scores.len() - 1)
-            .map(|j| scores[j].abs_diff(scores[j + 1]))
+        let largest_gap = (1..scores.len())
+            .map(|j| scores[j - 1].abs_diff(scores[j]))
             .max()
             .unwrap();
 

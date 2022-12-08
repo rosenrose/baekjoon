@@ -1,39 +1,29 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let t = parse_int(&buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<usize>().unwrap());
 
-    for _ in 0..t {
-        read_line(&mut buf);
-        let k = parse_int(&buf);
-
-        read_line(&mut buf);
-        let n = parse_int(&buf);
-
+    for _ in 0..input.next().unwrap() {
+        let (k, n) = (input.next().unwrap(), input.next().unwrap());
         let residents = residents_at_floor(k, n);
 
-        println!("{}", residents[(n - 1) as usize])
+        println!("{}", residents[n - 1])
     }
 }
 
-fn residents_at_floor(floor: i32, room_num: i32) -> Vec<i32> {
-    let mut residents: Vec<i32> = (1..=room_num).collect();
+fn residents_at_floor(floor: usize, room_num: usize) -> Vec<usize> {
+    let mut residents: Vec<_> = (1..=room_num).collect();
 
     for _ in 0..floor {
-        for i in 0..residents.len() - 1 {
-            residents[i + 1] += residents[i];
+        for i in 1..residents.len() {
+            residents[i] += residents[i - 1];
         }
     }
 
     residents
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

@@ -33,8 +33,8 @@ fn main() {
         let len = new_logs.len();
         let mut max_diff = new_logs[0].abs_diff(new_logs[len - 1]);
 
-        for i in 0..len - 1 {
-            max_diff = new_logs[i].abs_diff(new_logs[i + 1]).max(max_diff);
+        for i in 1..len {
+            max_diff = new_logs[i - 1].abs_diff(new_logs[i]).max(max_diff);
         }
 
         writeln!(output, "{max_diff}").unwrap();

@@ -1,22 +1,16 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    let mut is_found = false;
+    stdin().read_to_string(&mut buf).unwrap();
 
-    for i in 1..=5 {
-        read_line(&mut buf);
-
-        if buf.contains("FBI") {
-            is_found = true;
-            print!("{i} ");
-        }
-    }
-
-    if !is_found {
+    if !buf.lines().any(|input| input.contains("FBI")) {
         println!("HE GOT AWAY!");
+        return;
     }
-}
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
+    buf.lines()
+        .enumerate()
+        .filter_map(|(i, input)| input.contains("FBI").then(|| i + 1))
+        .for_each(|i| print!("{i} "));
 }

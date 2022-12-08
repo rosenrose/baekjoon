@@ -2,12 +2,10 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [n, m] = parse_int_vec(&buf)[..] {
-        match m {
-            1 | 2 => println!("NEWBIE!"),
-            m if m <= n => println!("OLDBIE!"),
-            _ => println!("TLE!"),
-        };
+    match parse_int_vec(&buf)[..] {
+        [_, 1 | 2] => println!("NEWBIE!"),
+        [n, m] if m <= n => println!("OLDBIE!"),
+        _ => println!("TLE!"),
     }
 }
 

@@ -32,12 +32,12 @@ fn bubble_sort(arr: &mut Vec<i32>) {
     let len = arr.len();
 
     for i in 0..len - 1 {
-        for j in 0..len - 1 - i {
-            if arr[j] < arr[j + 1] {
+        for j in 1..len - i {
+            if arr[j - 1] < arr[j] {
                 continue;
             }
 
-            arr.swap(j, j + 1);
+            arr.swap(j - 1, j);
         }
     }
 }
@@ -56,12 +56,12 @@ fn insertion_sort(arr: &mut Vec<i32>) {
     let len = arr.len();
 
     for i in 1..len {
-        for j in (0..=i - 1).rev() {
-            if arr[j] < arr[j + 1] {
+        for j in (1..=i).rev() {
+            if arr[j - 1] < arr[j] {
                 break;
             }
 
-            arr.swap(j, j + 1);
+            arr.swap(j - 1, j);
         }
     }
 }

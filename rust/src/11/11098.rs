@@ -1,23 +1,17 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim());
+    let mut input = buf.split_ascii_whitespace();
+    let n = parse_int(input.next().unwrap());
 
     for _ in 0..n {
-        read_line(&mut buf);
-        let players = parse_int(buf.trim());
+        let p = parse_int(input.next().unwrap());
 
-        let (_, vip) = (0..players)
-            .map(|_| {
-                read_line(&mut buf);
-                let mut tokens = buf.split_whitespace();
-
-                (
-                    parse_int(tokens.next().unwrap()),
-                    tokens.next().unwrap().to_string(),
-                )
-            })
+        let (_, vip) = (0..p)
+            .map(|_| (parse_int(input.next().unwrap()), input.next().unwrap()))
             .max_by_key(|&(guarantee, _)| guarantee)
             .unwrap();
 
@@ -25,11 +19,6 @@ fn main() {
     }
 }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
 fn parse_int(buf: &str) -> i32 {
-    buf.trim().parse().unwrap()
+    buf.parse().unwrap()
 }

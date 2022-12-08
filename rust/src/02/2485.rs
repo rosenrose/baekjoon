@@ -15,14 +15,14 @@ fn main() {
 
     let mut gcd = nums[0].abs_diff(nums[1]);
 
-    for i in 1..nums.len() - 1 {
-        gcd = get_gcd(nums[i].abs_diff(nums[i + 1]), gcd);
+    for i in 2..nums.len() {
+        gcd = get_gcd(nums[i - 1].abs_diff(nums[i]), gcd);
     }
 
     let mut count = 0;
 
-    for i in 0..nums.len() - 1 {
-        let gap = nums[i].abs_diff(nums[i + 1]);
+    for i in 1..nums.len() {
+        let gap = nums[i - 1].abs_diff(nums[i]);
 
         count += (gap / gcd) - 1;
     }

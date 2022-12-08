@@ -8,13 +8,13 @@ fn main() {
     let sum = if x.len() < 2 {
         x.parse().unwrap()
     } else {
-        convert(x.to_string(), &mut count)
+        convert(x, &mut count)
     };
 
     println!("{count}\n{}", if sum % 3 == 0 { "YES" } else { "NO" });
 }
 
-fn convert(num: String, count: &mut i32) -> u32 {
+fn convert(num: &str, count: &mut i32) -> u32 {
     *count += 1;
 
     let sum: u32 = num.chars().map(|c| c.to_digit(10).unwrap()).sum();
@@ -22,6 +22,6 @@ fn convert(num: String, count: &mut i32) -> u32 {
     if sum < 10 {
         sum
     } else {
-        convert(sum.to_string(), count)
+        convert(&sum.to_string()[..], count)
     }
 }

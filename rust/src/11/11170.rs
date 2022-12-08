@@ -1,43 +1,31 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let t: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<usize>().unwrap());
 
-    for _ in 0..t {
-        read_line(&mut buf);
+    let sum_accum = (1..=1_000_000).fold(vec![0, 1], |mut acc, mut num| {
+        let mut count = 0;
 
-        if let [n, m] = parse_int_vec(&buf)[..] {
-            let count_sum: i32 = (n..=m)
-                .map(|mut i| {
-                    if i == 0 {
-                        return 1;
-                    }
+        while num > 0 {
+            if num % 10 == 0 {
+                count += 1;
+            }
 
-                    let mut count = 0;
-
-                    while i > 0 {
-                        if i % 10 == 0 {
-                            count += 1;
-                        }
-
-                        i /= 10;
-                    }
-
-                    count
-                })
-                .sum();
-
-            println!("{count_sum}");
+            num /= 10;
         }
+
+        acc.push(*acc.last().unwrap() + count);
+        acc
+    });
+
+    for _ in 0..input.next().unwrap() {
+        let (n, m) = (input.next().unwrap(), input.next().unwrap());
+
+        println!("{}", sum_accum[m + 1] - sum_accum[n]);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

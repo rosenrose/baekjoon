@@ -6,12 +6,12 @@ fn main() {
     let len = arr.len();
 
     for i in 0..len - 1 {
-        for j in 0..len - 1 - i {
-            if arr[j] <= arr[j + 1] {
+        for j in 1..len - i {
+            if arr[j - 1] <= arr[j] {
                 continue;
             }
 
-            arr.swap(j, j + 1);
+            arr.swap(j - 1, j);
 
             for num in &arr {
                 print!("{num} ");

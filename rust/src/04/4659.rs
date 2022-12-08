@@ -1,17 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    loop {
-        read_line(&mut buf);
-        let password = buf.trim();
-
-        if password == "end" {
-            return;
-        }
-
+    for input in buf.lines().take_while(|&input| input != "end") {
         println!(
-            "<{password}> is {}",
-            if is_acceptable(password) {
+            "<{input}> is {}",
+            if is_acceptable(input) {
                 "acceptable."
             } else {
                 "not acceptable."
@@ -42,9 +38,4 @@ fn is_acceptable(pwd: &str) -> bool {
     }
 
     true
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

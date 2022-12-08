@@ -1,38 +1,35 @@
+use std::io::{stdin, Read};
 use std::string::ToString;
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [_, k] = parse_int_vec(&buf)[..] {
-        read_line(&mut buf);
+    let mut input = buf.split_ascii_whitespace();
+    input.next();
 
-        if k == 0 {
-            println!("{buf}");
-            return;
-        }
+    let k = parse_int(input.next().unwrap());
+    let arr = input.next().unwrap();
 
-        let arr: Vec<i32> = buf.trim().split(',').map(|s| s.parse().unwrap()).collect();
-
-        let mut new_arr: Vec<i32> = (0..arr.len() - 1).map(|i| arr[i + 1] - arr[i]).collect();
-
-        for _ in 0..k - 1 {
-            new_arr = (0..new_arr.len() - 1)
-                .map(|i| new_arr[i + 1] - new_arr[i])
-                .collect();
-        }
-
-        println!("{}", vec_join(&new_arr, ","))
+    if k == 0 {
+        println!("{arr}");
+        return;
     }
+
+    let arr: Vec<_> = arr.split(',').map(parse_int).collect();
+    let mut new_arr: Vec<_> = (1..arr.len()).map(|i| arr[i] - arr[i - 1]).collect();
+
+    for _ in 0..k - 1 {
+        new_arr = (1..new_arr.len())
+            .map(|i| new_arr[i] - new_arr[i - 1])
+            .collect();
+    }
+
+    println!("{}", vec_join(&new_arr, ","))
 }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }
 
 fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String

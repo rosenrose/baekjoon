@@ -1,4 +1,5 @@
 use std::fmt;
+use std::io::{stdin, Read};
 use std::ops::{Add, Sub};
 
 #[derive(Copy, Clone)]
@@ -79,23 +80,23 @@ impl fmt::Display for Fraction {
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
+
+    let n = input.next().unwrap();
     let point_heights: Vec<_> = (0..n + 1)
-        .map(|_| {
-            read_line(&mut buf);
-            parse_int_tuple(&buf)
-        })
+        .map(|_| (input.next().unwrap(), input.next().unwrap()))
         .collect();
-    read_line(&mut buf);
 
-    let (start_x, end_x) = parse_int_tuple(&buf);
+    let (start_x, end_x) = (input.next().unwrap(), input.next().unwrap());
     let (mut start_h, mut end_h) = (Fraction::new(), Fraction::new());
 
-    for i in 0..point_heights.len() - 1 {
-        let (x1, h1) = point_heights[i];
-        let (x2, h2) = point_heights[i + 1];
+    for i in 1..point_heights.len() {
+        let (x1, h1) = point_heights[i - 1];
+        let (x2, h2) = point_heights[i];
         let gradient = Fraction::from(h2 - h1, x2 - x1);
 
         if (x1..=x2 - 1).contains(&start_x) {
@@ -104,6 +105,7 @@ fn main() {
 
             start_h = Fraction::from_int(h1) + delta_y;
         }
+
         if (x1 + 1..=x2).contains(&end_x) {
             let delta_x = end_x - x1;
             let delta_y = gradient.multiply(delta_x);
@@ -113,8 +115,7 @@ fn main() {
         }
     }
 
-    let delta_x = end_x - start_x;
-    let delta_y = end_h - start_h;
+    let (delta_x, delta_y) = (end_x - start_x, end_h - start_h);
     let avg = delta_y.divide(delta_x);
 
     println!("{}", avg.abs());
@@ -128,18 +129,4 @@ fn get_gcd(mut a: i64, mut b: i64) -> i64 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &str) -> i64 {
-    buf.parse().unwrap()
-}
-
-fn parse_int_tuple(buf: &String) -> (i64, i64) {
-    let mut tokens = buf.split_whitespace().map(parse_int);
-    (tokens.next().unwrap(), tokens.next().unwrap())
 }

@@ -21,8 +21,8 @@ fn is_hansu(num: i32) -> bool {
 
     let diff = digits[0] - digits[1];
 
-    for i in 1..digits.len() - 1 {
-        if diff != digits[i] - digits[i + 1] {
+    for i in 2..digits.len() {
+        if diff != digits[i - 1] - digits[i] {
             return false;
         }
     }

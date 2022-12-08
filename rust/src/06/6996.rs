@@ -1,44 +1,29 @@
 use std::collections::HashMap;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf.split_ascii_whitespace();
+    let n: i32 = input.next().unwrap().parse().unwrap();
 
-    let char_count = |s: &str| -> HashMap<char, usize> {
+    let char_count = |s: &str| -> HashMap<_, _> {
         s.chars()
-            .map(|letter| {
-                let count = s.chars().filter(|&c| c == letter).count();
-                (letter, count)
-            })
+            .map(|c| (c, s.matches(c).count() as i32))
             .collect()
     };
 
     for _ in 0..n {
-        read_line(&mut buf);
+        let (a, b) = (input.next().unwrap(), input.next().unwrap());
 
-        if let [a, b] = parse_str_vec(&buf)[..] {
-            let a_count_map = char_count(a);
-            let b_count_map = char_count(b);
-
-            println!(
-                "{a} & {b} are {}",
-                if a_count_map == b_count_map {
-                    "anagrams."
-                } else {
-                    "NOT anagrams."
-                }
-            );
-        }
+        println!(
+            "{a} & {b} are {}",
+            if char_count(a) == char_count(b) {
+                "anagrams."
+            } else {
+                "NOT anagrams."
+            }
+        );
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_str_vec(buf: &String) -> Vec<&str> {
-    buf.split_whitespace().collect()
 }
