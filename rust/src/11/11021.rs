@@ -1,22 +1,16 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    for i in 1..=n {
-        read_line(&mut buf);
-
-        let sum: i32 = buf
-            .split_whitespace()
-            .map(|s| s.parse::<i32>().unwrap())
-            .sum();
+    for i in 1..=input.next().unwrap() {
+        let sum = input.next().unwrap() + input.next().unwrap();
 
         println!("Case #{i}: {sum}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

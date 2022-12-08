@@ -1,15 +1,18 @@
+use std::fmt::Write;
 use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
     stdin().read_to_string(&mut buf).unwrap();
 
-    for line in buf.lines() {
-        let sum: i32 = line
-            .split_whitespace()
-            .map(|s| s.parse::<i32>().unwrap())
-            .sum();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-        println!("{sum}");
+    while let Some(a) = input.next() {
+        writeln!(output, "{}", a + input.next().unwrap()).unwrap();
     }
+
+    print!("{output}");
 }

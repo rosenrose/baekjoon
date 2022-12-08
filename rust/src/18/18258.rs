@@ -12,24 +12,27 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut output = String::new();
 
-    let n = parse_int(input.next().unwrap());
+    let n = input.next().unwrap().parse().unwrap();
     let mut queue = VecDeque::new();
 
     for _ in 0..n {
         let result = match input.next().unwrap() {
-            "pop" => queue.pop_front().unwrap_or(-1),
-            "size" => queue.len() as i32,
+            "pop" => queue.pop_front().unwrap_or("-1"),
+            "size" => {
+                writeln!(output, "{}", queue.len()).unwrap();
+                continue;
+            }
             "empty" => {
                 if queue.is_empty() {
-                    1
+                    "1"
                 } else {
-                    0
+                    "0"
                 }
             }
-            "front" => *queue.front().unwrap_or(&-1),
-            "back" => *queue.back().unwrap_or(&-1),
+            "front" => queue.front().unwrap_or(&"-1"),
+            "back" => queue.back().unwrap_or(&"-1"),
             _ => {
-                queue.push_back(parse_int(input.next().unwrap()));
+                queue.push_back(input.next().unwrap());
                 continue;
             }
         };
@@ -38,8 +41,4 @@ fn main() {
     }
 
     print!("{output}");
-}
-
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
 }
