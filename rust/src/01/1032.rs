@@ -1,9 +1,10 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    let file_names = parse_str_vec_lines(&mut buf, n);
+    let file_names: Vec<_> = buf.lines().skip(1).collect();
 
     if file_names.len() == 1 {
         println!("{}", file_names[0]);
@@ -28,18 +29,4 @@ fn main() {
         .collect();
 
     println!("{pattern}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_str_vec_lines(buf: &mut String, n: i32) -> Vec<String> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            buf.trim().to_string()
-        })
-        .collect()
 }

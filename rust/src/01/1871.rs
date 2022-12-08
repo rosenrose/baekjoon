@@ -1,43 +1,28 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim());
+    for input in buf.lines().skip(1) {
+        let (first, second) = input.split_at(3);
 
-    for _ in 0..n {
-        read_line(&mut buf);
+        let first_value: i32 = first
+            .chars()
+            .rev()
+            .enumerate()
+            .map(|(i, c)| (c as u8 - 'A' as u8) as i32 * 26_i32.pow(i as u32))
+            .sum();
 
-        if let [first, second] = parse_str_vec(&buf)[..] {
-            let first_value: i32 = first
-                .chars()
-                .rev()
-                .enumerate()
-                .map(|(i, c)| (c as u8 - 'A' as u8) as i32 * 26_i32.pow(i as u32))
-                .sum();
+        let second_value: i32 = second[1..].parse().unwrap();
 
-            let second_value = parse_int(second);
-
-            println!(
-                "{}",
-                if first_value.abs_diff(second_value) <= 100 {
-                    "nice"
-                } else {
-                    "not nice"
-                }
-            );
-        }
+        println!(
+            "{}",
+            if first_value.abs_diff(second_value) <= 100 {
+                "nice"
+            } else {
+                "not nice"
+            }
+        );
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
-}
-
-fn parse_str_vec(buf: &String) -> Vec<&str> {
-    buf.trim().split('-').collect()
 }

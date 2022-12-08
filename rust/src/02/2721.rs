@@ -1,25 +1,27 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<usize>().unwrap());
+    let mut output = String::new();
+
     let t = |n: usize| n * (n + 1) / 2;
-    let mut t_sum = vec![0];
+    let w = (1..301).fold(vec![0], |mut acc, i| {
+        acc.push(acc.last().unwrap() + i * t(i + 1));
+        acc
+    });
 
-    while t_sum.len() < 301 {
-        let len = t_sum.len();
-        t_sum.push(t_sum.last().unwrap() + len * t(len + 1));
+    for n in input.skip(1) {
+        writeln!(output, "{}", w[n]).unwrap();
     }
 
-    for line in buf.lines().skip(1) {
-        writeln!(stdout, "{}", t_sum[parse_int(line)]).unwrap();
-    }
-}
-
-fn parse_int(buf: &str) -> usize {
-    buf.trim().parse().unwrap()
+    print!("{output}");
 }

@@ -1,28 +1,34 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [n, m] = parse_int_vec(&buf)[..] {
-        let board = parse_str_vec_lines(&mut buf, n);
+    let mut input = buf.split_ascii_whitespace();
 
-        let mut min_paint = 32;
+    let (n, m) = (
+        parse_int(input.next().unwrap()),
+        parse_int(input.next().unwrap()),
+    );
+    let board: Vec<_> = input.map(|row| row.as_bytes()).collect();
 
-        for i in 0..=n - 8 {
-            for j in 0..=m - 8 {
-                min_paint = get_paint_count(&board, i as usize, j as usize).min(min_paint);
-            }
+    let mut min_paint = 32;
+
+    for i in 0..=n - 8 {
+        for j in 0..=m - 8 {
+            min_paint = get_paint_count(&board, i, j).min(min_paint);
         }
-
-        println!("{min_paint}");
     }
+
+    println!("{min_paint}");
 }
 
-fn get_paint_count(board: &Vec<String>, i: usize, j: usize) -> i32 {
+fn get_paint_count(board: &Vec<&[u8]>, i: usize, j: usize) -> i32 {
     let mut paint_start_from_black = 0;
 
     for y in 0..8 {
-        for (x, bw) in board[y + i].chars().skip(j).take(8).enumerate() {
-            match (y % 2, x % 2, bw) {
+        for (x, &bw) in board[y + i].iter().skip(j).take(8).enumerate() {
+            match (y % 2, x % 2, bw as char) {
                 (0, 0, 'W') | (0, 1, 'B') | (1, 0, 'B') | (1, 1, 'W') => {
                     paint_start_from_black += 1
                 }
@@ -36,22 +42,8 @@ fn get_paint_count(board: &Vec<String>, i: usize, j: usize) -> i32 {
     paint_start_from_black.min(paint_start_from_white)
 }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
-}
-
-fn parse_str_vec_lines(buf: &mut String, n: i32) -> Vec<String> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            buf.trim().to_string()
-        })
-        .collect()
+fn parse_int(buf: &str) -> usize {
+    buf.parse().unwrap()
 }
 
 /*

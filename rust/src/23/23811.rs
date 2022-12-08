@@ -1,29 +1,25 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
-
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    std::io::stdin().read_line(&mut buf).unwrap();
+
+    let mut output = String::new();
 
     let n: usize = buf.trim().parse().unwrap();
-    let at = "@".repeat(n);
-    let long_at = at.repeat(5);
+    let at = "@".repeat(n * 5);
 
-    for _ in 0..n {
-        writeln!(stdout, "{long_at}").unwrap();
+    for _ in 0..2 {
+        for _ in 0..n {
+            writeln!(output, "{at}").unwrap();
+        }
+        for _ in 0..n {
+            writeln!(output, "{}", &at[..n]).unwrap();
+        }
     }
     for _ in 0..n {
-        writeln!(stdout, "{at}").unwrap();
+        writeln!(output, "{at}").unwrap();
     }
-    for _ in 0..n {
-        writeln!(stdout, "{long_at}").unwrap();
-    }
-    for _ in 0..n {
-        writeln!(stdout, "{at}").unwrap();
-    }
-    for _ in 0..n {
-        writeln!(stdout, "{long_at}").unwrap();
-    }
+
+    print!("{output}");
 }
