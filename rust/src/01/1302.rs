@@ -1,9 +1,10 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    let titles = parse_str_vec_lines(&mut buf, n);
+    let titles: Vec<_> = buf.lines().skip(1).collect();
 
     let mut max_count = 0;
     let counts: Vec<_> = titles
@@ -24,18 +25,4 @@ fn main() {
     best_sellers.sort();
 
     println!("{}", best_sellers[0]);
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_str_vec_lines(buf: &mut String, n: i32) -> Vec<String> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            buf.trim().to_string()
-        })
-        .collect()
 }

@@ -1,14 +1,18 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: usize = buf.trim().parse().unwrap();
-    let video = parse_str_vec_lines(&mut buf, n);
+    let mut input = buf.lines();
+
+    let n: usize = input.next().unwrap().parse().unwrap();
+    let video: Vec<_> = input.collect();
 
     println!("{}", compress(&video, 0, 0, n));
 }
 
-fn compress(video: &Vec<String>, x: usize, y: usize, n: usize) -> String {
+fn compress(video: &Vec<&str>, x: usize, y: usize, n: usize) -> String {
     if n == 1 {
         return video[y].chars().nth(x).unwrap().to_string();
     }
@@ -37,18 +41,4 @@ fn compress(video: &Vec<String>, x: usize, y: usize, n: usize) -> String {
         compress(video, x, y + n / 2, n / 2),
         compress(video, x + n / 2, y + n / 2, n / 2)
     )
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_str_vec_lines(buf: &mut String, n: usize) -> Vec<String> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            buf.trim().to_string()
-        })
-        .collect()
 }

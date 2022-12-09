@@ -1,32 +1,24 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim());
+    let mut input = buf.split_ascii_whitespace();
 
-    for _ in 0..n {
-        read_line(&mut buf);
+    for _ in 0..parse_int(input.next().unwrap()) {
+        let index = parse_int(input.next().unwrap()) - 1;
+        let typo: String = input
+            .next()
+            .unwrap()
+            .char_indices()
+            .filter_map(|(i, c)| (i != index).then(|| c))
+            .collect();
 
-        if let [index, typo] = parse_str_vec(&buf)[..] {
-            let index = parse_int(index) - 1;
-            let mut typo = typo.to_string();
-
-            typo.remove(index);
-
-            println!("{typo}");
-        }
+        println!("{typo}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }
 
 fn parse_int(buf: &str) -> usize {
     buf.parse().unwrap()
-}
-
-fn parse_str_vec(buf: &String) -> Vec<&str> {
-    buf.split_whitespace().collect()
 }

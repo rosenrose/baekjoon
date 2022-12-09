@@ -1,9 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: usize = buf.trim().parse().unwrap();
-    let paper = parse_str_vec_lines(&mut buf, n);
+    let mut input = buf.lines();
+
+    let n: usize = input.next().unwrap().parse().unwrap();
+    let paper: Vec<String> = input.map(|row| row.split_whitespace().collect()).collect();
     let (mut white, mut blue) = (0, 0);
 
     cut(&paper, 0, 0, n, &mut white, &mut blue);
@@ -38,18 +42,4 @@ fn cut(paper: &Vec<String>, x: usize, y: usize, n: usize, white: &mut i32, blue:
     cut(paper, x + n / 2, y, n / 2, white, blue);
     cut(paper, x, y + n / 2, n / 2, white, blue);
     cut(paper, x + n / 2, y + n / 2, n / 2, white, blue);
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_str_vec_lines(buf: &mut String, n: usize) -> Vec<String> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            buf.split_whitespace().collect()
-        })
-        .collect()
 }

@@ -1,28 +1,17 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let words = parse_str_vec_lines(&mut buf, 5);
+    let words: Vec<_> = buf.lines().collect();
     let longest = words.iter().map(|word| word.len()).max().unwrap();
 
     for i in 0..longest {
-        for word in &words {
+        for word in words.iter() {
             if let Some(c) = word.chars().nth(i) {
                 print!("{c}");
             }
         }
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_str_vec_lines(buf: &mut String, n: i32) -> Vec<String> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            buf.trim().to_string()
-        })
-        .collect()
 }

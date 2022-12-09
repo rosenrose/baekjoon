@@ -1,36 +1,31 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf.split_ascii_whitespace();
+    let n: i32 = input.next().unwrap().parse().unwrap();
 
     for _ in 0..n {
-        read_line(&mut buf);
+        let (a, b) = (input.next().unwrap(), input.next().unwrap());
 
-        if let [a, b] = parse_str_vec(&buf)[..] {
-            let distances = a.as_bytes().iter().zip(b.as_bytes()).map(|(x, y)| {
-                if x <= y {
-                    y - x
-                } else {
-                    26 - (x - y)
-                }
-            });
+        let distances =
+            a.as_bytes().iter().zip(b.as_bytes()).map(
+                |(x, y)| {
+                    if x <= y {
+                        y - x
+                    } else {
+                        26 - (x - y)
+                    }
+                },
+            );
 
-            print!("Distances: ");
-            for dist in distances {
-                print!("{dist} ");
-            }
-
-            println!("");
+        print!("Distances: ");
+        for dist in distances {
+            print!("{dist} ");
         }
+
+        println!("");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_str_vec(buf: &String) -> Vec<&str> {
-    buf.split_whitespace().collect()
 }

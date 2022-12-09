@@ -31,59 +31,6 @@ fn parse_int_vec(buf: &String) -> Vec<i32> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
 
-fn parse_int_vec_lines(buf: &mut String, n: i32) -> Vec<i32> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            parse_int(buf)
-        })
-        .collect()
-}
-
-fn parse_str_vec(buf: &String) -> Vec<&str> {
-    buf.split_whitespace().collect()
-}
-
-fn parse_str_vec_lines(buf: &mut String, n: i32) -> Vec<String> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            buf.trim().to_string()
-        })
-        .collect()
-}
-
-fn parse_int_set(buf: &String) -> HashSet<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
-}
-
-fn parse_int_set_lines(buf: &mut String, n: i32) -> HashSet<i32> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            parse_int(buf)
-        })
-        .collect()
-}
-
-fn parse_str_set_lines(buf: &mut String, n: i32) -> HashSet<String> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            buf.trim().to_string()
-        })
-        .collect()
-}
-
-fn parse_matrix(buf: &mut String, rows: i32) -> Vec<Vec<i32>> {
-    (0..rows)
-        .map(|_| {
-            read_line(buf);
-            parse_int_vec(buf)
-        })
-        .collect()
-}
-
 use std::string::ToString;
 
 fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String
@@ -115,10 +62,6 @@ where
     buf.split_whitespace().map(|s| s.parse::<T>().unwrap())
 }
 
-fn print_type_of<T>(_: &T) {
-    println!("{}", std::any::type_name::<T>())
-}
-
 fn from_range<R>(range: R) -> i32
 where
     R: RangeBounds<i32> + std::iter::Iterator,
@@ -127,4 +70,8 @@ where
     <<R as Iterator>::Item as Rem<i32>>::Output: PartialEq<i32>,
     <R as Iterator>::Item: Copy,
 {
+}
+
+fn print_type_of<T>(_: &T) {
+    println!("{}", std::any::type_name::<T>())
 }
