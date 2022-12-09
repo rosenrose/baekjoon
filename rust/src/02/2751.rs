@@ -102,11 +102,8 @@ where
 }
 
 fn main() {
-    let stdin = stdin();
-    let mut stdin = stdin.lock();
-
     let mut buf = String::new();
-    stdin.read_to_string(&mut buf).unwrap();
+    stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf
         .split_ascii_whitespace()

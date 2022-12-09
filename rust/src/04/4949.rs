@@ -1,11 +1,8 @@
 use std::io::{stdin, Read};
 
 fn main() {
-    let stdin = stdin();
-    let mut stdin = stdin.lock();
-
     let mut buf = String::new();
-    stdin.read_to_string(&mut buf).unwrap();
+    stdin().read_to_string(&mut buf).unwrap();
 
     'outer: for input in buf.lines().take_while(|&input| input != ".") {
         let mut open_close = Vec::new();

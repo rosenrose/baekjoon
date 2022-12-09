@@ -2,17 +2,14 @@ use std::fmt::Write;
 use std::io::{stdin, Read};
 
 fn main() {
-    let stdin = stdin();
-    let mut stdin = stdin.lock();
-
     let mut buf = String::new();
-    stdin.read_to_string(&mut buf).unwrap();
+    stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.lines();
     let mut output = String::new();
 
     let (t, p) = (input.next().unwrap(), input.next().unwrap());
-    let p_chars: Vec<char> = p.chars().collect();
+    let p_chars: Vec<_> = p.chars().collect();
 
     let partial_match = get_partial_match(&p_chars);
     // println!("{partial_match:?}");

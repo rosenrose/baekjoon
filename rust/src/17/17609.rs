@@ -1,14 +1,11 @@
 use std::io::{stdin, Read};
 
 fn main() {
-    let stdin = stdin();
-    let mut stdin = stdin.lock();
-
     let mut buf = String::new();
-    stdin.read_to_string(&mut buf).unwrap();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    buf.split_ascii_whitespace().skip(1).for_each(|line| {
-        let (is_palin, is_pseudo_palin) = is_palindrome(line);
+    for input in buf.lines().skip(1) {
+        let (is_palin, is_pseudo_palin) = is_palindrome(input);
 
         println!(
             "{}",
@@ -22,7 +19,7 @@ fn main() {
                 }
             }
         );
-    });
+    }
 }
 
 fn is_palindrome(word: &str) -> (bool, bool) {

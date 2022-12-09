@@ -2,11 +2,8 @@ use std::fmt::Write;
 use std::io::{stdin, Read};
 
 fn main() {
-    let stdin = stdin();
-    let mut stdin = stdin.lock();
-
     let mut buf = String::new();
-    stdin.read_to_string(&mut buf).unwrap();
+    stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf
         .split_ascii_whitespace()
@@ -73,7 +70,6 @@ fn get_ex_gcd(a: i32, b: i32) -> (i32, i32, i32) {
     loop {
         q = r1 / r2;
         (r1, r2) = (r2, r1 % r2);
-
         (s1, s2) = (s2, s1 - s2 * q);
         (t1, t2) = (t2, t1 - t2 * q);
 
@@ -91,11 +87,8 @@ fn get_ex_gcd(a: i32, b: i32) -> (i32, i32, i32) {
 // use std::io::{stdin, Read};
 
 // fn main() {
-//     let stdin = stdin();
-//     let mut stdin = stdin.lock();
-
 //     let mut buf = String::new();
-//     stdin.read_to_string(&mut buf).unwrap();
+//     stdin().read_to_string(&mut buf).unwrap();
 
 //     let mut input = buf
 //         .split_ascii_whitespace()
