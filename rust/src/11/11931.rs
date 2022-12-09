@@ -1,28 +1,28 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    let mut arr: Vec<i32> = (0..n)
-        .map(|_| {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
-
-            buf.trim().parse().unwrap()
-        })
-        .collect();
+    let n = input.next().unwrap() as usize;
+    let mut arr: Vec<_> = input.collect();
 
     merge_sort(&mut arr[..], n as usize);
 
     for num in arr {
-        writeln!(stdout, "{num}").unwrap();
+        writeln!(output, "{num}").unwrap();
     }
+
+    print!("{output}");
 }
 
 fn merge_sort(arr: &mut [i32], len: usize) {
@@ -36,8 +36,7 @@ fn merge_sort(arr: &mut [i32], len: usize) {
     merge_sort(&mut arr[pivot..], len - pivot);
 
     let mut temp = vec![0; len];
-    let mut a = 0;
-    let mut b = pivot;
+    let (mut a, mut b) = (0, pivot);
 
     for i in 0..len {
         if a < pivot && b < len {
@@ -59,7 +58,5 @@ fn merge_sort(arr: &mut [i32], len: usize) {
         }
     }
 
-    for (i, num) in temp.iter().enumerate() {
-        arr[i] = *num;
-    }
+    arr.copy_from_slice(&temp[..]);
 }

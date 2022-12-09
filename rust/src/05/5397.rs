@@ -1,17 +1,18 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut left = String::new();
-    let mut right = String::new();
+    let mut output = String::new();
+    let (mut left, mut right) = (String::new(), String::new());
 
-    buf.lines().skip(1).for_each(|line| {
-        line.chars().for_each(|c| {
+    for input in buf.lines().skip(1) {
+        for c in input.chars() {
             match c {
                 '-' => {
                     left.pop();
@@ -28,13 +29,15 @@ fn main() {
                 }
                 _ => left.push(c),
             };
-        });
+        }
 
         right = right.chars().rev().collect();
 
-        writeln!(stdout, "{left}{right}").unwrap();
+        writeln!(output, "{left}{right}").unwrap();
 
         left.clear();
         right.clear();
-    });
+    }
+
+    print!("{output}");
 }

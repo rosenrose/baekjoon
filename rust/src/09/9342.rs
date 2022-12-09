@@ -1,22 +1,20 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let accept_chars = 'A'..='F';
 
-    'outer: for _ in 0..n {
-        read_line(&mut buf);
+    for input in buf.lines().skip(1) {
+        if input.chars().any(|c| !accept_chars.contains(&c)) {
+            println!("Good");
+            continue;
+        }
 
         let mut state = Some(1);
-        // https://cyberzhg.github.io/toolbox/min_dfa?regex=KEF8QnxDfER8RXxGKT9BK0YrQysoQXxCfEN8RHxFfEYpPw==
-        let accept_chars = 'A'..='F';
 
-        for c in buf.trim().chars() {
-            if !accept_chars.contains(&c) {
-                println!("Good");
-                continue 'outer;
-            }
-
+        for c in input.chars() {
             state = get_state(state, c);
 
             if state.is_none() {
@@ -31,19 +29,19 @@ fn main() {
     }
 }
 
+// https://cyberzhg.github.io/toolbox/min_dfa?regex=KEF8QnxDfER8RXxGKT9BK0YrQysoQXxCfEN8RHxFfEYpPw==
 #[rustfmt::skip]
 fn get_state(state: Option<i32>, input: char) -> Option<i32> {
-  match (state, input) {
-      (Some(1), 'A') => Some(2), (Some(1), _)   => Some(3),
-      (Some(2), 'A') => Some(2), (Some(2), 'F') => Some(4),
-      (Some(3), 'A') => Some(2),
-      (Some(4), 'C') => Some(5), (Some(4), 'F') => Some(4),
-      (Some(5), 'C') => Some(5), (Some(5), _)   => Some(6),
-      _ => None,
-  }
-}
+    if state.is_none() {
+        return None;
+    }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
+    match (state.unwrap(), input) {
+        (1, 'A') => Some(2), (1, _) => Some(3),
+        (2, 'A') => Some(2), (2, 'F') => Some(4),
+        (3, 'A') => Some(2),
+        (4, 'C') => Some(5), (4, 'F') => Some(4),
+        (5, 'C') => Some(5), (5, _) => Some(6),
+        _ => None,
+    }
 }

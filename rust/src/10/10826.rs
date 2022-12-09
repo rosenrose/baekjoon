@@ -1,22 +1,22 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+const EXP: i128 = 10_000_000_000_000_000_000_000_000_000_000_000_000;
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
-
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    std::io::stdin().read_line(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-
+    let n: i128 = buf.trim().parse().unwrap();
     let fibo_num = fibo(n);
 
-    for i in fibo_num.iter().rev() {
-        write!(stdout, "{i}").unwrap();
+    for (i, num) in fibo_num.iter().rev().enumerate() {
+        if i == 0 {
+            print!("{num}");
+        } else {
+            print!("{num:037}");
+        }
     }
 }
 
-fn fibo(n: i32) -> Vec<i32> {
+fn fibo(n: i128) -> Vec<i128> {
     if n <= 1 {
         return Vec::from([n]);
     }
@@ -31,14 +31,14 @@ fn fibo(n: i32) -> Vec<i32> {
     b
 }
 
-fn add(a: &mut Vec<i32>, b: &mut Vec<i32>) -> Vec<i32> {
+fn add(a: &mut Vec<i128>, b: &mut Vec<i128>) -> Vec<i128> {
     let mut carry = 0;
     let mut sum: Vec<_> = (0..a.len().max(b.len()))
         .map(|i| {
             let temp = carry + a.get(i).unwrap_or(&0) + b.get(i).unwrap_or(&0);
-            carry = temp / 10;
+            carry = temp / EXP;
 
-            temp % 10
+            temp % EXP
         })
         .collect();
 

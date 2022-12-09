@@ -1,22 +1,19 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut output = String::new();
 
-    for _ in 0..n {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
+    for input in buf.lines().skip(1) {
         let mut state = Some(1);
-        // https://cyberzhg.github.io/toolbox/min_dfa?regex=KDEwMCsxK3wwMSkr
 
-        for c in buf.trim().chars() {
+        for c in input.chars() {
             state = get_state(state, c);
 
             if state.is_none() {
@@ -24,25 +21,37 @@ fn main() {
             }
         }
 
-        match state {
-            Some(4 | 7 | 8) => writeln!(stdout, "YES").unwrap(),
-            _ => writeln!(stdout, "NO").unwrap(),
-        }
+        writeln!(
+            output,
+            "{}",
+            match state {
+                Some(4 | 7 | 8) => "YES",
+                _ => "NO",
+            }
+        )
+        .unwrap();
     }
+
+    print!("{output}");
 }
 
+// https://cyberzhg.github.io/toolbox/min_dfa?regex=KDEwMCsxK3wwMSkr
 #[rustfmt::skip]
 fn get_state(state: Option<i32>, input: char) -> Option<i32> {
-    match (state, input) {
-        (Some(1), '0') => Some(2), (Some(1), '1') => Some(3),
-        (Some(2), '1') => Some(4),
-        (Some(3), '0') => Some(5),
-        (Some(4), '0') => Some(2), (Some(4), '1') => Some(3),
-        (Some(5), '0') => Some(6),
-        (Some(6), '0') => Some(6), (Some(6), '1') => Some(7),
-        (Some(7), '0') => Some(2), (Some(7), '1') => Some(8),
-        (Some(8), '0') => Some(9), (Some(8), '1') => Some(8),
-        (Some(9), '0') => Some(6), (Some(9), '1') => Some(4),
+    if state.is_none() {
+        return None;
+    }
+
+    match (state.unwrap(), input) {
+        (1, '0') => Some(2), (1, '1') => Some(3),
+        (2, '1') => Some(4),
+        (3, '0') => Some(5),
+        (4, '0') => Some(2), (4, '1') => Some(3),
+        (5, '0') => Some(6),
+        (6, '0') => Some(6), (6, '1') => Some(7),
+        (7, '0') => Some(2), (7, '1') => Some(8),
+        (8, '0') => Some(9), (8, '1') => Some(8),
+        (9, '0') => Some(6), (9, '1') => Some(4),
         _ => None,
     }
 }

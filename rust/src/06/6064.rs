@@ -1,24 +1,25 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let t: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    for _ in 0..t {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
-
-        if let [m, n, x, y] = parse_int_vec(&buf)[..] {
+    for _ in 0..input.next().unwrap() {
+        if let [m, n, x, y] = (0..4).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..] {
             let lcm = get_lcm(m, n);
             let (gcd, mut a, mut b) = get_ex_gcd(m, n);
             // println!("{lcm} {gcd} {a} {b]");
             if (y - x) % gcd != 0 {
-                writeln!(stdout, "-1").unwrap();
+                writeln!(output, "-1").unwrap();
                 continue;
             }
 
@@ -42,9 +43,11 @@ fn main() {
             assert_eq!(left, right);
             // println!("{left} {right}");
 
-            writeln!(stdout, "{left}").unwrap();
+            writeln!(output, "{left}").unwrap();
         }
     }
+
+    print!("{output}");
 }
 
 fn get_lcm(a: i32, b: i32) -> i32 {
@@ -84,62 +87,57 @@ fn get_ex_gcd(a: i32, b: i32) -> (i32, i32, i32) {
     }
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
-}
+// use std::fmt::Write;
+// use std::io::{stdin, Read};
 
-/* use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+// fn main() {
+//     let stdin = stdin();
+//     let mut stdin = stdin.lock();
 
-fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+//     let mut buf = String::new();
+//     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+//     let mut input = buf
+//         .split_ascii_whitespace()
+//         .map(|s| s.parse::<usize>().unwrap());
+//     let mut output = String::new();
 
-    let t: i32 = buf.trim().parse().unwrap();
+//     'outer: for _ in 0..input.next().unwrap() {
+//         if let [m, n, x, y] = (0..4).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..] {
+//             let total_years = get_lcm(m, n);
 
-    'outer: for _ in 0..t {
-        buf.clear();
-        stdin.read_line(&mut buf).unwrap();
+//             let (start_year, compare_year) = if m > n {
+//                 (x, if y == n { 0 } else { y })
+//             } else {
+//                 (y, if x == m { 0 } else { x })
+//             };
 
-        if let [m, n, x, y] = parse_int_vec(&buf)[..] {
-            let total_years = get_lcm(m, n);
+//             let (mod1, mod2) = (m.max(n), m.min(n));
 
-            let (start_year, compare_year) = if m > n {
-                (x, if y == n { 0 } else { y })
-            } else {
-                (y, if x == m { 0 } else { x })
-            };
-            let (mod1, mod2) = (m.max(n), m.min(n));
+//             for year in (start_year..=total_years).step_by(mod1) {
+//                 if year % mod2 == compare_year {
+//                     writeln!(output, "{year}").unwrap();
+//                     continue 'outer;
+//                 }
+//             }
 
-            for year in (start_year..=total_years).step_by(mod1) {
-                if year % mod2 == compare_year {
-                    writeln!(stdout, "{year}").unwrap();
-                    continue 'outer;
-                }
-            }
+//             writeln!(output, "-1").unwrap();
+//         }
+//     }
 
-            writeln!(stdout, "-1").unwrap();
-        }
-    }
-}
+//     print!("{output}");
+// }
 
-fn get_lcm(a: usize, b: usize) -> usize {
-    a / get_gcd(a, b) * b
-}
+// fn get_lcm(a: usize, b: usize) -> usize {
+//     a / get_gcd(a, b) * b
+// }
 
-fn get_gcd(mut a: usize, mut b: usize) -> usize {
-    loop {
-        if b == 0 {
-            return a;
-        }
+// fn get_gcd(mut a: usize, mut b: usize) -> usize {
+//     loop {
+//         if b == 0 {
+//             return a;
+//         }
 
-        (a, b) = (b, a % b);
-    }
-}
-
-fn parse_int_vec(buf: &String) -> Vec<usize> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
-}
- */
+//         (a, b) = (b, a % b);
+//     }
+// }

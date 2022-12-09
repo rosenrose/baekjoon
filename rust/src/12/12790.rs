@@ -1,26 +1,30 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    buf.lines().skip(1).for_each(|line| {
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
+
+    for _ in 0..input.next().unwrap() {
         if let [hp, mp, atk, def, hp_delta, mp_delta, atk_delta, def_delta] =
-            parse_int_vec(line)[..]
+            (0..8).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..]
         {
             let power = (hp + hp_delta).max(1)
                 + 5 * (mp + mp_delta).max(1)
                 + 2 * (atk + atk_delta).max(0)
                 + 2 * (def + def_delta);
 
-            writeln!(stdout, "{power}").unwrap();
+            writeln!(output, "{power}").unwrap();
         }
-    });
-}
+    }
 
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    print!("{output}");
 }

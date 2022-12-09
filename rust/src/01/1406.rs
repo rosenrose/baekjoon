@@ -1,20 +1,20 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
-    let mut lines = buf.lines();
 
-    let mut left = lines.next().unwrap().to_string();
+    let mut input = buf.split_ascii_whitespace();
+
+    let mut left = input.next().unwrap().to_string();
     let mut right = String::new();
+    let n: i32 = input.next().unwrap().parse().unwrap();
 
-    lines.skip(1).for_each(|line| {
-        let mut command = line.split_whitespace();
-
-        match command.next().unwrap() {
+    for _ in 0..n {
+        match input.next().unwrap() {
             "L" => {
                 if let Some(c) = left.pop() {
                     right.push(c);
@@ -29,14 +29,15 @@ fn main() {
                 left.pop();
             }
             "P" => {
-                let c = command.next().unwrap().chars().next().unwrap();
-                left.push(c);
+                if let Some(c) = input.next().unwrap().chars().nth(0) {
+                    left.push(c);
+                }
             }
             _ => (),
         };
-    });
+    }
 
     right = right.chars().rev().collect();
 
-    writeln!(stdout, "{left}{right}").unwrap();
+    println!("{left}{right}");
 }

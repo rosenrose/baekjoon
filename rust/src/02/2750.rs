@@ -1,22 +1,20 @@
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
-    stdin.read_line(&mut buf).unwrap();
+    stdin.read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    let mut arr: Vec<i32> = (0..n)
-        .map(|_| {
-            buf.clear();
-            stdin.read_line(&mut buf).unwrap();
-
-            buf.trim().parse().unwrap()
-        })
-        .collect();
+    let n = input.next().unwrap();
+    let mut arr: Vec<_> = input.collect();
 
     // bubble_sort(&mut arr);
     // selection_sort(&mut arr);
@@ -24,8 +22,10 @@ fn main() {
     quick_sort(&mut arr[..], n);
 
     for num in arr {
-        writeln!(stdout, "{num}").unwrap();
+        writeln!(output, "{num}").unwrap();
     }
+
+    print!("{output}");
 }
 
 fn bubble_sort(arr: &mut Vec<i32>) {

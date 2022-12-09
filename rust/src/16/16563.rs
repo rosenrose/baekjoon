@@ -1,30 +1,33 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
+
     let min_factors = get_min_factors(5_000_000);
     // println!("{min_factors:?}");
 
-    buf.lines()
-        .next_back()
-        .unwrap()
-        .split_whitespace()
-        .map(|s| s.parse::<i32>().unwrap())
-        .for_each(|mut num| {
-            while num > 1 {
-                let min_factor = min_factors[num as usize];
+    for mut num in input.skip(1) {
+        while num > 1 {
+            let min_factor = min_factors[num as usize];
+            num /= min_factor;
 
-                num /= min_factor;
-                write!(stdout, "{min_factor} ").unwrap();
-            }
+            write!(output, "{min_factor} ").unwrap();
+        }
 
-            writeln!(stdout, "").unwrap();
-        });
+        writeln!(output, "").unwrap();
+    }
+
+    print!("{output}");
 }
 
 fn get_min_factors(num: usize) -> Vec<i32> {

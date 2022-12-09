@@ -1,25 +1,31 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    for line in buf.lines().skip(1) {
-        let k: i32 = line.parse().unwrap();
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
+    for k in input.skip(1) {
         if is_prime(k) {
-            writeln!(stdout, "0").unwrap();
+            writeln!(output, "0").unwrap();
             continue;
         }
 
         let down = (2..k).rev().filter(|&i| is_prime(i)).next().unwrap();
         let up = (k + 1..).filter(|&i| is_prime(i)).next().unwrap();
 
-        writeln!(stdout, "{}", up - down).unwrap();
+        writeln!(output, "{}", up - down).unwrap();
     }
+
+    print!("{output}");
 }
 
 fn is_prime(num: i32) -> bool {

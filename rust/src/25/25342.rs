@@ -1,14 +1,19 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    buf.lines().skip(1).for_each(|line| {
-        let n = parse_int(line);
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
+    let mut output = String::new();
+
+    for n in input.skip(1) {
         let lcm1 = get_lcm(n, n - 1);
         let lcm2 = get_lcm(n - 2, (n - 3).max(1));
 
@@ -19,8 +24,10 @@ fn main() {
             get_lcm(n - 1, lcm2),
         ];
 
-        writeln!(stdout, "{}", lcm_list.iter().max().unwrap()).unwrap();
-    });
+        writeln!(output, "{}", lcm_list.iter().max().unwrap()).unwrap();
+    }
+
+    print!("{output}");
 }
 
 fn get_lcm(a: i64, b: i64) -> i64 {
@@ -35,8 +42,4 @@ fn get_gcd(mut a: i64, mut b: i64) -> i64 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn parse_int(buf: &str) -> i64 {
-    buf.parse().unwrap()
 }

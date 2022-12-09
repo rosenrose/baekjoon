@@ -1,32 +1,33 @@
 use std::cmp::Ordering;
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    let n = parse_int(lines.next().unwrap());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    let mut nums = 1..=n;
+    let mut nums = 1..=input.next().unwrap();
     let mut stack = Vec::new();
     let mut ops = Vec::new();
 
-    for line in lines {
-        let input = parse_int(line);
-
-        match input.cmp(stack.last().unwrap_or(&0)) {
+    for num in input {
+        match num.cmp(stack.last().unwrap_or(&0)) {
             Ordering::Greater => {
                 loop {
-                    let num = nums.next().unwrap();
+                    let temp = nums.next().unwrap();
 
-                    stack.push(num);
+                    stack.push(temp);
                     ops.push('+');
 
-                    if num == input {
+                    if temp == num {
                         break;
                     }
                 }
@@ -39,17 +40,15 @@ fn main() {
                 ops.push('-');
             }
             Ordering::Less => {
-                writeln!(stdout, "NO").unwrap();
+                print!("NO");
                 return;
             }
         }
     }
 
     for op in ops {
-        writeln!(stdout, "{op}").unwrap();
+        writeln!(output, "{op}").unwrap();
     }
-}
 
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
+    print!("{output}");
 }

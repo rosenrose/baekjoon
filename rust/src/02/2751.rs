@@ -1,5 +1,6 @@
 use std::collections::BinaryHeap;
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
+use std::io::{stdin, Read};
 
 struct Heap<T> {
     tree: Vec<T>,
@@ -101,37 +102,42 @@ where
 }
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
-    let n: usize = lines.next().unwrap().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    // let mut arr: Vec<i32> = lines.map(|line| line.parse().unwrap()).collect();
+    let n = input.next().unwrap() as usize;
+    let mut arr: Vec<_> = input.collect();
 
-    // merge_sort(&mut arr[..], n);
+    merge_sort(&mut arr[..], n);
 
-    // for num in arr {
-    //     writeln!(stdout, "{num}").unwrap();
+    for num in arr {
+        writeln!(output, "{num}").unwrap();
+    }
+
+    // let mut heap = Heap::new();
+    // lines.for_each(|line| heap.push(line.parse::<i32>().unwrap()));
+
+    // // let mut heap: BinaryHeap<i32> = lines.map(|line| line.parse().unwrap()).collect();
+
+    // let mut arr = Vec::new();
+
+    // while !heap.is_empty() {
+    //     arr.push(heap.pop().unwrap());
     // }
 
-    let mut heap = Heap::new();
-    lines.for_each(|line| heap.push(line.parse::<i32>().unwrap()));
+    // for num in arr.iter().rev() {
+    //     writeln!(output, "{num}").unwrap();
+    // }
 
-    // let mut heap: BinaryHeap<i32> = lines.map(|line| line.parse().unwrap()).collect();
-
-    let mut arr = Vec::new();
-
-    while !heap.is_empty() {
-        arr.push(heap.pop().unwrap());
-    }
-
-    for num in arr.iter().rev() {
-        writeln!(stdout, "{num}").unwrap();
-    }
+    print!("{output}");
 }
 
 fn merge_sort(arr: &mut [i32], len: usize) {

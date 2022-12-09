@@ -1,20 +1,28 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
 
-    let mut lines = buf.lines();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
+    input.next();
 
-    if let [_, m] = parse_int_vec(lines.next().unwrap())[..] {
-        let heights = parse_int_vec(lines.next().unwrap());
-        let max_height = *heights.iter().max().unwrap();
+    let m = input.next().unwrap();
+    let mut max_height = 0;
 
-        writeln!(stdout, "{}", binary_search(&heights, m, 0, max_height - 1)).unwrap();
-    }
+    let heights: Vec<_> = input
+        .map(|height| {
+            max_height = height.max(max_height);
+            height
+        })
+        .collect();
+
+    println!("{}", binary_search(&heights, m, 0, max_height - 1));
 }
 
 fn binary_search(heights: &Vec<i64>, m: i64, start: i64, end: i64) -> i64 {
@@ -35,12 +43,4 @@ fn binary_search(heights: &Vec<i64>, m: i64, start: i64, end: i64) -> i64 {
     } else {
         binary_search(heights, m, start, mid)
     }
-}
-
-fn parse_int(buf: &str) -> i64 {
-    buf.parse().unwrap()
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i64> {
-    buf.split_whitespace().map(parse_int).collect()
 }

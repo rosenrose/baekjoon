@@ -7,16 +7,19 @@ fn main() {
     let mut buf = String::new();
     stdin.read_line(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim_end());
     let mut s = 0;
 
-    for _ in 0..n {
+    for _ in 0..parse_int(buf.trim_end()) {
         buf.clear();
         stdin.read_line(&mut buf).unwrap();
 
-        let mut operation = buf.split_ascii_whitespace();
-        let op = operation.next().unwrap();
-        let x = parse_int(operation.next().unwrap_or("0"));
+        let mut input = buf.split_ascii_whitespace();
+        let op = input.next().unwrap();
+        let x = if let Some(s) = input.next() {
+            parse_int(s)
+        } else {
+            0
+        };
 
         match op {
             "add" => s |= 1 << x,

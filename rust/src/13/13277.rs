@@ -1,5 +1,5 @@
 use std::f64::consts::PI;
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::fmt::Write;
 use std::ops::{Add, DivAssign, Mul, MulAssign, Sub};
 
 #[derive(Clone, Copy, Debug)]
@@ -55,25 +55,26 @@ impl DivAssign for Complex {
 }
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
-
     let mut buf = String::new();
-    stdin.read_to_string(&mut buf).unwrap();
+    std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut nums = buf.lines().next().unwrap().split_whitespace();
-    let mut a = parse_bigint(nums.next().unwrap());
-    let mut b = parse_bigint(nums.next().unwrap());
+    let mut input = buf.split_ascii_whitespace();
+    let mut output = String::new();
+
+    let mut a = parse_bigint(input.next().unwrap());
+    let mut b = parse_bigint(input.next().unwrap());
 
     let result = multiply(&mut a, &mut b);
 
-    for (i, r) in result.iter().rev().enumerate() {
+    for (i, num) in result.iter().rev().enumerate() {
         if i == 0 {
-            write!(stdout, "{r}").unwrap();
+            write!(output, "{num}").unwrap();
         } else {
-            write!(stdout, "{r:02}").unwrap();
+            write!(output, "{num:02}").unwrap();
         }
     }
+
+    print!("{output}");
 }
 
 fn parse_bigint(input: &str) -> Vec<Complex> {

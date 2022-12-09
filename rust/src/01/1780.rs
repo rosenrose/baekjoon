@@ -1,20 +1,26 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::io::{stdin, Read};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
 
     let mut buf = String::new();
     stdin.read_to_string(&mut buf).unwrap();
-    let mut lines = buf.lines();
 
-    let n: usize = lines.next().unwrap().parse().unwrap();
-    let paper: Vec<_> = lines.map(|line| parse_int_vec(line)).collect();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+
+    let n = input.next().unwrap() as usize;
+    let paper: Vec<_> = (0..n)
+        .map(|_| (0..n).map(|_| input.next().unwrap()).collect())
+        .collect();
+
     let (mut minus, mut zero, mut plus) = (0, 0, 0);
 
     cut(&paper, 0, 0, n, &mut minus, &mut zero, &mut plus);
 
-    writeln!(stdout, "{minus}\n{zero}\n{plus}").unwrap();
+    println!("{minus}\n{zero}\n{plus}");
 }
 
 fn cut(
@@ -70,8 +76,4 @@ fn cut(
     cut(paper, x + n / 3, y + n / 3 * 2, n / 3, minus, zero, plus);
     #[rustfmt::skip]
     cut(paper, x + n / 3 * 2, y + n / 3 * 2, n / 3, minus, zero, plus);
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
