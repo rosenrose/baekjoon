@@ -1,11 +1,14 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let current = parse_int_vec(&buf);
-    read_line(&mut buf);
+    let mut input = buf.lines();
+    let parse_time = |s: &str| -> Vec<i32> { s.split(':').map(|s| s.parse().unwrap()).collect() };
 
-    let mut end = parse_int_vec(&buf);
+    let current = parse_time(input.next().unwrap());
+    let mut end = parse_time(input.next().unwrap());
 
     if end <= current {
         end[0] += 24;
@@ -26,13 +29,4 @@ fn main() {
 
         println!("{left_hour:02}:{left_minute:02}:{left_second:02}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.trim().split(':').map(|s| s.parse().unwrap()).collect()
 }

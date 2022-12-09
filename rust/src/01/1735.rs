@@ -1,4 +1,5 @@
 use std::fmt;
+use std::io::{stdin, Read};
 use std::ops::Add;
 
 struct Fraction {
@@ -33,22 +34,19 @@ impl fmt::Display for Fraction {
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
-    let mut nums = buf.split_whitespace().map(parse_int);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
     let fraction1 = Fraction {
-        numerator: nums.next().unwrap(),
-        denominator: nums.next().unwrap(),
+        numerator: input.next().unwrap(),
+        denominator: input.next().unwrap(),
     };
-
-    read_line(&mut buf);
-    nums = buf.split_whitespace().map(parse_int);
-
     let fraction2 = Fraction {
-        numerator: nums.next().unwrap(),
-        denominator: nums.next().unwrap(),
+        numerator: input.next().unwrap(),
+        denominator: input.next().unwrap(),
     };
 
     println!("{}", fraction1 + fraction2);
@@ -66,9 +64,4 @@ fn get_gcd(mut a: i32, mut b: i32) -> i32 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

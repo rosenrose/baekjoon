@@ -1,15 +1,10 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-
-    let words = (0..n).map(|_| {
-        read_line(&mut buf);
-        buf.trim().to_string()
-    });
-
-    let group_words = words.filter(|word| is_group_word(word));
+    let group_words = buf.lines().skip(1).filter(|word| is_group_word(word));
 
     println!("{}", group_words.count());
 }
@@ -36,9 +31,4 @@ fn is_group_word(word: &str) -> bool {
     }
 
     true
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

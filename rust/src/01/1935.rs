@@ -1,22 +1,23 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    read_line(&mut buf);
+    let mut input = buf.lines();
+    input.next();
 
-    let formula = buf.trim().to_string();
-    let nums = parse_float_vec_lines(&mut buf, n);
+    let formula = input.next().unwrap();
+    let nums: Vec<f64> = input.map(|s| s.parse().unwrap()).collect();
+
     let offset = 'A' as u8;
-
     let mut stack = Vec::new();
 
-    for c in formula.chars() {
-        match c {
-            'A'..='Z' => stack.push(nums[(c as u8 - offset) as usize]),
+    for ch in formula.chars() {
+        match ch {
+            'A'..='Z' => stack.push(nums[(ch as u8 - offset) as usize]),
             op => {
-                let b = stack.pop().unwrap();
-                let a = stack.pop().unwrap();
+                let (b, a) = (stack.pop().unwrap(), stack.pop().unwrap());
 
                 let result = match op {
                     '+' => a + b,
@@ -32,22 +33,4 @@ fn main() {
     }
 
     println!("{:.2}", stack.pop().unwrap());
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_float(buf: &String) -> f64 {
-    buf.trim().parse().unwrap()
-}
-
-fn parse_float_vec_lines(buf: &mut String, n: i32) -> Vec<f64> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            parse_float(buf)
-        })
-        .collect()
 }

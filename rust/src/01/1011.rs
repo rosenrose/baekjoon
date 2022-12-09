@@ -1,40 +1,36 @@
+use std::fmt::Write;
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
+    let mut output = String::new();
 
-    for _ in 0..n {
-        read_line(&mut buf);
+    for _ in 0..input.next().unwrap() {
+        let (x, y) = (input.next().unwrap(), input.next().unwrap());
+        let distance = y - x;
 
-        if let [x, y] = parse_int_vec(&buf)[..] {
-            let distance = y - x;
+        let mut step = 0;
+        let mut max_distance = 0;
 
-            let mut step = 0;
-            let mut max_distance = 0;
+        while max_distance < distance {
+            step += 1;
 
-            while max_distance < distance {
-                step += 1;
-
-                max_distance += if step % 2 == 0 {
-                    step / 2
-                } else {
-                    (step + 1) / 2
-                };
-            }
-
-            println!("{step}");
+            max_distance += if step % 2 == 0 {
+                step / 2
+            } else {
+                (step + 1) / 2
+            };
         }
+
+        writeln!(output, "{step}").unwrap();
     }
-}
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i64> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    print!("{output}");
 }
 
 /*

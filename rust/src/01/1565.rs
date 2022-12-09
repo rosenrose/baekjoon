@@ -1,16 +1,21 @@
 use std::collections::HashSet;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let d = parse_int_vec(&buf);
-    read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
 
-    let m = parse_int_vec(&buf);
+    let n = input.next().unwrap();
+    input.next();
+
+    let d: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
+    let m: Vec<_> = input.collect();
+
     let gcd = get_gcd(m.into_iter());
-
     let mut lcm = 1;
 
     for num in d {
@@ -59,13 +64,4 @@ where
         (a, b) = (b, a % b);
     })
     .unwrap()
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i64> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

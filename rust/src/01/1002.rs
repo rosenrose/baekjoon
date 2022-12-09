@@ -1,13 +1,17 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    for _ in 0..n {
-        read_line(&mut buf);
-
-        if let [x1, y1, r1, x2, y2, r2] = parse_int_vec(&buf)[..] {
+    for _ in 0..input.next().unwrap() {
+        if let [x1, y1, r1, x2, y2, r2] =
+            (0..6).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..]
+        {
             if (x1, y1) == (x2, y2) {
                 println!("{}", if r1 == r2 { -1 } else { 0 });
                 continue;
@@ -46,13 +50,4 @@ fn distance_of_points(p1: (i32, i32), p2: (i32, i32)) -> f64 {
     let (x2, y2) = p2;
 
     ((x1 - x2).pow(2) as f64 + (y1 - y2).pow(2) as f64).sqrt()
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

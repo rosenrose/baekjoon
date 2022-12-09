@@ -1,26 +1,25 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [w, h, x, y, p] = parse_int_vec(&buf)[..] {
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+
+    if let [w, h, x, y, p] = (0..5).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..] {
         let radius = h / 2;
         let mut count = 0;
 
         for _ in 0..p {
-            read_line(&mut buf);
+            let player = (input.next().unwrap(), input.next().unwrap());
 
-            if let [px, py] = parse_int_vec(&buf)[..] {
-                let player = (px, py);
-
-                if is_point_inside_or_border_rect(player, (x, y, w, h))
-                    || is_point_inside_or_border_circle(player, ((x, y + radius), radius as f64))
-                    || is_point_inside_or_border_circle(
-                        player,
-                        ((x + w, y + radius), radius as f64),
-                    )
-                {
-                    count += 1;
-                }
+            if is_point_inside_or_border_rect(player, (x, y, w, h))
+                || is_point_inside_or_border_circle(player, ((x, y + radius), radius as f64))
+                || is_point_inside_or_border_circle(player, ((x + w, y + radius), radius as f64))
+            {
+                count += 1;
             }
         }
 
@@ -46,13 +45,4 @@ fn distance_of_points(p1: (i32, i32), p2: (i32, i32)) -> f64 {
     let (x2, y2) = p2;
 
     ((x1 - x2).pow(2) as f64 + (y1 - y2).pow(2) as f64).sqrt()
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

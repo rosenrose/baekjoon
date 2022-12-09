@@ -1,21 +1,16 @@
 use std::collections::HashSet;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let seats = parse_int_vec(&buf);
-    let denied = seats.len() - seats.iter().collect::<HashSet<_>>().len();
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    println!("{denied}");
-}
+    let seats: Vec<_> = input.skip(1).collect();
+    let denied: HashSet<_> = seats.iter().collect();
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    println!("{}", seats.len() - denied.len());
 }

@@ -1,13 +1,19 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [k, n] = parse_int_vec(&buf)[..] {
-        let cables = parse_int_vec_lines(&mut buf, k);
-        let max_length = *cables.iter().max().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
+    input.next();
 
-        println!("{}", binary_search(&cables, n, 1, max_length));
-    }
+    let n = input.next().unwrap();
+    let cables: Vec<_> = input.collect();
+    let max_length = *cables.iter().max().unwrap();
+
+    println!("{}", binary_search(&cables, n, 1, max_length));
 }
 
 fn binary_search(cables: &Vec<i64>, n: i64, start: i64, end: i64) -> i64 {
@@ -28,26 +34,4 @@ fn binary_search(cables: &Vec<i64>, n: i64, start: i64, end: i64) -> i64 {
     } else {
         binary_search(cables, n, start, mid)
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &str) -> i64 {
-    buf.parse().unwrap()
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i64> {
-    buf.split_whitespace().map(parse_int).collect()
-}
-
-fn parse_int_vec_lines(buf: &mut String, n: i64) -> Vec<i64> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            parse_int(buf.trim())
-        })
-        .collect()
 }

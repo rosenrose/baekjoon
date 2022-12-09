@@ -1,29 +1,25 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+
     let mut ball = 1;
 
-    for _ in 0..n {
-        read_line(&mut buf);
+    for _ in 0..input.next().unwrap() {
+        let (x, y) = (input.next().unwrap(), input.next().unwrap());
 
-        ball = match (ball, &parse_int_vec(&buf)[..]) {
-            (1, [1, 3] | [3, 1]) | (2, [2, 3] | [3, 2]) => 3,
-            (1, [1, 2] | [2, 1]) | (3, [2, 3] | [3, 2]) => 2,
-            (2, [1, 2] | [2, 1]) | (3, [1, 3] | [3, 1]) => 1,
+        ball = match (ball, (x, y)) {
+            (1, (1, 3) | (3, 1)) | (2, (2, 3) | (3, 2)) => 3,
+            (1, (1, 2) | (2, 1)) | (3, (2, 3) | (3, 2)) => 2,
+            (2, (1, 2) | (2, 1)) | (3, (1, 3) | (3, 1)) => 1,
             _ => continue,
         };
     }
 
     println!("{ball}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
