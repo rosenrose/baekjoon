@@ -1,13 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let mut scores: Vec<_> = (1..=8)
-        .map(|i| {
-            read_line(&mut buf);
-            let score = parse_int(&buf);
-
-            (score, i)
-        })
+    let mut scores: Vec<_> = buf
+        .lines()
+        .enumerate()
+        .map(|(i, s)| (s.parse::<i32>().unwrap(), i + 1))
         .collect();
     scores.sort_by_key(|&(s, _)| s);
 
@@ -22,13 +22,4 @@ fn main() {
     for (_, i) in top_5 {
         print!("{i} ");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

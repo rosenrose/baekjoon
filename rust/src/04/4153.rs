@@ -1,32 +1,31 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
+
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
     loop {
-        read_line(&mut buf);
-        let nums = parse_int_vec(&buf);
+        let (a, b, c) = (
+            input.next().unwrap(),
+            input.next().unwrap(),
+            input.next().unwrap(),
+        );
 
-        if nums.iter().all(|&n| n == 0) {
+        if (a, b, c) == (0, 0, 0) {
             return;
         }
 
-        let (index, &longest) = nums.iter().enumerate().max_by_key(|(_, &n)| n).unwrap();
-
-        let is_right = match index {
-            0 => nums[1].pow(2) + nums[2].pow(2) == longest.pow(2),
-            1 => nums[0].pow(2) + nums[2].pow(2) == longest.pow(2),
-            2 => nums[0].pow(2) + nums[1].pow(2) == longest.pow(2),
+        let is_right = match a.max(b.max(c)) {
+            longest if longest == a => a * a == b * b + c * c,
+            longest if longest == b => b * b == a * a + c * c,
+            longest if longest == c => c * c == a * a + b * b,
             _ => false,
         };
 
         println!("{}", if is_right { "right" } else { "wrong" });
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

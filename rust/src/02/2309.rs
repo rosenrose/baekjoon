@@ -19,7 +19,7 @@ fn main() {
         }
     }
 
-    let mut littles: Vec<&i32> = heights
+    let mut littles: Vec<_> = heights
         .iter()
         .filter(|h| !non_littles.contains(h))
         .collect();

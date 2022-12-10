@@ -1,9 +1,10 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let seats = buf.trim();
+    let seats = buf.lines().next_back().unwrap();
     let count = seats.len();
 
     let mut seats: String = seats
@@ -24,9 +25,4 @@ fn main() {
     let no_holders = seats.replace('*', "").len();
 
     println!("{}", count - no_holders);
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -1,15 +1,25 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int_vec(&buf)[0];
-    let a = parse_matrix(&mut buf, n);
-    let b = parse_matrix(&mut buf, n);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
+    let (n, m) = (input.next().unwrap(), input.next().unwrap());
+    let mut parse_matrix = |n: i32, m: i32| -> Vec<Vec<_>> {
+        (0..n)
+            .map(|_| (0..m).map(|_| input.next().unwrap()).collect())
+            .collect()
+    };
+
+    let (a, b) = (parse_matrix(n, m), parse_matrix(n, m));
     let sum = a
         .iter()
-        .zip(b.iter())
-        .map(|(row1, row2)| row1.iter().zip(row2.iter()).map(|(col1, col2)| col1 + col2));
+        .zip(b)
+        .map(|(row1, row2)| row1.iter().zip(row2).map(|(col1, col2)| col1 + col2));
 
     for row in sum {
         for col in row {
@@ -17,22 +27,4 @@ fn main() {
         }
         println!("");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
-}
-
-fn parse_matrix(buf: &mut String, rows: i32) -> Vec<Vec<i32>> {
-    (0..rows)
-        .map(|_| {
-            read_line(buf);
-            parse_int_vec(buf)
-        })
-        .collect()
 }

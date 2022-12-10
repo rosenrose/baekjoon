@@ -1,34 +1,26 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    let mut nums: Vec<String> = (0..n)
-        .flat_map(|_| {
-            read_line(&mut buf);
+    let mut nums: Vec<String> = buf
+        .lines()
+        .skip(1)
+        .flat_map(|input| {
+            input.split(char::is_alphabetic).filter_map(|s| {
+                if s.is_empty() {
+                    return None;
+                }
 
-            buf.trim()
-                .split(char::is_alphabetic)
-                .filter_map(|s| {
-                    if s.is_empty() {
-                        return None;
-                    }
-                    if s.chars().all(|c| c == '0') {
-                        return Some("0".to_string());
-                    }
+                let mut s = s.to_string();
 
-                    let mut s = s.to_string();
+                while s.len() > 1 && s.chars().nth(0).unwrap() == '0' {
+                    s.remove(0);
+                }
 
-                    loop {
-                        match s.chars().nth(0) {
-                            Some('0') => s.remove(0),
-                            _ => break,
-                        };
-                    }
-
-                    Some(s)
-                })
-                .collect::<Vec<_>>()
+                Some(s)
+            })
         })
         .collect();
 
@@ -43,9 +35,4 @@ fn main() {
     for num in nums {
         println!("{num}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

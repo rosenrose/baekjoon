@@ -1,22 +1,17 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let mut abc = parse_int_vec(&buf);
+    let mut input = buf.split_ascii_whitespace();
+
+    let mut abc: Vec<i32> = (0..3)
+        .map(|_| input.next().unwrap().parse().unwrap())
+        .collect();
     abc.sort();
 
-    read_line(&mut buf);
-
-    for ch in buf.trim().chars() {
-        print!("{} ", abc[(ch as u8 - 'A' as u8) as usize]);
+    for ch in input.next().unwrap().as_bytes() {
+        print!("{} ", abc[(ch - 'A' as u8) as usize]);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

@@ -1,13 +1,12 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(&buf);
+    let input = buf.lines().map(|s| s.parse::<i32>().unwrap());
 
-    for _ in 0..n {
-        read_line(&mut buf);
-        let num = parse_int(&buf);
-
+    for num in input.skip(1) {
         let sum = num
             + num
                 .to_string()
@@ -40,13 +39,4 @@ fn is_palindrome(word: &str) -> bool {
     }
 
     is_palindrome(&word[1..len - 1])
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

@@ -1,22 +1,14 @@
 use std::collections::HashSet;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    let mut set = HashSet::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    for _ in 0..10 {
-        read_line(&mut buf);
-        set.insert(parse_int(&buf) % 42);
-    }
+    let set: HashSet<_> = buf
+        .lines()
+        .map(|s| s.parse::<i32>().unwrap() % 42)
+        .collect();
 
     println!("{}", set.len());
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

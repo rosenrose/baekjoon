@@ -1,24 +1,17 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [l, p] = parse_int_vec(&buf)[..] {
-        let exact_count = l * p;
-        read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-        let counts = parse_int_vec(&buf);
+    let (l, p) = (input.next().unwrap(), input.next().unwrap());
+    let exact_count = l * p;
 
-        for count in counts {
-            print!("{} ", count - exact_count);
-        }
+    for count in input {
+        print!("{} ", count - exact_count);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
