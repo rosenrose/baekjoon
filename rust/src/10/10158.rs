@@ -1,16 +1,14 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let size = parse_int_vec(&buf);
-    read_line(&mut buf);
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    let coord = parse_int_vec(&buf);
-    read_line(&mut buf);
-
-    let t: i32 = buf.trim().parse().unwrap();
-
-    if let [w, h, p, q] = [size, coord].concat()[..] {
+    if let [w, h, p, q, t] = input.collect::<Vec<_>>()[..] {
         let (mut ant_x, mut ant_y) = (p, q);
 
         let mut time = t;
@@ -33,13 +31,4 @@ fn main() {
 
         println!("{ant_x} {ant_y}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

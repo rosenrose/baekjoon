@@ -1,4 +1,5 @@
 use std::fmt;
+use std::io::{stdin, Read};
 use std::ops::Add;
 
 struct MixedFraction {
@@ -74,20 +75,19 @@ impl fmt::Display for MixedFraction {
 
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
+
+    let mut input = buf.lines();
 
     for i in 1.. {
-        read_line(&mut buf);
-        let n = parse_int(buf.trim());
+        let n = parse_int(input.next().unwrap());
 
         if n == 0 {
             return;
         }
 
         let sum = (0..n)
-            .map(|_| {
-                read_line(&mut buf);
-                MixedFraction::parse(buf.trim())
-            })
+            .map(|_| MixedFraction::parse(input.next().unwrap()))
             .reduce(|a, b| a + b)
             .unwrap();
 
@@ -107,11 +107,6 @@ fn get_gcd(mut a: i32, mut b: i32) -> i32 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }
 
 fn parse_int(buf: &str) -> i32 {

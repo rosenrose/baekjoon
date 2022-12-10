@@ -1,11 +1,12 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let s: Vec<_> = buf.trim().chars().collect();
-    read_line(&mut buf);
-
-    let t = buf.trim();
+    let mut input = buf.lines();
+    let (s, t) = (input.next().unwrap(), input.next().unwrap());
+    let s: Vec<_> = s.chars().collect();
 
     let mut table = vec![vec![0; s.len() + 1]; t.len() + 1];
     let mut max_len = 0;
@@ -39,7 +40,7 @@ fn main() {
             continue;
         }
 
-        assert_eq!(s[j - 1], t.chars().nth(i - 1).unwrap());
+        // assert_eq!(s[j - 1], t.chars().nth(i - 1).unwrap());
         lcs.push(s[j - 1]);
         i -= 1;
         j -= 1;
@@ -52,9 +53,4 @@ fn main() {
 
         println!("{lcs}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

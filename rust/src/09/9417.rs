@@ -1,12 +1,14 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-
-    for _ in 0..n {
-        read_line(&mut buf);
-        let nums = parse_int_vec(&buf);
+    for input in buf.lines().skip(1) {
+        let nums: Vec<_> = input
+            .split_whitespace()
+            .map(|s| s.parse::<i32>().unwrap())
+            .collect();
 
         let mut max_gcd = 0;
 
@@ -28,13 +30,4 @@ fn get_gcd(mut a: i32, mut b: i32) -> i32 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

@@ -1,32 +1,24 @@
 use std::cmp::Ordering;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    let (mut score_a, mut score_b) = (100, 100);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    for _ in 0..n {
-        read_line(&mut buf);
+    let (score_a, score_b) = (0..input.next().unwrap()).fold((100, 100), |acc, _| {
+        let (a, b) = acc;
+        let (a_num, b_num) = (input.next().unwrap(), input.next().unwrap());
 
-        if let [a, b] = parse_int_vec(&buf)[..] {
-            match a.cmp(&b) {
-                Ordering::Less => score_a -= b,
-                Ordering::Equal => (),
-                Ordering::Greater => score_b -= a,
-            };
+        match a_num.cmp(&b_num) {
+            Ordering::Less => (a - b_num, b),
+            Ordering::Equal => (a, b),
+            Ordering::Greater => (a, b - a_num),
         }
-    }
+    });
 
     println!("{score_a}\n{score_b}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

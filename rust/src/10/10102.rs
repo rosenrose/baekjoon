@@ -1,11 +1,11 @@
 use std::cmp::Ordering;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let votes = buf.trim();
+    let votes = buf.lines().next_back().unwrap();
     let a_count = votes.chars().filter(|&c| c == 'A').count();
 
     match (votes.len() - a_count).cmp(&a_count) {
@@ -13,9 +13,4 @@ fn main() {
         Ordering::Equal => println!("Tie"),
         Ordering::Greater => println!("B"),
     };
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

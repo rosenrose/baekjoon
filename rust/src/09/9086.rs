@@ -1,20 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-
-    for _ in 0..n {
-        read_line(&mut buf);
-
-        let first = buf.trim().chars().nth(0).unwrap();
-        let last = buf.trim().chars().last().unwrap();
+    for input in buf.lines().skip(1) {
+        let first = &input[..1];
+        let last = &input[input.len() - 1..];
 
         println!("{first}{last}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }
