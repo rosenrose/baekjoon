@@ -1,20 +1,17 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
     let score: usize = buf
-        .trim()
-        .replace(' ', "")
+        .split_ascii_whitespace()
+        .skip(1)
+        .collect::<String>()
         .split(|c| c == '0')
         .filter_map(|s| (!s.is_empty()).then(|| s.char_indices().map(|(i, _)| i + 1)))
         .flatten()
         .sum();
 
     println!("{score}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -1,3 +1,5 @@
+use std::io::{stdin, Read};
+
 struct Side {
     direction: i32,
     length: i32,
@@ -5,22 +7,22 @@ struct Side {
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let k: i32 = buf.trim().parse().unwrap();
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+
+    let k = input.next().unwrap();
     let mut direction_counts = [0; 5];
 
     let mut sides: Vec<_> = (0..6)
         .map(|_| {
-            read_line(&mut buf);
-            let nums = parse_int_vec(&buf);
+            let (direction, length) = (input.next().unwrap(), input.next().unwrap());
 
-            direction_counts[nums[0] as usize] += 1;
+            direction_counts[direction as usize] += 1;
 
-            Side {
-                direction: nums[0],
-                length: nums[1],
-            }
+            Side { direction, length }
         })
         .collect();
 
@@ -51,15 +53,6 @@ fn main() {
     let count = (outer_area - inner_area) * k;
 
     println!("{count}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
 
 /*

@@ -1,12 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let m = parse_int(&buf);
-    read_line(&mut buf);
-    let n = parse_int(&buf);
+    let mut input = buf.lines().map(|s| s.parse::<i32>().unwrap());
 
-    let prime_nums: Vec<i32> = (m..=n).filter(|&n| is_prime(n)).collect();
+    let (m, n) = (input.next().unwrap(), input.next().unwrap());
+    let prime_nums: Vec<_> = (m..=n).filter(|&n| is_prime(n)).collect();
 
     if prime_nums.is_empty() {
         println!("{}", -1);
@@ -32,13 +33,4 @@ fn is_prime(num: i32) -> bool {
     }
 
     true
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

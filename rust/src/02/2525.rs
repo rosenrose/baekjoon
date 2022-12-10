@@ -1,31 +1,25 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [mut hour, mut minute] = parse_int_vec(&buf)[..] {
-        read_line(&mut buf);
-        let cooking_time = parse_int(&buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-        minute += cooking_time;
+    let (mut hour, mut minute, cooking_time) = (
+        input.next().unwrap(),
+        input.next().unwrap(),
+        input.next().unwrap(),
+    );
 
-        if minute >= 60 {
-            hour = (hour + (minute / 60)) % 24;
-            minute %= 60;
-        }
+    minute += cooking_time;
 
-        println!("{hour} {minute}");
+    if minute >= 60 {
+        hour = (hour + (minute / 60)) % 24;
+        minute %= 60;
     }
-}
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    println!("{hour} {minute}");
 }

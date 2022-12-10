@@ -1,13 +1,14 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    for _ in 0..3 {
-        read_line(&mut buf);
-
+    for input in buf.lines() {
         let (mut count, mut max_count) = (0, 0);
-        let mut current = buf.chars().nth(0).unwrap();
+        let mut current = input.chars().nth(0).unwrap();
 
-        for next in buf.trim().chars() {
+        for next in input.chars() {
             if current == next {
                 count += 1;
                 continue;
@@ -22,9 +23,4 @@ fn main() {
 
         println!("{max_count}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

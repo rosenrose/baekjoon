@@ -1,5 +1,7 @@
 use std::collections::VecDeque;
 use std::fmt;
+use std::io::{stdin, Read};
+
 const BILLION_SQUARE: i128 = 1_000_000_000_000_000_000;
 
 struct BigInt {
@@ -51,6 +53,14 @@ impl BigInt {
     fn len(&self) -> usize {
         self.abs.len()
     }
+
+    fn is_less(&self, other: &Self) -> bool {
+        if self.len() == other.len() {
+            self.abs.iter().rev().lt(other.abs.iter().rev())
+        } else {
+            self.len() < other.len()
+        }
+    }
 }
 
 impl fmt::Display for BigInt {
@@ -73,12 +83,11 @@ impl fmt::Display for BigInt {
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let a = BigInt::parse(buf.trim());
-    read_line(&mut buf);
-
-    let b = BigInt::parse(buf.trim());
+    let mut input = buf.lines();
+    let a = BigInt::parse(input.next().unwrap());
+    let b = BigInt::parse(input.next().unwrap());
 
     println!("{}", add(&a, &b));
     println!("{}", sub(&a, &b));
@@ -191,7 +200,7 @@ fn sub(a: &BigInt, b: &BigInt) -> BigInt {
         };
     }
 
-    if a.len() < b.len() || (a.len() == b.len() && a.abs.iter().rev().lt(b.abs.iter().rev())) {
+    if a.is_less(b) {
         let mut result = sub(b, a);
         result.sign *= -1;
 
@@ -224,9 +233,4 @@ fn sub(a: &BigInt, b: &BigInt) -> BigInt {
     }
 
     result
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

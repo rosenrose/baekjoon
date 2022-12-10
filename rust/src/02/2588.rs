@@ -1,34 +1,20 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let nums = parse_int_vec_lines(&mut buf, 2);
-    let multiplier = nums[1].to_string();
+    let mut input = buf.lines();
 
-    let result = multiplier
-        .chars()
-        .rev()
-        .map(|c| c.to_digit(10).unwrap() as i32 * nums[0]);
+    let (a, b) = (parse_int(input.next().unwrap()), input.next().unwrap());
+    let result = b.chars().rev().map(|ch| ch.to_digit(10).unwrap() * a);
 
     for r in result {
         println!("{r}");
     }
-    println!("{}", nums[0] * nums[1]);
+    println!("{}", a * parse_int(b));
 }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
-}
-
-fn parse_int_vec_lines(buf: &mut String, n: i32) -> Vec<i32> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            parse_int(buf)
-        })
-        .collect()
+fn parse_int(buf: &str) -> u32 {
+    buf.parse().unwrap()
 }
