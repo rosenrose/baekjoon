@@ -10,15 +10,28 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
-    let (n, m) = (input.next().unwrap(), input.next().unwrap());
-    let sum_arr: Vec<Vec<_>> = (0..n)
-        .map(|_| {
-            (0..m).fold(vec![0], |mut row, _| {
-                row.push(row.last().unwrap() + input.next().unwrap());
-                row
-            })
-        })
-        .collect();
+    let (n, m) = (
+        input.next().unwrap() as usize,
+        input.next().unwrap() as usize,
+    );
+
+    let sum_accum = (0..n).fold(vec![vec![0; m + 1]], |mut acc, _| {
+        let row_accum = (0..m).fold(vec![0], |mut acc, _| {
+            acc.push(acc.last().unwrap() + input.next().unwrap());
+            acc
+        });
+
+        let row: Vec<_> = acc
+            .last()
+            .unwrap()
+            .iter()
+            .zip(row_accum)
+            .map(|(col1, col2)| col1 + col2)
+            .collect();
+
+        acc.push(row);
+        acc
+    });
 
     for _ in 0..input.next().unwrap() {
         if let [i, j, x, y] = (0..4)
@@ -26,7 +39,7 @@ fn main() {
             .collect::<Vec<_>>()[..]
         {
             let (i, j) = (i - 1, j - 1);
-            let sum: i32 = sum_arr[i..x].iter().map(|row| row[y] - row[j]).sum();
+            let sum = sum_accum[x][y] - sum_accum[i][y] - sum_accum[x][j] + sum_accum[i][j];
 
             writeln!(output, "{sum}").unwrap();
         }
