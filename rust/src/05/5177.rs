@@ -1,19 +1,16 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut input = buf.lines();
+    let n: i32 = input.next().unwrap().parse().unwrap();
 
     for i in 1..=n {
-        read_line(&mut buf);
-        let s1 = buf.to_string();
-
-        read_line(&mut buf);
-        let s2 = buf.to_string();
-
         println!(
             "Data Set {i}: {}",
-            if sanitize(&s1) == sanitize(&s2) {
+            if sanitize(input.next().unwrap()) == sanitize(input.next().unwrap()) {
                 "equal"
             } else {
                 "not equal"
@@ -26,8 +23,8 @@ fn main() {
     }
 }
 
-fn sanitize(input: &String) -> String {
-    let mut cleaned = input.trim().to_lowercase();
+fn sanitize(input: &str) -> String {
+    let mut cleaned = input.to_lowercase();
 
     while cleaned.contains("  ") {
         cleaned = cleaned.replace("  ", " ");
@@ -48,9 +45,4 @@ fn sanitize(input: &String) -> String {
     }
 
     cleaned
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

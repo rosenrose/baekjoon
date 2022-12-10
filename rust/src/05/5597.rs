@@ -1,13 +1,15 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    const N: usize = 30;
+    stdin().read_to_string(&mut buf).unwrap();
 
+    let input = buf.lines().map(|s| s.parse::<usize>().unwrap());
+
+    const N: usize = 30;
     let mut is_submit = [false; N];
 
-    for _ in 0..N - 2 {
-        read_line(&mut buf);
-        let num: usize = buf.trim().parse().unwrap();
-
+    for num in input {
         is_submit[num - 1] = true;
     }
 
@@ -19,9 +21,4 @@ fn main() {
     for num in absent {
         println!("{num}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -1,23 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let total_sum = parse_int(&buf);
-    let rest_sum: i32 = (0..9)
-        .map(|_| {
-            read_line(&mut buf);
-            parse_int(&buf)
-        })
-        .sum();
+    let mut input = buf.lines().map(|s| s.parse::<i32>().unwrap());
+
+    let total_sum = input.next().unwrap();
+    let rest_sum: i32 = input.sum();
 
     println!("{}", total_sum - rest_sum);
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

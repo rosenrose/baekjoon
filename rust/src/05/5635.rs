@@ -1,20 +1,22 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
-    let n = parse_int(buf.trim());
+    let mut input = buf.split_ascii_whitespace();
+    let n = parse_int(input.next().unwrap());
 
     let infos: Vec<_> = (0..n)
         .map(|_| {
-            read_line(&mut buf);
-            let mut tokens = buf.split_whitespace();
-            let name = tokens.next().unwrap().to_string();
+            let name = input.next().unwrap();
+            let (d, m, y) = (
+                parse_int(input.next().unwrap()),
+                parse_int(input.next().unwrap()),
+                parse_int(input.next().unwrap()),
+            );
 
-            match tokens.map(parse_int).collect::<Vec<_>>()[..] {
-                [d, m, y] => (name, (y, m, d)),
-                _ => Default::default(),
-            }
+            (name, (y, m, d))
         })
         .collect();
 
@@ -24,7 +26,6 @@ fn main() {
     println!("{youngest}\n{oldest}");
 }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }

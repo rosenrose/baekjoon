@@ -1,17 +1,15 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    for input in buf.lines().skip(1) {
+        let mut formula = input.split_whitespace();
+        let mut num: f64 = formula.next().unwrap().parse().unwrap();
 
-    for _ in 0..n {
-        read_line(&mut buf);
-
-        let mut operators = buf.split_whitespace();
-        let mut num: f64 = operators.next().unwrap().parse().unwrap();
-
-        for op in operators {
-            match op {
+        for operator in formula {
+            match operator {
                 "@" => num *= 3.0,
                 "%" => num += 5.0,
                 "#" => num -= 7.0,
@@ -21,9 +19,4 @@ fn main() {
 
         println!("{num:.2}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

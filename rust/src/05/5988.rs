@@ -1,19 +1,12 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-
-    for _ in 0..n {
-        read_line(&mut buf);
-
-        let last = buf.trim().chars().last().unwrap().to_digit(10).unwrap();
+    for input in buf.lines().skip(1) {
+        let last = input.chars().last().unwrap().to_digit(10).unwrap();
 
         println!("{}", if last % 2 == 0 { "even" } else { "odd" });
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

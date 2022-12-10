@@ -1,14 +1,11 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-
-    for _ in 0..n {
-        read_line(&mut buf);
-
-        let score: usize = buf
-            .trim()
+    for input in buf.lines().skip(1) {
+        let score: usize = input
             .split(|c| c == 'X')
             .filter_map(|s| (!s.is_empty()).then(|| s.char_indices().map(|(i, _)| i + 1)))
             .flatten()
@@ -16,11 +13,6 @@ fn main() {
 
         println!("{score}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }
 
 /*

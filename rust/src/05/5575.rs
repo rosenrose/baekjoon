@@ -1,11 +1,16 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
+
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
     for _ in 0..3 {
-        read_line(&mut buf);
-
         if let [on_hour, on_minute, on_second, off_hour, off_minute, off_second] =
-            parse_int_vec(&buf)[..]
+            (0..6).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..]
         {
             let mut hours = off_hour - on_hour;
             let mut minutes = off_minute - on_minute;
@@ -24,13 +29,4 @@ fn main() {
             println!("{hours} {minutes} {seconds}");
         }
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
