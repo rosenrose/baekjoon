@@ -1,23 +1,24 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim());
-    read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
 
-    let init = parse_int_vec(&buf);
-    let (mut coin_a, mut coin_b) = (init[0], init[1]);
+    let n = input.next().unwrap();
+    let (coin_a, coin_b) =
+        (0..n - 1).fold((input.next().unwrap(), input.next().unwrap()), |acc, _| {
+            let (coin_a, coin_b) = acc;
+            let (a, b) = (input.next().unwrap(), input.next().unwrap());
 
-    for _ in 0..n - 1 {
-        read_line(&mut buf);
-
-        if let [a, b] = parse_int_vec(&buf)[..] {
             let lcm = get_lcm(coin_b, b);
             let gcd = get_gcd(coin_a * (lcm / coin_b), a * (lcm / b));
 
-            (coin_a, coin_b) = (gcd, lcm);
-        }
-    }
+            (gcd, lcm)
+        });
 
     let gcd = get_gcd(coin_a, coin_b);
 
@@ -36,17 +37,4 @@ fn get_gcd(mut a: i64, mut b: i64) -> i64 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &str) -> i64 {
-    buf.parse().unwrap()
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i64> {
-    buf.split_whitespace().map(parse_int).collect()
 }

@@ -1,29 +1,18 @@
+use std::cmp::Ordering::{Greater, Less};
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    match parse_int_vec_lines(&mut buf, 2)[..] {
-        [x, y] if x > 0 && y > 0 => println!("1"),
-        [x, y] if x < 0 && y > 0 => println!("2"),
-        [x, y] if x < 0 && y < 0 => println!("3"),
-        [x, y] if x > 0 && y < 0 => println!("4"),
+    let mut input = buf.lines().map(|s| s.parse::<i32>().unwrap());
+    let (x, y) = (input.next().unwrap(), input.next().unwrap());
+
+    match (x.cmp(&0), y.cmp(&0)) {
+        (Greater, Greater) => println!("1"),
+        (Less, Greater) => println!("2"),
+        (Less, Less) => println!("3"),
+        (Greater, Less) => println!("4"),
         _ => (),
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
-}
-
-fn parse_int_vec_lines(buf: &mut String, n: i32) -> Vec<i32> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            parse_int(buf)
-        })
-        .collect()
 }

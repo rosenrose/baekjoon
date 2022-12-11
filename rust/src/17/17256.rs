@@ -1,4 +1,5 @@
 use std::fmt;
+use std::io::{stdin, Read};
 
 #[derive(Copy, Clone)]
 struct Cake {
@@ -15,6 +16,7 @@ impl Cake {
             z: self.x + other.z,
         }
     }
+
     fn cake_op_inverse(self, other: Self) -> Self {
         Self {
             x: self.x - other.z,
@@ -32,29 +34,24 @@ impl fmt::Display for Cake {
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let cake_a = parse_cake(&buf);
-    read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    let cake_c = parse_cake(&buf);
+    let cake_a = Cake {
+        x: input.next().unwrap(),
+        y: input.next().unwrap(),
+        z: input.next().unwrap(),
+    };
+    let cake_c = Cake {
+        x: input.next().unwrap(),
+        y: input.next().unwrap(),
+        z: input.next().unwrap(),
+    };
 
     let cake_b = cake_c.cake_op_inverse(cake_a);
 
     println!("{cake_b}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_cake(buf: &String) -> Cake {
-    let mut nums = buf.split_whitespace().map(|s| s.parse().unwrap());
-
-    Cake {
-        x: nums.next().unwrap(),
-        y: nums.next().unwrap(),
-        z: nums.next().unwrap(),
-    }
 }

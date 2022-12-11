@@ -1,43 +1,37 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [n, m] = parse_int_vec(&buf)[..] {
-        read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
 
-        let nums = parse_int_vec(&buf);
-        let mut count = 0;
+    let (n, m) = (input.next().unwrap(), input.next().unwrap());
+    let nums: Vec<_> = input.collect();
+    let mut count = 0;
 
-        for bit in 1..1 << n {
-            let indices: Vec<_> = (0..n).filter(|index| bit & (1 << index) != 0).collect();
-            let mut lcm = 1;
+    for bit in 1..1 << n {
+        let indices: Vec<_> = (0..n).filter(|index| bit & (1 << index) != 0).collect();
+        let mut lcm = 1;
 
-            for num in indices.iter().map(|&i| nums[i as usize]) {
-                lcm *= num;
+        for num in indices.iter().map(|&i| nums[i as usize]) {
+            lcm *= num;
 
-                if lcm > m {
-                    break;
-                }
+            if lcm > m {
+                break;
             }
-
-            let multiple_count = m / lcm;
-
-            count += if indices.len() % 2 == 1 {
-                multiple_count
-            } else {
-                -multiple_count
-            };
         }
 
-        println!("{count}");
+        let multiple_count = m / lcm;
+
+        count += if indices.len() % 2 == 1 {
+            multiple_count
+        } else {
+            -multiple_count
+        };
     }
-}
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i64> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    println!("{count}");
 }

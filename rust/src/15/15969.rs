@@ -1,27 +1,19 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let scores = parse_int_vec(&buf);
-    let min = scores.iter().min().unwrap();
-    let max = scores.iter().max().unwrap();
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    // let (mut min, mut max) = (1000, 0);
-    // buf.split_whitespace().for_each(|s| {
-    //     let score: i32 = s.parse().unwrap();
-    //     min = score.min(min);
-    //     max = score.max(max);
-    // });
+    let (mut min, mut max) = (1000, 0);
+
+    for score in input.skip(1) {
+        min = score.min(min);
+        max = score.max(max);
+    }
 
     println!("{}", max - min);
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

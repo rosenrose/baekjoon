@@ -1,18 +1,14 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let parse_int = |s: &str| s.parse::<i32>().unwrap();
-    let n = parse_int(buf.trim());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    for _ in 0..n {
-        read_line(&mut buf);
-
-        println!("{}", buf.split_whitespace().map(parse_int).min().unwrap());
+    for _ in 0..input.next().unwrap() {
+        println!("{}", (0..3).map(|_| input.next().unwrap()).min().unwrap());
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

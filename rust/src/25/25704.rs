@@ -1,11 +1,12 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(&buf);
-    read_line(&mut buf);
+    let mut input = buf.lines().map(|s| s.parse::<i32>().unwrap());
 
-    let mut p = parse_int(&buf);
+    let (n, mut p) = (input.next().unwrap(), input.next().unwrap());
     let discounts = [
         0,
         500,
@@ -20,13 +21,4 @@ fn main() {
         .unwrap();
 
     println!("{}", p.max(0));
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

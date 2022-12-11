@@ -1,4 +1,5 @@
 use std::fmt;
+use std::io::{stdin, Read};
 use std::ops::{Add, Div, Mul, Sub};
 
 #[derive(Copy, Clone)]
@@ -37,48 +38,48 @@ impl Add for Real {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self {
-            a: self.a * other.a,
-            b: other.a * self.b + self.a * other.b,
-            c: other.a * self.c + self.a * other.c,
-            d: self.d,
-        }
+        Self::from(
+            self.a * other.a,
+            other.a * self.b + self.a * other.b,
+            other.a * self.c + self.a * other.c,
+            self.d,
+        )
     }
 }
 impl Sub for Real {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self {
-            a: self.a * other.a,
-            b: other.a * self.b - self.a * other.b,
-            c: other.a * self.c - self.a * other.c,
-            d: self.d,
-        }
+        Self::from(
+            self.a * other.a,
+            other.a * self.b - self.a * other.b,
+            other.a * self.c - self.a * other.c,
+            self.d,
+        )
     }
 }
 impl Mul for Real {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self {
-            a: self.a * other.a,
-            b: self.b * other.b + self.c * other.c * self.d,
-            c: other.b * self.c + self.b * other.c,
-            d: self.d,
-        }
+        Self::from(
+            self.a * other.a,
+            self.b * other.b + self.c * other.c * self.d,
+            other.b * self.c + self.b * other.c,
+            self.d,
+        )
     }
 }
 impl Div for Real {
     type Output = Self;
 
     fn div(self, other: Self) -> Self {
-        Self {
-            a: self.a * (other.b.pow(2) - other.c.pow(2) * self.d),
-            b: other.a * (self.b * other.b - self.c * other.c * self.d),
-            c: other.a * (other.b * self.c - self.b * other.c),
-            d: self.d,
-        }
+        Self::from(
+            self.a * (other.b.pow(2) - other.c.pow(2) * self.d),
+            other.a * (self.b * other.b - self.c * other.c * self.d),
+            other.a * (other.b * self.c - self.b * other.c),
+            self.d,
+        )
     }
 }
 
@@ -90,11 +91,18 @@ struct Complex {
 
 impl Complex {
     fn from(re: Real, im: Real) -> Self {
-        Self { re, im }
+        Self {
+            re: re.normalized(),
+            im: im.normalized(),
+        }
     }
 
     fn parse(input: &str) -> Self {
-        match parse_int_vec(input)[..] {
+        match input
+            .split(' ')
+            .map(|s| s.parse::<i64>().unwrap())
+            .collect::<Vec<_>>()[..]
+        {
             [a0, b0, c0, d0, a1, b1, c1, d1] => {
                 Self::from(Real::from(a0, b0, c0, d0), Real::from(a1, b1, c1, d1))
             }
@@ -106,30 +114,24 @@ impl Add for Complex {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self {
-            re: (self.re + other.re).normalized(),
-            im: (self.im + other.im).normalized(),
-        }
+        Self::from(self.re + other.re, self.im + other.im)
     }
 }
 impl Sub for Complex {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self {
-            re: (self.re - other.re).normalized(),
-            im: (self.im - other.im).normalized(),
-        }
+        Self::from(self.re - other.re, self.im - other.im)
     }
 }
 impl Mul for Complex {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self {
-            re: (self.re * other.re - self.im * other.im).normalized(),
-            im: (self.re * other.im + self.im * other.re).normalized(),
-        }
+        Self::from(
+            self.re * other.re - self.im * other.im,
+            self.re * other.im + self.im * other.re,
+        )
     }
 }
 impl Div for Complex {
@@ -138,10 +140,10 @@ impl Div for Complex {
     fn div(self, other: Self) -> Self {
         let divisor = other.re * other.re + other.im * other.im;
 
-        Self {
-            re: ((self.re * other.re + self.im * other.im) / divisor).normalized(),
-            im: ((self.im * other.re - self.re * other.im) / divisor).normalized(),
-        }
+        Self::from(
+            (self.re * other.re + self.im * other.im) / divisor,
+            (self.im * other.re - self.re * other.im) / divisor,
+        )
     }
 }
 
@@ -158,12 +160,11 @@ impl fmt::Display for Complex {
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let a = Complex::parse(buf.trim());
-    read_line(&mut buf);
-
-    let b = Complex::parse(buf.trim());
+    let mut input = buf.lines();
+    let a = Complex::parse(input.next().unwrap());
+    let b = Complex::parse(input.next().unwrap());
 
     println!("{}\n{}\n{}\n{}", a + b, a - b, a * b, a / b);
 }
@@ -180,13 +181,4 @@ where
         (a, b) = (b, a % b);
     })
     .unwrap()
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i64> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

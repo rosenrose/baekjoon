@@ -1,14 +1,19 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let size = parse_int_vec(&buf);
-    read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<usize>().unwrap());
 
-    let robot = parse_int_vec(&buf);
-
-    if let [n, _, mut r, mut c, mut d] = [size, robot].concat()[..] {
-        let mut room = parse_matrix(&mut buf, n);
+    if let [n, m, mut r, mut c, mut d] =
+        (0..5).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..]
+    {
+        let mut room: Vec<Vec<_>> = (0..n)
+            .map(|_| (0..m).map(|_| input.next().unwrap()).collect())
+            .collect();
 
         loop {
             room[r][c] = 2;
@@ -70,22 +75,4 @@ fn main() {
         //     println!("{row:?}");
         // }
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<usize> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
-}
-
-fn parse_matrix(buf: &mut String, rows: usize) -> Vec<Vec<usize>> {
-    (0..rows)
-        .map(|_| {
-            read_line(buf);
-            parse_int_vec(buf)
-        })
-        .collect()
 }

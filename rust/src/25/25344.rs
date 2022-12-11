@@ -1,14 +1,16 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let periods = parse_int_vec(&buf);
-    let total_period = periods
-        .windows(3)
-        .fold(1, |lcm, chunk| get_lcm(chunk.iter().copied().chain([lcm])));
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    println!("{total_period}");
+    let period = get_lcm(input.skip(1));
+
+    println!("{period}");
 }
 
 fn get_lcm<I>(nums: I) -> i32
@@ -26,13 +28,4 @@ fn get_gcd(mut a: i32, mut b: i32) -> i32 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

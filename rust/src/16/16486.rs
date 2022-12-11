@@ -1,20 +1,14 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let d1 = parse_float(&buf);
-    read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<f64>().unwrap());
 
-    let d2 = parse_float(&buf);
+    let (d1, d2) = (input.next().unwrap(), input.next().unwrap());
 
-    println!("{:.10}", (d1 * 2.0) + (2.0 * 3.141592 * d2));
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_float(buf: &String) -> f64 {
-    buf.trim().parse().unwrap()
+    println!("{:.6}", (d1 * 2.0) + (2.0 * 3.141592 * d2));
 }

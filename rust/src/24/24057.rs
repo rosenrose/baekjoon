@@ -1,4 +1,5 @@
 use std::fmt;
+use std::io::{stdin, Read};
 use std::ops::{Add, Div, Mul, Sub};
 
 #[derive(Copy, Clone)]
@@ -11,11 +12,15 @@ struct Real {
 
 impl Real {
     fn from(a: i64, b: i64, c: i64, d: i64) -> Self {
-        Self { a, b, c, d }
+        Self { a, b, c, d }.normalized()
     }
 
     fn parse(input: &str) -> Self {
-        match parse_int_vec(input)[..] {
+        match input
+            .split(' ')
+            .map(|s| s.parse::<i64>().unwrap())
+            .collect::<Vec<_>>()[..]
+        {
             [a, b, c, d] => Self::from(a, b, c, d),
             _ => Self::from(1, 0, 0, 0),
         }
@@ -44,52 +49,48 @@ impl Add for Real {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self {
-            a: self.a * other.a,
-            b: other.a * self.b + self.a * other.b,
-            c: other.a * self.c + self.a * other.c,
-            d: self.d,
-        }
-        .normalized()
+        Self::from(
+            self.a * other.a,
+            other.a * self.b + self.a * other.b,
+            other.a * self.c + self.a * other.c,
+            self.d,
+        )
     }
 }
 impl Sub for Real {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self {
-            a: self.a * other.a,
-            b: other.a * self.b - self.a * other.b,
-            c: other.a * self.c - self.a * other.c,
-            d: self.d,
-        }
-        .normalized()
+        Self::from(
+            self.a * other.a,
+            other.a * self.b - self.a * other.b,
+            other.a * self.c - self.a * other.c,
+            self.d,
+        )
     }
 }
 impl Mul for Real {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self {
-            a: self.a * other.a,
-            b: self.b * other.b + self.c * other.c * self.d,
-            c: other.b * self.c + self.b * other.c,
-            d: self.d,
-        }
-        .normalized()
+        Self::from(
+            self.a * other.a,
+            self.b * other.b + self.c * other.c * self.d,
+            other.b * self.c + self.b * other.c,
+            self.d,
+        )
     }
 }
 impl Div for Real {
     type Output = Self;
 
     fn div(self, other: Self) -> Self {
-        Self {
-            a: self.a * (other.b.pow(2) - other.c.pow(2) * self.d),
-            b: other.a * (self.b * other.b - self.c * other.c * self.d),
-            c: other.a * (other.b * self.c - self.b * other.c),
-            d: self.d,
-        }
-        .normalized()
+        Self::from(
+            self.a * (other.b.pow(2) - other.c.pow(2) * self.d),
+            other.a * (self.b * other.b - self.c * other.c * self.d),
+            other.a * (other.b * self.c - self.b * other.c),
+            self.d,
+        )
     }
 }
 
@@ -101,12 +102,11 @@ impl fmt::Display for Real {
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let a = Real::parse(buf.trim());
-    read_line(&mut buf);
-
-    let b = Real::parse(buf.trim());
+    let mut input = buf.lines();
+    let a = Real::parse(input.next().unwrap());
+    let b = Real::parse(input.next().unwrap());
 
     println!("{}\n{}\n{}\n{}", a + b, a - b, a * b, a / b);
 }
@@ -123,13 +123,4 @@ where
         (a, b) = (b, a % b);
     })
     .unwrap()
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i64> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

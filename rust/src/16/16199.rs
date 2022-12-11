@@ -1,29 +1,21 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let birth = parse_int_vec(&buf);
-    read_line(&mut buf);
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    let compare = parse_int_vec(&buf);
-
-    if let [birth_year, birth_month, birth_date, compare_year, compare_month, compare_date] =
-        [birth, compare].concat()[..]
+    if let [birth_year, birth_month, birth_date, cmp_year, cmp_month, cmp_date] =
+        input.collect::<Vec<_>>()[..]
     {
-        let age = compare_year - birth_year;
-        let is_early = (compare_month, compare_date) < (birth_month, birth_date);
+        let age = cmp_year - birth_year;
+        let is_early = (cmp_month, cmp_date) < (birth_month, birth_date);
 
         println!("{}", age - if is_early { 1 } else { 0 });
         println!("{}", age + 1);
         println!("{}", age);
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
