@@ -1,26 +1,16 @@
 use std::cmp::Ordering;
+use std::io::{stdin, Read};
 
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let month = parse_int(&buf);
-    read_line(&mut buf);
-
-    let date = parse_int(&buf);
+    let mut input = buf.lines().map(|s| s.parse::<i32>().unwrap());
+    let (month, date) = (input.next().unwrap(), input.next().unwrap());
 
     match (month, date).cmp(&(2, 18)) {
         Ordering::Less => println!("Before"),
         Ordering::Equal => println!("Special"),
         Ordering::Greater => println!("After"),
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
 }

@@ -1,26 +1,24 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(&buf);
+    let mut input = buf.split_ascii_whitespace();
 
-    for _ in 0..n {
-        read_line(&mut buf);
-
-        let classes = parse_int(&buf);
+    for _ in 0..parse_int(input.next().unwrap()) {
+        let n = parse_int(input.next().unwrap());
         let mut credits = 0;
 
-        let sum: f64 = (0..classes)
+        let sum: f64 = (0..n)
             .map(|_| {
-                read_line(&mut buf);
+                let (c, g) = (
+                    parse_int(input.next().unwrap()),
+                    input.next().unwrap().parse::<f64>().unwrap(),
+                );
 
-                match parse_float_vec(&buf)[..] {
-                    [c, g] => {
-                        credits += c as i32;
-                        c * g
-                    }
-                    _ => 0.0,
-                }
+                credits += c;
+                c as f64 * g
             })
             .sum();
 
@@ -30,15 +28,6 @@ fn main() {
     }
 }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
-}
-
-fn parse_float_vec(buf: &String) -> Vec<f64> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }

@@ -1,3 +1,5 @@
+use std::io::{stdin, Read};
+
 fn main() {
     const FIRSTS: [char; 19] = [
         'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ',
@@ -11,13 +13,12 @@ fn main() {
     const LAST_COUNT: u32 = LASTS.len() as u32 + 1;
 
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let first = buf.trim().chars().nth(0).unwrap();
-    read_line(&mut buf);
+    let mut input = buf.lines().map(|s| s.chars().nth(0));
 
-    let medial = buf.trim().chars().nth(0).unwrap();
-    read_line(&mut buf);
+    let first = input.next().unwrap().unwrap();
+    let medial = input.next().unwrap().unwrap();
 
     let mut code = '가' as u32;
 
@@ -25,15 +26,10 @@ fn main() {
 
     code += (medial as u32 - 'ㅏ' as u32) * LAST_COUNT;
 
-    code += match buf.trim().chars().nth(0) {
+    code += match input.next().unwrap() {
         Some(last) => LASTS.iter().position(|&c| c == last).unwrap() as u32 + 1,
         None => 0,
     };
 
     println!("{}", char::from_u32(code).unwrap());
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

@@ -1,19 +1,12 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
-
-    for i in 1..=n {
-        read_line(&mut buf);
-
-        let words: Vec<&str> = buf.split_whitespace().rev().collect();
+    for (i, input) in buf.lines().enumerate().skip(1) {
+        let words: Vec<_> = input.split(' ').rev().collect();
 
         println!("Case #{i}: {}", words.join(" "));
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

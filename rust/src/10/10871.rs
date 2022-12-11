@@ -1,25 +1,18 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let x = parse_int_vec(&buf)[1];
-    read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+    input.next();
 
-    let result = buf
-        .split_whitespace()
-        .map(|s| s.parse::<i32>().unwrap())
-        .filter(|&n| n < x);
+    let x = input.next().unwrap();
+    let result = input.filter(|&n| n < x);
 
     for r in result {
         print!("{r} ");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }

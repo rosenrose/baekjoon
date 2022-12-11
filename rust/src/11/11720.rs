@@ -1,18 +1,16 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
     let sum: i32 = buf
-        .trim()
+        .lines()
+        .next_back()
+        .unwrap()
         .chars()
         .map(|c| c.to_digit(10).unwrap() as i32)
         .sum();
 
     println!("{sum}");
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }

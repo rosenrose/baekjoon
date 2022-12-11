@@ -1,25 +1,20 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let points = parse_int_vec(&buf);
-    read_line(&mut buf);
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    if let [x, _, _] = parse_int_vec(&buf)[..] {
-        let number = match points.iter().position(|&p| p == x) {
-            Some(i) => i + 1,
-            None => 0,
-        };
+    let points: Vec<_> = (0..4).map(|_| input.next().unwrap()).collect();
+    let x = input.next().unwrap();
 
-        println!("{number}");
-    }
-}
+    let number = match points.iter().position(|&p| p == x) {
+        Some(i) => i + 1,
+        None => 0,
+    };
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    println!("{number}");
 }

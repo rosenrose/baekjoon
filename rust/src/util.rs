@@ -14,11 +14,6 @@ fn main() {
     writeln!(stdout, "").unwrap();
 }
 
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
 fn parse_int(buf: &String) -> i32 {
     buf.trim().parse().unwrap()
 }

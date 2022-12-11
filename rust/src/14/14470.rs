@@ -1,7 +1,12 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
+    stdin().read_to_string(&mut buf).unwrap();
 
-    if let [start, end, ice, melting, water] = parse_int_vec_lines(&mut buf, 5)[..] {
+    let input = buf.lines().map(|s| s.parse::<i32>().unwrap());
+
+    if let [start, end, ice, melting, water] = input.collect::<Vec<_>>()[..] {
         let mut time = (end - start.max(0)) * water;
 
         if start < 0 {
@@ -11,22 +16,4 @@ fn main() {
 
         println!("{time}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
-}
-
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
-}
-
-fn parse_int_vec_lines(buf: &mut String, n: i32) -> Vec<i32> {
-    (0..n)
-        .map(|_| {
-            read_line(buf);
-            parse_int(buf)
-        })
-        .collect()
 }

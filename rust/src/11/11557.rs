@@ -1,33 +1,21 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
-    let n = parse_int(buf.trim());
+    let mut input = buf.split_ascii_whitespace();
 
-    for _ in 0..n {
-        read_line(&mut buf);
-        let schools = parse_int(buf.trim());
+    for _ in 0..parse_int(input.next().unwrap()) {
+        let n = parse_int(input.next().unwrap());
 
-        let (max_school, _) = (0..schools)
-            .map(|_| {
-                read_line(&mut buf);
-                let mut tokens = buf.split_whitespace();
-
-                (
-                    tokens.next().unwrap().to_string(),
-                    parse_int(tokens.next().unwrap()),
-                )
-            })
+        let (max_school, _) = (0..n)
+            .map(|_| (input.next().unwrap(), parse_int(input.next().unwrap())))
             .max_by_key(|&(_, alcohol)| alcohol)
             .unwrap();
 
         println!("{max_school}");
     }
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }
 
 fn parse_int(buf: &str) -> i32 {

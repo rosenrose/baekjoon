@@ -1,11 +1,13 @@
+use std::io::{stdin, Read};
+
 fn main() {
     let mut buf = String::new();
-    read_line(&mut buf);
-    read_line(&mut buf);
+    stdin().read_to_string(&mut buf).unwrap();
 
     let mut sum = 0;
 
-    buf.split_whitespace()
+    buf.split_ascii_whitespace()
+        .skip(1)
         .map(|s| s.parse::<i32>().unwrap())
         .enumerate()
         .for_each(|(i, avg)| {
@@ -14,9 +16,4 @@ fn main() {
 
             sum += num;
         });
-}
-
-fn read_line(buf: &mut String) {
-    buf.clear();
-    std::io::stdin().read_line(buf).unwrap();
 }
