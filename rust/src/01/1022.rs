@@ -12,7 +12,6 @@ fn main() {
                 .map(|x| {
                     let num = x.abs().max(y.abs());
                     let diff = num * 2;
-                    let (left_top_y, left_top_x) = (-num, -num);
 
                     let right_bottom = (num * 2 + 1).pow(2);
                     let left_bottom = right_bottom - diff;
@@ -20,10 +19,10 @@ fn main() {
                     let right_top = left_top - diff;
 
                     let cell = match (x, y) {
-                        (x, y) if y == -num => left_top - (x - left_top_x),
-                        (x, y) if y == num => left_bottom + (x - left_top_x),
-                        (x, y) if x == -num => left_top + (y - left_top_y),
-                        (x, y) if x == num => right_top - (y - left_top_y),
+                        (x, y) if y == num => right_bottom - x.abs_diff(num) as i32,
+                        (x, y) if x == -num => left_bottom - y.abs_diff(num) as i32,
+                        (x, y) if y == -num => left_top - x.abs_diff(-num) as i32,
+                        (x, y) if x == num => right_top - y.abs_diff(-num) as i32,
                         _ => 0,
                     };
 
