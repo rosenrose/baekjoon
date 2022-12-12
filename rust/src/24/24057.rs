@@ -33,7 +33,7 @@ impl Real {
             d = 0;
         }
 
-        let gcd = get_gcd([a, b, c].into_iter().filter(|&i| i != 0));
+        let gcd = get_gcd([a, b, c].into_iter());
         (a, b, c) = (a / gcd, b / gcd, c / gcd);
 
         if a < 0 {
