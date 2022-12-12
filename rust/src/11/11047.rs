@@ -10,12 +10,12 @@ fn main() {
     input.next();
 
     let mut k = input.next().unwrap();
-    let mut count = 0;
-
-    for coin in input.rev() {
-        count += k / coin;
+    let count = input.rev().fold(0, |acc, coin| {
+        let count = acc + (k / coin);
         k %= coin;
-    }
+
+        count
+    });
 
     println!("{count}");
 }
