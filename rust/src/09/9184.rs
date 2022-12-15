@@ -11,7 +11,7 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
-    let mut table = HashMap::new();
+    let mut cache = HashMap::new();
 
     loop {
         let (a, b, c) = (
@@ -24,22 +24,22 @@ fn main() {
             break;
         }
 
-        writeln!(output, "w({a}, {b}, {c}) = {}", w(a, b, c, &mut table)).unwrap();
+        writeln!(output, "w({a}, {b}, {c}) = {}", w(a, b, c, &mut cache)).unwrap();
     }
 
     print!("{output}");
 }
 
-fn w(a: i32, b: i32, c: i32, table: &mut HashMap<(i32, i32, i32), i32>) -> i32 {
+fn w(a: i32, b: i32, c: i32, cache: &mut HashMap<(i32, i32, i32), i32>) -> i32 {
     if a <= 0 || b <= 0 || c <= 0 {
         return 1;
     }
 
-    let mut get_or_insert = |a: i32, b: i32, c: i32| match table.get(&(a, b, c)) {
+    let mut get_or_insert = |a: i32, b: i32, c: i32| match cache.get(&(a, b, c)) {
         Some(i) => *i,
         None => {
-            let ret = w(a, b, c, table);
-            table.insert((a, b, c), ret);
+            let ret = w(a, b, c, cache);
+            cache.insert((a, b, c), ret);
 
             ret
         }
