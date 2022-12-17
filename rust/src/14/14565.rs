@@ -33,7 +33,6 @@ fn get_ex_gcd(a: i64, b: i64) -> (i64, i64, i64) {
     loop {
         q = r1 / r2;
         (r1, r2) = (r2, r1 % r2);
-
         (s1, s2) = (s2, s1 - s2 * q);
         (t1, t2) = (t2, t1 - t2 * q);
 
