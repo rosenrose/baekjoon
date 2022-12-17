@@ -59,3 +59,21 @@ fn get_ex_gcd(a: i32, b: i32) -> (i32, i32, i32) {
 fn parse_int_vec(buf: &String) -> Vec<i32> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
+
+// fn combination_num(n: i32, r: i32, cache: &mut HashMap<(i32, i32), i32>) -> i32 {
+//     if n == r || r == 0 {
+//         return 1;
+//     }
+
+//     let mut get_or_insert = |n: i32, r: i32| match cache.get(&(n, r)) {
+//         Some(i) => *i,
+//         None => {
+//             let ret = combination_num(n, r, cache);
+//             cache.insert((n, r), ret % M);
+
+//             ret
+//         }
+//     };
+
+//     (get_or_insert(n - 1, r - 1) + get_or_insert(n - 1, r)) % M
+// }
