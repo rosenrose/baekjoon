@@ -5,11 +5,11 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     if let [n, k] = parse_int_vec(&buf)[..] {
-        println!("{}", combination_num(n, k));
+        println!("{}", combination_num_rem(n, k));
     }
 }
 
-fn combination_num(n: i32, r: i32) -> i32 {
+fn combination_num_rem(n: i32, r: i32) -> i32 {
     if n == r || r == 0 {
         return 1;
     }
@@ -60,7 +60,7 @@ fn parse_int_vec(buf: &String) -> Vec<i32> {
     buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
 }
 
-// fn combination_num(n: i32, r: i32, cache: &mut HashMap<(i32, i32), i32>) -> i32 {
+// fn combination_num_rem(n: i32, r: i32, cache: &mut HashMap<(i32, i32), i32>) -> i32 {
 //     if n == r || r == 0 {
 //         return 1;
 //     }
@@ -68,7 +68,7 @@ fn parse_int_vec(buf: &String) -> Vec<i32> {
 //     let mut get_or_insert = |n: i32, r: i32| match cache.get(&(n, r)) {
 //         Some(i) => *i,
 //         None => {
-//             let ret = combination_num(n, r, cache);
+//             let ret = combination_num_rem(n, r, cache);
 //             cache.insert((n, r), ret % M);
 
 //             ret
