@@ -1,85 +1,42 @@
-use std::ops::Mul;
+use std::collections::HashMap;
 
 const M: i64 = 1_000_000;
-
-struct Matrix {
-    matrix: Vec<Vec<i64>>,
-}
-
-impl Matrix {
-    fn from(matrix: Vec<Vec<i64>>) -> Self {
-        Self { matrix }
-    }
-
-    fn rem(self, m: i64) -> Self {
-        Self::from(
-            self.matrix
-                .iter()
-                .map(|row| row.iter().map(|num| num % m).collect())
-                .collect(),
-        )
-    }
-}
-
-impl Clone for Matrix {
-    fn clone(&self) -> Self {
-        Self::from((*self.matrix.clone()).to_vec())
-    }
-}
-
-impl Mul for Matrix {
-    type Output = Self;
-
-    fn mul(self, other: Self) -> Self {
-        Self::from(
-            self.matrix
-                .iter()
-                .map(|row| {
-                    (0..self.matrix.len())
-                        .map(|i| {
-                            row.iter()
-                                .enumerate()
-                                .map(|(j, num)| num * other.matrix[j][i])
-                                .sum()
-                        })
-                        .collect()
-                })
-                .collect(),
-        )
-    }
-}
 
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: i64 = buf.trim().parse().unwrap();
+    let mut cache = HashMap::new();
 
-    println!("{}", fibo_rem(n));
+    println!("{}", fibo_rem(n, &mut cache));
 }
 
-fn fibo_rem(n: i64) -> i64 {
+fn fibo_rem(n: i64, cache: &mut HashMap<i64, i64>) -> i64 {
     if n <= 1 {
         return n;
     }
-
-    let mut fibo_matrix = Matrix::from(vec![vec![1, 1], vec![1, 0]]);
-    fibo_matrix = pow_rem(&mut fibo_matrix, n);
-
-    fibo_matrix.matrix[0][1]
-}
-
-fn pow_rem(base: &mut Matrix, exp: i64) -> Matrix {
-    if exp == 1 {
-        return base.clone().rem(M);
+    if n == 2 {
+        return 1;
     }
 
-    let mut remainder = pow_rem(base, exp / 2);
-    remainder = (remainder.clone() * remainder).rem(M);
+    let i = n / 2;
+    let j = if n % 2 == 0 { i } else { i + 1 };
 
-    if exp % 2 == 0 {
-        remainder
-    } else {
-        (remainder * base.clone().rem(M)).rem(M)
-    }
+    let mut get_or_insert = |n: i64| match cache.get(&n) {
+        Some(num) => *num,
+        None => {
+            let ret = fibo_rem(n, cache);
+            cache.insert(n, ret);
+
+            ret
+        }
+    };
+
+    let (a, b) = (
+        get_or_insert(i) * get_or_insert(j - 1),
+        get_or_insert(i + 1) * get_or_insert(j),
+    );
+
+    (a % M + b % M) % M
 }
