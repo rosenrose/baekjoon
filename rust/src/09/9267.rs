@@ -3,18 +3,11 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     if let [a, b, s] = parse_int_vec(&buf)[..] {
-        println!(
-            "{}",
-            if extended_euclidean(a, b, s) {
-                "YES"
-            } else {
-                "NO"
-            }
-        );
+        println!("{}", if is_solvable(a, b, s) { "YES" } else { "NO" });
     }
 }
 
-fn extended_euclidean(a: i128, b: i128, s: i128) -> bool {
+fn is_solvable(a: i128, b: i128, s: i128) -> bool {
     if a == s || b == s {
         return true;
     }
@@ -36,17 +29,24 @@ fn extended_euclidean(a: i128, b: i128, s: i128) -> bool {
     }
 
     let multiple = s / gcd;
-    let (inc, dec) = (a / gcd, b / gcd);
+    let (y_step, x_step) = (a / gcd, b / gcd);
 
     x *= multiple;
     y *= multiple;
     // println!("{x} {y}");
     if y <= 0 {
-        let mul = y.abs() / inc;
-        let mul = if inc * mul <= y.abs() { mul + 1 } else { mul };
+        let mul = y.abs() / y_step;
+        let mul = if y_step * mul <= y.abs() {
+            mul + 1
+        } else {
+            mul
+        };
 
-        y += inc * mul;
-        x -= dec * mul;
+        y += y_step * mul;
+        x -= x_step * mul;
+    } else {
+        y %= y_step;
+        y = if y == 0 { y + y_step } else { y };
     }
     // println!("{x} {y}");
     while x > 0 {
@@ -56,8 +56,8 @@ fn extended_euclidean(a: i128, b: i128, s: i128) -> bool {
             return true;
         }
 
-        y += inc;
-        x -= dec;
+        y += y_step;
+        x -= x_step;
     }
 
     false
