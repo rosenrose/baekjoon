@@ -12,53 +12,36 @@ fn main() {
 
     for _ in 0..input.next().unwrap() {
         if let [m, n, x, y] = (0..4).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..] {
-            let lcm = get_lcm(m, n);
             let (gcd, mut a, mut b) = get_ex_gcd(m, n);
-            // println!("{lcm} {gcd} {a} {b]");
+            // println!("{a} {b} {gcd}");
             if (y - x) % gcd != 0 {
                 writeln!(output, "-1").unwrap();
                 continue;
             }
 
             let multiple = (y - x) / gcd;
+            let (b_step, a_step) = (m / gcd, n / gcd);
 
             a *= multiple;
-            a %= n / gcd;
-
             b *= -multiple;
-            b %= m / gcd;
 
-            let mut left = m * a + x;
-            let mut right = n * b + y;
-
-            while left <= 0 {
-                left += lcm;
+            while a > 0 || b > 0 {
+                a -= a_step;
+                b -= b_step;
             }
-            while right <= 0 {
-                right += lcm;
+            while a < 0 || b < 0 {
+                a += a_step;
+                b += b_step;
             }
-            assert_eq!(left, right);
-            // println!("{left} {right}");
+            // println!("{a} {b}");
+            // assert_eq!(m*a+x, n*b+y);
+            // println!("{} {}", m * a + x, n * b + y);
 
-            writeln!(output, "{left}").unwrap();
+            writeln!(output, "{}", m * a + x).unwrap();
         }
     }
 
     print!("{output}");
-}
-
-fn get_lcm(a: i32, b: i32) -> i32 {
-    a / get_gcd(a, b) * b
-}
-
-fn get_gcd(mut a: i32, mut b: i32) -> i32 {
-    loop {
-        if b == 0 {
-            return a;
-        }
-
-        (a, b) = (b, a % b);
-    }
 }
 
 fn get_ex_gcd(a: i32, b: i32) -> (i32, i32, i32) {
@@ -74,10 +57,11 @@ fn get_ex_gcd(a: i32, b: i32) -> (i32, i32, i32) {
         (t1, t2) = (t2, t1 - t2 * q);
 
         if r2 == 0 {
-            // if s1 < 0 {
-            //     s1 += b;
-            //     t1 -= a;
-            // }
+            if s1 < 0 {
+                s1 += b;
+                t1 -= a;
+            }
+
             return (r1, s1, t1);
         }
     }
