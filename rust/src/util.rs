@@ -14,8 +14,8 @@ fn main() {
     writeln!(stdout, "").unwrap();
 }
 
-fn parse_int(buf: &String) -> i32 {
-    buf.trim().parse().unwrap()
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i32> {
