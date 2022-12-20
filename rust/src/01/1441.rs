@@ -11,19 +11,19 @@ fn main() {
 
     let (left, right) = (input.next().unwrap(), input.next().unwrap());
     let mut count = 0;
-    let mut lcm_accum = vec![(1, -1)];
+    let mut lcm_accum = vec![-1_i64];
 
     for num in input {
         for i in 0..lcm_accum.len() {
-            let (lcm, sign) = lcm_accum[i];
+            let (lcm, sign) = (lcm_accum[i].abs(), lcm_accum[i].signum() * -1);
             let lcm = get_lcm(lcm, num);
 
             if lcm > right {
                 continue;
             }
 
-            count += ((right / lcm) - ((left - 1) / lcm)) * -sign;
-            lcm_accum.push((lcm, -sign));
+            count += ((right / lcm) - ((left - 1) / lcm)) * sign;
+            lcm_accum.push(lcm * sign);
         }
     }
 
