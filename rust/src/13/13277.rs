@@ -1,11 +1,18 @@
 use std::f64::consts::PI;
 use std::fmt::Write;
-use std::ops::{Add, DivAssign, Mul, MulAssign, Sub};
+use std::ops::{Add, Mul, MulAssign, Sub};
 
 #[derive(Clone, Copy, Debug)]
 struct Complex {
     re: f64,
     im: f64,
+}
+
+impl Complex {
+    fn div(&mut self, num: f64) {
+        self.re /= num;
+        self.im /= num;
+    }
 }
 
 impl Add for Complex {
@@ -41,16 +48,6 @@ impl Mul for Complex {
 impl MulAssign for Complex {
     fn mul_assign(&mut self, other: Self) {
         *self = *self * other;
-    }
-}
-impl DivAssign for Complex {
-    fn div_assign(&mut self, other: Self) {
-        let denominator = other.re.powi(2) + other.im.powi(2);
-
-        *self = Self {
-            re: (self.re * other.re + self.im * other.im) / denominator,
-            im: (self.im * other.re - self.re * other.im) / denominator,
-        };
     }
 }
 
@@ -164,10 +161,7 @@ fn fast_fourier_transform(v: &mut Vec<Complex>, is_inverse: bool) {
 
     if is_inverse {
         for num in v.iter_mut() {
-            *num /= Complex {
-                re: len as f64,
-                im: 0.0,
-            };
+            (*num).div(len as f64);
         }
     }
 }
