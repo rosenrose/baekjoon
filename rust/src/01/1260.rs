@@ -1,4 +1,4 @@
-use std::collections::{HashSet, VecDeque};
+use std::collections::VecDeque;
 use std::io::{stdin, Read};
 
 enum Ops {
@@ -13,15 +13,12 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let (n, m, v) = (
-        input.next().unwrap(),
-        input.next().unwrap(),
-        input.next().unwrap(),
-    );
+    let (n, m, v) = (input(), input(), input());
 
     let mut adjacency_list = (0..m).fold(vec![Vec::new(); n + 1], |mut acc, _| {
-        let (v1, v2) = (input.next().unwrap(), input.next().unwrap());
+        let (v1, v2) = (input(), input());
         acc[v1].push(v2);
         acc[v2].push(v1);
 
@@ -39,7 +36,7 @@ fn main() {
 
 fn search(graph: &Vec<Vec<usize>>, start: usize, op: Ops) {
     let mut queue = VecDeque::from([start]);
-    let mut visited = HashSet::new();
+    let mut visited = vec![false; graph.len()];
 
     while !queue.is_empty() {
         let node = match op {
@@ -48,12 +45,12 @@ fn search(graph: &Vec<Vec<usize>>, start: usize, op: Ops) {
         }
         .unwrap();
 
-        if visited.contains(&node) {
+        if visited[node] {
             continue;
         }
 
         print!("{node} ");
-        visited.insert(node);
+        visited[node] = true;
 
         match op {
             Ops::DFS => {
