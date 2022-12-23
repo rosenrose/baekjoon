@@ -21,21 +21,19 @@ fn main() {
     });
 
     let (start, end) = (input(), input());
-    let (distances, prevs) = dijkstra(&adjacency_list, start);
-    // println!("{distances:?} {prevs:?}");
+    let distances = dijkstra(&adjacency_list, start);
 
     println!("{}", distances[end]);
 }
 
-fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> (Vec<i32>, Vec<usize>) {
+fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> Vec<i32> {
     let mut distances = vec![i32::MAX; graph.len()];
     distances[start] = 0;
 
-    let mut prevs = vec![0; graph.len()];
-    let mut candidates = BinaryHeap::from([Reverse((0, start))]);
+    let mut queue = BinaryHeap::from([Reverse((0, start))]);
 
-    while !candidates.is_empty() {
-        let (dist, node) = candidates.pop().unwrap().0;
+    while !queue.is_empty() {
+        let (dist, node) = queue.pop().unwrap().0;
         let min_dist = distances[node];
 
         if dist > min_dist {
@@ -51,12 +49,9 @@ fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> (Vec<i32>, Vec<usiz
             }
 
             distances[neighbor] = new_dist;
-            prevs[neighbor] = node;
-
-            let new_candi = (new_dist, neighbor);
-            candidates.push(Reverse(new_candi));
+            queue.push(Reverse((new_dist, neighbor)));
         }
     }
 
-    (distances, prevs)
+    distances
 }

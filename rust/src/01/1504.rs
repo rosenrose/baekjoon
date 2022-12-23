@@ -45,10 +45,10 @@ fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> Vec<i32> {
     let mut dists = vec![i32::MAX; graph.len()];
     dists[start] = 0;
 
-    let mut candidates = BinaryHeap::from([Reverse((0, start))]);
+    let mut queue = BinaryHeap::from([Reverse((0, start))]);
 
-    while !candidates.is_empty() {
-        let (dist, node) = candidates.pop().unwrap().0;
+    while !queue.is_empty() {
+        let (dist, node) = queue.pop().unwrap().0;
         let min_dist = dists[node];
 
         if dist > min_dist {
@@ -64,9 +64,7 @@ fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> Vec<i32> {
             }
 
             dists[neighbor] = new_dist;
-
-            let new_candi = (new_dist, neighbor);
-            candidates.push(Reverse(new_candi));
+            queue.push(Reverse((new_dist, neighbor)));
         }
     }
 
