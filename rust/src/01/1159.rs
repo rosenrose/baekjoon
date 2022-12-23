@@ -17,7 +17,7 @@ fn main() {
         .filter(|ch| names.iter().filter(|name| name == ch).count() >= 5)
         .collect();
 
-    if availables.len() == 0 {
+    if availables.is_empty() {
         println!("PREDAJA");
         return;
     }

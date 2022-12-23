@@ -13,7 +13,7 @@ fn main() {
         .map(|i| i * i)
         .collect();
 
-    if square_nums.len() == 0 {
+    if square_nums.is_empty() {
         println!("-1");
         return;
     }
