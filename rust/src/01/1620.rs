@@ -12,7 +12,7 @@ fn main() {
     let mut pokemon_name = HashMap::new();
     let mut pokemon_index = Vec::new();
 
-    let n = parse_int(input.next().unwrap());
+    let n: i32 = input.next().unwrap().parse().unwrap();
     input.next();
 
     for i in 1..=n {
@@ -23,17 +23,14 @@ fn main() {
     }
 
     for query in input {
-        match query.parse::<usize>() {
-            Ok(i) => writeln!(output, "{}", pokemon_index[i - 1]).unwrap(),
-            _ => writeln!(output, "{}", pokemon_name.get(query).unwrap()).unwrap(),
-        }
+        (match query.parse::<usize>() {
+            Ok(i) => writeln!(output, "{}", pokemon_index[i - 1]),
+            _ => writeln!(output, "{}", pokemon_name.get(query).unwrap()),
+        })
+        .unwrap();
     }
 
     print!("{output}");
-}
-
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
 }
 
 // enum Answer<'a> {
