@@ -17,10 +17,10 @@ fn main() {
     for x in input.skip(1) {
         match x {
             0 => {
-                let (_, smallest) = heap.pop().unwrap_or((Reverse(0), Reverse(0)));
-                writeln!(output, "{}", smallest.0).unwrap();
+                let (_, smallest) = heap.pop().unwrap_or(Reverse((0, 0))).0;
+                writeln!(output, "{smallest}").unwrap();
             }
-            x => heap.push((Reverse(x.abs()), Reverse(x))),
+            x => heap.push(Reverse((x.abs(), x))),
         }
     }
 
