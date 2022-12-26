@@ -20,7 +20,9 @@ fn main() {
                 table[i + 1][j + 1][k + 1] = if c == b && b == a {
                     table[i][j][k] + 1
                 } else {
-                    table[i][j + 1][k + 1].max(table[i + 1][j][k + 1].max(table[i + 1][j + 1][k]))
+                    table[i][j + 1][k + 1]
+                        .max(table[i + 1][j][k + 1])
+                        .max(table[i + 1][j + 1][k])
                 };
 
                 max_len = table[i + 1][j + 1][k + 1].max(max_len);

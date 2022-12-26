@@ -19,7 +19,7 @@ fn main() {
             return;
         }
 
-        let is_right = match a.max(b.max(c)) {
+        let is_right = match a.max(b).max(c) {
             longest if longest == a => a * a == b * b + c * c,
             longest if longest == b => b * b == a * a + c * c,
             longest if longest == c => c * c == a * a + b * b,

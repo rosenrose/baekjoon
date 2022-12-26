@@ -21,7 +21,7 @@ fn main() {
                 (a, b, _) if a == b => 1000 + a * 100,
                 (a, _, b) if a == b => 1000 + a * 100,
                 (_, a, b) if a == b => 1000 + a * 100,
-                _ => a.max(b.max(c)) * 100,
+                _ => a.max(b).max(c) * 100,
             }
         })
         .max()
