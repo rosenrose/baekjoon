@@ -7,16 +7,16 @@ fn main() {
     let is_leap = if year % 4 == 0 {
         if year % 100 == 0 {
             if year % 400 == 0 {
-                1
+                true
             } else {
-                0
+                false
             }
         } else {
-            1
+            true
         }
     } else {
-        0
+        false
     };
 
-    println!("{is_leap}");
+    println!("{}", if is_leap { 1 } else { 0 });
 }
