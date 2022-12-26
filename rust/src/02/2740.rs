@@ -7,20 +7,17 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let (n, m) = (input.next().unwrap(), input.next().unwrap());
-    let a: Vec<Vec<_>> = (0..n)
-        .map(|_| (0..m).map(|_| input.next().unwrap()).collect())
-        .collect();
-    input.next();
+    let (n, m) = (input(), input());
+    let a: Vec<Vec<_>> = (0..n).map(|_| (0..m).map(|_| input()).collect()).collect();
+    input();
 
-    let k = input.next().unwrap() as usize;
-    let b: Vec<Vec<_>> = (0..m)
-        .map(|_| (0..k).map(|_| input.next().unwrap()).collect())
-        .collect();
+    let k = input();
+    let b: Vec<Vec<_>> = (0..m).map(|_| (0..k).map(|_| input()).collect()).collect();
 
     for a_row in a {
-        for i in 0..k {
+        for i in 0..k as usize {
             let sum: i32 = a_row
                 .iter()
                 .enumerate()

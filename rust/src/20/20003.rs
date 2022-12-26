@@ -7,18 +7,18 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let n = input.next().unwrap();
-    let (coin_a, coin_b) =
-        (0..n - 1).fold((input.next().unwrap(), input.next().unwrap()), |acc, _| {
-            let (coin_a, coin_b) = acc;
-            let (a, b) = (input.next().unwrap(), input.next().unwrap());
+    let n = input();
+    let (coin_a, coin_b) = (0..n - 1).fold((input(), input()), |acc, _| {
+        let (coin_a, coin_b) = acc;
+        let (a, b) = (input(), input());
 
-            let lcm = get_lcm(coin_b, b);
-            let gcd = get_gcd(coin_a * (lcm / coin_b), a * (lcm / b));
+        let lcm = get_lcm(coin_b, b);
+        let gcd = get_gcd(coin_a * (lcm / coin_b), a * (lcm / b));
 
-            (gcd, lcm)
-        });
+        (gcd, lcm)
+    });
 
     let gcd = get_gcd(coin_a, coin_b);
 

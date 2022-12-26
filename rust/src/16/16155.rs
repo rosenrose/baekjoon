@@ -85,13 +85,12 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let n = input.next().unwrap();
-    let point_heights: Vec<_> = (0..n + 1)
-        .map(|_| (input.next().unwrap(), input.next().unwrap()))
-        .collect();
+    let n = input();
+    let point_heights: Vec<_> = (0..n + 1).map(|_| (input(), input())).collect();
 
-    let (start_x, end_x) = (input.next().unwrap(), input.next().unwrap());
+    let (start_x, end_x) = (input(), input());
     let (mut start_h, mut end_h) = (Fraction::new(), Fraction::new());
 
     for i in 1..point_heights.len() {

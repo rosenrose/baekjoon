@@ -8,22 +8,19 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (a, d) = (input.next().unwrap(), input.next().unwrap());
+    let (a, d) = (input(), input());
     let gcd = get_gcd(a, d);
 
     let sequence = |n: i64| a + (n - 1) * d;
     let sum = |n: i64| n * ((n - 1) * d + 2 * a) / 2;
 
-    for _ in 0..input.next().unwrap() {
-        let (q, left, right) = (
-            input.next().unwrap(),
-            input.next().unwrap(),
-            input.next().unwrap(),
-        );
+    for _ in 0..input() {
+        let (query, left, right) = (input(), input(), input());
 
-        let result = match q {
+        let result = match query {
             1 => sum(right) - sum(left - 1),
             2 => {
                 if left == right {

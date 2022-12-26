@@ -4,26 +4,28 @@ fn main() {
     let mut buf = String::new();
     stdin().read_to_string(&mut buf).unwrap();
 
-    let input = buf
+    let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    if let [mut hour, mut minute, mut second, mut time] = input.collect::<Vec<_>>()[..] {
-        second += time % 60;
-        minute += second / 60;
-        second %= 60;
+    let (mut hour, mut minute, mut second) = (input(), input(), input());
+    let mut time = input();
 
-        time -= time % 60;
+    second += time % 60;
+    minute += second / 60;
+    second %= 60;
 
-        minute += (time % 3600) / 60;
-        hour += minute / 60;
-        minute %= 60;
+    time -= time % 60;
 
-        time -= time % 3600;
+    minute += (time % 3600) / 60;
+    hour += minute / 60;
+    minute %= 60;
 
-        hour += time / 3600;
-        hour %= 24;
+    time -= time % 3600;
 
-        println!("{hour} {minute} {second}");
-    }
+    hour += time / 3600;
+    hour %= 24;
+
+    println!("{hour} {minute} {second}");
 }

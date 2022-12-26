@@ -8,13 +8,14 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, m) = (input.next().unwrap() as usize, input.next().unwrap());
+    let (n, m) = (input() as usize, input());
 
     let sum_accum: Vec<_> = (0..n).fold(vec![vec![0; n + 1]], |mut acc, _| {
         let row_accum = (0..n).fold(vec![0], |mut acc, _| {
-            acc.push(acc.last().unwrap() + input.next().unwrap());
+            acc.push(acc.last().unwrap() + input());
             acc
         });
 
@@ -31,15 +32,17 @@ fn main() {
     });
     // println!("{sum_accum:?}");
     for _ in 0..m {
-        if let [x1, y1, x2, y2] = (0..4)
-            .map(|_| input.next().unwrap() as usize)
-            .collect::<Vec<_>>()[..]
-        {
-            let (x1, y1, x2, y2) = (y1 - 1, x1 - 1, y2, x2);
-            let sum = sum_accum[y2][x2] - sum_accum[y2][x1] - sum_accum[y1][x2] + sum_accum[y1][x1];
+        let (x1, y1, x2, y2) = (
+            input() as usize,
+            input() as usize,
+            input() as usize,
+            input() as usize,
+        );
 
-            writeln!(output, "{sum}").unwrap();
-        }
+        let (x1, y1, x2, y2) = (y1 - 1, x1 - 1, y2, x2);
+        let sum = sum_accum[y2][x2] - sum_accum[y2][x1] - sum_accum[y1][x2] + sum_accum[y1][x1];
+
+        writeln!(output, "{sum}").unwrap();
     }
 
     print!("{output}");

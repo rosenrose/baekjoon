@@ -8,22 +8,17 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input.next().unwrap() {
-        let (start, end) = (
-            (input.next().unwrap(), input.next().unwrap()),
-            (input.next().unwrap(), input.next().unwrap()),
-        );
+    for _ in 0..input() {
+        let (start, end) = ((input(), input()), (input(), input()));
 
-        let n = input.next().unwrap();
+        let n = input();
         let mut count = 0;
 
         for _ in 0..n {
-            let planet = (
-                (input.next().unwrap(), input.next().unwrap()),
-                input.next().unwrap() as f64,
-            );
+            let planet = ((input(), input()), input() as f64);
 
             let is_start_inside_planet = is_point_inside_circle(start, planet);
             let is_end_inside_planet = is_point_inside_circle(end, planet);

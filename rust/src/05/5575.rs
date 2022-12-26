@@ -7,26 +7,28 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
     for _ in 0..3 {
-        if let [on_hour, on_minute, on_second, off_hour, off_minute, off_second] =
-            (0..6).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..]
-        {
-            let mut hours = off_hour - on_hour;
-            let mut minutes = off_minute - on_minute;
-            let mut seconds = off_second - on_second;
+        let (on_hour, on_minute, on_second, off_hour, off_minute, off_second) =
+            (input(), input(), input(), input(), input(), input());
 
-            if seconds < 0 {
-                seconds += 60;
-                minutes -= 1;
-            }
+        let (mut hours, mut minutes, mut seconds) = (
+            off_hour - on_hour,
+            off_minute - on_minute,
+            off_second - on_second,
+        );
 
-            if minutes < 0 {
-                minutes += 60;
-                hours -= 1;
-            }
-
-            println!("{hours} {minutes} {seconds}");
+        if seconds < 0 {
+            seconds += 60;
+            minutes -= 1;
         }
+
+        if minutes < 0 {
+            minutes += 60;
+            hours -= 1;
+        }
+
+        println!("{hours} {minutes} {seconds}");
     }
 }

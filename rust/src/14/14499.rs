@@ -8,24 +8,17 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, m, x, y) = (
-        input.next().unwrap(),
-        input.next().unwrap(),
-        input.next().unwrap(),
-        input.next().unwrap(),
-    );
-    input.next();
+    let (n, m, x, y, k) = (input(), input(), input(), input(), input());
 
     let (mut x, mut y) = (y, x);
-    let mut map: Vec<Vec<_>> = (0..n)
-        .map(|_| (0..m).map(|_| input.next().unwrap()).collect())
-        .collect();
+    let mut map: Vec<Vec<_>> = (0..n).map(|_| (0..m).map(|_| input()).collect()).collect();
 
     let (mut top, mut bottom, mut east, mut west, mut south, mut north) = (0, 0, 0, 0, 0, 0);
 
-    for command in input {
+    for command in (0..k).map(|_| input()) {
         match (command, x, y) {
             (1, i, _) if i == m - 1 => continue,
             (2, 0, _) | (3, _, 0) => continue,

@@ -96,19 +96,6 @@ impl Complex {
             im: im.normalized(),
         }
     }
-
-    fn parse(input: &str) -> Self {
-        match input
-            .split(' ')
-            .map(|s| s.parse::<i64>().unwrap())
-            .collect::<Vec<_>>()[..]
-        {
-            [a0, b0, c0, d0, a1, b1, c1, d1] => {
-                Self::from(Real::from(a0, b0, c0, d0), Real::from(a1, b1, c1, d1))
-            }
-            _ => Self::from(Real::from(1, 0, 0, 0), Real::from(1, 0, 0, 0)),
-        }
-    }
 }
 impl Add for Complex {
     type Output = Self;
@@ -162,9 +149,19 @@ fn main() {
     let mut buf = String::new();
     stdin().read_to_string(&mut buf).unwrap();
 
-    let mut input = buf.lines();
-    let a = Complex::parse(input.next().unwrap());
-    let b = Complex::parse(input.next().unwrap());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
+
+    let a = Complex::from(
+        Real::from(input(), input(), input(), input()),
+        Real::from(input(), input(), input(), input()),
+    );
+    let b = Complex::from(
+        Real::from(input(), input(), input(), input()),
+        Real::from(input(), input(), input(), input()),
+    );
 
     println!("{}\n{}\n{}\n{}", a + b, a - b, a * b, a / b);
 }

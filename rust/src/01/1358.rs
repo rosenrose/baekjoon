@@ -7,24 +7,24 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    if let [w, h, x, y, p] = (0..5).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..] {
-        let radius = h / 2;
-        let mut count = 0;
+    let (w, h, x, y, p) = (input(), input(), input(), input(), input());
+    let radius = h / 2;
+    let mut count = 0;
 
-        for _ in 0..p {
-            let player = (input.next().unwrap(), input.next().unwrap());
+    for _ in 0..p {
+        let player = (input(), input());
 
-            if is_point_inside_or_border_rect(player, (x, y, w, h))
-                || is_point_inside_or_border_circle(player, ((x, y + radius), radius as f64))
-                || is_point_inside_or_border_circle(player, ((x + w, y + radius), radius as f64))
-            {
-                count += 1;
-            }
+        if is_point_inside_or_border_rect(player, (x, y, w, h))
+            || is_point_inside_or_border_circle(player, ((x, y + radius), radius as f64))
+            || is_point_inside_or_border_circle(player, ((x + w, y + radius), radius as f64))
+        {
+            count += 1;
         }
-
-        println!("{count}");
     }
+
+    println!("{count}");
 }
 
 fn is_point_inside_or_border_rect(point: (i32, i32), rect: (i32, i32, i32, i32)) -> bool {

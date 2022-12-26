@@ -8,13 +8,14 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input.next().unwrap() {
-        let (x, y) = (input.next().unwrap(), input.next().unwrap());
-        let k = input.next().unwrap();
+    for _ in 0..input() {
+        let (x, y) = (input(), input());
+        let k = input();
 
-        let gcd = get_gcd((0..k).map(|_| input.next().unwrap()));
+        let gcd = get_gcd((0..k).map(|_| input()));
 
         if x % gcd != 0 || y % gcd != 0 {
             writeln!(output, "Gave up").unwrap();

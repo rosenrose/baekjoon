@@ -9,15 +9,16 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input.next().unwrap() {
-        let n = input.next().unwrap();
-        let diary: HashSet<_> = (0..n).map(|_| input.next().unwrap()).collect();
+    for _ in 0..input() {
+        let n = input();
+        let diary: HashSet<_> = (0..n).map(|_| input()).collect();
 
-        let m = input.next().unwrap();
+        let m = input();
 
-        for num in (0..m).map(|_| input.next().unwrap()) {
+        for num in (0..m).map(|_| input()) {
             writeln!(output, "{}", if diary.contains(&num) { 1 } else { 0 }).unwrap();
         }
     }

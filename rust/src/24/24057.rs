@@ -15,17 +15,6 @@ impl Real {
         Self { a, b, c, d }.normalized()
     }
 
-    fn parse(input: &str) -> Self {
-        match input
-            .split(' ')
-            .map(|s| s.parse::<i64>().unwrap())
-            .collect::<Vec<_>>()[..]
-        {
-            [a, b, c, d] => Self::from(a, b, c, d),
-            _ => Self::from(1, 0, 0, 0),
-        }
-    }
-
     fn normalized(self) -> Self {
         let (mut a, mut b, mut c, mut d) = (self.a, self.b, self.c, self.d);
 
@@ -104,9 +93,13 @@ fn main() {
     let mut buf = String::new();
     stdin().read_to_string(&mut buf).unwrap();
 
-    let mut input = buf.lines();
-    let a = Real::parse(input.next().unwrap());
-    let b = Real::parse(input.next().unwrap());
+    let mut input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
+
+    let a = Real::from(input(), input(), input(), input());
+    let b = Real::from(input(), input(), input(), input());
 
     println!("{}\n{}\n{}\n{}", a + b, a - b, a * b, a / b);
 }

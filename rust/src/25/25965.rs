@@ -7,18 +7,13 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    for _ in 0..input.next().unwrap() {
-        let m = input.next().unwrap();
-        let rewards: Vec<Vec<_>> = (0..m)
-            .map(|_| (0..3).map(|_| input.next().unwrap()).collect())
-            .collect();
+    for _ in 0..input() {
+        let m = input();
+        let rewards: Vec<Vec<_>> = (0..m).map(|_| (0..3).map(|_| input()).collect()).collect();
 
-        let (k, d, a) = (
-            input.next().unwrap(),
-            input.next().unwrap(),
-            input.next().unwrap(),
-        );
+        let (k, d, a) = (input(), input(), input());
 
         let donation: i64 = rewards
             .iter()

@@ -5,16 +5,14 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.split_ascii_whitespace();
-    let n = parse_int(input.next().unwrap());
+    let mut input = || input.next().unwrap();
+
+    let n = parse_int(input());
 
     let infos: Vec<_> = (0..n)
         .map(|_| {
-            let name = input.next().unwrap();
-            let (d, m, y) = (
-                parse_int(input.next().unwrap()),
-                parse_int(input.next().unwrap()),
-                parse_int(input.next().unwrap()),
-            );
+            let name = input();
+            let (d, m, y) = (parse_int(input()), parse_int(input()), parse_int(input()));
 
             (name, (y, m, d))
         })

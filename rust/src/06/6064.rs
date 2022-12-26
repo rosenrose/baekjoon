@@ -8,37 +8,37 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input.next().unwrap() {
-        if let [m, n, x, y] = (0..4).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..] {
-            let (gcd, mut a, mut b) = get_ex_gcd(m, n);
-            // println!("{a} {b} {gcd}");
-            if (y - x) % gcd != 0 {
-                writeln!(output, "-1").unwrap();
-                continue;
-            }
-
-            let multiple = (y - x) / gcd;
-            let (b_step, a_step) = (m / gcd, n / gcd);
-
-            a *= multiple;
-            b *= -multiple;
-
-            while a > 0 || b > 0 {
-                a -= a_step;
-                b -= b_step;
-            }
-            while a < 0 || b < 0 {
-                a += a_step;
-                b += b_step;
-            }
-            // println!("{a} {b}");
-            // assert_eq!(m*a+x, n*b+y);
-            // println!("{} {}", m * a + x, n * b + y);
-
-            writeln!(output, "{}", m * a + x).unwrap();
+    for _ in 0..input() {
+        let (m, n, x, y) = (input(), input(), input(), input());
+        let (gcd, mut a, mut b) = get_ex_gcd(m, n);
+        // println!("{a} {b} {gcd}");
+        if (y - x) % gcd != 0 {
+            writeln!(output, "-1").unwrap();
+            continue;
         }
+
+        let multiple = (y - x) / gcd;
+        let (b_step, a_step) = (m / gcd, n / gcd);
+
+        a *= multiple;
+        b *= -multiple;
+
+        while a > 0 || b > 0 {
+            a -= a_step;
+            b -= b_step;
+        }
+        while a < 0 || b < 0 {
+            a += a_step;
+            b += b_step;
+        }
+        // println!("{a} {b}");
+        // assert_eq!(m*a+x, n*b+y);
+        // println!("{} {}", m * a + x, n * b + y);
+
+        writeln!(output, "{}", m * a + x).unwrap();
     }
 
     print!("{output}");
@@ -77,29 +77,29 @@ fn get_ex_gcd(a: i32, b: i32) -> (i32, i32, i32) {
 //     let mut input = buf
 //         .split_ascii_whitespace()
 //         .map(|s| s.parse::<usize>().unwrap());
+//     let mut input = || input.next().unwrap();
 //     let mut output = String::new();
 
-//     'outer: for _ in 0..input.next().unwrap() {
-//         if let [m, n, x, y] = (0..4).map(|_| input.next().unwrap()).collect::<Vec<_>>()[..] {
-//             let total_years = get_lcm(m, n);
+//     'outer: for _ in 0..input() {
+//         let (m, n, x, y) = (input(), input(), input(), input());
+//         let total_years = get_lcm(m, n);
 
-//             let (start_year, compare_year) = if m > n {
-//                 (x, if y == n { 0 } else { y })
-//             } else {
-//                 (y, if x == m { 0 } else { x })
-//             };
+//         let (start_year, compare_year) = if m > n {
+//             (x, if y == n { 0 } else { y })
+//         } else {
+//             (y, if x == m { 0 } else { x })
+//         };
 
-//             let (mod1, mod2) = (m.max(n), m.min(n));
+//         let (mod1, mod2) = (m.max(n), m.min(n));
 
-//             for year in (start_year..=total_years).step_by(mod1) {
-//                 if year % mod2 == compare_year {
-//                     writeln!(output, "{year}").unwrap();
-//                     continue 'outer;
-//                 }
+//         for year in (start_year..=total_years).step_by(mod1) {
+//             if year % mod2 == compare_year {
+//                 writeln!(output, "{year}").unwrap();
+//                 continue 'outer;
 //             }
-
-//             writeln!(output, "-1").unwrap();
 //         }
+
+//         writeln!(output, "-1").unwrap();
 //     }
 
 //     print!("{output}");

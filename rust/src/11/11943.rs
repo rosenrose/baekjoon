@@ -4,11 +4,11 @@ fn main() {
     let mut buf = String::new();
     stdin().read_to_string(&mut buf).unwrap();
 
-    let input = buf
+    let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    if let [a, b, c, d] = input.collect::<Vec<_>>()[..] {
-        println!("{}", (a + d).min(b + c));
-    }
+    let (a, b, c, d) = (input(), input(), input(), input());
+    println!("{}", (a + d).min(b + c));
 }

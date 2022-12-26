@@ -39,16 +39,17 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
     let cake_a = Cake {
-        x: input.next().unwrap(),
-        y: input.next().unwrap(),
-        z: input.next().unwrap(),
+        x: input(),
+        y: input(),
+        z: input(),
     };
     let cake_c = Cake {
-        x: input.next().unwrap(),
-        y: input.next().unwrap(),
-        z: input.next().unwrap(),
+        x: input(),
+        y: input(),
+        z: input(),
     };
 
     let cake_b = cake_c.cake_op_inverse(cake_a);
