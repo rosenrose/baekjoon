@@ -15,10 +15,9 @@ fn star(n: usize) -> String {
     }
 
     let inner = star(n - 1);
-    let inner_width = inner.lines().nth(0).unwrap().len();
+    let blank = " ".repeat((1 << n) - 1);
 
     let mut result = String::new();
-    let blank = " ".repeat(inner_width - 1);
 
     for (idx, i) in inner.lines().enumerate() {
         writeln!(result, "{i}{}{i}", &blank[..idx]).unwrap();

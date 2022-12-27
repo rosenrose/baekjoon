@@ -21,9 +21,7 @@ fn star(n: usize) -> String {
     }
 
     let inner = star(n / 2);
-    let inner_width = inner.lines().nth(0).unwrap().len();
-
-    let blank = " ".repeat(inner_width / 2 + 1);
+    let blank = " ".repeat(n / 2);
 
     for i in inner.lines() {
         writeln!(result, "{blank}{i}{blank}").unwrap();
