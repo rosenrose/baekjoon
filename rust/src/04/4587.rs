@@ -51,9 +51,7 @@ fn main() {
         .map(|s| s.parse::<i64>().unwrap());
     let mut output = String::new();
 
-    loop {
-        let (m, n) = (input.next().unwrap(), input.next().unwrap());
-
+    while let (Some(m), Some(n)) = (input.next(), input.next()) {
         if (m, n) == (0, 0) {
             break;
         }

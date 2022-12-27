@@ -10,9 +10,7 @@ fn main() {
         .map(|s| s.parse::<i64>().unwrap());
     let mut output = String::new();
 
-    loop {
-        let (b, n) = (input.next().unwrap(), input.next().unwrap());
-
+    while let (Some(b), Some(n)) = (input.next(), input.next()) {
         if (b, n) == (0, 0) {
             break;
         }

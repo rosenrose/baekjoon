@@ -11,9 +11,7 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
-    loop {
-        let n = input.next().unwrap();
-
+    while let Some(n) = input.next() {
         if n == 0 {
             break;
         }

@@ -13,13 +13,7 @@ fn main() {
 
     let mut cache = HashMap::new();
 
-    loop {
-        let (a, b, c) = (
-            input.next().unwrap(),
-            input.next().unwrap(),
-            input.next().unwrap(),
-        );
-
+    while let (Some(a), Some(b), Some(c)) = (input.next(), input.next(), input.next()) {
         if (a, b, c) == (-1, -1, -1) {
             break;
         }

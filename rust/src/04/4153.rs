@@ -8,15 +8,12 @@ fn main() {
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
 
-    loop {
-        let (a, b, c) = (
-            input.next().unwrap(),
-            input.next().unwrap(),
-            input.next().unwrap(),
-        );
+    while let (Some(a), Some(b), Some(c)) = (input.next(), input.next(), input.next()) {
+        if (a, b, c) == (0, 0, 0) {
+            return;
+        }
 
         let is_right = match a.max(b).max(c) {
-            0 => return,
             longest if longest == a => a * a == b * b + c * c,
             longest if longest == b => b * b == a * a + c * c,
             longest if longest == c => c * c == a * a + b * b,

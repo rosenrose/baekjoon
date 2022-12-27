@@ -8,9 +8,7 @@ fn main() {
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
 
-    loop {
-        let n = input.next().unwrap();
-
+    while let Some(n) = input.next() {
         if n == 0 {
             return;
         }
