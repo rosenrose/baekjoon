@@ -8,11 +8,12 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    for _ in 0..input.next().unwrap() {
-        let (n, m) = (input.next().unwrap(), input.next().unwrap());
+    for _ in 0..input() {
+        let (n, m) = (input(), input());
 
-        let mut docs: VecDeque<_> = (0..n).map(|i| (input.next().unwrap(), i)).collect();
+        let mut docs: VecDeque<_> = (0..n).map(|i| (input(), i)).collect();
 
         if docs.len() == 1 {
             println!("1");

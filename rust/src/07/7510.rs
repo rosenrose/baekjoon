@@ -8,14 +8,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for i in 1..=input.next().unwrap() {
-        let (a, b, c) = (
-            input.next().unwrap(),
-            input.next().unwrap(),
-            input.next().unwrap(),
-        );
+    for i in 1..=input() {
+        let (a, b, c) = (input(), input(), input());
 
         let is_right = match a.max(b).max(c) {
             longest if longest == a => a * a == b * b + c * c,

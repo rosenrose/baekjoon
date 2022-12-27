@@ -6,13 +6,14 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
 
-    for _ in 0..parse_int(input.next().unwrap()) {
-        let n = parse_int(input.next().unwrap());
+    for _ in 0..parse_int(input()) {
+        let n = parse_int(input());
         let mut map = BTreeMap::new();
 
         for _ in 0..n {
-            let (op, num) = (input.next().unwrap(), parse_int(input.next().unwrap()));
+            let (op, num) = (input(), parse_int(input()));
 
             match op {
                 "I" => {

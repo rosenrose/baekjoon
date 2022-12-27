@@ -7,13 +7,14 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n = parse_int(input.next().unwrap());
+    let n = parse_int(input());
     let mut deque = VecDeque::new();
 
     for _ in 0..n {
-        let result = match input.next().unwrap() {
+        let result = match input() {
             "pop_front" => deque.pop_front().unwrap_or(-1),
             "pop_back" => deque.pop_back().unwrap_or(-1),
             "size" => deque.len() as i32,
@@ -27,11 +28,11 @@ fn main() {
             "front" => *deque.front().unwrap_or(&-1),
             "back" => *deque.back().unwrap_or(&-1),
             "push_front" => {
-                deque.push_front(parse_int(input.next().unwrap()));
+                deque.push_front(parse_int(input()));
                 continue;
             }
             "push_back" => {
-                deque.push_back(parse_int(input.next().unwrap()));
+                deque.push_back(parse_int(input()));
                 continue;
             }
             _ => 0,

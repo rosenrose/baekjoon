@@ -39,14 +39,15 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
     let fraction1 = Fraction {
-        numerator: input.next().unwrap(),
-        denominator: input.next().unwrap(),
+        numerator: input(),
+        denominator: input(),
     };
     let fraction2 = Fraction {
-        numerator: input.next().unwrap(),
-        denominator: input.next().unwrap(),
+        numerator: input(),
+        denominator: input(),
     };
 
     println!("{}", fraction1 + fraction2);

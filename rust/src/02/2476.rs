@@ -7,14 +7,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let max_prize = (0..input.next().unwrap())
+    let max_prize = (0..input())
         .map(|_| {
-            let (a, b, c) = (
-                input.next().unwrap(),
-                input.next().unwrap(),
-                input.next().unwrap(),
-            );
+            let (a, b, c) = (input(), input(), input());
 
             match (a, b, c) {
                 (a, b, c) if a == b && b == c => 10000 + a * 1000,

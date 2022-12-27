@@ -7,29 +7,26 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
-    let mut i = 1;
+    let mut input = || input.next().unwrap();
 
-    loop {
-        let (name, square) = match (
-            input.next().unwrap(),
-            input.next().unwrap(),
-            input.next().unwrap(),
-        ) {
-            (-1, b, c) => ("a", c * c - b * b),
-            (a, -1, c) => ("b", c * c - a * a),
-            (a, b, -1) => ("c", a * a + b * b),
-            _ => return,
-        };
+    (1..)
+        .map(|i| (i, (input(), input(), input())))
+        .take_while(|&(_, (a, b, c))| (a, b, c) != (0, 0, 0))
+        .for_each(|(i, (a, b, c))| {
+            let (name, square) = match (a, b, c) {
+                (-1, b, c) => ("a", c * c - b * b),
+                (a, -1, c) => ("b", c * c - a * a),
+                (a, b, -1) => ("c", a * a + b * b),
+                _ => return,
+            };
 
-        println!("Triangle #{i}");
+            println!("Triangle #{i}");
 
-        if square <= 0 {
-            println!("Impossible.");
-        } else {
-            println!("{name} = {:.3}", (square as f64).sqrt());
-        }
+            if square <= 0 {
+                println!("Impossible.\n");
+                return;
+            }
 
-        println!("");
-        i += 1;
-    }
+            println!("{name} = {:.3}\n", (square as f64).sqrt());
+        });
 }

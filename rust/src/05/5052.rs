@@ -7,10 +7,11 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.lines();
+    let mut input = || input.next().unwrap();
 
-    'outer: for _ in 0..parse_int(input.next().unwrap()) {
-        let n = parse_int(input.next().unwrap());
-        let mut numbers: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
+    'outer: for _ in 0..parse_int(input()) {
+        let n = parse_int(input());
+        let mut numbers: Vec<_> = (0..n).map(|_| input()).collect();
         numbers.sort_unstable_by_key(|s| s.len());
 
         let mut number_set = HashSet::new();
@@ -31,7 +32,7 @@ fn main() {
         // let mut trie = Trie::new();
 
         // for _ in 0..n {
-        //     let number = input.next().unwrap();
+        //     let number = input();
 
         //     if trie.is_prefix_exists {
         //         continue;

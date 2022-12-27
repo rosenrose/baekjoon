@@ -4,7 +4,7 @@ fn main() {
     let mut buf = String::new();
     stdin().read_to_string(&mut buf).unwrap();
 
-    for (i, input) in buf.lines().skip(1).enumerate() {
-        println!("{}. {input}", i + 1);
+    for (i, input) in buf.lines().enumerate().skip(1) {
+        println!("{i}. {input}");
     }
 }

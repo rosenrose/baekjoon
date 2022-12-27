@@ -7,14 +7,15 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n = parse_int(input.next().unwrap());
+    let n = parse_int(input());
 
     'outer: for _ in 0..n {
-        let p = input.next().unwrap();
-        let len = parse_int(input.next().unwrap());
-        let arr = input.next().unwrap();
+        let p = input();
+        let len = parse_int(input());
+        let arr = input();
 
         let mut arr: VecDeque<_> = if len > 0 {
             arr[1..arr.len() - 1].split(',').map(parse_int).collect()

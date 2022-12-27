@@ -8,15 +8,14 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    for _ in 0..input.next().unwrap() {
-        input.next();
-        input.next();
+    for _ in 0..input() {
+        input();
+        input();
 
-        let k = input.next().unwrap();
-        let plant_coords: HashSet<_> = (0..k)
-            .map(|_| (input.next().unwrap(), input.next().unwrap()))
-            .collect();
+        let k = input();
+        let plant_coords: HashSet<_> = (0..k).map(|_| (input(), input())).collect();
 
         let mut visited = HashSet::new();
         let mut count = 0;

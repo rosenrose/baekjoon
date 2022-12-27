@@ -5,13 +5,14 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
 
-    let mut left = input.next().unwrap().to_string();
+    let mut left = input().to_string();
     let mut right = String::new();
-    let n: i32 = input.next().unwrap().parse().unwrap();
+    let n: i32 = input().parse().unwrap();
 
     for _ in 0..n {
-        match input.next().unwrap() {
+        match input() {
             "L" => {
                 if let Some(c) = left.pop() {
                     right.push(c);
@@ -26,7 +27,7 @@ fn main() {
                 left.pop();
             }
             "P" => {
-                if let Some(c) = input.next().unwrap().chars().nth(0) {
+                if let Some(c) = input().chars().nth(0) {
                     left.push(c);
                 }
             }

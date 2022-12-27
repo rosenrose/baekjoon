@@ -7,12 +7,13 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let (n, k) = (input.next().unwrap(), input.next().unwrap() as usize);
+    let (n, k) = (input(), input() as usize);
     let mut cache = vec![0; k + 1];
 
     for i in 0..n {
-        let (w, v) = (input.next().unwrap() as usize, input.next().unwrap());
+        let (w, v) = (input() as usize, input());
 
         if i == 0 {
             for j in w..=k {

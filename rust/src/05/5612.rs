@@ -7,13 +7,14 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let n = input.next().unwrap();
-    let mut current = input.next().unwrap();
+    let n = input();
+    let mut current = input();
     let mut max = current;
 
     for _ in 0..n {
-        let (into, out) = (input.next().unwrap(), input.next().unwrap());
+        let (into, out) = (input(), input());
         current = current + into - out;
 
         if current < 0 {

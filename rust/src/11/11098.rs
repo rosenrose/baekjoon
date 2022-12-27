@@ -5,13 +5,15 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.split_ascii_whitespace();
-    let n = parse_int(input.next().unwrap());
+    let mut input = || input.next().unwrap();
+
+    let n = parse_int(input());
 
     for _ in 0..n {
-        let p = parse_int(input.next().unwrap());
+        let p = parse_int(input());
 
         let (_, vip) = (0..p)
-            .map(|_| (parse_int(input.next().unwrap()), input.next().unwrap()))
+            .map(|_| (parse_int(input()), input()))
             .max_by_key(|&(guarantee, _)| guarantee)
             .unwrap();
 

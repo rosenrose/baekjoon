@@ -7,13 +7,14 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..parse_int(input.next().unwrap()) {
-        let games = parse_int(input.next().unwrap());
+    for _ in 0..parse_int(input()) {
+        let games = parse_int(input());
 
         let (a, b) = (0..games)
-            .map(|_| match (input.next().unwrap(), input.next().unwrap()) {
+            .map(|_| match (input(), input()) {
                 ("R", "P") => (0, 1),
                 ("R", "S") => (1, 0),
                 ("P", "R") => (1, 0),
