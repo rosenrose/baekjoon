@@ -2,13 +2,15 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let n: i32 = buf.trim().parse().unwrap();
+    let mut n: i32 = buf.trim().parse().unwrap();
 
-    for bit in (0..).take_while(|&b| (1 << b) < n) {
-        if ((1 << bit) & n) >> bit == 1 {
+    while n > 2 {
+        if n & 1 == 1 {
             println!("0");
             return;
         }
+
+        n >>= 1;
     }
 
     println!("1");
