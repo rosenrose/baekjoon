@@ -21,7 +21,7 @@ fn main() {
     });
 
     let (start, mut end) = (input(), input());
-    let (distances, prevs) = dijkstra(&adjacency_list, start);
+    let (distances, prevs) = dijkstra_with_path(&adjacency_list, start);
 
     println!("{}", distances[end]);
 
@@ -39,7 +39,7 @@ fn main() {
     }
 }
 
-fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> (Vec<i32>, Vec<usize>) {
+fn dijkstra_with_path(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> (Vec<i32>, Vec<usize>) {
     let mut distances = vec![i32::MAX; graph.len()];
     distances[start] = 0;
 
