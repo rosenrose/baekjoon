@@ -14,9 +14,9 @@ fn main() {
     let (n, e) = (input(), input());
 
     let adjacency_list = (0..e).fold(vec![Vec::new(); n + 1], |mut acc, _| {
-        let (a, b, c) = (input(), input(), input());
-        acc[a].push((b, c as i32));
-        acc[b].push((a, c as i32));
+        let (a, b, c) = (input(), input(), input() as i32);
+        acc[a].push((b, c));
+        acc[b].push((a, c));
 
         acc
     });
@@ -47,8 +47,7 @@ fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> Vec<i32> {
 
     let mut queue = BinaryHeap::from([Reverse((0, start))]);
 
-    while !queue.is_empty() {
-        let (dist, node) = queue.pop().unwrap().0;
+    while let Some(Reverse((dist, node))) = queue.pop() {
         let min_dist = dists[node];
 
         if dist > min_dist {

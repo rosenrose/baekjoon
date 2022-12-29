@@ -17,9 +17,7 @@ fn main() {
 
     let mut queue = VecDeque::from([(0_usize, 0_usize, 1)]);
 
-    while !queue.is_empty() {
-        let (x, y, step) = queue.pop_front().unwrap();
-
+    while let Some((x, y, step)) = queue.pop_front() {
         let adjacent = [
             (x.saturating_sub(1), y),
             (x, y.saturating_sub(1)),

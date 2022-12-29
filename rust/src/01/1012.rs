@@ -27,9 +27,7 @@ fn main() {
 
             let mut stack = vec![coord];
 
-            while !stack.is_empty() {
-                let (x, y) = stack.pop().unwrap();
-
+            while let Some((x, y)) = stack.pop() {
                 let adjacent = [
                     (x.saturating_sub(1), y),
                     (x, y.saturating_sub(1)),

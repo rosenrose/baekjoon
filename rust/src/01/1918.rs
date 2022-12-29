@@ -37,7 +37,7 @@ fn main() {
         };
     }
 
-    while !stack.is_empty() {
-        print!("{}", stack.pop().unwrap());
+    while let Some(ch) = stack.pop() {
+        print!("{ch}");
     }
 }

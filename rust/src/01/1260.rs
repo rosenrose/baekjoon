@@ -38,13 +38,10 @@ fn search(graph: &Vec<Vec<usize>>, start: usize, op: Ops) {
     let mut queue = VecDeque::from([start]);
     let mut visited = vec![false; graph.len()];
 
-    while !queue.is_empty() {
-        let node = match op {
-            Ops::DFS => queue.pop_back(),
-            Ops::BFS => queue.pop_front(),
-        }
-        .unwrap();
-
+    while let Some(node) = match op {
+        Ops::DFS => queue.pop_back(),
+        Ops::BFS => queue.pop_front(),
+    } {
         if visited[node] {
             continue;
         }

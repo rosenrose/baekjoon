@@ -30,8 +30,7 @@ fn dijkstra(coins: &Vec<i64>, biggest: i64) -> Vec<i64> {
 
     let mut queue = BinaryHeap::from([Reverse((0, 0))]);
 
-    while !queue.is_empty() {
-        let (a, current_coin) = queue.pop().unwrap().0;
+    while let Some(Reverse((a, current_coin))) = queue.pop() {
         let b = distances[current_coin as usize];
 
         if a != b {

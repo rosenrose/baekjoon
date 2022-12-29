@@ -12,9 +12,7 @@ fn main() {
 
     let (mut max, mut count) = (bars.pop().unwrap(), 1);
 
-    while !bars.is_empty() {
-        let height = bars.pop().unwrap();
-
+    while let Some(height) = bars.pop() {
         if height > max {
             max = height;
             count += 1;

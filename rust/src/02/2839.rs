@@ -15,11 +15,5 @@ fn main() {
         }
     }
 
-    let result = if counts.is_empty() {
-        -1
-    } else {
-        *counts.iter().min().unwrap()
-    };
-
-    println!("{result}");
+    println!("{}", counts.iter().min().unwrap_or(&-1));
 }

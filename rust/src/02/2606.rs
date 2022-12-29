@@ -29,9 +29,7 @@ fn dfs(graph: &Vec<Vec<usize>>, start: usize) {
     let mut stack = vec![start];
     let mut count = 0;
 
-    while !stack.is_empty() {
-        let node = stack.pop().unwrap();
-
+    while let Some(node) = stack.pop() {
         for &neighbor in graph[node].iter() {
             if discovered[neighbor] {
                 continue;

@@ -33,9 +33,7 @@ fn dfs(graph: &Vec<Vec<usize>>, start: usize) {
     let mut count = 1;
     let mut output = String::new();
 
-    while !stack.is_empty() {
-        let node = stack.pop().unwrap();
-
+    while let Some(node) = stack.pop() {
         if visited[node] != 0 {
             continue;
         }

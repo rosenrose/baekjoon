@@ -14,8 +14,8 @@ fn main() {
     let (n, m, k) = (input(), input(), input());
 
     let adjacency_list = (0..m).fold(vec![Vec::new(); n + 1], |mut acc, _| {
-        let (a, b, c) = (input(), input(), input());
-        acc[a].push((b, c as i32));
+        let (a, b, c) = (input(), input(), input() as i32);
+        acc[a].push((b, c));
 
         acc
     });
@@ -44,9 +44,7 @@ fn dijkstra_nth(
 
     let mut queue = BinaryHeap::from([Reverse((0, start))]);
 
-    while !queue.is_empty() {
-        let (dist, node) = queue.pop().unwrap().0;
-
+    while let Some(Reverse((dist, node))) = queue.pop() {
         for &(neighbor, weight) in graph[node].iter() {
             let new_dist = dist + weight;
 

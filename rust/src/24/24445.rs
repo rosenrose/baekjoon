@@ -34,9 +34,7 @@ fn bfs(graph: &Vec<Vec<usize>>, start: usize) {
     let mut count = 1;
     let mut output = String::new();
 
-    while !queue.is_empty() {
-        let node = queue.pop_front().unwrap();
-
+    while let Some(node) = queue.pop_front() {
         if visited[node] != 0 {
             continue;
         }
