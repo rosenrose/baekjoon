@@ -50,9 +50,6 @@ fn main() {
     }
 }
 
-fn distance_of_points(p1: (i32, i32), p2: (i32, i32)) -> f64 {
-    let (x1, y1) = p1;
-    let (x2, y2) = p2;
-
+fn distance_of_points((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> f64 {
     ((x1 - x2).pow(2) as f64 + (y1 - y2).pow(2) as f64).sqrt()
 }

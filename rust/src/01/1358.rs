@@ -27,22 +27,20 @@ fn main() {
     println!("{count}");
 }
 
-fn is_point_inside_or_border_rect(point: (i32, i32), rect: (i32, i32, i32, i32)) -> bool {
-    let (px, py) = point;
-    let (rx, ry, width, height) = rect;
-
+fn is_point_inside_or_border_rect(
+    (px, py): (i32, i32),
+    (rx, ry, width, height): (i32, i32, i32, i32),
+) -> bool {
     (rx..=rx + width).contains(&px) && (ry..=ry + height).contains(&py)
 }
 
-fn is_point_inside_or_border_circle(point: (i32, i32), circle: ((i32, i32), f64)) -> bool {
-    let (center, radius) = circle;
-
+fn is_point_inside_or_border_circle(
+    point: (i32, i32),
+    (center, radius): ((i32, i32), f64),
+) -> bool {
     distance_of_points(point, center) <= radius
 }
 
-fn distance_of_points(p1: (i32, i32), p2: (i32, i32)) -> f64 {
-    let (x1, y1) = p1;
-    let (x2, y2) = p2;
-
+fn distance_of_points((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> f64 {
     ((x1 - x2).pow(2) as f64 + (y1 - y2).pow(2) as f64).sqrt()
 }
