@@ -13,6 +13,13 @@ impl<'a> DisjointSet<'a> {
         }
     }
 
+    fn insert(&mut self, a: &'a str, b: &'a str) {
+        self.set.entry(a).or_insert((a, 1));
+        self.set.entry(b).or_insert((b, 1));
+
+        self.union(a, b);
+    }
+
     fn find(&mut self, a: &'a str) -> (&'a str, i32) {
         let (result, _) = *self.set.get(a).unwrap();
 
@@ -24,13 +31,6 @@ impl<'a> DisjointSet<'a> {
         *self.set.get(a).unwrap()
     }
 
-    fn insert(&mut self, a: &'a str, b: &'a str) {
-        self.set.entry(a).or_insert((a, 1));
-        self.set.entry(b).or_insert((b, 1));
-
-        self.union(a, b);
-    }
-
     fn union(&mut self, a: &'a str, b: &'a str) {
         let ((a, a_size), (b, b_size)) = (self.find(a), self.find(b));
 
@@ -38,8 +38,13 @@ impl<'a> DisjointSet<'a> {
             return;
         }
 
-        self.set.insert(b, (a, a_size));
-        self.set.entry(a).and_modify(|c| (*c).1 += b_size);
+        if a_size > b_size {
+            self.set.insert(b, (a, a_size));
+            self.set.entry(a).and_modify(|c| (*c).1 += b_size);
+        } else {
+            self.set.insert(a, (b, b_size));
+            self.set.entry(b).and_modify(|c| (*c).1 += a_size);
+        }
     }
 
     fn get_size(&mut self, a: &'a str) -> i32 {
