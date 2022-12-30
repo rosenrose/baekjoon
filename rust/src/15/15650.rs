@@ -32,12 +32,17 @@ fn combination(
         return;
     }
 
-    for i in start..nums.len() - (m as usize - 1) {
-        if selected.contains(&nums[i]) {
+    for (i, &num) in nums
+        .iter()
+        .enumerate()
+        .skip(start)
+        .take(nums.len() - m as usize + 1)
+    {
+        if selected.contains(&num) {
             continue;
         }
 
-        selected.push(nums[i]);
+        selected.push(num);
 
         combination(nums, m - 1, i + 1, selected, output);
 

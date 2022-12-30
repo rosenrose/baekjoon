@@ -32,8 +32,8 @@ fn combination_with_replacement(
         return;
     }
 
-    for i in start..nums.len() {
-        selected.push(nums[i]);
+    for (i, &num) in nums.iter().enumerate().skip(start) {
+        selected.push(num);
 
         combination_with_replacement(nums, m - 1, i, selected, output);
 

@@ -11,51 +11,39 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
-    input.next();
-    let m = input.next().unwrap();
+    let (_, m) = (input.next(), input.next().unwrap());
 
     let mut nums: Vec<_> = input.collect();
     nums.sort();
 
     let mut selected = Vec::new();
-    let mut result = HashSet::new();
 
-    permutation(&nums, m, 0, &mut selected, &mut result);
-
-    let mut result: Vec<_> = result.iter().collect();
-    result.sort_unstable();
-
-    for arr in result {
-        for num in arr {
-            write!(output, "{num} ").unwrap()
-        }
-        writeln!(output, "").unwrap();
-    }
+    permutation(&nums, m, &mut selected, &mut output);
 
     print!("{output}");
 }
 
-fn permutation(
-    nums: &Vec<i32>,
-    m: i32,
-    start: usize,
-    selected: &mut Vec<usize>,
-    result: &mut HashSet<Vec<i32>>,
-) {
+fn permutation(nums: &Vec<i32>, m: i32, selected: &mut Vec<usize>, output: &mut String) {
     if m == 0 {
-        result.insert(selected.iter().map(|&i| nums[i]).collect());
+        for num in selected.iter().map(|&i| nums[i]) {
+            write!(output, "{num} ").unwrap();
+        }
+        writeln!(output, "").unwrap();
 
         return;
     }
 
-    for (i, _) in nums.iter().enumerate().skip(start) {
-        if selected.contains(&i) {
+    let mut visited = HashSet::new();
+
+    for (i, num) in nums.iter().enumerate() {
+        if selected.contains(&i) || visited.contains(&num) {
             continue;
         }
 
         selected.push(i);
+        visited.insert(num);
 
-        permutation(nums, m - 1, 0, selected, result);
+        permutation(nums, m - 1, selected, output);
 
         selected.pop();
     }

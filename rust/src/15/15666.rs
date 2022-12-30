@@ -11,26 +11,14 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
-    input.next();
-    let m = input.next().unwrap();
+    let (_, m) = (input.next(), input.next().unwrap());
 
     let mut nums: Vec<_> = input.collect();
     nums.sort();
 
     let mut selected = Vec::new();
-    let mut result = HashSet::new();
 
-    combination_with_replacement(&nums, m, 0, &mut selected, &mut result);
-
-    let mut result: Vec<_> = result.iter().collect();
-    result.sort_unstable();
-
-    for arr in result {
-        for num in arr {
-            write!(output, "{num} ").unwrap()
-        }
-        writeln!(output, "").unwrap();
-    }
+    combination_with_replacement(&nums, m, 0, &mut selected, &mut output);
 
     print!("{output}");
 }
@@ -40,18 +28,28 @@ fn combination_with_replacement(
     m: i32,
     start: usize,
     selected: &mut Vec<usize>,
-    result: &mut HashSet<Vec<i32>>,
+    output: &mut String,
 ) {
     if m == 0 {
-        result.insert(selected.iter().map(|&i| nums[i]).collect());
+        for num in selected.iter().map(|&i| nums[i]) {
+            write!(output, "{num} ").unwrap();
+        }
+        writeln!(output, "").unwrap();
 
         return;
     }
 
-    for i in start..nums.len() {
-        selected.push(i);
+    let mut visited = HashSet::new();
 
-        combination_with_replacement(nums, m - 1, i, selected, result);
+    for (i, &num) in nums.iter().enumerate().skip(start) {
+        if visited.contains(&num) {
+            continue;
+        }
+
+        selected.push(i);
+        visited.insert(num);
+
+        combination_with_replacement(nums, m - 1, i, selected, output);
 
         selected.pop();
     }

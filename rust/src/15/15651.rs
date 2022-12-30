@@ -10,13 +10,13 @@ fn main() {
         let nums: Vec<_> = (1..=n).collect();
         let mut selected = Vec::new();
 
-        product(&nums, m, 0, &mut selected, &mut output);
+        product(&nums, m, &mut selected, &mut output);
 
         print!("{output}");
     }
 }
 
-fn product(nums: &Vec<i32>, m: i32, start: usize, selected: &mut Vec<i32>, output: &mut String) {
+fn product(nums: &Vec<i32>, m: i32, selected: &mut Vec<i32>, output: &mut String) {
     if m == 0 {
         for num in selected {
             write!(output, "{num} ").unwrap();
@@ -26,10 +26,10 @@ fn product(nums: &Vec<i32>, m: i32, start: usize, selected: &mut Vec<i32>, outpu
         return;
     }
 
-    for &num in nums.iter().skip(start) {
+    for &num in nums {
         selected.push(num);
 
-        product(nums, m - 1, 0, selected, output);
+        product(nums, m - 1, selected, output);
 
         selected.pop();
     }

@@ -10,8 +10,7 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
-    input.next();
-    let m = input.next().unwrap();
+    let (_, m) = (input.next(), input.next().unwrap());
 
     let mut nums: Vec<_> = input.collect();
     nums.sort();
@@ -39,12 +38,17 @@ fn combination(
         return;
     }
 
-    for i in start..nums.len() - (m as usize - 1) {
-        if selected.contains(&nums[i]) {
+    for (i, &num) in nums
+        .iter()
+        .enumerate()
+        .skip(start)
+        .take(nums.len() - m as usize + 1)
+    {
+        if selected.contains(&num) {
             continue;
         }
 
-        selected.push(nums[i]);
+        selected.push(num);
 
         combination(nums, m - 1, i + 1, selected, output);
 

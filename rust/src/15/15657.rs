@@ -10,8 +10,7 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
-    input.next();
-    let m = input.next().unwrap();
+    let (_, m) = (input.next(), input.next().unwrap());
 
     let mut nums: Vec<_> = input.collect();
     nums.sort();
@@ -39,8 +38,8 @@ fn combination_with_replacement(
         return;
     }
 
-    for i in start..nums.len() {
-        selected.push(nums[i]);
+    for (i, &num) in nums.iter().enumerate().skip(start) {
+        selected.push(num);
 
         combination_with_replacement(nums, m - 1, i, selected, output);
 
