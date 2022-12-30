@@ -51,5 +51,5 @@ fn main() {
 }
 
 fn distance_of_points((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> f64 {
-    ((x1 - x2).pow(2) as f64 + (y1 - y2).pow(2) as f64).sqrt()
+    ((x1 - x2) as f64).hypot((y1 - y2) as f64)
 }
