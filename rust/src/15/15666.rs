@@ -31,8 +31,8 @@ fn combination_with_replacement(
     output: &mut String,
 ) {
     if m == 0 {
-        for num in selected.iter().map(|&i| nums[i]) {
-            write!(output, "{num} ").unwrap();
+        for &i in selected.iter() {
+            write!(output, "{} ", nums[i]).unwrap();
         }
         writeln!(output, "").unwrap();
 

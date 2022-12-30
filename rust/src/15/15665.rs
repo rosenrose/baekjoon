@@ -25,8 +25,8 @@ fn main() {
 
 fn product(nums: &Vec<i32>, m: i32, selected: &mut Vec<usize>, output: &mut String) {
     if m == 0 {
-        for num in selected.iter().map(|&i| nums[i]) {
-            write!(output, "{num} ").unwrap();
+        for &i in selected.iter() {
+            write!(output, "{} ", nums[i]).unwrap();
         }
         writeln!(output, "").unwrap();
 
