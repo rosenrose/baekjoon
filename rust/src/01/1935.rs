@@ -14,22 +14,21 @@ fn main() {
     let mut stack = Vec::new();
 
     for ch in formula.chars() {
-        match ch {
-            'A'..='Z' => stack.push(nums[(ch as u8 - offset) as usize]),
-            op => {
-                let (b, a) = (stack.pop().unwrap(), stack.pop().unwrap());
-
-                let result = match op {
-                    '+' => a + b,
-                    '-' => a - b,
-                    '*' => a * b,
-                    '/' => a / b,
-                    _ => 0.0,
-                };
-
-                stack.push(result);
-            }
+        if matches!(ch, 'A'..='Z') {
+            stack.push(nums[(ch as u8 - offset) as usize]);
+            continue;
         }
+
+        let (b, a) = (stack.pop().unwrap(), stack.pop().unwrap());
+        let result = match ch {
+            '+' => a + b,
+            '-' => a - b,
+            '*' => a * b,
+            '/' => a / b,
+            _ => 0.0,
+        };
+
+        stack.push(result);
     }
 
     println!("{:.2}", stack.pop().unwrap());

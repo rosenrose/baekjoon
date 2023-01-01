@@ -7,9 +7,12 @@ fn main() {
     for input in buf.lines().take_while(|&input| input != "#") {
         let checksum: usize = input
             .char_indices()
-            .map(|(i, c)| match c {
-                'A'..='Z' => (i + 1) * (c as u8 - 'A' as u8 + 1) as usize,
-                _ => 0,
+            .map(|(i, c)| {
+                if matches!(c, 'A'..='Z') {
+                    (i + 1) * (c as u8 - 'A' as u8 + 1) as usize
+                } else {
+                    0
+                }
             })
             .sum();
 

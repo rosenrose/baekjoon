@@ -12,9 +12,10 @@ fn main() {
         writeln!(
             output,
             "{}",
-            match password.len() {
-                6..=9 => "yes",
-                _ => "no",
+            if matches!(password.len(), 6..=9) {
+                "yes"
+            } else {
+                "no"
             }
         )
         .unwrap();
