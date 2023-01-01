@@ -4,8 +4,8 @@ fn main() {
     let mut buf = String::new();
     stdin().read_to_string(&mut buf).unwrap();
 
-    const N: i32 = 1_000_000;
-    let (mut min, mut max) = (N, -N);
+    const MAX: i32 = 1_000_000;
+    let (mut min, mut max) = (MAX, -MAX);
 
     buf.split_ascii_whitespace()
         .skip(1)
