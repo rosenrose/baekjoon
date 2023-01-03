@@ -7,12 +7,9 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let (mut hour, mut minute, cooking_time) = (
-        input.next().unwrap(),
-        input.next().unwrap(),
-        input.next().unwrap(),
-    );
+    let (mut hour, mut minute, cooking_time) = (input(), input(), input());
 
     minute += cooking_time;
 

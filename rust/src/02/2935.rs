@@ -5,12 +5,9 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.lines();
-    let (a, operator, b) = (
-        input.next().unwrap(),
-        input.next().unwrap(),
-        input.next().unwrap(),
-    );
+    let mut input = || input.next().unwrap();
 
+    let (a, operator, b) = (input(), input(), input());
     let (greater, less) = if a.len() > b.len() { (a, b) } else { (b, a) };
 
     let result = match operator {

@@ -6,15 +6,11 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
     for i in 1.. {
-        let (a, op, b) = (
-            parse_int(input.next().unwrap()),
-            input.next().unwrap(),
-            parse_int(input.next().unwrap()),
-        );
-
+        let (a, op, b) = (parse_int(input()), input(), parse_int(input()));
         let cmp = match op {
             ">" => a > b,
             ">=" => a >= b,

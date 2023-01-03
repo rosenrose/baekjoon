@@ -5,12 +5,9 @@ fn main() {
     stdin().read_to_string(&mut buf).unwrap();
 
     let mut input = buf.split_ascii_whitespace();
-    let (a, b, c) = (
-        input.next().unwrap(),
-        input.next().unwrap(),
-        input.next().unwrap(),
-    );
+    let mut input = || input.next().unwrap();
 
+    let (a, b, c) = (input(), input(), input());
     let mut table = vec![vec![vec![0; a.len() + 1]; b.len() + 1]; c.len() + 1];
     let mut max_len = 0;
 

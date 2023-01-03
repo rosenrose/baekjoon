@@ -7,14 +7,10 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let (a, b, c) = (
-        input.next().unwrap(),
-        input.next().unwrap(),
-        input.next().unwrap(),
-    );
-    let balance = a + b;
-    let price = c * 2;
+    let balance = input() + input();
+    let price = input() * 2;
 
     println!(
         "{}",
