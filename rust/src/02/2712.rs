@@ -19,8 +19,6 @@ fn main() {
             _ => (0.0, ""),
         };
 
-        let converted = (converted * 10000.0).round() / 10000.0;
-
         println!("{converted:.4} {unit}");
     }
 }

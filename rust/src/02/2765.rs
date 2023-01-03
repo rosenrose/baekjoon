@@ -18,9 +18,6 @@ fn main() {
             let distance = diameter * PI * rotate / (5280.0 * 12.0);
             let mph = distance * 3600.0 / seconds;
 
-            let distance = (distance * 100.0).round() / 100.0;
-            let mph = (mph * 100.0).round() / 100.0;
-
             println!("Trip #{i}: {distance:.2} {mph:.2}");
         });
 }

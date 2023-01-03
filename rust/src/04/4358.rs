@@ -21,7 +21,6 @@ fn main() {
 
     for (tree, &count) in tree_counts {
         let percentage = (count as f64 / total as f64) * 100.0;
-        let percentage = (percentage * 10000.0).round() / 10000.0;
 
         writeln!(output, "{tree} {percentage:.4}").unwrap();
     }
