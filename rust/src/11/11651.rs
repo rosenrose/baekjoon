@@ -11,20 +11,15 @@ fn main() {
     let mut output = String::new();
 
     let mut coords: Vec<_> = (0..input.next().unwrap())
-        .map(|_| (input.next().unwrap(), input.next().unwrap()))
+        .map(|_| {
+            let (x, y) = (input.next().unwrap(), input.next().unwrap());
+            (y, x)
+        })
         .collect();
 
-    coords.sort_unstable_by(
-        |(x1, y1), (x2, y2)| {
-            if y1 == y2 {
-                x1.cmp(x2)
-            } else {
-                y1.cmp(y2)
-            }
-        },
-    );
+    coords.sort_unstable();
 
-    for (x, y) in coords {
+    for (y, x) in coords {
         writeln!(output, "{x} {y}").unwrap();
     }
 

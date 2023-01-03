@@ -14,15 +14,7 @@ fn main() {
         .map(|_| (input.next().unwrap(), input.next().unwrap()))
         .collect();
 
-    coords.sort_unstable_by(
-        |(x1, y1), (x2, y2)| {
-            if x1 == x2 {
-                y1.cmp(y2)
-            } else {
-                x1.cmp(x2)
-            }
-        },
-    );
+    coords.sort_unstable();
 
     for (x, y) in coords {
         writeln!(output, "{x} {y}").unwrap();
