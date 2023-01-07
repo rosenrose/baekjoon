@@ -12,7 +12,7 @@ fn main() {
     stdin.read_line(&mut buf).unwrap();
     writeln!(stdout, "").unwrap();
 
-    let input = read_to_string(stdin()).unwrap();
+    let buf = read_to_string(stdin()).unwrap();
 }
 
 fn parse_int(buf: &str) -> i32 {
