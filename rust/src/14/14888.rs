@@ -1,4 +1,4 @@
-use std::io::{stdin, Read};
+use std::io;
 
 #[derive(Copy, Clone)]
 enum Ops {
@@ -11,9 +11,7 @@ enum Ops {
 const MAX: i32 = 1_000_000_000;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());

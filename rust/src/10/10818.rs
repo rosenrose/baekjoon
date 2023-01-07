@@ -1,9 +1,7 @@
-use std::io::{stdin, Read};
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     const MAX: i32 = 1_000_000;
     let (mut min, mut max) = (MAX, -MAX);
 

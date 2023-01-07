@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 use std::fmt;
-use std::io::{stdin, Read};
+use std::io;
 
 const BILLION_SQUARE: i128 = 1_000_000_000_000_000_000;
 
@@ -82,10 +82,9 @@ impl fmt::Display for BigInt {
 }
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
+
     let a = BigInt::parse(input.next().unwrap());
     let b = BigInt::parse(input.next().unwrap());
 

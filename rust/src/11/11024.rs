@@ -1,9 +1,7 @@
-use std::io::{stdin, Read};
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     for input in buf.lines().skip(1) {
         let sum: i32 = input
             .split_whitespace()

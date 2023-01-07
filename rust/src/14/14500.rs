@@ -1,9 +1,7 @@
-use std::io::{stdin, Read};
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     const TETROMINOES: [[(usize, usize); 4]; 19] = [
         // I
         [(0, 0), (0, 1), (0, 2), (0, 3)],

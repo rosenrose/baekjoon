@@ -1,12 +1,11 @@
-use std::io::{stdin, Read};
+use std::io;
 
 const M: i64 = 1_000_000_007;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().map(|s| s.parse::<i64>().unwrap());
+
     let (a, x) = (input.next().unwrap(), input.next().unwrap());
 
     println!("{}", pow_rem(a, x));

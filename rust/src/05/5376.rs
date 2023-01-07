@@ -1,5 +1,5 @@
 use std::fmt;
-use std::io::{stdin, Read};
+use std::io;
 use std::ops::AddAssign;
 
 struct Fraction {
@@ -37,8 +37,7 @@ impl fmt::Display for Fraction {
 }
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
 
     for line in buf.lines().skip(1) {
         let mut fraction = Fraction::from(0, 1);

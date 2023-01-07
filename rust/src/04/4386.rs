@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::io::{stdin, Read};
+use std::io;
 
 #[derive(Eq, PartialEq, Copy, Clone, Hash)]
 struct Point<'a>(&'a str, &'a str);
@@ -52,9 +52,7 @@ impl<'a> DisjointSet<'a> {
 }
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let n: i32 = input.next().unwrap().parse().unwrap();

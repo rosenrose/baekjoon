@@ -1,12 +1,10 @@
 use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::fmt::Write;
-use std::io::{stdin, Read};
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());

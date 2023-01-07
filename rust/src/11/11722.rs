@@ -1,10 +1,8 @@
 use std::cmp::Reverse;
-use std::io::{stdin, Read};
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut a = buf
         .split_ascii_whitespace()
         .skip(1)

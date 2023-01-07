@@ -1,11 +1,9 @@
 use std::collections::HashMap;
 use std::fmt::Write;
-use std::io::{stdin, Read};
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.lines();
     let mut output = String::new();
 

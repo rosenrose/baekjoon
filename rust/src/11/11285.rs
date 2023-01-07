@@ -1,4 +1,4 @@
-use std::io::{stdin, Read};
+use std::io;
 
 fn main() {
     const FIRSTS: [char; 19] = [
@@ -12,9 +12,7 @@ fn main() {
     const MEDIAL_COUNT: u32 = 21;
     const LAST_COUNT: u32 = LASTS.len() as u32 + 1;
 
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().map(|s| s.chars().nth(0));
 
     let first = input.next().unwrap().unwrap();

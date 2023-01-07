@@ -1,13 +1,12 @@
-use std::io::{stdin, stdout, BufWriter, Read, Write};
+use std::io::{self, stdout, BufWriter, Write};
 
 fn main() {
     let stdout = stdout();
     let mut stdout = BufWriter::new(stdout.lock());
 
-    let mut buf = String::new();
-    stdin.read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
+
     let offset = 'A' as u8;
 
     for _ in 0..parse_int(input.next().unwrap()) {

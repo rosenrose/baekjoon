@@ -1,9 +1,7 @@
-use std::io::{stdin, Read};
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let room: Vec<_> = buf.lines().skip(1).map(str::to_owned).collect();
 
     let count_rest = |row: &String| {
