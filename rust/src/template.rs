@@ -1,10 +1,10 @@
 use std::fmt::Write;
 use std::io;
-use std::io::{stdin, stdout, BufRead, BufWriter, Write};
+use std::io::{self, BufRead, Write};
 
 fn main() {
-    let (stdin, stdout) = (stdin(), stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), BufWriter::new(stdout.lock()));
+    let (stdin, stdout) = (io::stdin(), io::stdout());
+    let (mut stdin, mut stdout) = (stdin.lock(), io::BufWriter::new(stdout.lock()));
 
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();

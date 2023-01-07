@@ -1,8 +1,8 @@
-use std::io::{self, stdout, BufWriter, Write};
+use std::io::{self, Write};
 
 fn main() {
-    let stdout = stdout();
-    let mut stdout = BufWriter::new(stdout.lock());
+    let stdout = io::stdout();
+    let mut stdout = io::BufWriter::new(stdout.lock());
 
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
