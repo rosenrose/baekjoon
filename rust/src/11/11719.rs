@@ -1,17 +1,14 @@
-use std::io::{stdin, Read};
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
-    print!("{buf}");
-
-    /* loop {
-        buf.clear();
-
-        match std::io::stdin().read_line(&mut buf).unwrap() {
-            0 => return,
-            _ => print!("{buf}"),
-        };
-    } */
+    print!("{}", io::read_to_string(io::stdin()).unwrap());
 }
+
+/* loop {
+    buf.clear();
+
+    match std::io::stdin().read_line(&mut buf).unwrap() {
+        0 => return,
+        _ => print!("{buf}"),
+    };
+} */

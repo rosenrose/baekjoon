@@ -1,7 +1,7 @@
-use std::io::{read_to_string, stdin};
+use std::io;
 
 fn main() {
-    let buf = read_to_string(stdin()).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());

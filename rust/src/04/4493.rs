@@ -1,11 +1,9 @@
 use std::cmp::Ordering;
 use std::fmt::Write;
-use std::io::{stdin, Read};
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    stdin().read_to_string(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
     let mut input = || input.next().unwrap();
     let mut output = String::new();
@@ -15,12 +13,8 @@ fn main() {
 
         let (a, b) = (0..games)
             .map(|_| match (input(), input()) {
-                ("R", "P") => (0, 1),
-                ("R", "S") => (1, 0),
-                ("P", "R") => (1, 0),
-                ("P", "S") => (0, 1),
-                ("S", "R") => (0, 1),
-                ("S", "P") => (1, 0),
+                ("R", "P") | ("P", "S") | ("S", "R") => (0, 1),
+                ("R", "S") | ("P", "R") | ("S", "P") => (1, 0),
                 _ => (0, 0),
             })
             .reduce(|a, b| (a.0 + b.0, a.1 + b.1))

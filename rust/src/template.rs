@@ -1,5 +1,5 @@
 use std::fmt::Write;
-use std::io::{read_to_string, stdin};
+use std::io;
 use std::io::{stdin, stdout, BufRead, BufWriter, Write};
 
 fn main() {
@@ -12,7 +12,7 @@ fn main() {
     stdin.read_line(&mut buf).unwrap();
     writeln!(stdout, "").unwrap();
 
-    let buf = read_to_string(stdin()).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
 }
 
 fn parse_int(buf: &str) -> i32 {
