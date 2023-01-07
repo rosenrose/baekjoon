@@ -23,7 +23,7 @@ fn main() {
                 ("S", "P") => (1, 0),
                 _ => (0, 0),
             })
-            .reduce(|(a1, b1), (a2, b2)| (a1 + a2, b1 + b2))
+            .reduce(|a, b| (a.0 + b.0, a.1 + b.1))
             .unwrap();
 
         let result = match a.cmp(&b) {
