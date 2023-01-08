@@ -1,18 +1,18 @@
-use std::collections::HashSet;
 use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let nums: HashSet<_> = buf
+    let input = buf
         .split_ascii_whitespace()
-        .skip(1)
-        .map(|s| s.parse::<i32>().unwrap())
-        .collect();
+        .map(|s| s.parse::<i32>().unwrap());
 
-    let mut nums: Vec<_> = nums.iter().collect();
-    nums.sort_unstable();
+    let mut nums = [false; 2001];
 
-    for num in nums {
-        print!("{num} ");
+    for num in input.skip(1) {
+        nums[(num + 1000) as usize] = true;
+    }
+
+    for (num, _) in nums.iter().enumerate().filter(|(_, &b)| b) {
+        print!("{} ", num as i32 - 1000);
     }
 }
