@@ -47,7 +47,7 @@ fn main() {
         let non_repeat = tokens.next().unwrap();
 
         for (i, c) in non_repeat.char_indices() {
-            fraction += Fraction::from(c.to_digit(10).unwrap() as i64, 10_i64.pow(i as u32 + 1));
+            fraction += Fraction::from(c as i64 - '0' as i64, 10_i64.pow(i as u32 + 1));
         }
 
         if let Some(repeating) = tokens.next() {

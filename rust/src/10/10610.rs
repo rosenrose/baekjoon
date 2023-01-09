@@ -7,7 +7,7 @@ fn main() {
         .trim()
         .chars()
         .map(|c| {
-            sum += c.to_digit(10).unwrap();
+            sum += c as i32 - '0' as i32;
             c
         })
         .collect();

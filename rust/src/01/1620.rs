@@ -10,16 +10,15 @@ fn main() {
     let n: i32 = input.next().unwrap().parse().unwrap();
     input.next();
 
-    let (pokemon_name, pokemon_index) = (1..=n).fold(
-        (HashMap::new(), Vec::new()),
-        |(mut names, mut indices), i| {
-            let name = input.next().unwrap();
-            names.insert(name, i);
-            indices.push(name);
+    let mut pokemon_name = HashMap::new();
+    let mut pokemon_index = Vec::new();
 
-            (names, indices)
-        },
-    );
+    for i in 1..=n {
+        let name = input.next().unwrap();
+
+        pokemon_name.insert(name, i);
+        pokemon_index.push(name);
+    }
 
     for query in input {
         (match query.parse::<usize>() {

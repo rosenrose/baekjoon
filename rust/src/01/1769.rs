@@ -14,10 +14,10 @@ fn main() {
     println!("{count}\n{}", if sum % 3 == 0 { "YES" } else { "NO" });
 }
 
-fn convert(num: &str, count: &mut i32) -> u32 {
+fn convert(num: &str, count: &mut i32) -> i32 {
     *count += 1;
 
-    let sum: u32 = num.chars().map(|c| c.to_digit(10).unwrap()).sum();
+    let sum: i32 = num.chars().map(|c| c as i32 - '0' as i32).sum();
 
     if sum < 10 {
         sum

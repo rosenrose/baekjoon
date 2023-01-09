@@ -6,13 +6,12 @@ fn main() {
 
     let mut nums = buf.split_whitespace().map(|s| {
         s.chars()
-            .map(|c| c.to_digit(10).unwrap() as i32)
-            .collect::<VecDeque<i32>>()
+            .map(|c| c as i32 - '0' as i32)
+            .collect::<VecDeque<_>>()
     });
 
-    let a: VecDeque<i32> = nums.next().unwrap();
-    let b: VecDeque<i32> = nums.next().unwrap();
-
+    let a = nums.next().unwrap();
+    let b = nums.next().unwrap();
     let sum = add_by_array(a, b);
 
     for i in sum {
@@ -30,7 +29,7 @@ fn add_by_array(mut a: VecDeque<i32>, mut b: VecDeque<i32>) -> VecDeque<i32> {
         b.push_front(0);
     }
 
-    let mut sum: VecDeque<i32> = a.iter().zip(b).map(|(a, b)| a + b).collect();
+    let mut sum: VecDeque<_> = a.iter().zip(b).map(|(a, b)| a + b).collect();
 
     for i in (1..longer).rev() {
         if sum[i] < 10 {

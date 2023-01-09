@@ -45,7 +45,7 @@ fn main() {
     let integer = parse_int(integer);
     let fraction = decimal
         .char_indices()
-        .map(|(i, c)| Fraction::from(c.to_digit(10).unwrap() as i64, 10_i64.pow(i as u32 + 1)))
+        .map(|(i, c)| Fraction::from(c as i64 - '0' as i64, 10_i64.pow(i as u32 + 1)))
         .fold(Fraction::from(integer, 1), |acc, a| acc + a);
 
     let papers = fraction.denominator;

@@ -7,13 +7,14 @@ fn main() {
     let mut output = String::new();
 
     buf.trim().char_indices().for_each(|(i, c)| {
-        let digit = c.to_digit(10).unwrap();
+        let digit = c as u8 - '0' as u8;
 
-        if i == 0 {
-            write!(output, "{digit:b}").unwrap();
+        (if i == 0 {
+            write!(output, "{digit:b}")
         } else {
-            write!(output, "{digit:03b}").unwrap();
-        }
+            write!(output, "{digit:03b}")
+        })
+        .unwrap();
     });
 
     print!("{output}");

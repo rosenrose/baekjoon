@@ -39,8 +39,8 @@ impl fmt::Display for Fraction {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
 
-    for line in buf.lines() {
-        let mut number = line.split('.');
+    for input in buf.lines() {
+        let mut number = input.split('.');
         let integer = Fraction::from(number.next().unwrap().parse().unwrap(), 1);
         let decimal = number.next().unwrap();
 
@@ -51,7 +51,7 @@ fn main() {
         let mut fraction = integer;
 
         for (i, c) in non_repeat.char_indices() {
-            fraction += Fraction::from(c.to_digit(10).unwrap() as i32, 10_i32.pow(i as u32 + 1));
+            fraction += Fraction::from(c as i32 - '0' as i32, 10_i32.pow(i as u32 + 1));
         }
 
         fraction += Fraction::from(
@@ -65,7 +65,7 @@ fn main() {
             .unwrap(),
         );
 
-        println!("{line} = {fraction}");
+        println!("{input} = {fraction}");
     }
 }
 

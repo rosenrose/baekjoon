@@ -8,8 +8,8 @@ fn main() {
     while num.len() > 1 {
         num = num
             .chars()
-            .map(|c| c.to_digit(10).unwrap())
-            .product::<u32>()
+            .map(|c| c as i32 - '0' as i32)
+            .product::<i32>()
             .to_string();
 
         step += 1;

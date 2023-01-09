@@ -2,10 +2,9 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace();
 
-    for num in input.take_while(|&num| num != "0") {
-        let mut sum: u32 = num.chars().map(|c| c.to_digit(10).unwrap()).sum();
+    for num in buf.lines().take_while(|&num| num != "0") {
+        let mut sum: i32 = num.chars().map(|c| c as i32 - '0' as i32).sum();
 
         if sum < 10 {
             println!("{sum}");

@@ -13,19 +13,8 @@ fn is_hansu(num: i32) -> bool {
         return true;
     }
 
-    let digits: Vec<i32> = num
-        .to_string()
-        .chars()
-        .map(|c| c.to_digit(10).unwrap() as i32)
-        .collect();
-
+    let digits: Vec<_> = num.to_string().chars().map(|c| c as i8).collect();
     let diff = digits[0] - digits[1];
 
-    for i in 2..digits.len() {
-        if diff != digits[i - 1] - digits[i] {
-            return false;
-        }
-    }
-
-    true
+    (2..digits.len()).all(|i| digits[i - 1] - digits[i] == diff)
 }

@@ -3,14 +3,13 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n = buf.trim();
-
     let n_multiple_16 = format!("{n}0000");
     let n_padded = format!("0000{n}");
 
-    let mut n_multiple_17: Vec<u32> = n_multiple_16
+    let mut n_multiple_17: Vec<_> = n_multiple_16
         .chars()
         .zip(n_padded.chars())
-        .map(|(a, b)| a.to_digit(2).unwrap() + b.to_digit(2).unwrap())
+        .map(|(a, b)| a as u8 + b as u8 - '0' as u8 * 2)
         .collect();
 
     for i in (1..n_multiple_17.len()).rev() {

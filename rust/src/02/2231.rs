@@ -2,10 +2,10 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let radix = buf.trim().chars().count() as i32;
-    let n: i32 = buf.trim().parse().unwrap();
+    let input = buf.trim();
+    let n: i32 = input.parse().unwrap();
 
-    let min = (n - (9 * radix)).max(1);
+    let min = (n - (9 * input.len() as i32)).max(1);
     let max = n - 1;
 
     for i in min..=max {
@@ -19,9 +19,6 @@ fn main() {
 }
 
 fn d(n: i32) -> i32 {
-    n + n
-        .to_string()
-        .chars()
-        .map(|c| c.to_digit(10).unwrap() as i32)
-        .sum::<i32>()
+    let digit_sum: i32 = n.to_string().chars().map(|c| c as i32 - '0' as i32).sum();
+    n + digit_sum
 }

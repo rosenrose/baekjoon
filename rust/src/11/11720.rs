@@ -7,7 +7,7 @@ fn main() {
         .next_back()
         .unwrap()
         .chars()
-        .map(|c| c.to_digit(10).unwrap() as i32)
+        .map(|c| c as i32 - '0' as i32)
         .sum();
 
     println!("{sum}");

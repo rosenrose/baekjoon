@@ -16,9 +16,6 @@ fn main() {
 }
 
 fn d(n: i32) -> i32 {
-    n + n
-        .to_string()
-        .chars()
-        .map(|c| c.to_digit(10).unwrap() as i32)
-        .sum::<i32>()
+    let digit_sum: i32 = n.to_string().chars().map(|c| c as i32 - '0' as i32).sum();
+    n + digit_sum
 }

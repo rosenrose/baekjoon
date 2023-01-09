@@ -15,11 +15,7 @@ fn main() {
 }
 
 fn parse_bigint(input: &str) -> VecDeque<i8> {
-    input
-        .chars()
-        .rev()
-        .map(|c| c.to_digit(10).unwrap() as i8)
-        .collect()
+    input.chars().rev().map(|c| c as i8 - '0' as i8).collect()
 }
 
 fn print(bigint: &VecDeque<i8>) {

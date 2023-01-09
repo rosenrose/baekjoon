@@ -5,7 +5,7 @@ fn main() {
     let score = buf.trim();
     let (left, right) = score.split_at(score.len() / 2);
 
-    let digit_sum = |s: &str| s.chars().map(|c| c.to_digit(10).unwrap()).sum::<u32>();
+    let digit_sum = |s: &str| s.chars().map(|c| c as i32 - '0' as i32).sum::<i32>();
 
     println!(
         "{}",

@@ -2,9 +2,7 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let s = buf.trim();
-
-    println!("{}", unzipped_len(s));
+    println!("{}", unzipped_len(buf.trim()));
 }
 
 fn unzipped_len(input: &str) -> usize {
@@ -37,7 +35,7 @@ fn unzipped_len(input: &str) -> usize {
             _ => {
                 if paren_stack.is_empty() {
                     len += 1;
-                    repeat_times = c.to_digit(10).unwrap() as usize;
+                    repeat_times = c as usize - '0' as usize;
                 } else {
                     paren_str.push(c);
                 }

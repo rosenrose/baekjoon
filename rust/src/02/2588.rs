@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.lines();
 
     let (a, b) = (parse_int(input.next().unwrap()), input.next().unwrap());
-    let result = b.chars().rev().map(|ch| ch.to_digit(10).unwrap() * a);
+    let result = b.chars().rev().map(|ch| (ch as i32 - '0' as i32) * a);
 
     for r in result {
         println!("{r}");
@@ -13,6 +13,6 @@ fn main() {
     println!("{}", a * parse_int(b));
 }
 
-fn parse_int(buf: &str) -> u32 {
+fn parse_int(buf: &str) -> i32 {
     buf.parse().unwrap()
 }
