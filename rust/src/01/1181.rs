@@ -8,7 +8,7 @@ fn main() {
     let mut output = String::new();
 
     let words: HashSet<_> = input.skip(1).collect();
-    let mut words: Vec<_> = words.iter().collect();
+    let mut words = Vec::from_iter(words);
 
     words.sort_by(|a, b| {
         if a.len() == b.len() {

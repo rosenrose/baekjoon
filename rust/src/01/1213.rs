@@ -10,7 +10,7 @@ fn main() {
         .map(|c| (c, input.matches(c).count()))
         .collect();
 
-    let mut counts: Vec<_> = counts.into_iter().collect();
+    let mut counts = Vec::from_iter(counts);
     counts.sort();
 
     let odds: Vec<_> = counts
