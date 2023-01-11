@@ -2,9 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [x, y] = parse_int_vec(&buf)[..] {
-        println!("{}", if x < y { y - x } else { x + y });
-    }
+    let [x, y] = parse_int_vec(&buf)[..] else { return };
+
+    println!("{}", if x < y { y - x } else { x + y });
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i32> {
