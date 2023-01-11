@@ -13,9 +13,7 @@ fn main() {
     let mut nums: Vec<_> = input.collect();
     nums.sort();
 
-    let mut selected = Vec::new();
-
-    combination(&nums, m, 0, &mut selected, &mut output);
+    combination(&nums, m, 0, &mut Vec::new(), &mut output);
 
     print!("{output}");
 }

@@ -3,10 +3,9 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: usize = buf.trim().parse().unwrap();
-    let mut selected = vec![0; n];
     let mut count = 0;
 
-    n_queen(n, 0, &mut selected, &mut count);
+    n_queen(n, 0, &mut vec![0; n], &mut count);
 
     println!("{count}");
 }

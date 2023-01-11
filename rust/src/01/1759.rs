@@ -12,9 +12,7 @@ fn main() {
     let mut chars: Vec<_> = input.collect();
     chars.sort();
 
-    let mut selected = String::new();
-
-    combination(&chars, len, 0, &mut selected);
+    combination(&chars, len, 0, &mut String::new());
 }
 
 fn combination(chars: &Vec<&str>, m: i32, start: usize, selected: &mut String) {

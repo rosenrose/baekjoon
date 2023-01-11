@@ -5,15 +5,13 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let mut output = String::new();
+    let [n, m] = parse_int_vec(&buf)[..] else { return };
 
-    if let [n, m] = parse_int_vec(&buf)[..] {
-        let nums: Vec<_> = (1..=n).collect();
-        let mut selected = Vec::new();
+    let nums: Vec<_> = (1..=n).collect();
 
-        product(&nums, m, &mut selected, &mut output);
+    product(&nums, m, &mut Vec::new(), &mut output);
 
-        print!("{output}");
-    }
+    print!("{output}");
 }
 
 fn product(nums: &Vec<i32>, m: i32, selected: &mut Vec<i32>, output: &mut String) {

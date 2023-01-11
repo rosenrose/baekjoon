@@ -13,9 +13,7 @@ fn main() {
     let mut nums: Vec<_> = input.collect();
     nums.sort();
 
-    let mut selected = Vec::new();
-
-    permutation(&nums, m, &mut selected, &mut output);
+    permutation(&nums, m, &mut Vec::new(), &mut output);
 
     print!("{output}");
 }

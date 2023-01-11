@@ -13,9 +13,7 @@ fn main() {
     let mut nums: Vec<_> = input.collect();
     nums.sort();
 
-    let mut selected = Vec::new();
-
-    product(&nums, m, &mut selected, &mut output);
+    product(&nums, m, &mut Vec::new(), &mut output);
 
     print!("{output}");
 }

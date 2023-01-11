@@ -30,8 +30,7 @@ fn main() {
         })
         .collect();
 
-    let mut selected = Vec::new();
-    let (min, max) = formula_min_max(0, &operators, &mut selected, &nums);
+    let (min, max) = formula_min_max(0, &operators, &mut Vec::new(), &nums);
 
     println!("{max}\n{min}");
 }
