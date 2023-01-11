@@ -29,13 +29,10 @@ fn main() {
                     })
                     .unwrap();
 
-                    match map.get(&key).unwrap() {
-                        1 => {
-                            map.remove(&key);
-                        }
-                        value => {
-                            map.insert(key, value - 1);
-                        }
+                    if let Some(1) = map.get(&key) {
+                        map.remove(&key);
+                    } else {
+                        map.entry(key).and_modify(|c| *c -= 1);
                     }
                 }
                 _ => (),

@@ -2,29 +2,29 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [a, b] = parse_int_vec(&buf)[..] {
-        let range = b - a;
-        let sqrt = |n: i64| {
-            let n_sqrt = (n as f64).sqrt() as i64;
+    let [a, b] = parse_int_vec(&buf)[..] else { return };
+    let range = b - a;
 
-            if (n_sqrt - 1) * (n_sqrt - 1) <= n && n_sqrt * n_sqrt > n {
-                n_sqrt - 1
-            } else {
-                n_sqrt
-            }
-        };
+    let sqrt = |n: i64| {
+        let n_sqrt = (n as f64).sqrt() as i64;
 
-        let square_nums_count = sqrt(b) - sqrt(a);
-
-        if square_nums_count == 0 {
-            println!("0");
-            return;
+        if (n_sqrt - 1) * (n_sqrt - 1) <= n && n_sqrt * n_sqrt > n {
+            n_sqrt - 1
+        } else {
+            n_sqrt
         }
+    };
 
-        let gcd = get_gcd(square_nums_count, range);
+    let square_nums_count = sqrt(b) - sqrt(a);
 
-        println!("{}/{}", square_nums_count / gcd, range / gcd);
+    if square_nums_count == 0 {
+        println!("0");
+        return;
     }
+
+    let gcd = get_gcd(square_nums_count, range);
+
+    println!("{}/{}", square_nums_count / gcd, range / gcd);
 }
 
 // fn sqrt_binary_search(n: i64, left: i64, right: i64) -> i64 {

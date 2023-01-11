@@ -6,11 +6,10 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [n, m] = parse_int_vec(&buf)[..] {
-        let mut cache = HashMap::new();
+    let [n, m] = parse_int_vec(&buf)[..] else { return };
+    let mut cache = HashMap::new();
 
-        println!("{}", fibo_rem(get_gcd(n, m), &mut cache));
-    }
+    println!("{}", fibo_rem(get_gcd(n, m), &mut cache));
 }
 
 fn fibo_rem(n: i64, cache: &mut HashMap<i64, i64>) -> i64 {

@@ -4,9 +4,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [n, k] = parse_int_vec(&buf)[..] {
-        println!("{}", combination_rem(n, k));
-    }
+    let [n, k] = parse_int_vec(&buf)[..] else { return };
+
+    println!("{}", combination_rem(n, k));
 }
 
 fn combination_rem(n: i64, r: i64) -> i64 {

@@ -2,16 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [n, a] = parse_int_vec(&buf)[..] {
-        println!(
-            "{} {}",
-            n - a,
-            match mod_inverse(a, n) {
-                Some(i) => i,
-                None => -1,
-            }
-        );
-    }
+    let [n, a] = parse_int_vec(&buf)[..] else { return };
+
+    println!("{} {}", n - a, mod_inverse(a, n).unwrap_or(-1));
 }
 
 fn mod_inverse(n: i64, modular: i64) -> Option<i64> {

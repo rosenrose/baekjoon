@@ -2,9 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [ab, bc, cd] = parse_float_vec(&buf)[..] {
-        println!("{}", ab * cd / bc);
-    }
+    let [ab, bc, cd] = parse_float_vec(&buf)[..] else { return };
+
+    println!("{}", ab * cd / bc);
 }
 
 fn parse_float_vec(buf: &String) -> Vec<f32> {

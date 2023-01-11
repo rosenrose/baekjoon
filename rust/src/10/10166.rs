@@ -4,39 +4,38 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [d1, d2] = parse_int_vec(&buf)[..] {
-        let euler_phi = get_euler_phi(d2 as usize);
-        let mut checked = vec![false; (d2 + 1) as usize];
-        let mut count = 0;
+    let [d1, d2] = parse_int_vec(&buf)[..] else { return };
+    let euler_phi = get_euler_phi(d2 as usize);
+    let mut checked = vec![false; (d2 + 1) as usize];
+    let mut count = 0;
 
-        for mut d in d1..=d2 {
-            let mut divisors = (1..)
-                .take_while(|i| i * i <= d)
-                .fold(Vec::new(), |mut acc, i| {
-                    if d % i == 0 {
-                        acc.push(i);
-                        acc.push(d / i);
-                    }
-
-                    acc
-                });
-            divisors.dedup();
-
-            for divisor in divisors {
-                let div = divisor as usize;
-
-                if checked[div] {
-                    d -= euler_phi[div];
+    for mut d in d1..=d2 {
+        let mut divisors = (1..)
+            .take_while(|i| i * i <= d)
+            .fold(Vec::new(), |mut acc, i| {
+                if d % i == 0 {
+                    acc.push(i);
+                    acc.push(d / i);
                 }
 
-                checked[div] = true;
+                acc
+            });
+        divisors.dedup();
+
+        for divisor in divisors {
+            let div = divisor as usize;
+
+            if checked[div] {
+                d -= euler_phi[div];
             }
 
-            count += d;
+            checked[div] = true;
         }
 
-        println!("{count}");
+        count += d;
     }
+
+    println!("{count}");
 }
 
 fn get_euler_phi(num: usize) -> Vec<i32> {

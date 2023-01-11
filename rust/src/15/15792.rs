@@ -2,13 +2,13 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [mut a, b] = parse_int_vec(&buf)[..] {
-        print!("{}.", a / b);
+    let [mut a, b] = parse_int_vec(&buf)[..] else { return };
 
-        for _ in 0..1000 {
-            a = a % b * 10;
-            print!("{}", a / b);
-        }
+    print!("{}.", a / b);
+
+    for _ in 0..1000 {
+        a = a % b * 10;
+        print!("{}", a / b);
     }
 }
 
