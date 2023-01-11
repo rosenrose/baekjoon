@@ -9,11 +9,7 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
-    while let Some(n) = input.next() {
-        if n == 0 {
-            break;
-        }
-
+    while let Some(n @ 1..) = input.next() {
         let mut gcd_set = HashSet::<i32>::new();
         let mut gcd_accum = HashSet::new();
 

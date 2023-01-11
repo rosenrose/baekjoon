@@ -49,11 +49,7 @@ fn main() {
         .map(|s| s.parse::<i64>().unwrap());
     let mut output = String::new();
 
-    while let (Some(m), Some(n)) = (input.next(), input.next()) {
-        if (m, n) == (0, 0) {
-            break;
-        }
-
+    while let (Some(m @ 2..), Some(n @ 2..)) = (input.next(), input.next()) {
         let mut fraction = Fraction::from(m, n);
 
         while fraction.numerator > 1 {

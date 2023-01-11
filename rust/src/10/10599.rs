@@ -5,10 +5,9 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next();
 
-    while let (Some(a), Some(b), Some(c), Some(d)) =
-        (input.next(), input.next(), input.next(), input.next())
-    {
+    while let (Some(a), Some(b), Some(c), Some(d)) = (input(), input(), input(), input()) {
         if (a, b, c, d) == (0, 0, 0, 0) {
             return;
         }

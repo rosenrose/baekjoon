@@ -6,11 +6,7 @@ fn main() {
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
 
-    while let Some(n) = input.next() {
-        if n == 0 {
-            return;
-        }
-
+    while let Some(n @ 1..) = input.next() {
         let mut arr: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
         arr.dedup();
 

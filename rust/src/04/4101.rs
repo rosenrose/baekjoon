@@ -6,11 +6,7 @@ fn main() {
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
 
-    while let (Some(a), Some(b)) = (input.next(), input.next()) {
-        if (a, b) == (0, 0) {
-            return;
-        }
-
+    while let (Some(a @ 1..), Some(b @ 1..)) = (input.next(), input.next()) {
         println!("{}", if a > b { "Yes" } else { "No" })
     }
 }

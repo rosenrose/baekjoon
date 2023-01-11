@@ -6,11 +6,7 @@ fn main() {
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
 
-    while let (Some(m), Some(f)) = (input.next(), input.next()) {
-        if (m, f) == (0, 0) {
-            return;
-        }
-
+    while let (Some(m @ 1..), Some(f @ 1..)) = (input.next(), input.next()) {
         println!("{}", m + f);
     }
 }

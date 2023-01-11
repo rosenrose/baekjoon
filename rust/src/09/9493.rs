@@ -5,12 +5,9 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    while let (Some(m), Some(a), Some(b)) = (input.next(), input.next(), input.next()) {
-        if (m, a, b) == (0, 0, 0) {
-            return;
-        }
-
+    while let (m @ 1.., a @ 1.., b @ 1..) = (input(), input(), input()) {
         let train_seconds = m as f64 * 3600.0 / a as f64;
         let plane_seconds = m as f64 * 3600.0 / b as f64;
         let diff = (train_seconds - plane_seconds).round() as i32;

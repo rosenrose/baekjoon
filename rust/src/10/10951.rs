@@ -8,8 +8,8 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
-    while let Some(a) = input.next() {
-        writeln!(output, "{}", a + input.next().unwrap()).unwrap();
+    while let (Some(a), Some(b)) = (input.next(), input.next()) {
+        writeln!(output, "{}", a + b).unwrap();
     }
 
     print!("{output}");

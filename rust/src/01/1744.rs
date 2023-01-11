@@ -9,19 +9,11 @@ fn main() {
 
     let (mut sum, mut product_sum) = (0, 0);
 
-    while let Some(&n) = nums.get(1) {
-        if n > 0 {
-            break;
-        }
-
+    while let Some(_n @ ..=0) = nums.get(1) {
         product_sum += nums.remove(0) * nums.remove(0);
     }
 
-    while let Some(&n) = nums.iter().nth_back(1) {
-        if n <= 0 {
-            break;
-        }
-
+    while let Some(_n @ 1..) = nums.iter().nth_back(1) {
         let (a, b) = (nums.pop().unwrap(), nums.pop().unwrap());
 
         if a == 1 || b == 1 {

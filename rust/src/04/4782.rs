@@ -8,11 +8,7 @@ fn main() {
         .map(|s| s.parse::<i64>().unwrap());
     let mut output = String::new();
 
-    while let (Some(b), Some(n)) = (input.next(), input.next()) {
-        if (b, n) == (0, 0) {
-            break;
-        }
-
+    while let (Some(b @ 1..), Some(n @ 1..)) = (input.next(), input.next()) {
         let step = n / get_gcd(b, n);
 
         for m in (step..=2 * n)
@@ -31,7 +27,6 @@ fn main() {
 
             write!(output, "{a}/{m} ").unwrap();
         }
-
         writeln!(output, "").unwrap();
     }
 

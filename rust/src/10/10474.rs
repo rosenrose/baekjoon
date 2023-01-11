@@ -42,12 +42,9 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
-    while let (Some(n), Some(d)) = (input.next(), input.next()) {
-        if (n, d) == (0, 0) {
-            break;
-        }
-
-        writeln!(output, "{}", MixedFraction::from(0, n, d).to_mixed()).unwrap();
+    while let (Some(n @ 1..), Some(d @ 1..)) = (input.next(), input.next()) {
+        let fraction = MixedFraction::from(0, n, d).to_mixed();
+        writeln!(output, "{fraction}").unwrap();
     }
 
     print!("{output}");

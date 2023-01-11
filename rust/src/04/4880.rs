@@ -9,11 +9,15 @@ fn main() {
     let mut output = String::new();
 
     while let (Some(a), Some(b), Some(c)) = (input.next(), input.next(), input.next()) {
-        match c - b {
-            0 => break,
-            diff if diff == b - a => writeln!(output, "AP {}", c + diff).unwrap(),
-            _ => writeln!(output, "GP {}", c * (c / b)).unwrap(),
+        if (a, b, c) == (0, 0, 0) {
+            break;
         }
+
+        (match c - b {
+            diff if diff == b - a => writeln!(output, "AP {}", c + diff),
+            _ => writeln!(output, "GP {}", c * (c / b)),
+        })
+        .unwrap()
     }
 
     print!("{output}");

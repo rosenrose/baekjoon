@@ -1,3 +1,4 @@
+use std::fmt::Write;
 use std::io;
 
 fn main() {
@@ -5,27 +6,31 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut output = String::new();
 
-    while let Some(k) = input.next() {
-        if k == 0 {
-            break;
-        }
-
+    while let Some(k @ 7..) = input.next() {
         let nums: Vec<_> = (0..k).map(|_| input.next().unwrap()).collect();
-        let mut selected = Vec::new();
 
-        combination(&nums, 6, 0, &mut selected);
+        combination(&nums, 6, 0, &mut Vec::new(), &mut output);
 
-        println!("");
+        writeln!(output, "").unwrap();
     }
+
+    print!("{output}")
 }
 
-fn combination(nums: &Vec<i32>, m: i32, start: usize, selected: &mut Vec<i32>) {
+fn combination(
+    nums: &Vec<i32>,
+    m: i32,
+    start: usize,
+    selected: &mut Vec<i32>,
+    output: &mut String,
+) {
     if m == 0 {
         for num in selected {
-            print!("{num} ");
+            write!(output, "{num} ").unwrap();
         }
-        println!("");
+        writeln!(output, "").unwrap();
 
         return;
     }
@@ -37,7 +42,7 @@ fn combination(nums: &Vec<i32>, m: i32, start: usize, selected: &mut Vec<i32>) {
 
         selected.push(nums[i]);
 
-        combination(nums, m - 1, i + 1, selected);
+        combination(nums, m - 1, i + 1, selected, output);
 
         selected.pop();
     }

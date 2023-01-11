@@ -39,19 +39,16 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
-    let mut input = || input.next();
+    let mut input = || input.next().unwrap();
 
-    while let (Some(m), Some(n)) = (input(), input()) {
-        if (m, n) == (0, 0) {
-            return;
-        }
-
+    while let (m @ 1.., n) = (input(), input()) {
         let mut disjoint_set = DisjointSet::make(m);
         let mut total_weight = 0;
         let mut edges: Vec<_> = (0..n)
             .map(|_| {
-                let (x, y, z) = (input().unwrap(), input().unwrap(), input().unwrap() as i32);
+                let (x, y, z) = (input(), input(), input() as i32);
                 total_weight += z;
+
                 (x, y, z)
             })
             .collect();
