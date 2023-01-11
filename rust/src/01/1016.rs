@@ -2,22 +2,21 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [min, max] = parse_int_vec(&buf)[..] {
-        let prime_nums = get_prime_nums((max as f64).sqrt() as usize);
-        let mut square_free_num_sieve = vec![true; (max - min + 1) as usize];
+    let [min, max] = parse_int_vec(&buf)[..] else { return };
+    let prime_nums = get_prime_nums((max as f64).sqrt() as usize);
+    let mut square_free_num_sieve = vec![true; (max - min + 1) as usize];
 
-        for p in prime_nums {
-            let p_square = p * p;
-            let start = p_square * (min / p_square);
-            let start = if start < min { start + p_square } else { start };
+    for p in prime_nums {
+        let p_square = p * p;
+        let start = p_square * (min / p_square);
+        let start = if start < min { start + p_square } else { start };
 
-            for square_num in (start..=max).step_by(p_square as usize) {
-                square_free_num_sieve[(square_num - min) as usize] = false;
-            }
+        for square_num in (start..=max).step_by(p_square as usize) {
+            square_free_num_sieve[(square_num - min) as usize] = false;
         }
-
-        println!("{}", square_free_num_sieve.iter().filter(|&&s| s).count());
     }
+
+    println!("{}", square_free_num_sieve.iter().filter(|&&s| s).count());
 }
 
 fn get_prime_nums(num: usize) -> Vec<i64> {

@@ -2,11 +2,10 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [n, r, c] = parse_int_vec(&buf)[..] {
-        let size = 2_u32.pow(n);
+    let [n, r, c] = parse_int_vec(&buf)[..] else { return };
+    let size = 2_u32.pow(n);
 
-        println!("{}", visit_z(r, c, 0, 0, size, 0));
-    }
+    println!("{}", visit_z(r, c, 0, 0, size, 0));
 }
 
 fn visit_z(r: u32, c: u32, x: u32, y: u32, n: u32, start: u32) -> u32 {

@@ -6,11 +6,8 @@ fn main() {
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
 
-    while let Some(a) = input.next() {
-        if a == 0 {
-            return;
-        }
-
+    loop {
+        let a @ 1.. = input.next().unwrap() else { break };
         let leaves = (0..a).fold(1, |leaf, _| {
             (leaf * input.next().unwrap()) - input.next().unwrap()
         });
