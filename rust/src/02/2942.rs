@@ -2,24 +2,24 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [r, g] = parse_int_vec(&buf)[..] {
-        let gcd = get_gcd(r, g);
-        let mut divisors = (1..)
-            .take_while(|i| i * i <= gcd)
-            .fold(Vec::new(), |mut acc, i| {
-                if gcd % i == 0 {
-                    acc.push(i);
-                    acc.push(gcd / i);
-                }
+    let [r, g] = parse_int_vec(&buf)[..] else { return };
+    let gcd = get_gcd(r, g);
 
-                acc
-            });
+    let mut divisors = (1..)
+        .take_while(|i| i * i <= gcd)
+        .fold(Vec::new(), |mut acc, i| {
+            if gcd % i == 0 {
+                acc.push(i);
+                acc.push(gcd / i);
+            }
 
-        divisors.dedup();
+            acc
+        });
 
-        for divisor in divisors {
-            println!("{divisor} {} {}", r / divisor, g / divisor);
-        }
+    divisors.dedup();
+
+    for divisor in divisors {
+        println!("{divisor} {} {}", r / divisor, g / divisor);
     }
 }
 

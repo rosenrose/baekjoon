@@ -2,9 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [a, b, c] = parse_int_vec(&buf)[..] {
-        println!("{}", pow_rem(a, b, c));
-    }
+    let [a, b, c] = parse_int_vec(&buf)[..] else { return };
+
+    println!("{}", pow_rem(a, b, c));
 }
 
 fn pow_rem(base: i64, exp: i64, m: i64) -> i64 {

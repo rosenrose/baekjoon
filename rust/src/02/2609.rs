@@ -2,12 +2,11 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [a, b] = parse_int_vec(&buf)[..] {
-        let gcd = get_gcd(a, b);
-        let lcm = a / gcd * b;
+    let [a, b] = parse_int_vec(&buf)[..] else { return };
+    let gcd = get_gcd(a, b);
+    let lcm = a / gcd * b;
 
-        println!("{gcd}\n{lcm}");
-    }
+    println!("{gcd}\n{lcm}");
 }
 
 fn get_gcd(mut a: i32, mut b: i32) -> i32 {

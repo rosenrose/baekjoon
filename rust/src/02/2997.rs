@@ -7,12 +7,12 @@ fn main() {
     let mut nums = parse_int_vec(&buf);
     nums.sort();
 
-    if let [a, b, c] = nums[..] {
-        match (b - a).cmp(&(c - b)) {
-            Ordering::Equal => println!("{}", c + (c - b)),
-            Ordering::Less => println!("{}", b + (b - a)),
-            Ordering::Greater => println!("{}", a + (c - b)),
-        }
+    let [a, b, c] = nums[..] else { return };
+
+    match (b - a).cmp(&(c - b)) {
+        Ordering::Equal => println!("{}", c + (c - b)),
+        Ordering::Less => println!("{}", b + (b - a)),
+        Ordering::Greater => println!("{}", a + (c - b)),
     }
 }
 

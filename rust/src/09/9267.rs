@@ -2,9 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [a, b, s] = parse_int_vec(&buf)[..] {
-        println!("{}", if is_solvable(a, b, s) { "YES" } else { "NO" });
-    }
+    let [a, b, s] = parse_int_vec(&buf)[..] else { return };
+
+    println!("{}", if is_solvable(a, b, s) { "YES" } else { "NO" });
 }
 
 fn is_solvable(a: i128, b: i128, s: i128) -> bool {

@@ -28,11 +28,10 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if let [a, b] = parse_int_vec(&buf)[..] {
-        let sequence = Sequence::new();
+    let [a, b] = parse_int_vec(&buf)[..] else { return };
+    let sequence = Sequence::new();
 
-        println!("{}", sequence.skip(a - 1).take(b - a + 1).sum::<i32>());
-    }
+    println!("{}", sequence.skip(a - 1).take(b - a + 1).sum::<i32>());
 }
 
 fn parse_int_vec(buf: &String) -> Vec<usize> {
