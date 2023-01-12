@@ -6,10 +6,10 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let (score_a, score_b) = (0..input.next().unwrap()).fold((100, 100), |acc, _| {
-        let (a, b) = acc;
-        let (a_num, b_num) = (input.next().unwrap(), input.next().unwrap());
+    let (score_a, score_b) = (0..input()).fold((100, 100), |(a, b), _| {
+        let (a_num, b_num) = (input(), input());
 
         match a_num.cmp(&b_num) {
             Ordering::Less => (a - b_num, b),

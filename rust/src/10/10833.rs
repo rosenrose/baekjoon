@@ -5,10 +5,10 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let n = input.next().unwrap();
-    let extra_apple = (0..n).fold(0, |acc, _| {
-        let (student, apple) = (input.next().unwrap(), input.next().unwrap());
+    let extra_apple = (0..input()).fold(0, |acc, _| {
+        let (student, apple) = (input(), input());
         acc + (apple % student)
     });
 

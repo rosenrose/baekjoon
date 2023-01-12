@@ -6,11 +6,10 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input.next().unwrap() {
-        let (a, b) = (input.next().unwrap(), input.next().unwrap());
-
+    for (a, b) in (0..input()).map(|_| (input(), input())) {
         writeln!(output, "{}", (a / b) * (a / b)).unwrap();
     }
 

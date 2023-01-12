@@ -14,17 +14,16 @@ fn main() {
 
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().map(|s| s.chars().nth(0));
+    let mut input = || input.next().unwrap();
 
-    let first = input.next().unwrap().unwrap();
-    let medial = input.next().unwrap().unwrap();
-
+    let (first, medial) = (input().unwrap(), input().unwrap());
     let mut code = '가' as u32;
 
     code += FIRSTS.iter().position(|&c| c == first).unwrap() as u32 * (MEDIAL_COUNT * LAST_COUNT);
 
     code += (medial as u32 - 'ㅏ' as u32) * LAST_COUNT;
 
-    code += match input.next().unwrap() {
+    code += match input() {
         Some(last) => LASTS.iter().position(|&c| c == last).unwrap() as u32 + 1,
         None => 0,
     };

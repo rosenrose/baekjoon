@@ -4,13 +4,14 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n = parse_int(input.next().unwrap());
+    let n = parse_int(input());
     let mut stack = Vec::new();
 
     for _ in 0..n {
-        let result = match input.next().unwrap() {
+        let result = match input() {
             "pop" => stack.pop().unwrap_or(-1),
             "size" => stack.len() as i32,
             "empty" => {
@@ -22,7 +23,7 @@ fn main() {
             }
             "top" => *stack.last().unwrap_or(&-1),
             _ => {
-                stack.push(parse_int(input.next().unwrap()));
+                stack.push(parse_int(input()));
                 continue;
             }
         };

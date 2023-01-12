@@ -5,6 +5,7 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
 
     let sum_accum = (1..=1_000_000).fold(vec![0, 1], |mut acc, mut num| {
         let mut count = 0;
@@ -21,9 +22,7 @@ fn main() {
         acc
     });
 
-    for _ in 0..input.next().unwrap() {
-        let (n, m) = (input.next().unwrap(), input.next().unwrap());
-
+    for (n, m) in (0..input()).map(|_| (input(), input())) {
         println!("{}", sum_accum[m + 1] - sum_accum[n]);
     }
 }

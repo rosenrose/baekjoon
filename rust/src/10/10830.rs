@@ -69,11 +69,12 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let (n, b) = (input.next().unwrap(), input.next().unwrap());
+    let (n, b) = (input(), input());
     let a = Matrix::from(
         (0..n)
-            .map(|_| (0..n).map(|_| input.next().unwrap() as i32).collect())
+            .map(|_| (0..n).map(|_| input() as i32).collect())
             .collect(),
     );
 
