@@ -7,30 +7,7 @@ fn main() {
     let mut output = String::new();
 
     let (t, p) = (input.next().unwrap(), input.next().unwrap());
-    let p_chars: Vec<_> = p.chars().collect();
-
-    let partial_match = get_partial_match(&p_chars);
-    // println!("{partial_match:?}");
-
-    let (mut count, mut start) = (0, 0);
-    let mut indices = Vec::new();
-
-    for (index, t_char) in t.char_indices() {
-        while p_chars[start] != t_char && start > 0 {
-            start = partial_match[start - 1];
-        }
-
-        if p_chars[start] == t_char {
-            if start < p.len() - 1 {
-                start += 1;
-            } else {
-                count += 1;
-                indices.push(index + 1 - p.len());
-
-                start = partial_match[start];
-            }
-        }
-    }
+    let (count, indices) = kmp_with_index(t.as_bytes(), p.as_bytes());
 
     writeln!(output, "{count}").unwrap();
 
@@ -41,7 +18,33 @@ fn main() {
     print!("{output}");
 }
 
-fn get_partial_match(chars: &Vec<char>) -> Vec<usize> {
+fn kmp_with_index(source: &[u8], target: &[u8]) -> (i32, Vec<usize>) {
+    let (mut count, mut start) = (0, 0);
+    let mut indices = Vec::new();
+
+    let partial_match = get_partial_match(target);
+    // println!("{partial_match:?}");
+    for (i, &s) in source.iter().enumerate() {
+        while target[start] != s && start > 0 {
+            start = partial_match[start - 1];
+        }
+
+        if target[start] == s {
+            if start < target.len() - 1 {
+                start += 1;
+            } else {
+                count += 1;
+                indices.push(i + 1 - target.len());
+
+                start = partial_match[start];
+            }
+        }
+    }
+
+    (count, indices)
+}
+
+fn get_partial_match(chars: &[u8]) -> Vec<usize> {
     let mut partial_match = vec![0; chars.len()];
     let mut start = 0;
 
