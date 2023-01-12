@@ -5,19 +5,18 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let mut min_time = i32::MAX;
-
-    for _ in 0..input.next().unwrap() {
-        let (a, b) = (input.next().unwrap(), input.next().unwrap());
+    let min_time = (0..input()).fold(i32::MAX, |min, _| {
+        let (a, b) = (input(), input());
 
         if a > b {
-            continue;
+            return min;
         }
 
         let time = a.max(b);
-        min_time = time.min(min_time);
-    }
+        time.min(min)
+    });
 
     println!("{}", if min_time == i32::MAX { -1 } else { min_time });
 }

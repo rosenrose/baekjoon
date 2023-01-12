@@ -6,11 +6,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
-
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input.next().unwrap() {
-        writeln!(output, "{}", input.next().unwrap() + input.next().unwrap()).unwrap();
+    for (a, b) in (0..input()).map(|_| (input(), input())) {
+        writeln!(output, "{}", a + b).unwrap();
     }
 
     print!("{output}");

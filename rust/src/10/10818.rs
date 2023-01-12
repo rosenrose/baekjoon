@@ -2,16 +2,15 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    const MAX: i32 = 1_000_000;
-    let (mut min, mut max) = (MAX, -MAX);
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    buf.split_ascii_whitespace()
+    const MAX: i32 = 1_000_000;
+
+    let (min, max) = input
         .skip(1)
-        .map(|s| s.parse::<i32>().unwrap())
-        .for_each(|num| {
-            min = num.min(min);
-            max = num.max(max);
-        });
+        .fold((MAX, -MAX), |(min, max), num| (num.min(min), num.max(max)));
 
     println!("{min} {max}");
 }

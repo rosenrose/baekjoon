@@ -5,9 +5,10 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let lcm1 = get_lcm(input.next().unwrap(), input.next().unwrap());
-    let lcm2 = input.next().unwrap();
+    let lcm1 = get_lcm(input(), input());
+    let lcm2 = input();
 
     let mut divisors = (1..)
         .take_while(|i| i * i <= lcm2)

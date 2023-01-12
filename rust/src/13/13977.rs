@@ -8,16 +8,15 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
     let factorial_rem = (1..=4_000_000).fold(vec![1], |mut acc, i| {
-        acc.push((*acc.last().unwrap() * i) % M);
+        acc.push((acc.last().unwrap() * i) % M);
         acc
     });
 
-    for _ in 0..input.next().unwrap() {
-        let (n, k) = (input.next().unwrap(), input.next().unwrap());
-
+    for (n, k) in (0..input()).map(|_| (input(), input())) {
         writeln!(output, "{}", combination_rem(n, k, &factorial_rem)).unwrap();
     }
 

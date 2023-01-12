@@ -5,11 +5,9 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let coords: Vec<_> = (0..input.next().unwrap())
-        .map(|_| (input.next().unwrap(), input.next().unwrap()))
-        .collect();
-
+    let coords: Vec<_> = (0..input()).map(|_| (input(), input())).collect();
     let len: u32 = (0..coords.len())
         .map(|i| {
             let (a, b) = if i == 0 {

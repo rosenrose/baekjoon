@@ -6,11 +6,10 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input.next().unwrap() {
-        let (x, y) = (input.next().unwrap(), input.next().unwrap());
-
+    for (x, y) in (0..input()).map(|_| (input(), input())) {
         let is_time = matches!((x, y), (0..=23, 0..=59));
         let is_date = matches!(x, 1..=12)
             && (1..=(match x {

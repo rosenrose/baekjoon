@@ -5,16 +5,17 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    for _ in 0..input.next().unwrap() {
-        let n = input.next().unwrap();
+    for _ in 0..input() {
+        let n = input();
 
         if n == 1 {
             println!("INFINITY");
             continue;
         }
 
-        let nums: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
+        let nums: Vec<_> = (0..n).map(|_| input()).collect();
         let diffs = (1..nums.len()).map(|i| nums[i].abs_diff(nums[i - 1]));
         let gcd = get_gcd(diffs);
 

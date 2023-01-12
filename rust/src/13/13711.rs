@@ -6,10 +6,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let n = input.next().unwrap();
-    let a: HashMap<_, _> = (0..n).map(|i| (input.next().unwrap(), i)).collect();
-    let mut index_arr = (0..n).map(|_| a.get(&input.next().unwrap()).unwrap());
+    let n = input();
+    let a: HashMap<_, _> = (0..n).map(|i| (input(), i)).collect();
+    let mut index_arr = (0..n).map(|_| a.get(&input()).unwrap());
 
     let mut lis = vec![index_arr.next().unwrap()];
 

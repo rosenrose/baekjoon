@@ -1,7 +1,6 @@
 use std::io;
 
 fn main() {
-    let buf = io::read_to_string(io::stdin()).unwrap();
     const TETROMINOES: [[(usize, usize); 4]; 19] = [
         // I
         [(0, 0), (0, 1), (0, 2), (0, 3)],
@@ -31,15 +30,14 @@ fn main() {
         [(0, 1), (1, 0), (1, 1), (2, 1)],
     ];
     // print_tetrominos(TETROMINOES);
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let (n, m) = (input.next().unwrap(), input.next().unwrap());
-    let paper: Vec<Vec<_>> = (0..n)
-        .map(|_| (0..m).map(|_| input.next().unwrap()).collect())
-        .collect();
+    let (n, m) = (input(), input());
+    let paper: Vec<Vec<_>> = (0..n).map(|_| (0..m).map(|_| input()).collect()).collect();
 
     let mut max_sum = 0;
 
