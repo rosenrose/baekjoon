@@ -10,14 +10,14 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let k = input.next().unwrap();
+    let k = input();
     let mut direction_counts = [0; 5];
 
     let mut sides: Vec<_> = (0..6)
         .map(|_| {
-            let (direction, length) = (input.next().unwrap(), input.next().unwrap());
-
+            let (direction, length) = (input(), input());
             direction_counts[direction as usize] += 1;
 
             Side { direction, length }

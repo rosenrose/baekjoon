@@ -5,10 +5,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let n = input.next().unwrap();
-    let mut a: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
-    let mut b: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
+    let n = input();
+    let mut a: Vec<_> = (0..n).map(|_| input()).collect();
+    let mut b: Vec<_> = (0..n).map(|_| input()).collect();
 
     a.sort();
     b.sort_by(|x, y| y.cmp(x));

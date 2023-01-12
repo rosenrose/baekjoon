@@ -5,10 +5,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i128>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    for _ in 0..input.next().unwrap() {
-        let students = input.next().unwrap();
-        let candies: i128 = (0..students).map(|_| input.next().unwrap()).sum();
+    for _ in 0..input() {
+        let students = input();
+        let candies: i128 = (0..students).map(|_| input()).sum();
 
         println!("{}", if candies % students == 0 { "YES" } else { "NO" });
     }

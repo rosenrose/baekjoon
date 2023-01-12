@@ -5,12 +5,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let (n, m) = (input.next().unwrap(), input.next().unwrap());
+    let (n, m) = (input(), input());
     let mut parse_matrix = |n: i32, m: i32| -> Vec<Vec<_>> {
-        (0..n)
-            .map(|_| (0..m).map(|_| input.next().unwrap()).collect())
-            .collect()
+        (0..n).map(|_| (0..m).map(|_| input()).collect()).collect()
     };
 
     let (a, b) = (parse_matrix(n, m), parse_matrix(n, m));

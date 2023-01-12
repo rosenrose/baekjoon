@@ -3,12 +3,11 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let n: i32 = input.next().unwrap().parse().unwrap();
+    let mut input = || input.next().unwrap();
 
-    for _ in 0..n {
-        let value: f64 = input.next().unwrap().parse().unwrap();
-        let unit = input.next().unwrap();
+    let n: i32 = input().parse().unwrap();
 
+    for (value, unit) in (0..n).map(|_| (input().parse::<f64>().unwrap(), input())) {
         let (converted, unit) = match unit {
             "kg" => (value * 2.2046, "lb"),
             "lb" => (value * 0.4536, "kg"),

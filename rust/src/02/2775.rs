@@ -5,9 +5,9 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    for _ in 0..input.next().unwrap() {
-        let (k, n) = (input.next().unwrap(), input.next().unwrap());
+    for (k, n) in (0..input()).map(|_| (input(), input())) {
         let residents = residents_at_floor(k, n);
 
         println!("{}", residents[n - 1])

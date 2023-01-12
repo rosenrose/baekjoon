@@ -7,6 +7,7 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
     let digit_cycle: HashMap<_, _> = (0..=9)
@@ -27,9 +28,7 @@ fn main() {
         })
         .collect();
 
-    for _ in 0..input.next().unwrap() {
-        let (a, b) = (input.next().unwrap(), input.next().unwrap());
-
+    for (a, b) in (0..input()).map(|_| (input(), input())) {
         let cycle = digit_cycle.get(&(a % 10)).unwrap();
         let number = cycle[(b - 1) % cycle.len()];
 

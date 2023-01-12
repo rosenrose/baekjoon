@@ -6,11 +6,10 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i128>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input.next().unwrap() {
-        let (n, m) = (input.next().unwrap(), input.next().unwrap());
-
+    for (n, m) in (0..input()).map(|_| (input(), input())) {
         writeln!(output, "{}", combination_num(m, n)).unwrap();
     }
 

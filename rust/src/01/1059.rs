@@ -5,13 +5,12 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let mut s: Vec<_> = (0..input.next().unwrap())
-        .map(|_| input.next().unwrap())
-        .collect();
+    let mut s: Vec<_> = (0..input()).map(|_| input()).collect();
     s.sort();
 
-    let n = input.next().unwrap();
+    let n = input();
 
     if s.contains(&n) {
         println!("0");

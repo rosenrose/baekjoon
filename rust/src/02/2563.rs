@@ -5,14 +5,13 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
 
     const SIZE: usize = 10;
     let mut board = [[false; 100]; 100];
     let mut count = 0;
 
-    for _ in 0..input.next().unwrap() {
-        let (x_gap, y_gap) = (input.next().unwrap(), input.next().unwrap());
-
+    for (x_gap, y_gap) in (0..input()).map(|_| (input(), input())) {
         for y in y_gap..y_gap + SIZE {
             for x in x_gap..x_gap + SIZE {
                 if board[y][x] {

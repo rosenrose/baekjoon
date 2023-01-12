@@ -6,10 +6,10 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input.next().unwrap() {
-        let (a, b) = (input.next().unwrap(), input.next().unwrap());
+    for (a, b) in (0..input()).map(|_| (input(), input())) {
         let gcd = get_gcd(a, b);
         let lcm = a / gcd * b;
 

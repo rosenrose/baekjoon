@@ -11,13 +11,10 @@ fn main() {
 
     for _ in 0..input() {
         let (start, end) = ((input(), input()), (input(), input()));
-
         let n = input();
         let mut count = 0;
 
-        for _ in 0..n {
-            let planet = ((input(), input()), input() as f64);
-
+        for planet in (0..n).map(|_| ((input(), input()), input() as f64)) {
             let is_start_inside_planet = is_point_inside_circle(start, planet);
             let is_end_inside_planet = is_point_inside_circle(end, planet);
 

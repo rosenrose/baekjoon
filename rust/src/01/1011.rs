@@ -6,12 +6,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i64>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input.next().unwrap() {
-        let (x, y) = (input.next().unwrap(), input.next().unwrap());
+    for (x, y) in (0..input()).map(|_| (input(), input())) {
         let distance = y - x;
-
         let mut step = 0;
         let mut max_distance = 0;
 
