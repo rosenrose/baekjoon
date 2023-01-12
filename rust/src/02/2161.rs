@@ -14,7 +14,7 @@ fn main() {
     let mut cards: VecDeque<_> = (1..=n).collect();
 
     loop {
-        cards.pop_front();
+        print!("{} ", cards.pop_front().unwrap());
 
         if cards.len() == 1 {
             break;
