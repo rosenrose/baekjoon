@@ -6,19 +6,14 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let good_point = [1, 2, 3, 3, 4, 10];
-    let evil_point = [1, 2, 2, 2, 3, 5, 10];
+    let good_points = [1, 2, 3, 3, 4, 10];
+    let evil_points = [1, 2, 2, 2, 3, 5, 10];
 
-    for i in 1..=input.next().unwrap() {
-        let good: i32 = good_point
-            .iter()
-            .map(|point| point * input.next().unwrap())
-            .sum();
-        let evil: i32 = evil_point
-            .iter()
-            .map(|point| point * input.next().unwrap())
-            .sum();
+    for i in 1..=input() {
+        let good: i32 = good_points.iter().map(|point| point * input()).sum();
+        let evil: i32 = evil_points.iter().map(|point| point * input()).sum();
 
         match good.cmp(&evil) {
             Ordering::Less => println!("Battle {i}: Evil eradicates all trace of Good"),

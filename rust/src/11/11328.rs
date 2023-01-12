@@ -4,38 +4,25 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n: i32 = input.next().unwrap().parse().unwrap();
+    let n: i32 = input().parse().unwrap();
+    let char_count = |s: &str| {
+        let mut count = [0; 26];
 
-    for _ in 0..n {
-        let (a, b) = (input.next().unwrap(), input.next().unwrap());
-
-        if a.len() != b.len() {
-            writeln!(output, "Impossible").unwrap();
-            continue;
+        for ch in s.chars() {
+            count[ch as usize - 'a' as usize] += 1;
         }
 
-        let (mut a_counts, mut b_counts) = ([0; 26], [0; 26]);
+        count
+    };
 
-        for ch in a.chars() {
-            a_counts[ch as usize - 'a' as usize] += 1;
-        }
-
-        for ch in b.chars() {
-            let index = ch as usize - 'a' as usize;
-
-            if a_counts[index] == 0 {
-                break;
-            }
-
-            b_counts[index] += 1;
-        }
-
+    for (a, b) in (0..n).map(|_| (input(), input())) {
         writeln!(
             output,
             "{}",
-            if a_counts == b_counts {
+            if char_count(a) == char_count(b) {
                 "Possible"
             } else {
                 "Impossible"

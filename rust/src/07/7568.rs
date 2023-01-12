@@ -5,11 +5,10 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let n = input.next().unwrap();
-    let mut volumes: Vec<_> = (0..n)
-        .map(|_| ((input.next().unwrap(), input.next().unwrap()), 1))
-        .collect();
+    let n = input();
+    let mut volumes: Vec<_> = (0..n).map(|_| ((input(), input()), 1)).collect();
 
     for i in 0..n {
         for j in i + 1..n {

@@ -6,12 +6,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for i in 1..=input.next().unwrap() {
-        let sum = input.next().unwrap() + input.next().unwrap();
-
-        writeln!(output, "Case {i}: {sum}").unwrap();
+    for (i, (a, b)) in (1..=input()).map(|i| (i, (input(), input()))) {
+        writeln!(output, "Case {i}: {}", a + b).unwrap();
     }
 
     print!("{output}");

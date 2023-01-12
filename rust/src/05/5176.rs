@@ -6,12 +6,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<usize>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    for _ in 0..input.next().unwrap() {
-        let p = input.next().unwrap();
-        input.next();
-
-        let seats: HashSet<_> = (0..p).map(|_| input.next().unwrap()).collect();
+    for _ in 0..input() {
+        let (p, _) = (input(), input());
+        let seats: HashSet<_> = (0..p).map(|_| input()).collect();
 
         println!("{}", p - seats.len());
     }

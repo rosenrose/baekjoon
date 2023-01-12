@@ -5,13 +5,15 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    let n = input.next().unwrap();
+    let n = input();
     const MAX: i32 = 10000;
 
     let (x_min, x_max, y_min, y_max) =
         (0..n).fold((MAX, -MAX, MAX, -MAX), |(x_min, x_max, y_min, y_max), _| {
-            let (x, y) = (input.next().unwrap(), input.next().unwrap());
+            let (x, y) = (input(), input());
+
             (x_min.min(x), x_max.max(x), y_min.min(y), y_max.max(y))
         });
 

@@ -5,11 +5,10 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
 
-    for _ in 0..input.next().unwrap() {
-        let n = input.next().unwrap();
-
-        let mut stores: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
+    for _ in 0..input() {
+        let mut stores: Vec<_> = (0..input()).map(|_| input()).collect();
         stores.sort();
 
         let min = stores[0];

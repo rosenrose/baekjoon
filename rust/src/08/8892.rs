@@ -4,13 +4,14 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n = parse_int(input.next().unwrap());
+    let n = parse_int(input());
 
     'outer: for _ in 0..n {
-        let k = parse_int(input.next().unwrap());
-        let words: Vec<_> = (0..k).map(|_| input.next().unwrap()).collect();
+        let k = parse_int(input());
+        let words: Vec<_> = (0..k).map(|_| input()).collect();
 
         for i in 0..words.len() {
             for j in 0..words.len() {

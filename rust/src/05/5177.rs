@@ -3,12 +3,14 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
-    let n: i32 = input.next().unwrap().parse().unwrap();
+    let mut input = || input.next().unwrap();
+
+    let n: i32 = input().parse().unwrap();
 
     for i in 1..=n {
         println!(
             "Data Set {i}: {}",
-            if sanitize(input.next().unwrap()) == sanitize(input.next().unwrap()) {
+            if sanitize(input()) == sanitize(input()) {
                 "equal"
             } else {
                 "not equal"

@@ -54,14 +54,12 @@ impl<'a> DisjointSet<'a> {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
 
-    let n: i32 = input.next().unwrap().parse().unwrap();
+    let n: i32 = input().parse().unwrap();
+    let points: Vec<_> = (0..n).map(|_| Point(input(), input())).collect();
 
     let mut disjoint_set = DisjointSet::new();
-    let points: Vec<_> = (0..n)
-        .map(|_| Point(input.next().unwrap(), input.next().unwrap()))
-        .collect();
-
     let mut edges = Vec::new();
 
     for i in 0..points.len() - 1 {

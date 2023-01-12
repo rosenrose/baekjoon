@@ -1,20 +1,19 @@
-use std::collections::HashMap;
 use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let n: i32 = input.next().unwrap().parse().unwrap();
+    let mut input = || input.next().unwrap();
 
-    let char_count = |s: &str| -> HashMap<_, _> {
-        s.chars()
-            .map(|c| (c, s.matches(c).count() as i32))
-            .collect()
+    let n: i32 = input().parse().unwrap();
+    let char_count = |s: &str| {
+        s.chars().fold([0; 26], |mut acc, ch| {
+            acc[ch as usize - 'a' as usize] += 1;
+            acc
+        })
     };
 
-    for _ in 0..n {
-        let (a, b) = (input.next().unwrap(), input.next().unwrap());
-
+    for (a, b) in (0..n).map(|_| (input(), input())) {
         println!(
             "{a} & {b} are {}",
             if char_count(a) == char_count(b) {

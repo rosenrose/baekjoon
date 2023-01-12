@@ -6,12 +6,11 @@ fn main() {
     let mut input = buf
         .split_ascii_whitespace()
         .map(|s| s.parse::<i32>().unwrap());
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for i in 1..=input.next().unwrap() {
-        let n = input.next().unwrap();
-
-        let mut scores: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
+    for i in 1..=input() {
+        let mut scores: Vec<_> = (0..input()).map(|_| input()).collect();
         scores.sort_unstable();
 
         let min = scores[0];
