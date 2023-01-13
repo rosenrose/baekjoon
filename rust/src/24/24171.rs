@@ -6,8 +6,8 @@ use std::ops::{Add, Div, Mul, Sub};
 struct Real(i64, i64, i64, i64);
 
 impl Real {
-    fn reduced(real: Self) -> Self {
-        let (mut a, mut b, mut c, mut d) = (real.0, real.1, real.2, real.3);
+    fn reduced(&self) -> Self {
+        let (mut a, mut b, mut c, mut d) = (self.0, self.1, self.2, self.3);
 
         if c == 0 {
             d = 0;
@@ -78,32 +78,33 @@ impl Div for Real {
 struct Complex(Real, Real);
 
 impl Complex {
-    fn reduced(re: Real, im: Real) -> Self {
-        Self(Real::reduced(re), Real::reduced(im))
+    fn reduced(&self) -> Self {
+        Self(self.0.reduced(), self.1.reduced())
     }
 }
 impl Add for Complex {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self::reduced(self.0 + other.0, self.1 + other.1)
+        Self(self.0 + other.0, self.1 + other.1).reduced()
     }
 }
 impl Sub for Complex {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self::reduced(self.0 - other.0, self.1 - other.1)
+        Self(self.0 - other.0, self.1 - other.1).reduced()
     }
 }
 impl Mul for Complex {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self::reduced(
+        Self(
             self.0 * other.0 - self.1 * other.1,
             self.0 * other.1 + self.1 * other.0,
         )
+        .reduced()
     }
 }
 impl Div for Complex {
@@ -112,10 +113,11 @@ impl Div for Complex {
     fn div(self, other: Self) -> Self {
         let divisor = other.0 * other.0 + other.1 * other.1;
 
-        Self::reduced(
+        Self(
             (self.0 * other.0 + self.1 * other.1) / divisor,
             (self.1 * other.0 - self.0 * other.1) / divisor,
         )
+        .reduced()
     }
 }
 

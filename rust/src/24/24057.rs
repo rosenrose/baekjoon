@@ -6,7 +6,9 @@ use std::ops::{Add, Div, Mul, Sub};
 struct Real(i64, i64, i64, i64);
 
 impl Real {
-    fn reduced(mut a: i64, mut b: i64, mut c: i64, mut d: i64) -> Self {
+    fn reduced(&self) -> Self {
+        let (mut a, mut b, mut c, mut d) = (self.0, self.1, self.2, self.3);
+
         if c == 0 {
             d = 0;
         }
@@ -27,48 +29,52 @@ impl Add for Real {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self::reduced(
+        Self(
             self.0 * other.0,
             other.0 * self.1 + self.0 * other.1,
             other.0 * self.2 + self.0 * other.2,
             self.3,
         )
+        .reduced()
     }
 }
 impl Sub for Real {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self::reduced(
+        Self(
             self.0 * other.0,
             other.0 * self.1 - self.0 * other.1,
             other.0 * self.2 - self.0 * other.2,
             self.3,
         )
+        .reduced()
     }
 }
 impl Mul for Real {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self::reduced(
+        Self(
             self.0 * other.0,
             self.1 * other.1 + self.2 * other.2 * self.3,
             other.1 * self.2 + self.1 * other.2,
             self.3,
         )
+        .reduced()
     }
 }
 impl Div for Real {
     type Output = Self;
 
     fn div(self, other: Self) -> Self {
-        Self::reduced(
+        Self(
             self.0 * (other.1.pow(2) - other.2.pow(2) * self.3),
             other.0 * (self.1 * other.1 - self.2 * other.2 * self.3),
             other.0 * (other.1 * self.2 - self.1 * other.2),
             self.3,
         )
+        .reduced()
     }
 }
 
