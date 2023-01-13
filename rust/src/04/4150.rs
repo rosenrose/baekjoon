@@ -18,10 +18,10 @@ fn main() {
 
 fn fibo(n: i128) -> Vec<i128> {
     if n <= 1 {
-        return Vec::from([n]);
+        return vec![n];
     }
 
-    let (mut a, mut b) = (Vec::from([1]), Vec::from([1]));
+    let (mut a, mut b) = (vec![1], vec![1]);
 
     for _ in 2..n {
         let next = add(&mut a, &mut b);
