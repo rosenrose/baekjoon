@@ -9,7 +9,6 @@ fn main() {
 
     for _ in 0..n {
         let p = parse_int(input());
-
         let (_, vip) = (0..p)
             .map(|_| (parse_int(input()), input()))
             .max_by_key(|&(guarantee, _)| guarantee)

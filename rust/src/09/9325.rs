@@ -10,8 +10,7 @@ fn main() {
     let mut output = String::new();
 
     for _ in 0..input() {
-        let mut price = input();
-        let options = input();
+        let (mut price, options) = (input(), input());
 
         price += (0..options).map(|_| input() * input()).sum::<i32>();
 

@@ -14,9 +14,7 @@ fn main() {
         acc
     });
 
-    for _ in 0..input() {
-        let (i, j) = (input() as usize, input() as usize);
-
+    for (i, j) in (0..input()).map(|_| (input() as usize, input() as usize)) {
         writeln!(output, "{}", sum_accum[j] - sum_accum[i - 1]).unwrap();
     }
 

@@ -9,9 +9,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for i in 1..=input() {
-        let (a, b, c) = (input(), input(), input());
-
+    for (i, (a, b, c)) in (1..=input()).map(|i| (i, (input(), input(), input()))) {
         let is_right = match a.max(b).max(c) {
             longest if longest == a => a * a == b * b + c * c,
             longest if longest == b => b * b == a * a + c * c,

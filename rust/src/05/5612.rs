@@ -11,8 +11,7 @@ fn main() {
     let mut current = input();
     let mut max = current;
 
-    for _ in 0..n {
-        let (into, out) = (input(), input());
+    for (into, out) in (0..n).map(|_| (input(), input())) {
         current = current + into - out;
 
         if current < 0 {

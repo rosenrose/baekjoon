@@ -10,11 +10,7 @@ fn main() {
 
     let n = parse_int(input());
 
-    'outer: for _ in 0..n {
-        let p = input();
-        let len = parse_int(input());
-        let arr = input();
-
+    'outer: for (p, len, arr) in (0..n).map(|_| (input(), parse_int(input()), input())) {
         let mut arr: VecDeque<_> = if len > 0 {
             arr[1..arr.len() - 1].split(',').map(parse_int).collect()
         } else {

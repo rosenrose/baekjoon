@@ -13,9 +13,7 @@ fn main() {
     let mut adjacency_list = vec![Vec::new(); n + 1];
     let mut adjacency_list_reverse = vec![Vec::new(); n + 1];
 
-    for _ in 0..m {
-        let (start, end, t) = (input(), input(), input() as i32);
-
+    for (start, end, t) in (0..m).map(|_| (input(), input(), input() as i32)) {
         adjacency_list[start].push((end, t));
         adjacency_list_reverse[end].push((start, t));
     }

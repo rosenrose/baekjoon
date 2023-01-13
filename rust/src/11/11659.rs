@@ -5,7 +5,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf
         .split_ascii_whitespace()
-        .map(|s| s.parse::<usize>().unwrap());
+        .map(|s| s.parse::<i32>().unwrap());
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
@@ -15,11 +15,8 @@ fn main() {
         acc
     });
 
-    for _ in 0..m {
-        let (i, j) = (input(), input());
-        let sum = sum_accum[j] - sum_accum[i - 1];
-
-        writeln!(output, "{sum}").unwrap();
+    for (i, j) in (0..m).map(|_| (input() as usize, input() as usize)) {
+        writeln!(output, "{}", sum_accum[j] - sum_accum[i - 1]).unwrap();
     }
 
     print!("{output}");

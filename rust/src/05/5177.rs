@@ -7,10 +7,10 @@ fn main() {
 
     let n: i32 = input().parse().unwrap();
 
-    for i in 1..=n {
+    for (i, (s1, s2)) in (1..=n).map(|i| (i, (input(), input()))) {
         println!(
             "Data Set {i}: {}",
-            if sanitize(input()) == sanitize(input()) {
+            if sanitize(s1) == sanitize(s2) {
                 "equal"
             } else {
                 "not equal"

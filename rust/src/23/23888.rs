@@ -15,9 +15,7 @@ fn main() {
     let sequence = |n: i64| a + (n - 1) * d;
     let sum = |n: i64| n * ((n - 1) * d + 2 * a) / 2;
 
-    for _ in 0..input() {
-        let (query, left, right) = (input(), input(), input());
-
+    for (query, left, right) in (0..input()).map(|_| (input(), input(), input())) {
         let result = match query {
             1 => sum(right) - sum(left - 1),
             2 => {

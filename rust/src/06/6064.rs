@@ -9,8 +9,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input() {
-        let (m, n, x, y) = (input(), input(), input(), input());
+    for (m, n, x, y) in (0..input()).map(|_| (input(), input(), input(), input())) {
         let (gcd, mut a, mut b) = get_ex_gcd(m, n);
         // println!("{a} {b} {gcd}");
         if (y - x) % gcd != 0 {
@@ -76,8 +75,7 @@ fn get_ex_gcd(a: i32, b: i32) -> (i32, i32, i32) {
 //     let mut input = || input.next().unwrap();
 //     let mut output = String::new();
 
-//     'outer: for _ in 0..input() {
-//         let (m, n, x, y) = (input(), input(), input(), input());
+//     'outer: for (m, n, x, y) in (0..input()).map(|_| (input(), input(), input(), input())) {
 //         let total_years = get_lcm(m, n);
 
 //         let (start_year, compare_year) = if m > n {

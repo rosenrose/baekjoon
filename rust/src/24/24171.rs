@@ -3,20 +3,11 @@ use std::io;
 use std::ops::{Add, Div, Mul, Sub};
 
 #[derive(Copy, Clone)]
-struct Real {
-    a: i64,
-    b: i64,
-    c: i64,
-    d: i64,
-}
+struct Real(i64, i64, i64, i64);
 
 impl Real {
-    fn from(a: i64, b: i64, c: i64, d: i64) -> Self {
-        Self { a, b, c, d }
-    }
-
-    fn normalized(self) -> Self {
-        let (mut a, mut b, mut c, mut d) = (self.a, self.b, self.c, self.d);
+    fn reduced(real: Self) -> Self {
+        let (mut a, mut b, mut c, mut d) = (real.0, real.1, real.2, real.3);
 
         if c == 0 {
             d = 0;
@@ -31,18 +22,18 @@ impl Real {
             c *= -1;
         }
 
-        Self { a, b, c, d }
+        Self(a, b, c, d)
     }
 }
 impl Add for Real {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self::from(
-            self.a * other.a,
-            other.a * self.b + self.a * other.b,
-            other.a * self.c + self.a * other.c,
-            self.d,
+        Self(
+            self.0 * other.0,
+            other.0 * self.1 + self.0 * other.1,
+            other.0 * self.2 + self.0 * other.2,
+            self.3,
         )
     }
 }
@@ -50,11 +41,11 @@ impl Sub for Real {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self::from(
-            self.a * other.a,
-            other.a * self.b - self.a * other.b,
-            other.a * self.c - self.a * other.c,
-            self.d,
+        Self(
+            self.0 * other.0,
+            other.0 * self.1 - self.0 * other.1,
+            other.0 * self.2 - self.0 * other.2,
+            self.3,
         )
     }
 }
@@ -62,11 +53,11 @@ impl Mul for Real {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self::from(
-            self.a * other.a,
-            self.b * other.b + self.c * other.c * self.d,
-            other.b * self.c + self.b * other.c,
-            self.d,
+        Self(
+            self.0 * other.0,
+            self.1 * other.1 + self.2 * other.2 * self.3,
+            other.1 * self.2 + self.1 * other.2,
+            self.3,
         )
     }
 }
@@ -74,50 +65,44 @@ impl Div for Real {
     type Output = Self;
 
     fn div(self, other: Self) -> Self {
-        Self::from(
-            self.a * (other.b.pow(2) - other.c.pow(2) * self.d),
-            other.a * (self.b * other.b - self.c * other.c * self.d),
-            other.a * (other.b * self.c - self.b * other.c),
-            self.d,
+        Self(
+            self.0 * (other.1.pow(2) - other.2.pow(2) * self.3),
+            other.0 * (self.1 * other.1 - self.2 * other.2 * self.3),
+            other.0 * (other.1 * self.2 - self.1 * other.2),
+            self.3,
         )
     }
 }
 
 #[derive(Copy, Clone)]
-struct Complex {
-    re: Real,
-    im: Real,
-}
+struct Complex(Real, Real);
 
 impl Complex {
-    fn from(re: Real, im: Real) -> Self {
-        Self {
-            re: re.normalized(),
-            im: im.normalized(),
-        }
+    fn reduced(re: Real, im: Real) -> Self {
+        Self(Real::reduced(re), Real::reduced(im))
     }
 }
 impl Add for Complex {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self::from(self.re + other.re, self.im + other.im)
+        Self::reduced(self.0 + other.0, self.1 + other.1)
     }
 }
 impl Sub for Complex {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self::from(self.re - other.re, self.im - other.im)
+        Self::reduced(self.0 - other.0, self.1 - other.1)
     }
 }
 impl Mul for Complex {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self::from(
-            self.re * other.re - self.im * other.im,
-            self.re * other.im + self.im * other.re,
+        Self::reduced(
+            self.0 * other.0 - self.1 * other.1,
+            self.0 * other.1 + self.1 * other.0,
         )
     }
 }
@@ -125,23 +110,23 @@ impl Div for Complex {
     type Output = Self;
 
     fn div(self, other: Self) -> Self {
-        let divisor = other.re * other.re + other.im * other.im;
+        let divisor = other.0 * other.0 + other.1 * other.1;
 
-        Self::from(
-            (self.re * other.re + self.im * other.im) / divisor,
-            (self.im * other.re - self.re * other.im) / divisor,
+        Self::reduced(
+            (self.0 * other.0 + self.1 * other.1) / divisor,
+            (self.1 * other.0 - self.0 * other.1) / divisor,
         )
     }
 }
 
 impl fmt::Display for Real {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} {} {} {}", self.a, self.b, self.c, self.d)
+        write!(f, "{} {} {} {}", self.0, self.1, self.2, self.3)
     }
 }
 impl fmt::Display for Complex {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} {}", self.re, self.im)
+        write!(f, "{} {}", self.0, self.1)
     }
 }
 
@@ -152,13 +137,13 @@ fn main() {
         .map(|s| s.parse::<i64>().unwrap());
     let mut input = || input.next().unwrap();
 
-    let a = Complex::from(
-        Real::from(input(), input(), input(), input()),
-        Real::from(input(), input(), input(), input()),
+    let a = Complex(
+        Real(input(), input(), input(), input()),
+        Real(input(), input(), input(), input()),
     );
-    let b = Complex::from(
-        Real::from(input(), input(), input(), input()),
-        Real::from(input(), input(), input(), input()),
+    let b = Complex(
+        Real(input(), input(), input(), input()),
+        Real(input(), input(), input(), input()),
     );
 
     println!("{}\n{}\n{}\n{}", a + b, a - b, a * b, a / b);

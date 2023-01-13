@@ -11,9 +11,7 @@ fn main() {
     let radius = h / 2;
     let mut count = 0;
 
-    for _ in 0..p {
-        let player = (input(), input());
-
+    for player in (0..p).map(|_| (input(), input())) {
         if is_point_inside_or_border_rect(player, (x, y, w, h))
             || is_point_inside_or_border_circle(player, ((x, y + radius), radius as f64))
             || is_point_inside_or_border_circle(player, ((x + w, y + radius), radius as f64))

@@ -8,9 +8,7 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut input = || input.next().unwrap();
 
-    for _ in 0..input() {
-        let (r, e, c) = (input(), input(), input());
-
+    for (r, e, c) in (0..input()).map(|_| (input(), input(), input())) {
         match r.cmp(&(e - c)) {
             Ordering::Less => println!("advertise"),
             Ordering::Equal => println!("does not matter"),

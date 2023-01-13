@@ -10,7 +10,6 @@ fn main() {
 
     for _ in 0..input() {
         let (n, m) = (input(), input());
-
         let mut docs: VecDeque<_> = (0..n).map(|i| (input(), i)).collect();
 
         if docs.len() == 1 {

@@ -9,10 +9,7 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     for _ in 0..input() {
-        input();
-        input();
-
-        let k = input();
+        let (_, _, k) = (input(), input(), input());
         let plant_coords: HashSet<_> = (0..k).map(|_| (input(), input())).collect();
 
         let mut visited = HashSet::new();

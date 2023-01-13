@@ -18,7 +18,6 @@ fn main() {
                 if i == j {
                     continue;
                 }
-
                 // let merged = format!("{}{}", words[i], words[j]);
                 let merged = [&words[i][..], &words[j][..]].concat();
 

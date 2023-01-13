@@ -14,8 +14,7 @@ fn main() {
         .map(|i| (0..n).map(|j| if i == j { 0 } else { i32::MAX }).collect())
         .collect();
 
-    for _ in 0..m {
-        let (a, b, c) = (input() - 1, input() - 1, input() as i32);
+    for (a, b, c) in (0..m).map(|_| (input() - 1, input() - 1, input() as i32)) {
         adjacency_matrix[a][b] = adjacency_matrix[a][b].min(c);
     }
 

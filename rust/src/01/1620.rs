@@ -5,22 +5,19 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n: i32 = input.next().unwrap().parse().unwrap();
-    input.next();
-
+    let (n, m) = (parse_int(input()), parse_int(input()));
     let mut pokemon_name = HashMap::new();
     let mut pokemon_index = Vec::new();
 
-    for i in 1..=n {
-        let name = input.next().unwrap();
-
+    for (i, name) in (1..=n).map(|i| (i, input())) {
         pokemon_name.insert(name, i);
         pokemon_index.push(name);
     }
 
-    for query in input {
+    for query in (0..m).map(|_| input()) {
         (match query.parse::<usize>() {
             Ok(i) => writeln!(output, "{}", pokemon_index[i - 1]),
             _ => writeln!(output, "{}", pokemon_name.get(query).unwrap()),
@@ -29,6 +26,10 @@ fn main() {
     }
 
     print!("{output}");
+}
+
+fn parse_int(buf: &str) -> i32 {
+    buf.parse().unwrap()
 }
 
 // enum Answer<'a> {

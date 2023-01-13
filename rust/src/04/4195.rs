@@ -58,9 +58,7 @@ fn main() {
         let n = parse_int(input());
         let mut disjoint_set = DisjointSet::new();
 
-        for _ in 0..n {
-            let (friend1, friend2) = (input(), input());
-
+        for (friend1, friend2) in (0..n).map(|_| (input(), input())) {
             disjoint_set.insert(friend1, friend2);
 
             writeln!(output, "{}", disjoint_set.get_size(friend1)).unwrap();

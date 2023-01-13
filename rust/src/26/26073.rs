@@ -11,9 +11,7 @@ fn main() {
 
     for _ in 0..input() {
         let (x, y) = (input(), input());
-        let k = input();
-
-        let gcd = get_gcd((0..k).map(|_| input()));
+        let gcd = get_gcd((0..input()).map(|_| input()));
 
         if x % gcd != 0 || y % gcd != 0 {
             writeln!(output, "Gave up").unwrap();

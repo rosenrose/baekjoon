@@ -10,9 +10,7 @@ fn main() {
         let n = parse_int(input());
         let mut map = BTreeMap::new();
 
-        for _ in 0..n {
-            let (op, num) = (input(), parse_int(input()));
-
+        for (op, num) in (0..n).map(|_| (input(), parse_int(input()))) {
             match op {
                 "I" => {
                     map.entry(num).and_modify(|c| *c += 1).or_insert(1);
