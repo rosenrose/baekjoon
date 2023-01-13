@@ -1,22 +1,18 @@
 use std::io;
 
-struct DisjointSet {
-    set: Vec<usize>,
-}
+struct DisjointSet(Vec<usize>);
 
 impl DisjointSet {
     fn make(n: usize) -> Self {
-        Self {
-            set: (0..=n).collect(),
-        }
+        Self((0..=n).collect())
     }
 
     fn find(&mut self, a: usize) -> usize {
-        if self.set[a] != a {
-            self.set[a] = self.find(self.set[a]);
+        if self.0[a] != a {
+            self.0[a] = self.find(self.0[a]);
         }
 
-        self.set[a]
+        self.0[a]
     }
 
     fn union(&mut self, a: usize, b: usize) {
@@ -26,7 +22,7 @@ impl DisjointSet {
             return;
         }
 
-        self.set[b] = a;
+        self.0[b] = a;
     }
 
     fn is_same(&mut self, a: usize, b: usize) -> bool {
@@ -42,8 +38,6 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, m) = (input(), input());
-    let mut disjoint_set = DisjointSet::make(n);
-
     let know_truth: Vec<_> = (0..input()).map(|_| input()).collect();
 
     if know_truth.is_empty() {
@@ -52,6 +46,7 @@ fn main() {
     }
 
     let know_truth_group = know_truth[0];
+    let mut disjoint_set = DisjointSet::make(n);
 
     for i in 1..know_truth.len() {
         disjoint_set.union(know_truth_group, know_truth[i]);

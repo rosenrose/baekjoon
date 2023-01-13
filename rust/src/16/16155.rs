@@ -3,47 +3,33 @@ use std::io;
 use std::ops::{Add, Sub};
 
 #[derive(Copy, Clone)]
-struct Fraction {
-    numerator: i64,
-    denominator: i64,
-}
+struct Fraction(i64, i64);
 
 impl Fraction {
     fn new() -> Self {
-        Self::from(0, 1)
-    }
-
-    fn from(numerator: i64, denominator: i64) -> Self {
-        Self {
-            numerator,
-            denominator,
-        }
-        .reduced()
+        Self(0, 1)
     }
 
     fn from_int(int: i64) -> Self {
-        Self::from(int, 1)
+        Self(int, 1)
     }
 
-    fn reduced(self) -> Self {
-        let gcd = get_gcd(self.numerator, self.denominator).abs();
+    fn reduced(numerator: i64, denominator: i64) -> Self {
+        let gcd = get_gcd(numerator, denominator).abs();
 
-        Self {
-            numerator: self.numerator / gcd,
-            denominator: self.denominator / gcd,
-        }
+        Self(numerator / gcd, denominator / gcd)
     }
 
     fn multiply(self, mul: i64) -> Self {
-        Self::from(self.numerator * mul, self.denominator)
+        Self::reduced(self.0 * mul, self.1)
     }
 
     fn divide(self, div: i64) -> Self {
-        Self::from(self.numerator, self.denominator * div)
+        Self::reduced(self.0, self.1 * div)
     }
 
     fn abs(self) -> Self {
-        Self::from(self.numerator.abs(), self.denominator)
+        Self(self.0.abs(), self.1)
     }
 }
 
@@ -51,29 +37,23 @@ impl Add for Fraction {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self::from(
-            self.numerator * other.denominator + other.numerator * self.denominator,
-            self.denominator * other.denominator,
-        )
+        Self::reduced(self.0 * other.1 + other.0 * self.1, self.1 * other.1)
     }
 }
 impl Sub for Fraction {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self::from(
-            self.numerator * other.denominator - other.numerator * self.denominator,
-            self.denominator * other.denominator,
-        )
+        Self::reduced(self.0 * other.1 - other.0 * self.1, self.1 * other.1)
     }
 }
 
 impl fmt::Display for Fraction {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if self.denominator == 1 {
-            write!(f, "{}", self.numerator)
+        if self.1 == 1 {
+            write!(f, "{}", self.0)
         } else {
-            write!(f, "{}/{}", self.numerator, self.denominator)
+            write!(f, "{}/{}", self.0, self.1)
         }
     }
 }
@@ -94,7 +74,7 @@ fn main() {
     for i in 1..point_heights.len() {
         let (x1, h1) = point_heights[i - 1];
         let (x2, h2) = point_heights[i];
-        let gradient = Fraction::from(h2 - h1, x2 - x1);
+        let gradient = Fraction(h2 - h1, x2 - x1);
 
         if (x1..=x2 - 1).contains(&start_x) {
             let delta_x = start_x - x1;

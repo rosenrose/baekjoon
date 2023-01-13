@@ -2,33 +2,26 @@ use std::fmt;
 use std::io;
 use std::ops::Add;
 
-struct Fraction {
-    numerator: i32,
-    denominator: i32,
-}
+struct Fraction(i32, i32);
 
 impl Add for Fraction {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        let lcm = get_lcm(self.denominator, other.denominator);
+        let lcm = get_lcm(self.1, other.1);
 
-        let numerator =
-            self.numerator * (lcm / self.denominator) + other.numerator * (lcm / other.denominator);
+        let numerator = self.0 * (lcm / self.1) + other.0 * (lcm / other.1);
         let denominator = lcm;
 
         let gcd = get_gcd(numerator, denominator);
 
-        Self {
-            numerator: numerator / gcd,
-            denominator: denominator / gcd,
-        }
+        Self(numerator / gcd, denominator / gcd)
     }
 }
 
 impl fmt::Display for Fraction {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} {}", self.numerator, self.denominator)
+        write!(f, "{} {}", self.0, self.1)
     }
 }
 
@@ -39,14 +32,8 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut input = || input.next().unwrap();
 
-    let fraction1 = Fraction {
-        numerator: input(),
-        denominator: input(),
-    };
-    let fraction2 = Fraction {
-        numerator: input(),
-        denominator: input(),
-    };
+    let fraction1 = Fraction(input(), input());
+    let fraction2 = Fraction(input(), input());
 
     println!("{}", fraction1 + fraction2);
 }

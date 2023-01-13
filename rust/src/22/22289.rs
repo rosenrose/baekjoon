@@ -3,15 +3,12 @@ use std::fmt::Write;
 use std::ops::{Add, Mul, MulAssign, Sub};
 
 #[derive(Clone, Copy, Debug)]
-struct Complex {
-    re: f64,
-    im: f64,
-}
+struct Complex(f64, f64);
 
 impl Complex {
     fn div(&mut self, num: f64) {
-        self.re /= num;
-        self.im /= num;
+        self.0 /= num;
+        self.1 /= num;
     }
 }
 
@@ -19,30 +16,24 @@ impl Add for Complex {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self {
-            re: self.re + other.re,
-            im: self.im + other.im,
-        }
+        Self(self.0 + other.0, self.1 + other.1)
     }
 }
 impl Sub for Complex {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self {
-            re: self.re - other.re,
-            im: self.im - other.im,
-        }
+        Self(self.0 - other.0, self.1 - other.1)
     }
 }
 impl Mul for Complex {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self {
-            re: self.re * other.re - self.im * other.im,
-            im: self.re * other.im + self.im * other.re,
-        }
+        Self(
+            self.0 * other.0 - self.1 * other.1,
+            self.0 * other.1 + self.1 * other.0,
+        )
     }
 }
 impl MulAssign for Complex {
@@ -81,15 +72,15 @@ fn parse_bigint(input: &str) -> Vec<Complex> {
         .map(|chunk| {
             let mut exp = 1;
 
-            Complex {
-                re: chunk.iter().rev().fold(0.0, |acc, ch| {
+            Complex(
+                chunk.iter().rev().fold(0.0, |acc, ch| {
                     let num = (ch - '0' as u8) as i32 * exp;
                     exp *= 10;
 
                     acc + num as f64
                 }),
-                im: 0.0,
-            }
+                0.0,
+            )
         })
         .collect()
 }
@@ -101,8 +92,8 @@ fn multiply(a: &mut Vec<Complex>, b: &mut Vec<Complex>) -> Vec<u32> {
         len *= 2;
     }
 
-    a.resize(len, Complex { re: 0.0, im: 0.0 });
-    b.resize(len, Complex { re: 0.0, im: 0.0 });
+    a.resize(len, Complex(0.0, 0.0));
+    b.resize(len, Complex(0.0, 0.0));
 
     fast_fourier_transform(a, false);
     fast_fourier_transform(b, false);
@@ -137,13 +128,10 @@ fn fast_fourier_transform(v: &mut Vec<Complex>, is_inverse: bool) {
 
     while k < len {
         let angle = (if is_inverse { PI } else { -PI }) / k as f64;
-        let direction = Complex {
-            re: f64::cos(angle),
-            im: f64::sin(angle),
-        };
+        let direction = Complex(f64::cos(angle), f64::sin(angle));
 
         for i in (0..len).step_by(k * 2) {
-            let mut unit = Complex { re: 1.0, im: 0.0 };
+            let mut unit = Complex(1.0, 0.0);
 
             for j in 0..k {
                 let even = v[i + j];
@@ -171,7 +159,7 @@ fn normalize(v: Vec<Complex>) -> Vec<u32> {
     let mut result: Vec<_> = v
         .iter()
         .map(|complex| {
-            let temp = carry + complex.re.round() as u32;
+            let temp = carry + complex.0.round() as u32;
             carry = temp / 100;
 
             temp % 100

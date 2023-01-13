@@ -2,37 +2,24 @@ use std::fmt;
 use std::io;
 use std::ops::AddAssign;
 
-struct Fraction {
-    numerator: i32,
-    denominator: i32,
-}
-
-impl Fraction {
-    fn from(numerator: i32, denominator: i32) -> Self {
-        Self {
-            numerator,
-            denominator,
-        }
-    }
-}
+struct Fraction(i32, i32);
 
 impl AddAssign for Fraction {
     fn add_assign(&mut self, other: Self) {
-        let lcm = get_lcm(self.denominator, other.denominator);
+        let lcm = get_lcm(self.1, other.1);
 
-        let numerator =
-            self.numerator * (lcm / self.denominator) + other.numerator * (lcm / other.denominator);
+        let numerator = self.0 * (lcm / self.1) + other.0 * (lcm / other.1);
         let denominator = lcm;
 
         let gcd = get_gcd(numerator, denominator);
 
-        *self = Self::from(numerator / gcd, denominator / gcd);
+        *self = Self(numerator / gcd, denominator / gcd);
     }
 }
 
 impl fmt::Display for Fraction {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} / {}", self.numerator, self.denominator)
+        write!(f, "{} / {}", self.0, self.1)
     }
 }
 
@@ -41,7 +28,7 @@ fn main() {
 
     for input in buf.lines() {
         let mut number = input.split('.');
-        let integer = Fraction::from(number.next().unwrap().parse().unwrap(), 1);
+        let integer = Fraction(number.next().unwrap().parse().unwrap(), 1);
         let decimal = number.next().unwrap();
 
         let mut tokens = decimal.split(['(', ')']);
@@ -51,10 +38,10 @@ fn main() {
         let mut fraction = integer;
 
         for (i, c) in non_repeat.char_indices() {
-            fraction += Fraction::from(c as i32 - '0' as i32, 10_i32.pow(i as u32 + 1));
+            fraction += Fraction(c as i32 - '0' as i32, 10_i32.pow(i as u32 + 1));
         }
 
-        fraction += Fraction::from(
+        fraction += Fraction(
             repeating.parse().unwrap(),
             format!(
                 "{}{}",

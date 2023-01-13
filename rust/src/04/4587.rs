@@ -3,30 +3,13 @@ use std::io;
 use std::ops::Sub;
 
 #[derive(Copy, Clone)]
-struct Fraction {
-    numerator: i64,
-    denominator: i64,
-}
+struct Fraction(i64, i64);
 
 impl Fraction {
-    fn from(numerator: i64, denominator: i64) -> Self {
-        Self {
-            numerator,
-            denominator,
-        }
-    }
+    fn reduced(numerator: i64, denominator: i64) -> Self {
+        let gcd = get_gcd(numerator, denominator).abs();
 
-    fn unit(int: i64) -> Self {
-        Self::from(1, int)
-    }
-
-    fn reduced(self) -> Self {
-        let gcd = get_gcd(self.numerator, self.denominator).abs();
-
-        Self {
-            numerator: self.numerator / gcd,
-            denominator: self.denominator / gcd,
-        }
+        Self(numerator / gcd, denominator / gcd)
     }
 }
 
@@ -34,11 +17,7 @@ impl Sub for Fraction {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self::from(
-            self.numerator * other.denominator - other.numerator * self.denominator,
-            self.denominator * other.denominator,
-        )
-        .reduced()
+        Self::reduced(self.0 * other.1 - other.0 * self.1, self.1 * other.1)
     }
 }
 
@@ -50,13 +29,13 @@ fn main() {
     let mut output = String::new();
 
     while let (Some(m @ 2..), Some(n @ 2..)) = (input.next(), input.next()) {
-        let mut fraction = Fraction::from(m, n);
+        let mut fraction = Fraction(m, n);
 
-        while fraction.numerator > 1 {
-            for i in (fraction.denominator / fraction.numerator) + 1.. {
-                let next = fraction - Fraction::unit(i);
+        while fraction.0 > 1 {
+            for i in (fraction.1 / fraction.0) + 1.. {
+                let next = fraction - Fraction(1, i);
 
-                if next.numerator > 0 && next.denominator < 1_000_000 {
+                if next.0 > 0 && next.1 < 1_000_000 {
                     fraction = next;
                     write!(output, "{i} ").unwrap();
                     break;
@@ -64,7 +43,7 @@ fn main() {
             }
         }
 
-        writeln!(output, "{}", fraction.denominator).unwrap();
+        writeln!(output, "{}", fraction.1).unwrap();
     }
 
     print!("{output}");

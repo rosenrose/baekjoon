@@ -2,22 +2,20 @@ use std::collections::BinaryHeap;
 use std::fmt::Write;
 use std::io;
 
-struct Heap<T> {
-    tree: Vec<T>,
-}
+struct Heap<T>(Vec<T>);
 
 impl<T> Heap<T>
 where
     T: Copy + std::cmp::PartialOrd + std::fmt::Debug,
 {
     fn new() -> Self {
-        Self { tree: Vec::new() }
+        Self(Vec::new())
     }
 
     fn get_parent(&self, i: usize) -> Option<(usize, T)> {
         if i > 0 {
             let idx = (i - 1) / 2;
-            Some((idx, self.tree[idx]))
+            Some((idx, self.0[idx]))
         } else {
             None
         }
@@ -27,11 +25,11 @@ where
         let left_idx = i * 2 + 1;
         let right_idx = i * 2 + 2;
 
-        let left = match self.tree.get(left_idx) {
+        let left = match self.0.get(left_idx) {
             Some(v) => Some((left_idx, *v)),
             None => None,
         };
-        let right = match self.tree.get(right_idx) {
+        let right = match self.0.get(right_idx) {
             Some(v) => Some((right_idx, *v)),
             None => None,
         };
@@ -40,23 +38,23 @@ where
     }
 
     fn push(&mut self, value: T) {
-        self.tree.push(value);
+        self.0.push(value);
 
-        Self::up_heapify(self, self.tree.len() - 1, value);
+        Self::up_heapify(self, self.0.len() - 1, value);
     }
 
     fn pop(&mut self) -> Option<T> {
-        if self.tree.is_empty() {
+        if self.0.is_empty() {
             return None;
         }
 
-        let len = self.tree.len();
+        let len = self.0.len();
 
         if len > 1 {
-            self.tree.swap(0, len - 1);
+            self.0.swap(0, len - 1);
         }
 
-        let ret = self.tree.pop().unwrap();
+        let ret = self.0.pop().unwrap();
 
         Self::down_heapify(self, 0);
 
@@ -67,7 +65,7 @@ where
         match Self::get_parent(self, i) {
             Some((parent_idx, parent_value)) => {
                 if parent_value < value {
-                    self.tree.swap(parent_idx, i);
+                    self.0.swap(parent_idx, i);
                 }
 
                 Self::up_heapify(self, parent_idx, value);
@@ -90,14 +88,14 @@ where
             (None, None) => return,
         };
 
-        if child_val > self.tree[i] {
-            self.tree.swap(i, child_idx);
+        if child_val > self.0[i] {
+            self.0.swap(i, child_idx);
             Self::down_heapify(self, child_idx);
         }
     }
 
     fn is_empty(&self) -> bool {
-        self.tree.is_empty()
+        self.0.is_empty()
     }
 }
 

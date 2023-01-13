@@ -2,33 +2,21 @@ use std::fmt;
 use std::io;
 
 #[derive(Copy, Clone)]
-struct Cake {
-    x: i32,
-    y: i32,
-    z: i32,
-}
+struct Cake(i32, i32, i32);
 
 impl Cake {
     fn cake_op(self, other: Self) -> Self {
-        Self {
-            x: self.z + other.x,
-            y: self.y * other.y,
-            z: self.x + other.z,
-        }
+        Self(self.2 + other.0, self.1 * other.1, self.0 + other.2)
     }
 
     fn cake_op_inverse(self, other: Self) -> Self {
-        Self {
-            x: self.x - other.z,
-            y: self.y / other.y,
-            z: self.z - other.x,
-        }
+        Self(self.0 - other.2, self.1 / other.1, self.2 - other.0)
     }
 }
 
 impl fmt::Display for Cake {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} {} {}", self.x, self.y, self.z)
+        write!(f, "{} {} {}", self.0, self.1, self.2)
     }
 }
 
@@ -39,16 +27,8 @@ fn main() {
         .map(|s| s.parse::<i32>().unwrap());
     let mut input = || input.next().unwrap();
 
-    let cake_a = Cake {
-        x: input(),
-        y: input(),
-        z: input(),
-    };
-    let cake_c = Cake {
-        x: input(),
-        y: input(),
-        z: input(),
-    };
+    let cake_a = Cake(input(), input(), input());
+    let cake_c = Cake(input(), input(), input());
 
     let cake_b = cake_c.cake_op_inverse(cake_a);
 

@@ -1,26 +1,12 @@
 use std::ops::Add;
 
-struct Fraction {
-    numerator: i64,
-    denominator: i64,
-}
+struct Fraction(i64, i64);
 
 impl Fraction {
-    fn from(numerator: i64, denominator: i64) -> Self {
-        Self {
-            numerator,
-            denominator,
-        }
-        .reduced()
-    }
+    fn reduced(numerator: i64, denominator: i64) -> Self {
+        let gcd = get_gcd(numerator, denominator).abs();
 
-    fn reduced(self) -> Self {
-        let gcd = get_gcd(self.numerator, self.denominator).abs();
-
-        Self {
-            numerator: self.numerator / gcd,
-            denominator: self.denominator / gcd,
-        }
+        Self(numerator / gcd, denominator / gcd)
     }
 }
 
@@ -28,10 +14,7 @@ impl Add for Fraction {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self::from(
-            self.numerator * other.denominator + other.numerator * self.denominator,
-            self.denominator * other.denominator,
-        )
+        Self::reduced(self.0 * other.1 + other.0 * self.1, self.1 * other.1)
     }
 }
 
@@ -45,11 +28,11 @@ fn main() {
     let integer = parse_int(integer);
     let fraction = decimal
         .char_indices()
-        .map(|(i, c)| Fraction::from(c as i64 - '0' as i64, 10_i64.pow(i as u32 + 1)))
-        .fold(Fraction::from(integer, 1), |acc, a| acc + a);
+        .map(|(i, c)| Fraction(c as i64 - '0' as i64, 10_i64.pow(i as u32 + 1)))
+        .fold(Fraction(integer, 1), |acc, a| acc + a);
 
-    let papers = fraction.denominator;
-    let mut sum = fraction.numerator;
+    let papers = fraction.1;
+    let mut sum = fraction.0;
     let mut num_counts = [0; 5];
 
     sum -= papers;

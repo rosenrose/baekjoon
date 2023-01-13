@@ -2,18 +2,12 @@ use std::fmt;
 use std::io;
 use std::ops::Mul;
 
-struct Matrix {
-    matrix: Vec<Vec<i32>>,
-}
+struct Matrix(Vec<Vec<i32>>);
 
 impl Matrix {
-    fn from(matrix: Vec<Vec<i32>>) -> Self {
-        Self { matrix }
-    }
-
     fn rem(self, m: i32) -> Self {
-        Self::from(
-            self.matrix
+        Self(
+            self.0
                 .iter()
                 .map(|row| row.iter().map(|num| num % m).collect())
                 .collect(),
@@ -25,15 +19,15 @@ impl Mul for Matrix {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self::from(
-            self.matrix
+        Self(
+            self.0
                 .iter()
                 .map(|row| {
-                    (0..other.matrix[0].len())
+                    (0..other.0[0].len())
                         .map(|i| {
                             row.iter()
                                 .enumerate()
-                                .map(|(j, num)| num * other.matrix[j][i])
+                                .map(|(j, num)| num * other.0[j][i])
                                 .sum()
                         })
                         .collect()
@@ -45,13 +39,13 @@ impl Mul for Matrix {
 
 impl Clone for Matrix {
     fn clone(&self) -> Self {
-        Self::from((*self.matrix.clone()).to_vec())
+        Self((*self.0.clone()).to_vec())
     }
 }
 
 impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        for row in self.matrix.iter() {
+        for row in self.0.iter() {
             for cell in row {
                 write!(f, "{cell} ").unwrap();
             }
@@ -72,7 +66,7 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, b) = (input(), input());
-    let a = Matrix::from(
+    let a = Matrix(
         (0..n)
             .map(|_| (0..n).map(|_| input() as i32).collect())
             .collect(),

@@ -60,11 +60,9 @@ impl fmt::Display for MixedFraction {
         if self.integer != 0 {
             write!(f, "{}", self.integer).unwrap();
         }
-
         if self.integer != 0 && self.numerator != 0 {
             write!(f, ",").unwrap();
         }
-
         if self.numerator != 0 {
             write!(f, "{}/{}", self.numerator, self.denominator).unwrap();
         }

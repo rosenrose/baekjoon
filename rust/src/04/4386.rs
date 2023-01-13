@@ -4,33 +4,29 @@ use std::io;
 #[derive(Eq, PartialEq, Copy, Clone, Hash)]
 struct Point<'a>(&'a str, &'a str);
 
-struct DisjointSet<'a> {
-    set: HashMap<Point<'a>, Point<'a>>,
-}
+struct DisjointSet<'a>(HashMap<Point<'a>, Point<'a>>);
 
 impl<'a> DisjointSet<'a> {
     fn new() -> Self {
-        Self {
-            set: HashMap::new(),
-        }
+        Self(HashMap::new())
     }
 
     fn insert(&mut self, a: Point<'a>, b: Point<'a>) {
-        self.set.entry(a).or_insert(a);
-        self.set.entry(b).or_insert(b);
+        self.0.entry(a).or_insert(a);
+        self.0.entry(b).or_insert(b);
 
         self.union(a, b);
     }
 
     fn find(&mut self, a: Point<'a>) -> Option<Point<'a>> {
-        if let Some(&result) = self.set.get(&a) {
+        if let Some(&result) = self.0.get(&a) {
             if result != a {
                 let parent = self.find(result).unwrap();
-                self.set.insert(a, parent);
+                self.0.insert(a, parent);
             }
         }
 
-        self.set.get(&a).copied()
+        self.0.get(&a).copied()
     }
 
     fn union(&mut self, a: Point<'a>, b: Point<'a>) {
@@ -40,7 +36,7 @@ impl<'a> DisjointSet<'a> {
             return;
         }
 
-        self.set.insert(b, a);
+        self.0.insert(b, a);
     }
 
     fn is_same(&mut self, a: Point<'a>, b: Point<'a>) -> bool {
