@@ -29,7 +29,6 @@ fn main() {
 
     let cake_a = Cake(input(), input(), input());
     let cake_c = Cake(input(), input(), input());
-
     let cake_b = cake_c.cake_op_inverse(cake_a);
 
     println!("{cake_b}");
