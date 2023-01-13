@@ -8,16 +8,16 @@ fn main() {
     let mut pattern = input.next().unwrap().split('*');
     let (prefix, suffix) = (pattern.next().unwrap(), pattern.next().unwrap());
 
-    for file_name in input {
-        if file_name.len() < prefix.len() + suffix.len() {
-            println!("NE");
-            continue;
-        }
+    let regex = Regex::new(&format!("^{prefix}.*{suffix}$"), false);
 
-        if file_name.starts_with(prefix) && file_name.ends_with(suffix) {
-            println!("DA");
-        } else {
-            println!("NE");
-        }
+    for file_name in input {
+        println!(
+            "{}",
+            if regex.find(file_name).is_some() {
+                "DA"
+            } else {
+                "NE"
+            }
+        );
     }
 }
