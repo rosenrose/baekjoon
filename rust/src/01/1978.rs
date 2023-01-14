@@ -2,13 +2,11 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let prime_nums = buf
-        .split_whitespace()
-        .skip(1)
-        .map(|s| s.parse::<i32>().unwrap())
-        .filter(|&n| is_prime(n));
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
 
-    println!("{}", prime_nums.count());
+    println!("{}", input.skip(1).filter(|&num| is_prime(num)).count());
 }
 
 fn is_prime(num: i32) -> bool {
@@ -16,11 +14,5 @@ fn is_prime(num: i32) -> bool {
         return false;
     }
 
-    for i in (2..).take_while(|i| i * i <= num) {
-        if num % i == 0 {
-            return false;
-        }
-    }
-
-    true
+    (2..).take_while(|i| i * i <= num).all(|i| num % i != 0)
 }

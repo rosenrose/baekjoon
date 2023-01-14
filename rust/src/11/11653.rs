@@ -5,10 +5,10 @@ fn main() {
     let mut n: i32 = buf.trim().parse().unwrap();
     let prime_nums = (2..=n).filter(|&i| is_prime(i));
 
-    for prime_num in prime_nums {
-        while n % prime_num == 0 {
-            println!("{prime_num}");
-            n /= prime_num;
+    for p in prime_nums {
+        while n % p == 0 {
+            println!("{p}");
+            n /= p;
         }
 
         if is_prime(n) {
@@ -27,11 +27,5 @@ fn is_prime(num: i32) -> bool {
         return false;
     }
 
-    for i in (2..).take_while(|i| i * i <= num) {
-        if num % i == 0 {
-            return false;
-        }
-    }
-
-    true
+    (2..).take_while(|i| i * i <= num).all(|i| num % i != 0)
 }

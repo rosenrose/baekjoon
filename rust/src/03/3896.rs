@@ -3,9 +3,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf
-        .split_ascii_whitespace()
-        .map(|s| s.parse::<i32>().unwrap());
+    let input = buf.lines().map(|s| s.parse::<i32>().unwrap());
     let mut output = String::new();
 
     for k in input.skip(1) {
@@ -14,8 +12,8 @@ fn main() {
             continue;
         }
 
-        let down = (2..k).rev().filter(|&i| is_prime(i)).next().unwrap();
-        let up = (k + 1..).filter(|&i| is_prime(i)).next().unwrap();
+        let down = (2..k).rev().find(|&i| is_prime(i)).unwrap();
+        let up = (k + 1..).find(|&i| is_prime(i)).unwrap();
 
         writeln!(output, "{}", up - down).unwrap();
     }
@@ -28,11 +26,5 @@ fn is_prime(num: i32) -> bool {
         return false;
     }
 
-    for i in (2..).take_while(|i| i * i <= num) {
-        if num % i == 0 {
-            return false;
-        }
-    }
-
-    true
+    (2..).take_while(|i| i * i <= num).all(|i| num % i != 0)
 }

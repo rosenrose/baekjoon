@@ -24,11 +24,5 @@ fn is_prime(num: i32) -> bool {
         return false;
     }
 
-    for i in (2..).take_while(|i| i * i <= num) {
-        if num % i == 0 {
-            return false;
-        }
-    }
-
-    true
+    (2..).take_while(|i| i * i <= num).all(|i| num % i != 0)
 }
