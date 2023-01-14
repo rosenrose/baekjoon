@@ -1,0 +1,16 @@
+use std::io;
+
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let input = buf
+        .split_ascii_whitespace()
+        .map(|s| s.parse::<i32>().unwrap());
+
+    let nums: Vec<_> = input.skip(1).collect();
+    let score = nums[0]
+        + (1..nums.len())
+            .filter_map(|i| (nums[i] - nums[i - 1] > 1).then(|| nums[i]))
+            .sum::<i32>();
+
+    println!("{score}");
+}
