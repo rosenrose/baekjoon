@@ -1,5 +1,5 @@
 #[derive(Default, PartialEq, Debug)]
-enum Winner {
+enum Player {
     #[default]
     SK,
     CY,
@@ -10,28 +10,28 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: i64 = buf.trim().parse().unwrap();
-    let mut winner = vec![
+    let mut winners = vec![
         Default::default(),
-        Winner::SK,
-        Winner::CY,
-        Winner::SK,
-        Winner::SK,
+        Player::SK,
+        Player::CY,
+        Player::SK,
+        Player::SK,
     ];
 
     for i in 5..=7 {
-        winner.push(
+        winners.push(
             if [i - 1, i - 3, i - 4]
                 .iter()
-                .any(|&i| winner[i] == Winner::CY)
+                .any(|&i| winners[i] == Player::CY)
             {
-                Winner::SK
+                Player::SK
             } else {
-                Winner::CY
+                Player::CY
             },
         );
     }
 
     let idx = (n % 7) as usize;
 
-    println!("{:?}", winner[if idx == 0 { 7 } else { idx }]);
+    println!("{:?}", winners[if idx == 0 { 7 } else { idx }]);
 }
