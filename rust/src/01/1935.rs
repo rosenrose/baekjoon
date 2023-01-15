@@ -3,10 +3,9 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
-    input.next();
 
-    let formula = input.next().unwrap();
-    let nums: Vec<f64> = input.map(|s| s.parse().unwrap()).collect();
+    let (_, formula) = (input.next(), input.next().unwrap());
+    let nums: Vec<f64> = input.flat_map(str::parse).collect();
 
     let offset = 'A' as u8;
     let mut stack = Vec::new();

@@ -3,7 +3,7 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
-    let parse_time = |s: &str| -> Vec<i32> { s.split(':').map(|s| s.parse().unwrap()).collect() };
+    let parse_time = |s: &str| -> Vec<i32> { s.split(':').flat_map(str::parse).collect() };
 
     let current = parse_time(input.next().unwrap());
     let mut end = parse_time(input.next().unwrap());

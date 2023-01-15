@@ -25,5 +25,5 @@ fn get_gcd(mut a: i128, mut b: i128) -> i128 {
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i128> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    buf.split_whitespace().flat_map(str::parse).collect()
 }

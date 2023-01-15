@@ -42,7 +42,7 @@ fn pow_rem(mut base: i32, mut exp: i32) -> i32 {
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    buf.split_whitespace().flat_map(str::parse).collect()
 }
 
 // fn combination_rem(n: i32, r: i32, cache: &mut HashMap<(i32, i32), i32>) -> i32 {

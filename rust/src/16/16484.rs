@@ -8,5 +8,5 @@ fn main() {
 }
 // https://wiki.mathnt.net/index.php?title=나비정리
 fn parse_float_vec(buf: &String) -> Vec<f32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    buf.split_whitespace().flat_map(str::parse).collect()
 }

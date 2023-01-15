@@ -78,5 +78,5 @@ fn get_min_factors(num: usize) -> Vec<i32> {
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    buf.split_whitespace().flat_map(str::parse).collect()
 }

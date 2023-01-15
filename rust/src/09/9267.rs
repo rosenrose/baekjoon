@@ -87,5 +87,5 @@ fn get_ex_gcd(a: i128, b: i128) -> (i128, i128, i128) {
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i128> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    buf.split_whitespace().flat_map(str::parse).collect()
 }

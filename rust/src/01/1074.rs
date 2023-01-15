@@ -24,5 +24,5 @@ fn visit_z(r: u32, c: u32, x: u32, y: u32, n: u32, start: u32) -> u32 {
 }
 
 fn parse_int_vec(buf: &String) -> Vec<u32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    buf.split_whitespace().flat_map(str::parse).collect()
 }

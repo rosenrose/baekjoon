@@ -18,5 +18,5 @@ fn main() {
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i64> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    buf.split_whitespace().flat_map(str::parse).collect()
 }

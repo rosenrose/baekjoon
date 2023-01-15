@@ -34,5 +34,5 @@ fn product(nums: &Vec<i32>, m: i32, selected: &mut Vec<i32>, output: &mut String
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    buf.split_whitespace().flat_map(str::parse).collect()
 }

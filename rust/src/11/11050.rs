@@ -16,5 +16,5 @@ fn combination_num(n: i32, r: i32) -> i32 {
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i32> {
-    buf.split_whitespace().map(|s| s.parse().unwrap()).collect()
+    buf.split_whitespace().flat_map(str::parse).collect()
 }
