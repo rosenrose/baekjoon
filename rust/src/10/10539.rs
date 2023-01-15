@@ -6,7 +6,7 @@ fn main() {
 
     buf.split_ascii_whitespace()
         .skip(1)
-        .map(|s| s.parse::<i32>().unwrap())
+        .flat_map(str::parse::<i32>)
         .enumerate()
         .for_each(|(i, avg)| {
             let num = avg * (i as i32 + 1) - sum;

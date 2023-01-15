@@ -2,9 +2,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf
-        .split_ascii_whitespace()
-        .map(|s| s.parse::<i32>().unwrap());
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     const N: usize = 3;
     let (mut x_points, mut y_points) = ([0; N], [0; N]);

@@ -2,7 +2,7 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut nums = buf.trim().split(':').map(|s| s.parse::<i32>().unwrap());
+    let mut nums = buf.trim().split(':').flat_map(str::parse::<i32>);
 
     let (a, b) = (nums.next().unwrap(), nums.next().unwrap());
     let gcd = get_gcd(a, b);

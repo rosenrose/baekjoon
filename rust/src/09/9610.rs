@@ -3,9 +3,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf
-        .split_ascii_whitespace()
-        .map(|s| s.parse::<i32>().unwrap());
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
     let (q1, q2, q3, q4, axis) = (0..input()).fold((0, 0, 0, 0, 0), |mut acc, _| {

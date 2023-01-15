@@ -3,7 +3,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.lines().map(|s| s.parse::<i64>().unwrap());
+    let input = buf.lines().flat_map(str::parse::<i64>);
 
     let mut max_count = 1;
     let mut counts = HashMap::new();

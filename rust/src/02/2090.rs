@@ -21,9 +21,7 @@ impl Add for Fraction {
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf
-        .split_ascii_whitespace()
-        .map(|s| s.parse::<i64>().unwrap());
+    let input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
 
     let harmonic_mean = input
         .skip(1)

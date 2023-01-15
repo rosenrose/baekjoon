@@ -8,9 +8,7 @@ enum Player {
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf
-        .split_ascii_whitespace()
-        .map(|s| s.parse::<i32>().unwrap());
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let a_cards: Vec<_> = (0..10).map(|_| input.next().unwrap()).collect();
     let b_cards: Vec<_> = (0..10).map(|_| input.next().unwrap()).collect();

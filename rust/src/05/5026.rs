@@ -11,7 +11,8 @@ fn main() {
             continue;
         }
 
-        let sum: i32 = input.split('+').map(|s| s.parse::<i32>().unwrap()).sum();
+        let sum: i32 = input.split('+').flat_map(str::parse::<i32>).sum();
+
         writeln!(output, "{sum}").unwrap();
     }
 

@@ -2,12 +2,9 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    for input in buf.lines().skip(1) {
-        let nums: Vec<_> = input
-            .split_whitespace()
-            .map(|s| s.parse::<i32>().unwrap())
-            .collect();
 
+    for input in buf.lines().skip(1) {
+        let nums: Vec<_> = input.split(' ').flat_map(str::parse::<i32>).collect();
         let mut max_gcd = 0;
 
         for i in 0..nums.len() - 1 {

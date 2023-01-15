@@ -3,9 +3,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf
-        .split_ascii_whitespace()
-        .map(|s| s.parse::<i32>().unwrap());
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
@@ -69,9 +67,7 @@ fn get_ex_gcd(a: i32, b: i32) -> (i32, i32, i32) {
 
 // fn main() {
 //     let buf = io::read_to_string(io::stdin()).unwrap();
-//     let mut input = buf
-//         .split_ascii_whitespace()
-//         .map(|s| s.parse::<usize>().unwrap());
+//     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 //     let mut input = || input.next().unwrap();
 //     let mut output = String::new();
 

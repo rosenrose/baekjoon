@@ -5,7 +5,7 @@ fn main() {
     let mut bars: Vec<_> = buf
         .split_ascii_whitespace()
         .skip(1)
-        .map(|s| s.parse::<i32>().unwrap())
+        .flat_map(str::parse::<i32>)
         .collect();
 
     let (mut max, mut count) = (bars.pop().unwrap(), 1);

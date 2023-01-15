@@ -5,7 +5,7 @@ fn main() {
     let temperatures: Vec<_> = buf
         .lines()
         .take_while(|&s| s != "999")
-        .map(|s| s.parse::<f32>().unwrap())
+        .flat_map(str::parse::<f32>)
         .collect();
 
     for i in 1..temperatures.len() {

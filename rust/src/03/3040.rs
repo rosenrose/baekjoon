@@ -2,7 +2,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let heights: Vec<_> = buf.lines().map(|s| s.parse::<i32>().unwrap()).collect();
+    let heights: Vec<_> = buf.lines().flat_map(str::parse::<i32>).collect();
     let sum: i32 = heights.iter().sum();
 
     let mut non_littles = [0; 2];

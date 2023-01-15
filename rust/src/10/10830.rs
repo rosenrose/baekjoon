@@ -60,9 +60,7 @@ const M: i32 = 1_000;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf
-        .split_ascii_whitespace()
-        .map(|s| s.parse::<i64>().unwrap());
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
     let mut input = || input.next().unwrap();
 
     let (n, b) = (input(), input());

@@ -4,7 +4,7 @@ const M: i64 = 1_000_000_007;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.lines().map(|s| s.parse::<i64>().unwrap());
+    let mut input = buf.lines().flat_map(str::parse::<i64>);
 
     let (a, x) = (input.next().unwrap(), input.next().unwrap());
 

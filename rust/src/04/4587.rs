@@ -23,9 +23,7 @@ impl Sub for Fraction {
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf
-        .split_ascii_whitespace()
-        .map(|s| s.parse::<i64>().unwrap());
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
     let mut output = String::new();
 
     while let (Some(m @ 2..), Some(n @ 2..)) = (input.next(), input.next()) {

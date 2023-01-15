@@ -5,7 +5,7 @@ fn main() {
     let nums: Vec<_> = buf
         .split_ascii_whitespace()
         .skip(1)
-        .map(|s| s.parse::<u32>().unwrap())
+        .flat_map(str::parse::<u32>)
         .collect();
 
     let mut gcd = nums[0].abs_diff(nums[1]);

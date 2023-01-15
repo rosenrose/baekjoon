@@ -5,7 +5,7 @@ fn main() {
     let mut a = buf
         .split_ascii_whitespace()
         .skip(1)
-        .map(|s| s.parse::<i32>().unwrap());
+        .flat_map(str::parse::<i32>);
 
     let mut lis_len_arr = vec![a.next().unwrap()];
     let mut index_arr = vec![(lis_len_arr[0], 0)];

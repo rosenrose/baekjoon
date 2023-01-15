@@ -6,7 +6,7 @@ fn main() {
     let mut a = buf
         .split_ascii_whitespace()
         .skip(1)
-        .map(|s| s.parse::<i32>().unwrap());
+        .flat_map(str::parse::<i32>);
 
     let mut lis = vec![a.next().unwrap()];
 
