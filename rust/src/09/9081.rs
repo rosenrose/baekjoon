@@ -13,7 +13,9 @@ fn main() {
 fn next_permutation(mut chars: Vec<u8>) -> Vec<u8> {
     let len = chars.len();
 
-    let Some(i) = (1..len).rfind(|&i| chars[i - 1] < chars[i]) else { return chars; };
+    let Some(i) = (1..len).rfind(|&i| chars[i - 1] < chars[i]) else {
+        return chars;
+    };
     let j = (i..len).rfind(|&j| chars[j] > chars[i - 1]).unwrap();
 
     chars.swap(i - 1, j);
