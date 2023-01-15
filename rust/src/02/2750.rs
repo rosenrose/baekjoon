@@ -14,7 +14,7 @@ fn main() {
     // bubble_sort(&mut arr);
     // selection_sort(&mut arr);
     // insertion_sort(&mut arr);
-    quick_sort(&mut arr[..], n);
+    quick_sort(&mut arr[..], n as usize);
 
     for num in arr {
         writeln!(output, "{num}").unwrap();
@@ -61,20 +61,19 @@ fn insertion_sort(arr: &mut Vec<i32>) {
     }
 }
 
-fn quick_sort(arr: &mut [i32], len: i32) {
+fn quick_sort(arr: &mut [i32], len: usize) {
     if len <= 1 {
         return;
     }
 
-    let mut i = 0;
-    let mut j = len - 1;
-    let pivot_value = arr[(len / 2) as usize];
+    let (mut i, mut j) = (0, len - 1);
+    let pivot_value = arr[len / 2];
 
     while i <= j {
-        while arr[i as usize] < pivot_value {
+        while arr[i] < pivot_value {
             i += 1;
         }
-        while arr[j as usize] > pivot_value {
+        while arr[j] > pivot_value {
             j -= 1;
         }
 
@@ -82,11 +81,11 @@ fn quick_sort(arr: &mut [i32], len: i32) {
             break;
         }
 
-        arr.swap(i as usize, j as usize);
+        arr.swap(i, j);
         i += 1;
         j -= 1;
     }
 
-    quick_sort(&mut arr[..=j as usize], j + 1);
-    quick_sort(&mut arr[i as usize..], len - i);
+    quick_sort(&mut arr[..=j], j + 1);
+    quick_sort(&mut arr[i..], len - i);
 }
