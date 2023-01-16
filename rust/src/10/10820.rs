@@ -4,25 +4,21 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
 
     for input in buf.lines() {
-        if input.is_empty() {
-            continue;
-        }
-
-        let (lower, upper, digit, blank) = input.chars().fold((0, 0, 0, 0), |(l, u, d, b), ch| {
+        let (lower, upper, digit, blank) = input.chars().fold((0, 0, 0, 0), |mut acc, ch| {
             if ch.is_lowercase() {
-                return (l + 1, u, d, b);
+                acc.0 += 1;
             }
             if ch.is_uppercase() {
-                return (l, u + 1, d, b);
+                acc.1 += 1;
             }
             if ch.is_digit(10) {
-                return (l, u, d + 1, b);
+                acc.2 += 1;
             }
             if ch.is_whitespace() {
-                return (l, u, d, b + 1);
+                acc.3 += 1;
             }
 
-            (l, u, d, b)
+            acc
         });
 
         println!("{lower} {upper} {digit} {blank}");
