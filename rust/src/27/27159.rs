@@ -7,7 +7,7 @@ fn main() {
     let nums: Vec<_> = input.skip(1).collect();
     let score = nums[0]
         + (1..nums.len())
-            .filter_map(|i| (nums[i] - nums[i - 1] > 1).then(|| nums[i]))
+            .filter_map(|i| (nums[i] - nums[i - 1] > 1).then_some(nums[i]))
             .sum::<i32>();
 
     println!("{score}");

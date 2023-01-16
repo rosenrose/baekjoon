@@ -9,7 +9,7 @@ fn main() {
         .filter_map(|i| {
             let (first, rest) = word.split_at(i);
 
-            (first.chars().last().unwrap() == most_ahead).then(|| {
+            (first.chars().last().unwrap() == most_ahead).then_some({
                 (1..=rest.len() - 1).map(move |j| {
                     let (second, third) = rest.split_at(j);
                     [first, second, third]

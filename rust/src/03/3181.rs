@@ -10,7 +10,8 @@ fn main() {
     let short: String = words
         .enumerate()
         .filter_map(|(i, word)| {
-            (i == 0 || !ignore.contains(&word)).then(|| word.to_uppercase().chars().nth(0).unwrap())
+            (i == 0 || !ignore.contains(&word))
+                .then_some(word.to_uppercase().chars().nth(0).unwrap())
         })
         .collect();
 

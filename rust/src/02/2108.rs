@@ -28,7 +28,7 @@ fn main() {
     let mut max_counts: Vec<_> = counts
         .iter()
         .enumerate()
-        .filter_map(|(i, &c)| (c == max_count).then(|| i as i32 - 4000))
+        .filter_map(|(i, &c)| (c == max_count).then_some(i as i32 - 4000))
         .collect();
 
     let most = if max_counts.len() > 1 {

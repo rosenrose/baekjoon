@@ -26,7 +26,7 @@ fn main() {
             letters
                 .iter()
                 .enumerate()
-                .filter_map(|(ch, &b)| (!b).then(|| (ch as u8 + 'a' as u8) as char))
+                .filter_map(|(ch, &b)| (!b).then_some((ch as u8 + 'a' as u8) as char))
                 .collect::<String>()
         );
     }

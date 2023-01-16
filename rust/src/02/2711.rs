@@ -9,7 +9,7 @@ fn main() {
         let index = parse_int(input()) - 1;
         let typo: String = input()
             .char_indices()
-            .filter_map(|(i, c)| (i != index).then(|| c))
+            .filter_map(|(i, c)| (i != index).then_some(c))
             .collect();
 
         println!("{typo}");

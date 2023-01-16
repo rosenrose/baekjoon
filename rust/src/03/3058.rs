@@ -12,7 +12,7 @@ fn main() {
         (0..7)
             .filter_map(|_| {
                 let num = input.next().unwrap();
-                (num % 2 == 0).then(|| num)
+                (num % 2 == 0).then_some(num)
             })
             .for_each(|num| {
                 sum += num;

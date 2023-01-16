@@ -6,7 +6,7 @@ fn main() {
 
     let digit_sum = |s: &str| -> i32 {
         s.chars()
-            .filter_map(|c| c.is_numeric().then(|| c as i32 - '0' as i32))
+            .filter_map(|c| c.is_numeric().then_some(c as i32 - '0' as i32))
             .sum()
     };
 

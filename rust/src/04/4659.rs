@@ -2,6 +2,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+
     for input in buf.lines().take_while(|&input| input != "end") {
         println!(
             "<{input}> is {}",
@@ -29,7 +30,7 @@ fn is_acceptable(pwd: &str) -> bool {
     }
 
     if ('a'..='z')
-        .filter_map(|c| (c != 'e' && c != 'o').then(|| c.to_string().repeat(2)))
+        .filter_map(|c| (c != 'e' && c != 'o').then_some(c.to_string().repeat(2)))
         .any(|s| pwd.contains(&s))
     {
         return false;

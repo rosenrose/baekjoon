@@ -17,7 +17,7 @@ fn main() {
 
     let mut best_sellers: Vec<_> = counts
         .iter()
-        .filter_map(|&(title, count)| (count == max_count).then(|| title))
+        .filter_map(|&(title, count)| (count == max_count).then_some(title))
         .collect();
 
     best_sellers.sort();

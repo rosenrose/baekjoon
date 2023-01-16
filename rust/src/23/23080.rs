@@ -10,7 +10,7 @@ fn main() {
     println!(
         "{}",
         s.char_indices()
-            .filter_map(|(i, c)| (i % k == 0).then(|| c))
+            .filter_map(|(i, c)| (i % k == 0).then_some(c))
             .collect::<String>()
     );
 }

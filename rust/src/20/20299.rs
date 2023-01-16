@@ -15,7 +15,7 @@ fn main() {
             let rating = [input(), input(), input()];
 
             (rating.iter().sum::<i32>() >= team && rating.iter().all(|&r| r >= personal))
-                .then(|| rating)
+                .then_some(rating)
         })
         .for_each(|[x1, x2, x3]| {
             count += 1;

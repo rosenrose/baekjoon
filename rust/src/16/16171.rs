@@ -8,7 +8,7 @@ fn main() {
         .next()
         .unwrap()
         .chars()
-        .filter_map(|c| c.is_alphabetic().then(|| c))
+        .filter_map(|c| c.is_alphabetic().then_some(c))
         .collect();
     let k = input.next().unwrap();
 

@@ -10,7 +10,7 @@ fn main() {
         let team2: i32 = levels
             .iter()
             .enumerate()
-            .filter_map(|(idx, level)| (idx != 0 && idx != i).then(|| level))
+            .filter_map(|(idx, level)| (idx != 0 && idx != i).then_some(level))
             .sum();
 
         min_diff = team1.abs_diff(team2).min(min_diff);

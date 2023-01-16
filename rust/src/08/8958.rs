@@ -2,10 +2,11 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+
     for input in buf.lines().skip(1) {
         let score: usize = input
             .split(|c| c == 'X')
-            .filter_map(|s| (!s.is_empty()).then(|| s.char_indices().map(|(i, _)| i + 1)))
+            .filter_map(|s| (!s.is_empty()).then_some(s.char_indices().map(|(i, _)| i + 1)))
             .flatten()
             .sum();
 
