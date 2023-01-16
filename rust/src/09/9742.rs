@@ -11,7 +11,7 @@ fn main() {
         let len = word.len();
         let mut order: i32 = order.parse().unwrap();
 
-        while let _n @ 2.. = order {
+        while order > 1 {
             let Some(i) = (1..len).rfind(|&i| word[i - 1] < word[i]) else {
                 break;
             };
