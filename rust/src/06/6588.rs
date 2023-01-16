@@ -3,16 +3,18 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let input = buf.lines().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
     let (prime_nums, sieve) = get_prime_nums(1_000_000);
 
     for n in input.take_while(|&n| n != 0) {
-        match get_goldbach_partition(n, &prime_nums, &sieve) {
-            Some((a, b)) => writeln!(output, "{n} = {a} + {b}").unwrap(),
-            None => writeln!(output, "Goldbach's conjecture is wrong.").unwrap(),
-        };
+        (if let Some((a, b)) = get_goldbach_partition(n, &prime_nums, &sieve) {
+            writeln!(output, "{n} = {a} + {b}")
+        } else {
+            writeln!(output, "Goldbach's conjecture is wrong.")
+        })
+        .unwrap();
     }
 
     print!("{output}");

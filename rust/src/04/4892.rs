@@ -7,8 +7,10 @@ fn main() {
     let mut output = String::new();
 
     (1..)
-        .map(|i| (i, input.next().unwrap()))
-        .take_while(|&(_, n0)| n0 != 0)
+        .map_while(|i| {
+            let n0 = input.next().unwrap();
+            (n0 != 0).then_some((i, n0))
+        })
         .for_each(|(i, n0)| {
             let n1 = 3 * n0;
             let n2 = if n1 % 2 == 0 { n1 / 2 } else { (n1 + 1) / 2 };

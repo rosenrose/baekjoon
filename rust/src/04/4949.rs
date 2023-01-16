@@ -1,7 +1,10 @@
+use std::fmt::Write;
 use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut output = String::new();
+
     'outer: for input in buf.lines().take_while(|&input| input != ".") {
         let mut open_close = Vec::new();
 
@@ -11,12 +14,12 @@ fn main() {
                 ')' | ']' => match open_close.pop() {
                     Some(ch) => {
                         if (c == ')' && ch != '(') || (c == ']' && ch != '[') {
-                            println!("no");
+                            writeln!(output, "no").unwrap();
                             continue 'outer;
                         }
                     }
                     None => {
-                        println!("no");
+                        writeln!(output, "no").unwrap();
                         continue 'outer;
                     }
                 },
@@ -24,6 +27,13 @@ fn main() {
             };
         }
 
-        println!("{}", if open_close.is_empty() { "yes" } else { "no" });
+        writeln!(
+            output,
+            "{}",
+            if open_close.is_empty() { "yes" } else { "no" }
+        )
+        .unwrap();
     }
+
+    print!("{output}")
 }

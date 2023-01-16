@@ -17,8 +17,10 @@ fn main() {
     };
 
     (1..)
-        .map(|i| (i, (input.next().unwrap(), input.next().unwrap())))
-        .take_while(|&(_, (a, b))| (a, b) != ("END", "END"))
+        .map_while(|i| {
+            let (a, b) = (input.next().unwrap(), input.next().unwrap());
+            ((a, b) != ("END", "END")).then_some((i, (a, b)))
+        })
         .for_each(|(i, (a, b))| {
             writeln!(
                 output,

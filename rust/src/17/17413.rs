@@ -7,11 +7,9 @@ fn main() {
 
     buf.trim().split_inclusive(['<', '>']).for_each(|s| {
         if s.ends_with('>') {
-            let trimmed = s.strip_suffix('>').unwrap();
-            tags.push(trimmed);
+            tags.push(s.strip_suffix('>').unwrap());
         } else {
-            let trimmed = s.strip_suffix('<').unwrap_or(s);
-            words.push(trimmed);
+            words.push(s.strip_suffix('<').unwrap_or(s));
         }
     });
 
@@ -19,12 +17,8 @@ fn main() {
         words.push("");
     }
     // println!("{words:?} {tags:?}");
-
     for (i, word) in words.iter().enumerate() {
-        let word: Vec<String> = word
-            .split_whitespace()
-            .map(|s| s.chars().rev().collect())
-            .collect();
+        let word: Vec<String> = word.split(' ').map(|s| s.chars().rev().collect()).collect();
 
         if i > 0 {
             print!("<{}>", tags[i - 1]);

@@ -6,8 +6,10 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     (1..)
-        .map(|i| (i, (input(), input(), input())))
-        .take_while(|&(_, (a, b, c))| (a, b, c) != (0, 0, 0))
+        .map_while(|i| {
+            let (a, b, c) = (input(), input(), input());
+            ((a, b, c) != (0, 0, 0)).then_some((i, (a, b, c)))
+        })
         .for_each(|(i, (a, b, c))| {
             let (name, square) = match (a, b, c) {
                 (-1, b, c) => ("a", c * c - b * b),
