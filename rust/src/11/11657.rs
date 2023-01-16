@@ -26,15 +26,11 @@ fn main() {
     print!("{output}");
 }
 
-fn bellman_ford(
-    node_num: usize,
-    edges: &Vec<(usize, usize, i64)>,
-    start: usize,
-) -> (Vec<i64>, bool) {
-    let mut distances = vec![i64::MAX; node_num + 1];
+fn bellman_ford(len: usize, edges: &Vec<(usize, usize, i64)>, start: usize) -> (Vec<i64>, bool) {
+    let mut distances = vec![i64::MAX; len + 1];
     distances[start] = 0;
 
-    for count in 0..node_num {
+    for i in 0..len {
         for &(start, end, weight) in edges {
             if distances[start] == i64::MAX {
                 continue;
@@ -46,7 +42,7 @@ fn bellman_ford(
                 continue;
             }
 
-            if count == node_num - 1 {
+            if i == len - 1 {
                 return (distances, true);
             }
 
