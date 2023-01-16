@@ -2,9 +2,8 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    for line in buf.lines() {
-        let n: i32 = line.parse().unwrap();
 
+    for n in buf.lines().flat_map(str::parse::<i32>) {
         let (mut remainder, mut exp_remainder) = (1 % n, 1 % n);
         let mut count = 1;
 

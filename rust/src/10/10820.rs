@@ -2,26 +2,27 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    for line in buf.lines() {
-        if line.is_empty() {
+
+    for input in buf.lines() {
+        if input.is_empty() {
             continue;
         }
 
-        let (mut lower, mut upper, mut digit, mut blank) = (0, 0, 0, 0);
+        let (lower, upper, digit, blank) = input.chars().fold((0, 0, 0, 0), |(l, u, d, b), ch| {
+            if ch.is_lowercase() {
+                return (l + 1, u, d, b);
+            }
+            if ch.is_uppercase() {
+                return (l, u + 1, d, b);
+            }
+            if ch.is_digit(10) {
+                return (l, u, d + 1, b);
+            }
+            if ch.is_whitespace() {
+                return (l, u, d, b + 1);
+            }
 
-        line.chars().for_each(|c| {
-            if c.is_lowercase() {
-                lower += 1;
-            }
-            if c.is_uppercase() {
-                upper += 1;
-            }
-            if c.is_digit(10) {
-                digit += 1;
-            }
-            if c.is_whitespace() {
-                blank += 1;
-            }
+            (l, u, d, b)
         });
 
         println!("{lower} {upper} {digit} {blank}");

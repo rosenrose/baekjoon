@@ -2,8 +2,9 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+
     for input in buf.lines().skip(1) {
-        let mut formula = input.split_whitespace();
+        let mut formula = input.split(' ');
         let mut num: f64 = formula.next().unwrap().parse().unwrap();
 
         for operator in formula {

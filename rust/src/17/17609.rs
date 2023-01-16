@@ -2,6 +2,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+
     for input in buf.lines().skip(1) {
         let (is_palin, is_pseudo_palin) = is_palindrome(input);
 
