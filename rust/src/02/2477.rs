@@ -1,60 +1,31 @@
 use std::io;
 
-struct Side {
-    direction: i32,
-    length: i32,
-}
-
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
     let k = input();
-    let mut direction_counts = [0; 5];
 
-    let mut sides: Vec<_> = (0..6)
+    let mut longest = 0;
+    let mut lengths: Vec<_> = (0..6)
         .map(|_| {
-            let (direction, length) = (input(), input());
-            direction_counts[direction as usize] += 1;
+            let (_, length) = (input(), input());
+            longest = length.max(longest);
 
-            Side { direction, length }
+            length
         })
         .collect();
 
-    let mut outers: Vec<_> = direction_counts
-        .iter()
-        .enumerate()
-        .filter_map(|(d, &c)| (c == 1).then_some(d))
-        .collect();
-
-    outers.sort();
-
-    let (init_direction, out_width_idx, out_height_idx, in_width_idx, in_height_idx) =
-        match outers[..] {
-            [1, 3] => (1, 0, 5, 2, 3),
-            [1, 4] => (1, 0, 1, 4, 3),
-            [2, 3] => (2, 0, 1, 4, 3),
-            [2, 4] => (2, 0, 5, 2, 3),
-            _ => (0, 0, 0, 0, 0),
-        };
-
-    while sides[0].direction != init_direction {
-        let temp = sides.pop().unwrap();
-        sides.insert(0, temp);
+    while lengths[0] != longest {
+        lengths.rotate_left(1);
     }
 
-    let outer_area = sides[out_width_idx].length * sides[out_height_idx].length;
-    let inner_area = sides[in_width_idx].length * sides[in_height_idx].length;
-    let count = (outer_area - inner_area) * k;
+    let (outer_area, inner_area) = if lengths[1] < lengths[5] {
+        (lengths[0] * lengths[5], lengths[2] * lengths[3])
+    } else {
+        (lengths[0] * lengths[1], lengths[3] * lengths[4])
+    };
 
-    println!("{count}");
+    println!("{}", (outer_area - inner_area) * k);
 }
-
-/*
-┌┐               ┌┐             ┌─┐             ┌─┐
-│└┐             ┌┘│             │┌┘             └┐│
-└─┘             └─┘             └┘               └┘
-1 4 2 4 2 3  |  1 4 2 3 2 3  |  2 3 1 4 1 4  |  2 3 1 3 1 4
-(1, 3)          (1, 4)          (2, 3)          (2, 4)
-*/
