@@ -9,9 +9,9 @@ fn main() {
         let n = (input.len() as f64).sqrt() as usize;
         let table: Vec<_> = input.as_bytes().chunks(n).collect();
 
-        for j in (0..n).rev() {
-            for i in 0..n {
-                write!(output, "{}", table[i][j] as char).unwrap();
+        for col in (0..n).rev() {
+            for row in table.iter() {
+                write!(output, "{}", row[col] as char).unwrap();
             }
         }
         writeln!(output, "").unwrap();
