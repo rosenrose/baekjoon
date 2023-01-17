@@ -19,12 +19,11 @@ impl Matrix {
 
         for j in 0..size {
             if is_zero(self.0[j][j]) {
-                match (j + 1..size).find(|&k| !is_zero(self.0[k][j])) {
-                    Some(k) => {
-                        self.row_operation(k, j, j, 1.0);
-                        inv.row_operation(k, j, 0, 1.0);
-                    }
-                    None => return None,
+                if let Some(k) = (j + 1..size).find(|&k| !is_zero(self.0[k][j])) {
+                    self.row_operation(k, j, j, 1.0);
+                    inv.row_operation(k, j, 0, 1.0);
+                } else {
+                    return None;
                 }
             }
 
@@ -158,9 +157,10 @@ fn main() {
             .collect(),
     );
 
-    match a.inverse() {
-        Some(i) => print!("{i}"),
-        None => println!("no inverse"),
+    if let Some(inv) = a.inverse() {
+        print!("{inv}");
+    } else {
+        println!("no inverse");
     }
 }
 
