@@ -1,9 +1,8 @@
 use std::io;
-use std::string::ToString;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let input = buf.lines().flat_map(str::parse::<i32>);
 
     for num in input.take_while(|&num| num != -1) {
         let mut divisors = (1..)
@@ -24,20 +23,16 @@ fn main() {
         let sum: i32 = divisors.iter().sum();
 
         if sum == num {
-            println!("{num} = {}", vec_join(&divisors, " + "));
+            println!(
+                "{num} = {}",
+                format!("{divisors:?}")
+                    .replace(['[', ']'], "")
+                    .replace(", ", " + ")
+            );
+
             continue;
         }
 
         println!("{num} is NOT perfect.");
     }
-}
-
-fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String
-where
-    T: ToString,
-{
-    vec.iter()
-        .map(ToString::to_string)
-        .collect::<Vec<String>>()
-        .join(seperator)
 }

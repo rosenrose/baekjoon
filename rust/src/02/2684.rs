@@ -10,16 +10,9 @@ fn main() {
             .map(|coin| input.windows(3).filter(|&w| w == coin.as_bytes()).count())
             .collect();
 
-        println!("{}", vec_join(&counts, " "));
+        for c in counts {
+            print!("{c} ");
+        }
+        println!("");
     }
-}
-
-fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String
-where
-    T: ToString,
-{
-    vec.iter()
-        .map(ToString::to_string)
-        .collect::<Vec<String>>()
-        .join(seperator)
 }

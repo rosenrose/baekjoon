@@ -1,13 +1,12 @@
 use std::io;
-use std::string::ToString;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    input.next();
+    let mut input = || input.next().unwrap();
 
-    let k = parse_int(input.next().unwrap());
-    let arr = input.next().unwrap();
+    let (_, k) = (input(), parse_int(input()));
+    let arr = input();
 
     if k == 0 {
         println!("{arr}");
@@ -23,19 +22,9 @@ fn main() {
             .collect();
     }
 
-    println!("{}", vec_join(&new_arr, ","))
+    println!("{}", format!("{new_arr:?}").replace(['[', ']', ' '], ""));
 }
 
 fn parse_int(buf: &str) -> i32 {
     buf.parse().unwrap()
-}
-
-fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String
-where
-    T: ToString,
-{
-    vec.iter()
-        .map(ToString::to_string)
-        .collect::<Vec<String>>()
-        .join(seperator)
 }
