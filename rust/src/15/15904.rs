@@ -4,7 +4,7 @@ fn main() {
 
     const COMPARE: &str = "UCPC";
 
-    let comapre_chars: Vec<char> = "UCPC".chars().collect();
+    let comapre_chars: Vec<_> = "UCPC".chars().collect();
     let mut stack = String::new();
 
     for c in buf.trim().chars() {
