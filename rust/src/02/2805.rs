@@ -3,9 +3,8 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
-    input.next();
 
-    let m = input.next().unwrap();
+    let (_, m) = (input.next(), input.next().unwrap());
     let mut max_height = 0;
 
     let heights: Vec<_> = input

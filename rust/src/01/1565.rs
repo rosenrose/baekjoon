@@ -4,12 +4,11 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+    let mut input = || input.next().unwrap();
 
-    let n = input.next().unwrap();
-    input.next();
-
-    let d: Vec<_> = (0..n).map(|_| input.next().unwrap()).collect();
-    let m: Vec<_> = input.collect();
+    let (d_len, m_len) = (input(), input());
+    let d: Vec<_> = (0..d_len).map(|_| input()).collect();
+    let m: Vec<_> = (0..m_len).map(|_| input()).collect();
 
     let gcd = get_gcd(m.into_iter());
     let mut lcm = 1;

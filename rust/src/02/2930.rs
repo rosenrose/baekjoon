@@ -3,9 +3,8 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
-    input.next();
 
-    let my_rps = input.next().unwrap();
+    let (_, my_rps) = (input.next(), input.next().unwrap());
     let friends: Vec<_> = input.skip(1).collect();
 
     let (score, max_score) = my_rps

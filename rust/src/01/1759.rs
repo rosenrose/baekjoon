@@ -7,9 +7,8 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
 
     let len: i32 = input.next().unwrap().parse().unwrap();
-    input.next();
 
-    let mut chars: Vec<_> = input.collect();
+    let mut chars: Vec<_> = input.skip(1).collect();
     chars.sort();
 
     combination(&chars, len, 0, &mut String::new());

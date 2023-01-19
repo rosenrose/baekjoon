@@ -4,8 +4,8 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    input.next();
 
+    let _n = input.next();
     let m: usize = input.next().unwrap().parse().unwrap();
     let dna_strings: Vec<_> = input.map(|s| s.as_bytes()).collect();
 

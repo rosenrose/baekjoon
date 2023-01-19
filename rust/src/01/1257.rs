@@ -6,9 +6,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
 
-    let money = input.next().unwrap();
-    input.next();
-
+    let (money, _) = (input.next().unwrap(), input.next());
     let coins: Vec<_> = input.collect();
     let biggest = *coins.iter().max().unwrap();
 

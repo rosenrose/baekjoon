@@ -3,13 +3,13 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
-    input.next();
+    let mut input = || input.next().unwrap();
 
-    let (left, right) = (input.next().unwrap(), input.next().unwrap());
+    let (n, left, right) = (input(), input(), input());
     let mut count = 0;
     let mut lcm_accum = vec![-1_i64];
 
-    for num in input {
+    for num in (0..n).map(|_| input()) {
         for i in 0..lcm_accum.len() {
             let (lcm, sign) = (lcm_accum[i].abs(), lcm_accum[i].signum() * -1);
             let lcm = get_lcm(lcm, num);

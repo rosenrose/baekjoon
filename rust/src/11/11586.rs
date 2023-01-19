@@ -3,8 +3,8 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
-    input.next();
 
+    let _n = input.next();
     let state: i32 = input.next_back().unwrap().parse().unwrap();
 
     match state {

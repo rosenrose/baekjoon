@@ -4,8 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (a, b) = (input.next().unwrap(), input.next().unwrap());
-    input.next();
+    let (a, b, _) = (input.next().unwrap(), input.next().unwrap(), input.next());
 
     let mut b_nums = Vec::new();
     let mut a_num: i32 = input

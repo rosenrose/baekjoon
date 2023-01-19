@@ -6,12 +6,13 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().flat_map(str::parse::<i32>);
-    input.next();
     let mut output = String::new();
 
     let (mut under, mut over) = (BinaryHeap::new(), BinaryHeap::new());
 
+    let _n = input.next();
     under.push(input.next().unwrap());
+
     println!("{}", under.peek().unwrap());
 
     for num in input {
