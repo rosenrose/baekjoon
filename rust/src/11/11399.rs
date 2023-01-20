@@ -7,10 +7,13 @@ fn main() {
     let mut times: Vec<_> = input.skip(1).collect();
     times.sort();
 
-    let waits = times.iter().fold(vec![0], |mut acc, time| {
-        acc.push(acc.last().unwrap() + time);
-        acc
-    });
+    let waits: i32 = times
+        .iter()
+        .scan(0, |acc, time| {
+            *acc += time;
+            Some(*acc)
+        })
+        .sum();
 
-    println!("{}", waits.iter().sum::<i32>());
+    println!("{waits}");
 }

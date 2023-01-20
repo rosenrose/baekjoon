@@ -10,10 +10,11 @@ fn main() {
     let (n, m) = (input() as usize, input());
 
     let sum_accum: Vec<_> = (0..n).fold(vec![vec![0; n + 1]], |mut acc, _| {
-        let row_accum = (0..n).fold(vec![0], |mut acc, _| {
-            acc.push(acc.last().unwrap() + input());
-            acc
-        });
+        let mut row_accum = vec![0];
+        row_accum.extend((0..n).scan(0, |acc, _| {
+            *acc += input();
+            Some(*acc)
+        }));
 
         let row: Vec<_> = acc
             .last()

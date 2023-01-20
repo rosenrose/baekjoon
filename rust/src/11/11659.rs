@@ -8,10 +8,12 @@ fn main() {
     let mut output = String::new();
 
     let (n, m) = (input(), input());
-    let sum_accum = (0..n).fold(vec![0], |mut acc, _| {
-        acc.push(acc.last().unwrap() + input());
-        acc
-    });
+    let mut sum_accum = vec![0];
+
+    sum_accum.extend((0..n).scan(0, |acc, _| {
+        *acc += input();
+        Some(*acc)
+    }));
 
     for (i, j) in (0..m).map(|_| (input() as usize, input() as usize)) {
         writeln!(output, "{}", sum_accum[j] - sum_accum[i - 1]).unwrap();
