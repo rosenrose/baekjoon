@@ -23,7 +23,7 @@ fn main() {
     let k: usize = nums.next().unwrap().parse().unwrap();
 
     for prime in get_prime_nums(k - 1) {
-        if bigint_mod(&p, prime) == 0 {
+        if bigint_rem(&p, prime) == 0 {
             println!("BAD {prime}");
             return;
         }
@@ -32,17 +32,17 @@ fn main() {
     println!("GOOD");
 }
 
-fn bigint_mod(bigint: &Vec<i32>, m: i32) -> i32 {
-    let mut exp_rem = 1 % m;
+fn bigint_rem(bigint: &Vec<i32>, m: i32) -> i32 {
+    let mut exp_rem = 1;
 
     bigint.iter().fold(0, |acc, num| {
-        let rem = (num % m * exp_rem % m) % m;
+        let rem = ((num % m) * exp_rem) % m;
 
         for _ in 0..3 {
-            exp_rem = (exp_rem % m * 10 % m) % m;
+            exp_rem = (exp_rem * (10 % m)) % m;
         }
 
-        (acc % m + rem % m) % m
+        (acc + rem) % m
     })
 }
 
