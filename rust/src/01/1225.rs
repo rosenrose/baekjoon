@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let (a, b) = (input.next().unwrap(), input.next().unwrap());
 
-    let digit_sum = |s: &str| -> i64 { s.chars().map(|c| c as i64 - '0' as i64).sum() };
+    let digit_sum = |s: &str| s.chars().map(|c| c as i64 - '0' as i64).digit_sum::<i64>();
 
     println!("{}", digit_sum(a) * digit_sum(b));
 }
