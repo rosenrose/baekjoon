@@ -16,23 +16,22 @@ fn main() {
         count
     };
 
-    (1..)
-        .map_while(|i| {
-            let (a, b) = (input.next().unwrap(), input.next().unwrap());
-            ((a, b) != ("END", "END")).then_some((i, (a, b)))
-        })
-        .for_each(|(i, (a, b))| {
-            writeln!(
-                output,
-                "Case {i}: {}",
-                if char_count(a) == char_count(b) {
-                    "same"
-                } else {
-                    "different"
-                }
-            )
-            .unwrap();
-        });
+    for (i, (a, b)) in (1..).map(|i| (i, (input.next().unwrap(), input.next().unwrap()))) {
+        if (a, b) == ("END", "END") {
+            break;
+        }
+
+        writeln!(
+            output,
+            "Case {i}: {}",
+            if char_count(a) == char_count(b) {
+                "same"
+            } else {
+                "different"
+            }
+        )
+        .unwrap();
+    }
 
     print!("{output}");
 }
