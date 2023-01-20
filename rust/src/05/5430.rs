@@ -11,7 +11,7 @@ fn main() {
     let n = parse_int(input());
 
     'outer: for (p, len, arr) in (0..n).map(|_| (input(), parse_int(input()), input())) {
-        let mut arr: VecDeque<_> = if len > 0 {
+        let mut arr = if len > 0 {
             arr[1..arr.len() - 1].split(',').map(parse_int).collect()
         } else {
             VecDeque::new()
@@ -38,22 +38,13 @@ fn main() {
             };
         }
 
-        write!(output, "[").unwrap();
-
-        let print_arr = |(i, num): (usize, &i32)| {
-            if i > 0 {
-                write!(output, ",").unwrap();
-            }
-            write!(output, "{num}").unwrap();
-        };
+        let mut arr = Vec::from_iter(arr);
 
         if is_reverse {
-            arr.iter().rev().enumerate().for_each(print_arr);
-        } else {
-            arr.iter().enumerate().for_each(print_arr);
-        };
+            arr.reverse();
+        }
 
-        writeln!(output, "]").unwrap();
+        writeln!(output, "{}", format!("{arr:?}").replace(' ', "")).unwrap();
     }
 
     print!("{output}");
