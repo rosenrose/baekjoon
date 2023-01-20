@@ -1,6 +1,6 @@
 from itertools import combinations_with_replacement
 
-_, m = map(int, input().split())
+m = int(input().split()[1])
 arr = sorted(map(int, input().split()))
 
 print(

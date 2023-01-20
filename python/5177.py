@@ -8,7 +8,7 @@ def sanitize(string):
     string = re.sub(r"[}\]]", ")", string)
     string = string.replace(";", ",")
     string = re.sub(r"\s*([().,:])\s*", r"\1", string)
-    print("ssss", string)
+
     return string
 
 

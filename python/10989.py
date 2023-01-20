@@ -1,16 +1,9 @@
 import sys
 
-N = int(sys.stdin.readline())
+count = [0 for _ in range(10001)]
 
-count = []
-
-for i in range(N):
-    num = int(sys.stdin.readline())
-
-    while len(count) <= num:
-        count.append(0)
-
-    count[num] += 1
+for _ in range(int(sys.stdin.readline())):
+    count[int(sys.stdin.readline())] += 1
 
 for num, c in enumerate(count):
     if c == 0:

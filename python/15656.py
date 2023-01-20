@@ -1,6 +1,7 @@
 from itertools import product
 
-_, m = map(int, input().split())
-arr = sorted(map(int, input().split()))
+m = int(input().split()[1])
 
-print(*[" ".join(map(str, i)) for i in product(arr, repeat=m)], sep="\n")
+print(
+    *[" ".join(map(str, i)) for i in product(sorted(map(int, input().split())), repeat=m)], sep="\n"
+)

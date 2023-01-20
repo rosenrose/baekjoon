@@ -1,6 +1,7 @@
 from itertools import permutations
 
-_, m = map(int, input().split())
-arr = sorted(map(int, input().split()))
+m = int(input().split()[1])
 
-print(*[" ".join(map(str, i)) for i in permutations(arr, m)], sep="\n")
+print(
+    *[" ".join(map(str, i)) for i in permutations(sorted(map(int, input().split())), m)], sep="\n"
+)

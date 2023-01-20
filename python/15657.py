@@ -1,6 +1,11 @@
 from itertools import combinations_with_replacement
 
-_, m = map(int, input().split())
-arr = sorted(map(int, input().split()))
+m = int(input().split()[1])
 
-print(*[" ".join(map(str, i)) for i in combinations_with_replacement(arr, m)], sep="\n")
+print(
+    *[
+        " ".join(map(str, i))
+        for i in combinations_with_replacement(sorted(map(int, input().split())), m)
+    ],
+    sep="\n"
+)
