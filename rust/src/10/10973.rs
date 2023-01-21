@@ -18,9 +18,7 @@ fn main() {
 fn prev_permutation(mut nums: Vec<i32>) -> Option<Vec<i32>> {
     let len = nums.len();
 
-    let Some(i) = (1..len).rfind(|&i| nums[i - 1] > nums[i]) else {
-        return None;
-    };
+    let i = (1..len).rfind(|&i| nums[i - 1] > nums[i])?;
     let j = (i..len).rfind(|&j| nums[j] < nums[i - 1]).unwrap();
 
     nums.swap(i - 1, j);

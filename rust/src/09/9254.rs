@@ -19,12 +19,10 @@ impl Matrix {
 
         for j in 0..size {
             if is_zero(self.0[j][j]) {
-                if let Some(k) = (j + 1..size).find(|&k| !is_zero(self.0[k][j])) {
-                    self.row_operation(k, j, j, 1.0);
-                    inv.row_operation(k, j, 0, 1.0);
-                } else {
-                    return None;
-                }
+                let k = (j + 1..size).find(|&k| !is_zero(self.0[k][j]))?;
+
+                self.row_operation(k, j, j, 1.0);
+                inv.row_operation(k, j, 0, 1.0);
             }
 
             let diagonal = self.0[j][j];
