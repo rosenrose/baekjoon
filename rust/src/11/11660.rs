@@ -8,25 +8,16 @@ fn main() {
     let mut output = String::new();
 
     let (n, m) = (input() as usize, input());
+    let mut sum_accum = vec![vec![0; n + 1]; n + 1];
 
-    let sum_accum: Vec<_> = (0..n).fold(vec![vec![0; n + 1]], |mut acc, _| {
-        let mut row_accum = vec![0];
-        row_accum.extend((0..n).scan(0, |acc, _| {
-            *acc += input();
-            Some(*acc)
-        }));
-
-        let row: Vec<_> = acc
-            .last()
-            .unwrap()
-            .iter()
-            .zip(row_accum)
-            .map(|(col1, col2)| col1 + col2)
-            .collect();
-
-        acc.push(row);
-        acc
-    });
+    for i in 1..=n {
+        for j in 1..=n {
+            sum_accum[i][j] = sum_accum[i][j - 1] + input();
+        }
+        for j in 1..=n {
+            sum_accum[i][j] += sum_accum[i - 1][j];
+        }
+    }
     // println!("{sum_accum:?}");
     for _ in 0..m {
         let (x1, y1, x2, y2) = (
@@ -44,15 +35,3 @@ fn main() {
 
     print!("{output}");
 }
-
-// let mut sum = 0;
-// let row: Vec<_> = acc
-//     .last()
-//     .unwrap()
-//     .iter()
-//     .skip(1)
-//     .fold(vec![0], |mut row_acc, col| {
-//         sum += input.next().unwrap();
-//         row_acc.push(col + sum);
-//         row_acc
-//     });

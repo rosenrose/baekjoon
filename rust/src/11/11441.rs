@@ -7,11 +7,13 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let mut sum_accum = vec![0];
-    sum_accum.extend((0..input()).scan(0, |acc, _| {
-        *acc += input();
-        Some(*acc)
-    }));
+    let sum_accum: Vec<_> = [0]
+        .into_iter()
+        .chain((0..input()).scan(0, |acc, _| {
+            *acc += input();
+            Some(*acc)
+        }))
+        .collect();
 
     for (i, j) in (0..input()).map(|_| (input() as usize, input() as usize)) {
         writeln!(output, "{}", sum_accum[j] - sum_accum[i - 1]).unwrap();

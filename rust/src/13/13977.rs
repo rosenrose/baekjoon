@@ -9,11 +9,13 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let mut factorial_rem = vec![1];
-    factorial_rem.extend((1..=4_000_000).scan(1, |acc, i| {
-        *acc = (*acc * i) % M;
-        Some(*acc)
-    }));
+    let factorial_rem: Vec<_> = [1]
+        .into_iter()
+        .chain((1..=4_000_000).scan(1, |acc, i| {
+            *acc = (*acc * i) % M;
+            Some(*acc)
+        }))
+        .collect();
 
     for (n, k) in (0..input()).map(|_| (input(), input())) {
         writeln!(output, "{}", combination_rem(n, k, &factorial_rem)).unwrap();
