@@ -25,13 +25,15 @@ where
         let left_idx = i * 2 + 1;
         let right_idx = i * 2 + 2;
 
-        let left = match self.0.get(left_idx) {
-            Some(v) => Some((left_idx, *v)),
-            None => None,
+        let left = if let Some(v) = self.0.get(left_idx) {
+            Some((left_idx, *v))
+        } else {
+            None
         };
-        let right = match self.0.get(right_idx) {
-            Some(v) => Some((right_idx, *v)),
-            None => None,
+        let right = if let Some(v) = self.0.get(right_idx) {
+            Some((right_idx, *v))
+        } else {
+            None
         };
 
         (left, right)
@@ -62,15 +64,12 @@ where
     }
 
     fn up_heapify(&mut self, i: usize, value: T) {
-        match Self::get_parent(self, i) {
-            Some((parent_idx, parent_value)) => {
-                if parent_value < value {
-                    self.0.swap(parent_idx, i);
-                }
-
-                Self::up_heapify(self, parent_idx, value);
+        if let Some((parent_idx, parent_value)) = Self::get_parent(self, i) {
+            if parent_value < value {
+                self.0.swap(parent_idx, i);
             }
-            None => return,
+
+            Self::up_heapify(self, parent_idx, value);
         }
     }
 

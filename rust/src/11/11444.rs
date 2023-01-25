@@ -23,9 +23,10 @@ fn fibo_rem(n: i64, cache: &mut HashMap<i64, i64>) -> i64 {
     let i = n / 2;
     let j = if n % 2 == 0 { i } else { i + 1 };
 
-    let mut get_or_insert = |n: i64| match cache.get(&n) {
-        Some(num) => *num,
-        None => {
+    let mut get_or_insert = |n: i64| {
+        if let Some(num) = cache.get(&n) {
+            *num
+        } else {
             let ret = fibo_rem(n, cache);
             cache.insert(n, ret);
 

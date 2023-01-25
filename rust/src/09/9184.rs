@@ -25,9 +25,10 @@ fn w(a: i32, b: i32, c: i32, cache: &mut HashMap<(i32, i32, i32), i32>) -> i32 {
         return 1;
     }
 
-    let mut get_or_insert = |a: i32, b: i32, c: i32| match cache.get(&(a, b, c)) {
-        Some(i) => *i,
-        None => {
+    let mut get_or_insert = |a: i32, b: i32, c: i32| {
+        if let Some(i) = cache.get(&(a, b, c)) {
+            *i
+        } else {
             let ret = w(a, b, c, cache);
             cache.insert((a, b, c), ret);
 

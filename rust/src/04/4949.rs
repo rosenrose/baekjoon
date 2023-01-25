@@ -8,21 +8,20 @@ fn main() {
     'outer: for input in buf.lines().take_while(|&input| input != ".") {
         let mut open_close = Vec::new();
 
-        for c in input.chars() {
-            match c {
-                '(' | '[' => open_close.push(c),
-                ')' | ']' => match open_close.pop() {
-                    Some(ch) => {
-                        if (c == ')' && ch != '(') || (c == ']' && ch != '[') {
+        for input_char in input.chars() {
+            match input_char {
+                '(' | '[' => open_close.push(input_char),
+                ')' | ']' => {
+                    if let Some(ch) = open_close.pop() {
+                        if (input_char == ')' && ch != '(') || (input_char == ']' && ch != '[') {
                             writeln!(output, "no").unwrap();
                             continue 'outer;
                         }
-                    }
-                    None => {
+                    } else {
                         writeln!(output, "no").unwrap();
                         continue 'outer;
                     }
-                },
+                }
                 _ => (),
             };
         }

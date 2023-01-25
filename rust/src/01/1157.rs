@@ -19,8 +19,9 @@ fn main() {
         .filter(|(_, &c)| c == max_count);
     let (most_letter, _) = most_letters.next().unwrap();
 
-    match most_letters.next() {
-        Some(_) => println!("?"),
-        None => println!("{}", (most_letter as u8 + 'A' as u8) as char),
+    if most_letters.next().is_some() {
+        println!("?");
+    } else {
+        println!("{}", (most_letter as u8 + 'A' as u8) as char);
     }
 }

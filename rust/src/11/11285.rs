@@ -23,9 +23,10 @@ fn main() {
 
     code += (medial as u32 - 'ㅏ' as u32) * LAST_COUNT;
 
-    code += match input() {
-        Some(last) => LASTS.iter().position(|&c| c == last).unwrap() as u32 + 1,
-        None => 0,
+    code += if let Some(last) = input() {
+        LASTS.iter().position(|&c| c == last).unwrap() as u32 + 1
+    } else {
+        0
     };
 
     println!("{}", char::from_u32(code).unwrap());
