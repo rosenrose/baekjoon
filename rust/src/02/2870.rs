@@ -2,7 +2,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut nums: Vec<String> = buf
+    let mut nums: Vec<_> = buf
         .lines()
         .skip(1)
         .flat_map(|input| {
@@ -11,9 +11,9 @@ fn main() {
                     return None;
                 }
 
-                let mut s = s.to_string();
+                let mut s = s.to_owned();
 
-                while s.len() > 1 && s.chars().nth(0).unwrap() == '0' {
+                while s.len() > 1 && s.chars().nth(0) == Some('0') {
                     s.remove(0);
                 }
 

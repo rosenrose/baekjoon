@@ -2,15 +2,13 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace();
+    let mut input = buf.lines();
 
-    let bomb = input.next_back().unwrap();
+    let (s, bomb) = (input.next().unwrap(), input.next().unwrap());
     let bomb_len = bomb.len();
-    let input = input.next().unwrap();
-
     let mut stack = String::new();
 
-    for c in input.chars() {
+    for c in s.chars() {
         stack.push(c);
 
         if stack[stack.len().saturating_sub(bomb_len)..] == bomb[..] {
@@ -21,7 +19,7 @@ fn main() {
     println!(
         "{}",
         if stack.is_empty() {
-            "FRULA".to_string()
+            "FRULA".to_owned()
         } else {
             stack
         }

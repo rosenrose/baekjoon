@@ -18,8 +18,8 @@ fn main() {
     let mut poly = input.split('x');
 
     let coef_xx = match parse_int(poly.next().unwrap()) / 2 {
-        1 => "".to_string(),
-        -1 => "-".to_string(),
+        1 => "".to_owned(),
+        -1 => "-".to_owned(),
         x => x.to_string(),
     };
 
@@ -31,8 +31,8 @@ fn main() {
     }
 
     let coef_x = match parse_int(coef_x) {
-        1 => "+".to_string(),
-        -1 => "-".to_string(),
+        1 => "+".to_owned(),
+        -1 => "-".to_owned(),
         x => format!("{x:+}"),
     };
 

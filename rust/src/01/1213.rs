@@ -23,9 +23,10 @@ fn main() {
         return;
     }
 
-    let mut palindrome = match odds.get(0) {
-        Some(c) => c.to_string(),
-        None => String::new(),
+    let mut palindrome = if let Some(c) = odds.get(0) {
+        c.to_string()
+    } else {
+        String::new()
     };
 
     for &(ch, count) in counts.iter().rev() {

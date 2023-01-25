@@ -11,7 +11,7 @@ fn main() {
 
 fn star(n: usize) -> String {
     if n == 1 {
-        return "*".to_string();
+        return "*".to_owned();
     }
 
     let mut inner = star(n - 1);

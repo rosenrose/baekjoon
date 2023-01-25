@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut input = || input.next().unwrap();
 
-    let mut left = input().to_string();
+    let mut left = input().to_owned();
     let mut right = String::new();
     let n: i32 = input().parse().unwrap();
 

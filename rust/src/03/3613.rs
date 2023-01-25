@@ -1,3 +1,8 @@
+enum Format {
+    Cpp,
+    Java,
+}
+
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
@@ -32,24 +37,24 @@ fn main() {
             return;
         }
 
-        "cpp"
+        Format::Cpp
     } else {
-        "java"
+        Format::Java
     };
 
     let converted: String = match format {
-        "cpp" => name
+        Format::Cpp => name
             .split('_')
             .enumerate()
             .map(|(i, s)| {
                 if i == 0 {
-                    s.to_string()
+                    s.to_owned()
                 } else {
                     format!("{}{}", s.chars().nth(0).unwrap().to_uppercase(), &s[1..])
                 }
             })
             .collect(),
-        "java" => name
+        Format::Java => name
             .chars()
             .map(|c| {
                 if c.is_uppercase() {
@@ -59,7 +64,6 @@ fn main() {
                 }
             })
             .collect(),
-        _ => String::new(),
     };
 
     println!("{converted}");
