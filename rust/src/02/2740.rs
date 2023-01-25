@@ -7,9 +7,7 @@ fn main() {
 
     let (n, m) = (input(), input());
     let a: Vec<Vec<_>> = (0..n).map(|_| (0..m).map(|_| input()).collect()).collect();
-    input();
-
-    let k = input();
+    let (_, k) = (input(), input());
     let b: Vec<Vec<_>> = (0..m).map(|_| (0..k).map(|_| input()).collect()).collect();
 
     for a_row in a {
