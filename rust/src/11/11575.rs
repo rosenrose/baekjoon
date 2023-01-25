@@ -6,29 +6,26 @@ fn main() {
 
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
+    let mut input = || input.next().unwrap();
 
     let offset = 'A' as u8;
+    let mut convert_table = [0; 26];
 
-    for _ in 0..parse_int(input.next().unwrap()) {
-        let mut nums = input
-            .next()
-            .unwrap()
-            .split_ascii_whitespace()
-            .map(parse_int);
-
+    for _ in 0..parse_int(input()) {
+        let mut nums = input().split_ascii_whitespace().map(parse_int);
         let (a, b, s) = (
             nums.next().unwrap(),
             nums.next().unwrap(),
-            input.next().unwrap().as_bytes(),
+            input().as_bytes(),
         );
 
-        let convert_table: Vec<_> = ('A' as u8..='Z' as u8)
-            .map(|ch| (((a * (ch - offset) as i32 + b) % 26) as u8 + offset) as char)
-            .collect();
+        for x in 0..26 {
+            convert_table[x as usize] = ((a * x + b) % 26) as u8 + offset;
+        }
 
         let encrypted: String = s
             .iter()
-            .map(|ch| convert_table[(ch - offset) as usize])
+            .map(|&ch| convert_table[(ch - offset) as usize] as char)
             .collect();
 
         writeln!(stdout, "{encrypted}").unwrap();
