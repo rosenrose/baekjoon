@@ -1,11 +1,5 @@
+use std::cmp::Ordering::{self, Greater, Less};
 use std::io;
-
-#[derive(Default)]
-enum Ops {
-    #[default]
-    Less,
-    Greater,
-}
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -14,9 +8,9 @@ fn main() {
     let k: usize = input.next().unwrap().parse().unwrap();
     let operators: Vec<_> = input
         .map(|op| match op {
-            "<" => Ops::Less,
-            ">" => Ops::Greater,
-            _ => Default::default(),
+            "<" => Less,
+            ">" => Greater,
+            _ => Ordering::Equal,
         })
         .collect();
 
@@ -28,7 +22,7 @@ fn main() {
 
 fn formula_min_max(
     nums: &Vec<char>,
-    operators: &Vec<Ops>,
+    operators: &Vec<Ordering>,
     m: usize,
     selected: &mut Vec<char>,
 ) -> (i64, i64) {
@@ -45,14 +39,12 @@ fn formula_min_max(
 
         selected.push(num);
 
-        let result = if (1..selected.len()).all(|i| match operators[i - 1] {
-            Ops::Less => selected[i - 1] < selected[i],
-            Ops::Greater => selected[i - 1] > selected[i],
-        }) {
-            formula_min_max(nums, operators, m - 1, selected)
-        } else {
-            (min, max)
-        };
+        let result =
+            if (1..selected.len()).all(|i| selected[i - 1].cmp(&selected[i]) == operators[i - 1]) {
+                formula_min_max(nums, operators, m - 1, selected)
+            } else {
+                (min, max)
+            };
 
         selected.pop();
 
