@@ -1,5 +1,5 @@
 use std::fmt::Write;
-use std::io;
+use std::{io, iter};
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -7,8 +7,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let sum_accum: Vec<_> = [0]
-        .into_iter()
+    let sum_accum: Vec<_> = iter::once(0)
         .chain((0..input()).scan(0, |acc, _| {
             *acc += input();
             Some(*acc)

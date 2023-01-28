@@ -1,5 +1,5 @@
 use std::fmt::Write;
-use std::io;
+use std::{io, iter};
 
 const M: i64 = 1_000_000_007;
 
@@ -9,8 +9,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let factorial_rem: Vec<_> = [1]
-        .into_iter()
+    let factorial_rem: Vec<_> = iter::once(1)
         .chain((1..=4_000_000).scan(1, |acc, i| {
             *acc = (*acc * i) % M;
             Some(*acc)
