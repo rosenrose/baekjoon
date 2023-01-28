@@ -4,5 +4,5 @@ fn main() {
 
     let n: u32 = buf.trim().parse().unwrap();
 
-    println!("{}", 2_i32.pow(n));
+    println!("{}", 1 << n);
 }

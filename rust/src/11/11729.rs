@@ -8,7 +8,7 @@ fn main() {
     let n: u32 = buf.trim().parse().unwrap();
 
     // let mut tower: [Vec<i32>; 3] = [(1..=n).rev().collect(), Vec::new(), Vec::new()];
-    writeln!(output, "{}", 2_i32.pow(n) - 1).unwrap();
+    writeln!(output, "{}", (1 << n) - 1).unwrap();
 
     hanoi(n, 1, 3, &mut output);
 

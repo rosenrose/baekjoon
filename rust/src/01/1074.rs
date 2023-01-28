@@ -3,7 +3,7 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let [n, r, c] = parse_int_vec(&buf)[..] else { return };
-    let size = 2_u32.pow(n);
+    let size = 1 << n;
 
     println!("{}", visit_z(r, c, 0, 0, size, 0));
 }

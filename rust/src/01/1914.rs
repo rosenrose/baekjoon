@@ -7,7 +7,7 @@ fn main() {
     let mut output = String::new();
     let n: u32 = buf.trim().parse().unwrap();
 
-    writeln!(output, "{}", 2_i128.pow(n) - 1).unwrap();
+    writeln!(output, "{}", (1 << n) - 1).unwrap();
 
     if n <= 20 {
         hanoi(n, 1, 3, &mut output);
