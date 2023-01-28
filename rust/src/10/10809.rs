@@ -3,10 +3,12 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     for ch in 'a'..='z' {
-        if let Some(i) = buf.find(ch) {
-            print!("{i} ");
+        let idx = if let Some(i) = buf.find(ch) {
+            i as i32
         } else {
-            print!("-1 ");
-        }
+            -1
+        };
+
+        print!("{idx} ");
     }
 }
