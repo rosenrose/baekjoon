@@ -39,7 +39,7 @@ fn main() {
 
         for i in 1..=4 - a_len {
             let after_a = a + i;
-            let after_a_len = after_a.to_string().len();
+            let after_a_len = after_a.ilog10() as usize + 1;
 
             let check: usize = s[index..(index + after_a_len).min(s_len)].parse().unwrap();
 
@@ -57,7 +57,7 @@ fn main() {
         break;
     }
 
-    let a_len = a.to_string().len();
+    let a_len = a.ilog10() as usize + 1;
 
     if a_len == s_len {
         println!("{a} {a}");
@@ -77,7 +77,7 @@ fn main() {
 
         for i in 1..=4 - b_len {
             let before_b = b - i;
-            let before_b_len = before_b.to_string().len();
+            let before_b_len = before_b.ilog10() as usize + 1;
 
             let check: usize = s[index.saturating_sub(before_b_len)..index]
                 .parse()

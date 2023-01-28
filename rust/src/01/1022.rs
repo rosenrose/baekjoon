@@ -34,7 +34,7 @@ fn main() {
         })
         .collect();
 
-    let width = max.to_string().len();
+    let width = max.ilog10() as usize + 1;
 
     for row in vortex {
         for (i, cell) in row.iter().enumerate() {

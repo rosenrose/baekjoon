@@ -3,9 +3,9 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let [n, m] = parse_int_vec(&buf)[..] else { return };
-    let n_str = n.to_string().repeat(n);
+    let n = n.to_string().repeat(n);
 
-    println!("{}", &n_str[..m.min(n_str.len())]);
+    println!("{}", &n[..m.min(n.len())]);
 }
 
 fn parse_int_vec(buf: &String) -> Vec<usize> {
