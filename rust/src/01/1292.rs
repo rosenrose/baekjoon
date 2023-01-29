@@ -3,18 +3,9 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let [a, b] = parse_int_vec(&buf)[..] else { return };
-    let sequence = (0..).scan((0, 1), |(num, counter), _| {
-        if *counter == 1 {
-            *num += 1;
-            *counter = *num;
-        } else {
-            *counter -= 1;
-        }
+    let sequence = (1..).flat_map(|n| std::iter::repeat(n).take(n));
 
-        Some(*num)
-    });
-
-    println!("{}", sequence.skip(a - 1).take(b - a + 1).sum::<i32>());
+    println!("{}", sequence.skip(a - 1).take(b - a + 1).sum::<usize>());
 }
 
 fn parse_int_vec(buf: &String) -> Vec<usize> {
