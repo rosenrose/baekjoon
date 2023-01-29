@@ -1,10 +1,12 @@
 use std::collections::BTreeMap;
+use std::fmt::Write;
 use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
     let mut input = || input.next().unwrap();
+    let mut output = String::new();
 
     for _ in 0..parse_int(input()) {
         let n = parse_int(input());
@@ -35,18 +37,19 @@ fn main() {
                 }
                 _ => (),
             }
-            // println!("{map:?}");
         }
 
         if map.is_empty() {
-            println!("EMPTY");
+            writeln!(output, "EMPTY").unwrap();
             continue;
         }
 
         let (min, max) = (map.keys().nth(0).unwrap(), map.keys().last().unwrap());
 
-        println!("{max} {min}");
+        writeln!(output, "{max} {min}").unwrap();
     }
+
+    print!("{output}");
 }
 
 fn parse_int(buf: &str) -> i32 {
