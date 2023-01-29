@@ -5,7 +5,5 @@ fn main() {
     let mut chars: Vec<_> = buf.trim().chars().collect();
     chars.sort_by(|a, b| b.cmp(&a));
 
-    for c in chars {
-        print!("{c}");
-    }
+    println!("{}", String::from_iter(chars));
 }
