@@ -5,16 +5,13 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let len = input.next().unwrap() as usize;
-    let (mut sum, mut max_count) = (0, 1);
+    let mut sum = 0;
     let mut counts = [0; 8001];
 
     let mut arr: Vec<_> = input
         .map(|num| {
             sum += num;
-            let index = (num + 4000) as usize;
-
-            counts[index] += 1;
-            max_count = counts[index].max(max_count);
+            counts[(num + 4000) as usize] += 1;
 
             num
         })
@@ -25,14 +22,15 @@ fn main() {
     let (min, max, middle) = (arr[0], arr[len - 1], arr[len / 2]);
     let avg = (sum as f64 / len as f64).round() as i32;
 
+    let max_count = counts.iter().max().unwrap();
     let mut max_counts: Vec<_> = counts
         .iter()
         .enumerate()
-        .filter_map(|(i, &c)| (c == max_count).then_some(i as i32 - 4000))
+        .filter_map(|(i, c)| (c == max_count).then_some(i as i32 - 4000))
         .collect();
 
     let most = if max_counts.len() > 1 {
-        max_counts.sort();
+        max_counts.sort_unstable();
         max_counts[1]
     } else {
         max_counts[0]

@@ -12,7 +12,7 @@ def sanitize(string):
     return string
 
 
-for i in range(1, (K := int(input())) + 1):
+for i in range(1, K := int(input()) + 1):
     print(f"Data Set {K}: {'equal' if sanitize(input()) == sanitize(input()) else 'not equal'}")
 
     if i < K:
