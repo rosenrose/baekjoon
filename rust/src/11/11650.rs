@@ -8,7 +8,6 @@ fn main() {
     let mut output = String::new();
 
     let mut coords: Vec<_> = (0..input()).map(|_| (input(), input())).collect();
-
     coords.sort_unstable();
 
     for (x, y) in coords {

@@ -7,16 +7,10 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let mut coords: Vec<_> = (0..input())
-        .map(|_| {
-            let (x, y) = (input(), input());
-            (y, x)
-        })
-        .collect();
+    let mut coords: Vec<_> = (0..input()).map(|_| (input(), input())).collect();
+    coords.sort_unstable_by(|(x1, y1), (x2, y2)| (y1, x1).cmp(&(y2, x2)));
 
-    coords.sort_unstable();
-
-    for (y, x) in coords {
+    for (x, y) in coords {
         writeln!(output, "{x} {y}").unwrap();
     }
 
