@@ -5,8 +5,10 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let _n = input.next();
-    let m: usize = input.next().unwrap().parse().unwrap();
+    let (_, m) = (
+        input.next(),
+        input.next().unwrap().parse::<usize>().unwrap(),
+    );
     let dna_strings: Vec<_> = input.map(|s| s.as_bytes()).collect();
 
     let mut dist_sum = 0;

@@ -9,12 +9,9 @@ fn main() {
     let mut output = String::new();
 
     for _ in 0..input() {
-        let n = input();
-        let diary: HashSet<_> = (0..n).map(|_| input()).collect();
+        let diary: HashSet<_> = (0..input()).map(|_| input()).collect();
 
-        let m = input();
-
-        for num in (0..m).map(|_| input()) {
+        for num in (0..input()).map(|_| input()) {
             writeln!(output, "{}", if diary.contains(&num) { 1 } else { 0 }).unwrap();
         }
     }

@@ -4,8 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let _n = input.next();
-    let mut min = input.next().unwrap();
+    let (_, mut min) = (input.next(), input.next().unwrap());
     let mut max = min;
     let mut max_height = 0;
 

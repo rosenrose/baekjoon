@@ -4,8 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
 
-    let _n = input.next();
-    let mut pattern = input.next().unwrap().split('*');
+    let (_, mut pattern) = (input.next(), input.next().unwrap().split('*'));
     let (prefix, suffix) = (pattern.next().unwrap(), pattern.next().unwrap());
 
     let regex = Regex::new(&format!("^{prefix}.*{suffix}$"), false);

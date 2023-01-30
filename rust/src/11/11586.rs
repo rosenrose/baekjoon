@@ -4,8 +4,10 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
 
-    let _n = input.next();
-    let state: i32 = input.next_back().unwrap().parse().unwrap();
+    let (_, state) = (
+        input.next(),
+        input.next_back().unwrap().parse::<i32>().unwrap(),
+    );
 
     match state {
         1 => input.for_each(|face| println!("{face}")),

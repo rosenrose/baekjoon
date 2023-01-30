@@ -1,26 +1,17 @@
-use std::collections::HashSet;
-use std::fmt::Write;
 use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace();
-    let mut output = String::new();
+    let mut words: Vec<_> = buf.lines().skip(1).collect();
 
-    let words: HashSet<_> = input.skip(1).collect();
-    let mut words = Vec::from_iter(words);
-
-    words.sort_by(|a, b| {
+    words.sort_unstable_by(|a, b| {
         if a.len() == b.len() {
             a.cmp(b)
         } else {
             a.len().cmp(&b.len())
         }
     });
+    words.dedup();
 
-    for word in words {
-        writeln!(output, "{word}").unwrap();
-    }
-
-    print!("{output}");
+    println!("{}", words.join("\n"));
 }
