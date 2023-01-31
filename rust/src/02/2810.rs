@@ -13,12 +13,9 @@ fn main() {
 
     seats.push('*');
     // println!("{seats}");
-
-    seats = seats
-        .replace("*S", "")
-        .replace("*L", "")
-        .replace("S*", "")
-        .replace("L*", "");
+    for pattern in ["*S", "*L", "S*", "L*"] {
+        seats = seats.replace(pattern, "");
+    }
 
     let no_holders = seats.replace('*', "").len();
 

@@ -1,5 +1,7 @@
 use std::io;
 
+const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
 
@@ -16,16 +18,14 @@ fn main() {
 }
 
 fn is_acceptable(pwd: &str) -> bool {
-    let vowels = ['a', 'e', 'i', 'o', 'u'];
-
-    if pwd.matches(vowels).count() == 0 {
+    if pwd.matches(VOWELS).count() == 0 {
         return false;
     }
 
-    if pwd.split(vowels).any(|s| s.len() >= 3) {
+    if pwd.split(VOWELS).any(|s| s.len() >= 3) {
         return false;
     }
-    if pwd.split(|c| !vowels.contains(&c)).any(|s| s.len() >= 3) {
+    if pwd.split(|c| !VOWELS.contains(&c)).any(|s| s.len() >= 3) {
         return false;
     }
 

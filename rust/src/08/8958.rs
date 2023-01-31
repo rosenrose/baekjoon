@@ -6,8 +6,7 @@ fn main() {
     for input in buf.lines().skip(1) {
         let score: usize = input
             .split(|c| c == 'X')
-            .filter_map(|s| (!s.is_empty()).then_some(s.char_indices().map(|(i, _)| i + 1)))
-            .flatten()
+            .flat_map(|s| s.char_indices().map(|(i, _)| i + 1))
             .sum();
 
         println!("{score}");
