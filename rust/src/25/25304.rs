@@ -6,7 +6,7 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (x, n) = (input(), input());
-    let sum = (0..n).fold(0, |acc, _| acc + (input() * input()));
+    let sum: i32 = (0..n).map(|_| input() * input()).sum();
 
     println!("{}", if sum == x { "Yes" } else { "No" });
 }
