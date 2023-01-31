@@ -30,7 +30,7 @@ fn main() {
                 "ASFTR" | "ASFTRC" => 9,
                 "RL" | "RLC" => 10,
                 "RR" | "RRC" => 11,
-                _ => 0,
+                _ => Default::default(),
             },
             if op.ends_with('C') { '1' } else { '0' },
             if op.ends_with('C') {

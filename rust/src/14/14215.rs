@@ -10,7 +10,7 @@ fn main() {
             longest if longest == a => b + c + longest.min(b + c - 1),
             longest if longest == b => c + a + longest.min(c + a - 1),
             longest if longest == c => a + b + longest.min(a + b - 1),
-            _ => 0,
+            _ => Default::default(),
         }
     );
 }

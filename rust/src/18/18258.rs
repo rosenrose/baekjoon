@@ -13,6 +13,10 @@ fn main() {
 
     for _ in 0..n {
         let result = match input() {
+            "push" => {
+                queue.push_back(input());
+                continue;
+            }
             "pop" => queue.pop_front().unwrap_or("-1"),
             "size" => {
                 writeln!(output, "{}", queue.len()).unwrap();
@@ -27,10 +31,7 @@ fn main() {
             }
             "front" => queue.front().unwrap_or(&"-1"),
             "back" => queue.back().unwrap_or(&"-1"),
-            _ => {
-                queue.push_back(input());
-                continue;
-            }
+            _ => Default::default(),
         };
 
         writeln!(output, "{result}").unwrap();

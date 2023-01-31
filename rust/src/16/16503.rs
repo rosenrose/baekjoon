@@ -21,14 +21,14 @@ fn main() {
                 "-" => f - if i == 0 { k2 } else { k3 },
                 "*" => f * if i == 0 { k2 } else { k3 },
                 "/" => f / if i == 0 { k2 } else { k3 },
-                _ => 0,
+                _ => Default::default(),
             },
-            match if i == 0 { op2 } else { op1 }  {
+            match if i == 0 { op2 } else { op1 } {
                 "+" => if i == 0 { s + k3 } else { k1 + s },
                 "-" => if i == 0 { s - k3 } else { k1 - s },
                 "*" => if i == 0 { s * k3 } else { k1 * s },
                 "/" => if i == 0 { s / k3 } else { k1 / s },
-                _ => 0,
+                _ => Default::default(),
             },
         )
     });

@@ -20,7 +20,7 @@ fn main() {
             4 | 6 | 9 | 11 => 30,
             #[rustfmt::skip]
             2 => if is_leap(year) { 29 } else { 28 },
-            _ => 0,
+            _ => Default::default(),
         };
 
         writeln!(output, "{year} {month} {day}").unwrap();

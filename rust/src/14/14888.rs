@@ -1,8 +1,9 @@
 use std::io;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 enum Ops {
-    Add = 0,
+    #[default]
+    Add,
     Sub,
     Mul,
     Div,
@@ -23,7 +24,8 @@ fn main() {
                 0 => Ops::Add,
                 1 => Ops::Sub,
                 2 => Ops::Mul,
-                _ => Ops::Div,
+                3 => Ops::Div,
+                _ => Default::default(),
             })
         })
         .collect();

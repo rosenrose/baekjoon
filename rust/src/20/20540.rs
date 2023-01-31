@@ -15,7 +15,7 @@ fn main() {
                 'F' => 'T',
                 'J' => 'P',
                 'P' => 'J',
-                _ => '\0',
+                _ => Default::default(),
             })
             .collect::<String>()
     );

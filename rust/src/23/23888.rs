@@ -23,7 +23,7 @@ fn main() {
                     gcd
                 }
             }
-            _ => 0,
+            _ => Default::default(),
         };
 
         writeln!(output, "{result}").unwrap();

@@ -9,11 +9,11 @@ fn main() {
         return;
     }
 
-    let least = match ratio.iter().enumerate().min_by_key(|(_, &r)| r).unwrap() {
-        (0, _) => "Soongsil",
-        (1, _) => "Korea",
-        (2, _) => "Hanyang",
-        _ => "",
+    let least = match ratio.iter().enumerate().min_by_key(|(_, &r)| r).unwrap().0 {
+        0 => "Soongsil",
+        1 => "Korea",
+        2 => "Hanyang",
+        _ => Default::default(),
     };
 
     println!("{least}");
