@@ -4,11 +4,14 @@ fn main() {
 
     let score: i32 = buf.trim().parse().unwrap();
 
-    match score {
-        90..=100 => println!("A"),
-        80..=89 => println!("B"),
-        70..=79 => println!("C"),
-        60..=69 => println!("D"),
-        _ => println!("F"),
-    }
+    println!(
+        "{}",
+        match score {
+            90..=100 => 'A',
+            80..=89 => 'B',
+            70..=79 => 'C',
+            60..=69 => 'D',
+            _ => 'F',
+        }
+    );
 }

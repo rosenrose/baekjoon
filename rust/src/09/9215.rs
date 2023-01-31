@@ -2,6 +2,7 @@ use std::fmt;
 use std::io;
 use std::ops::Add;
 
+#[derive(Default)]
 struct MixedFraction {
     integer: i32,
     numerator: i32,
@@ -22,7 +23,7 @@ impl MixedFraction {
             [a, b, c] => Self::from(a, b, c),
             [b, c] => Self::from(0, b, c),
             [a] => Self::from(a, 0, 1),
-            _ => Self::from(0, 0, 1),
+            _ => Default::default(),
         }
     }
 }
@@ -76,11 +77,9 @@ fn main() {
     let mut input = buf.lines();
 
     for i in 1.. {
-        let n = parse_int(input.next().unwrap());
-
-        if n == 0 {
+        let n @ 1.. = parse_int(input.next().unwrap()) else {
             return;
-        }
+        };
 
         let sum = (0..n)
             .map(|_| MixedFraction::parse(input.next().unwrap()))

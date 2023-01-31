@@ -7,8 +7,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for i in 1.. {
-        let (a, op, b) = (parse_int(input()), input(), parse_int(input()));
+    for (i, (a, op, b)) in (1..).map(|i| (i, (parse_int(input()), input(), parse_int(input())))) {
         let cmp = match op {
             ">" => a > b,
             ">=" => a >= b,
@@ -16,9 +15,8 @@ fn main() {
             "<=" => a <= b,
             "==" => a == b,
             "!=" => a != b,
-            _ => {
-                break;
-            }
+            "E" => break,
+            _ => Default::default(),
         };
 
         writeln!(output, "Case {i}: {cmp}").unwrap();

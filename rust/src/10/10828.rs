@@ -12,6 +12,10 @@ fn main() {
 
     for _ in 0..n {
         let result = match input() {
+            "push" => {
+                stack.push(parse_int(input()));
+                continue;
+            }
             "pop" => stack.pop().unwrap_or(-1),
             "size" => stack.len() as i32,
             "empty" => {
@@ -22,10 +26,7 @@ fn main() {
                 }
             }
             "top" => *stack.last().unwrap_or(&-1),
-            _ => {
-                stack.push(parse_int(input()));
-                continue;
-            }
+            _ => Default::default(),
         };
 
         writeln!(output, "{result}").unwrap();

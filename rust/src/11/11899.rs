@@ -5,13 +5,10 @@ fn main() {
     let mut stack = Vec::new();
 
     for c in buf.trim().chars() {
-        match (stack.last(), c) {
-            (Some('('), ')') => {
-                stack.pop();
-            }
-            _ => {
-                stack.push(c);
-            }
+        if let (Some('('), ')') = (stack.last(), c) {
+            stack.pop();
+        } else {
+            stack.push(c);
         }
     }
 

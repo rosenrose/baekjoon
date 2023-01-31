@@ -6,15 +6,12 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     for (i, (a, b, c)) in (1..).map(|i| (i, (input(), input(), input()))) {
-        if (a, b, c) == (0, 0, 0) {
-            return;
-        }
-
         let (unknown, square) = match (a, b, c) {
+            (0, 0, 0) => return,
             (-1, b, c) => ("a", c * c - b * b),
             (a, -1, c) => ("b", c * c - a * a),
             (a, b, -1) => ("c", a * a + b * b),
-            _ => continue,
+            _ => Default::default(),
         };
 
         println!("Triangle #{i}");

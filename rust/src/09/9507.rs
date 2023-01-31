@@ -6,7 +6,7 @@ fn main() {
 
     for n in input.skip(1) {
         match n {
-            0..=1 => println!("1"),
+            0 | 1 => println!("1"),
             2 => println!("2"),
             3 => println!("4"),
             _ => {

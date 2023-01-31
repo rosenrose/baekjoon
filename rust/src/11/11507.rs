@@ -12,7 +12,7 @@ fn main() {
             'T' => 3,
             _ => Default::default(),
         };
-        let number = ((card[1] - '0' as u8) * 10 + card[2] - '0' as u8 - 1) as usize;
+        let number = ((card[1] - '0' as u8) * 10 + card[2] - '0' as u8) as usize - 1;
 
         if cards[shape][number] {
             println!("GRESKA");

@@ -90,8 +90,8 @@ fn find_path(prevs: &Vec<Vec<i32>>, start: usize, end: usize) -> Option<Vec<usiz
         return Some(vec![start]);
     }
 
-    match (find_path(prevs, start, prev), find_path(prevs, prev, end)) {
-        (Some(start_prev), Some(prev_end)) => Some([start_prev, prev_end].concat()),
-        _ => None,
-    }
+    let start_prev = find_path(prevs, start, prev)?;
+    let prev_end = find_path(prevs, prev, end)?;
+
+    Some([start_prev, prev_end].concat())
 }

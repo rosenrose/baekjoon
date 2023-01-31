@@ -13,6 +13,14 @@ fn main() {
 
     for _ in 0..n {
         let result = match input() {
+            "push_front" => {
+                deque.push_front(parse_int(input()));
+                continue;
+            }
+            "push_back" => {
+                deque.push_back(parse_int(input()));
+                continue;
+            }
             "pop_front" => deque.pop_front().unwrap_or(-1),
             "pop_back" => deque.pop_back().unwrap_or(-1),
             "size" => deque.len() as i32,
@@ -25,15 +33,7 @@ fn main() {
             }
             "front" => *deque.front().unwrap_or(&-1),
             "back" => *deque.back().unwrap_or(&-1),
-            "push_front" => {
-                deque.push_front(parse_int(input()));
-                continue;
-            }
-            "push_back" => {
-                deque.push_back(parse_int(input()));
-                continue;
-            }
-            _ => 0,
+            _ => Default::default(),
         };
 
         writeln!(output, "{result}").unwrap();

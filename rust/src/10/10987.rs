@@ -5,10 +5,7 @@ fn main() {
     let vowels = buf
         .trim()
         .chars()
-        .filter(|c| match c {
-            'a' | 'e' | 'i' | 'o' | 'u' => true,
-            _ => false,
-        })
+        .filter(|c| matches!(c, 'a' | 'e' | 'i' | 'o' | 'u'))
         .count();
 
     println!("{vowels}");
