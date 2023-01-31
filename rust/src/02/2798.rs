@@ -10,8 +10,8 @@ fn main() {
     let len = arr.len();
     let mut min_sum = 0;
 
-    for i in 0..len {
-        for j in i + 1..len {
+    for i in 0..len - 2 {
+        for j in i + 1..len - 1 {
             for k in j + 1..len {
                 let sum = arr[i] + arr[j] + arr[k];
 
