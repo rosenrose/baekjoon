@@ -41,6 +41,6 @@ fn get_rps_score(a: char, b: char) -> i32 {
         ('R', 'P') | ('P', 'S') | ('S', 'R') => 0,
         ('R', 'R') | ('P', 'P') | ('S', 'S') => 1,
         ('R', 'S') | ('P', 'R') | ('S', 'P') => 2,
-        _ => 0,
+        _ => Default::default(),
     }
 }

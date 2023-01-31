@@ -18,9 +18,10 @@ fn main() {
     }
 
     for query in (0..m).map(|_| input()) {
-        (match query.parse::<usize>() {
-            Ok(i) => writeln!(output, "{}", pokemon_index[i - 1]),
-            _ => writeln!(output, "{}", pokemon_name.get(query).unwrap()),
+        (if let Ok(i) = query.parse::<usize>() {
+            writeln!(output, "{}", pokemon_index[i - 1])
+        } else {
+            writeln!(output, "{}", pokemon_name.get(query).unwrap())
         })
         .unwrap();
     }

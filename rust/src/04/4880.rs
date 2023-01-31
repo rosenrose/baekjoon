@@ -11,9 +11,10 @@ fn main() {
             break;
         }
 
-        (match c - b {
-            diff if diff == b - a => writeln!(output, "AP {}", c + diff),
-            _ => writeln!(output, "GP {}", c * (c / b)),
+        (if c - b == b - a {
+            writeln!(output, "AP {}", c + (c - b))
+        } else {
+            writeln!(output, "GP {}", c * (c / b))
         })
         .unwrap()
     }

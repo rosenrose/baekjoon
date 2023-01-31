@@ -19,7 +19,7 @@ fn main() {
                     '7' => "se",
                     '8' => "e",
                     '9' => "n",
-                    _ => "",
+                    _ => Default::default(),
                 })
                 .collect();
 

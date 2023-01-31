@@ -10,7 +10,7 @@ fn main() {
             longest if longest == a => a * a == b * b + c * c,
             longest if longest == b => b * b == a * a + c * c,
             longest if longest == c => c * c == a * a + b * b,
-            _ => false,
+            _ => Default::default(),
         };
 
         println!("{}", if is_right { "right" } else { "wrong" });

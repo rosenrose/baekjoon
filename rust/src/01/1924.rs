@@ -10,7 +10,7 @@ fn main() {
             1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
             4 | 6 | 9 | 11 => 30,
             2 => 28,
-            _ => 0,
+            _ => Default::default(),
         };
     }
 
@@ -22,7 +22,7 @@ fn main() {
         4 => "FRI",
         5 => "SAT",
         6 => "SUN",
-        _ => "",
+        _ => Default::default(),
     };
 
     println!("{day}");

@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
 
     #[rustfmt::skip]
-    let values: Vec<i64> = buf
+    let values: Vec<_> = buf
         .lines()
         .enumerate()
         .map(|(i, s)| match s {
@@ -18,7 +18,7 @@ fn main() {
             "violet" => if i < 2 { 7 } else { 10_000_000 },
             "grey"   => if i < 2 { 8 } else { 100_000_000 },
             "white"  => if i < 2 { 9 } else { 1_000_000_000 },
-            _ => 0,
+            _ => Default::default(),
         })
         .collect();
 

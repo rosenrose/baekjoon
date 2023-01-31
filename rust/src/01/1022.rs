@@ -23,7 +23,7 @@ fn main() {
                         (x, y) if x == -num => left_bottom - y.abs_diff(num) as i32,
                         (x, y) if y == -num => left_top - x.abs_diff(-num) as i32,
                         (x, y) if x == num => right_top - y.abs_diff(-num) as i32,
-                        _ => 0,
+                        _ => Default::default(),
                     };
 
                     max = cell.max(max);

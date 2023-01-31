@@ -24,7 +24,7 @@ fn main() {
                 (x, y) if y == num => left_bottom - x.abs_diff(-num) as i32,
                 (x, y) if x == num => right_bottom - y.abs_diff(num) as i32,
                 (x, y) if y == -num => right_top - x.abs_diff(num) as i32,
-                _ => 0,
+                _ => Default::default(),
             };
 
             if cell == find_num {

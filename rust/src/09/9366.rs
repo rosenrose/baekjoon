@@ -6,13 +6,14 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     for i in 1..=input() {
-        print!("Case #{i}: ");
-
-        match (input(), input(), input()) {
-            (a, b, c) if a.max(b).max(c) * 2 >= a + b + c => println!("invalid!"),
-            (a, b, c) if a == b && b == c => println!("equilateral"),
-            (a, b, c) if a == b || b == c || c == a => println!("isosceles"),
-            _ => println!("scalene"),
-        }
+        println!(
+            "Case #{i}: {}",
+            match (input(), input(), input()) {
+                (a, b, c) if a.max(b).max(c) * 2 >= a + b + c => "invalid!",
+                (a, b, c) if a == b && b == c => "equilateral",
+                (a, b, c) if a == b || b == c || c == a => "isosceles",
+                _ => "scalene",
+            }
+        );
     }
 }

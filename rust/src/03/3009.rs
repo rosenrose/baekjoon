@@ -12,13 +12,11 @@ fn main() {
     }
 
     let get_unique = |points: [i32; 3]| match points {
-        [a, b, c] if a == b => Some(c),
-        [a, b, c] if a == c => Some(b),
-        [a, b, c] if b == c => Some(a),
-        _ => None,
+        [a, b, c] if a == b => c,
+        [a, b, c] if a == c => b,
+        [a, b, c] if b == c => a,
+        _ => Default::default(),
     };
 
-    let (x, y) = (get_unique(x_points).unwrap(), get_unique(y_points).unwrap());
-
-    println!("{x} {y}");
+    println!("{} {}", get_unique(x_points), get_unique(y_points));
 }
