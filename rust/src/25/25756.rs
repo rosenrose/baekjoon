@@ -8,13 +8,15 @@ fn main() {
         .map(|s| s.parse::<f64>().unwrap() / 100.0);
     let mut output = String::new();
 
-    let mut v = 0.0;
-
-    for def in input.skip(1) {
-        v = 1.0 - (1.0 - v) * (1.0 - def);
-
-        writeln!(output, "{:.6}", v * 100.0).unwrap();
-    }
+    input
+        .skip(1)
+        .scan(0.0, |v, def| {
+            *v = 1.0 - (1.0 - *v) * (1.0 - def);
+            Some(*v)
+        })
+        .for_each(|v| {
+            writeln!(output, "{:.6}", v * 100.0).unwrap();
+        });
 
     print!("{output}");
 }

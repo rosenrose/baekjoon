@@ -5,7 +5,7 @@ fn main() {
     for n in 0..=9 {
         let e = 1.0
             + (1..=n)
-                .map(|i| 1.0 / (1..=i).product::<i32>() as f64)
+                .map(|i| ((1..=i).product::<i32>() as f64).recip())
                 .sum::<f64>();
 
         if e.to_string().len() > 11 {

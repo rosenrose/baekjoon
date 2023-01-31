@@ -5,7 +5,7 @@ fn main() {
     let [a, b] = parse_float_vec(&buf)[..] else { return };
     let m = (b - a) / 400.0;
 
-    println!("{:.10}", 1.0 / (1.0 + 10.0_f64.powf(m)));
+    println!("{:.10}", (1.0 + 10.0_f64.powf(m)).recip());
 }
 
 fn parse_float_vec(buf: &String) -> Vec<f64> {
