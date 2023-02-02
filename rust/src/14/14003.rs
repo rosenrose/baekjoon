@@ -3,36 +3,36 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
-    let mut a = buf
-        .split_ascii_whitespace()
-        .skip(1)
-        .flat_map(str::parse::<i32>);
 
-    let mut lis_len_arr = vec![a.next().unwrap()];
-    let mut index_arr = vec![(lis_len_arr[0], 0)];
+    let _n = input.next();
+    let mut lis_temp = vec![input.next().unwrap()];
+    let mut num_indices = vec![(lis_temp[0], 0)];
     let mut lis = Vec::new();
 
-    for num in a {
-        if num > *lis_len_arr.last().unwrap() {
-            index_arr.push((num, lis_len_arr.len()));
-            lis_len_arr.push(num);
+    for num in input {
+        if num > *lis_temp.last().unwrap() {
+            num_indices.push((num, lis_temp.len()));
+            lis_temp.push(num);
             continue;
         }
 
-        let pos = lis_len_arr.binary_search(&num).unwrap_or_else(|i| i);
+        let pos = lis_temp.binary_search(&num).unwrap_or_else(|i| i);
 
-        index_arr.push((num, pos));
-        lis_len_arr[pos] = num;
+        num_indices.push((num, pos));
+        lis_temp[pos] = num;
     }
 
-    for &(num, index) in index_arr.iter().rev() {
-        if index + 1 == lis_len_arr.len() {
+    let mut lis_len = lis_temp.len();
+
+    for &(num, index) in num_indices.iter().rev() {
+        if index + 1 == lis_len {
             lis.push(num);
-            lis_len_arr.pop();
+            lis_len -= 1;
         }
 
-        if lis_len_arr.is_empty() {
+        if lis_len == 0 {
             break;
         }
     }

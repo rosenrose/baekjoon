@@ -3,25 +3,23 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut a = buf
-        .split_ascii_whitespace()
-        .skip(1)
-        .flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let mut lis = vec![a.next().unwrap()];
+    let _n = input.next();
+    let mut lis_temp = vec![input.next().unwrap()];
 
-    for num in a {
-        if num < *lis.last().unwrap() {
-            lis.push(num);
+    for num in input {
+        if num < *lis_temp.last().unwrap() {
+            lis_temp.push(num);
             continue;
         }
 
-        let pos = lis
+        let pos = lis_temp
             .binary_search_by_key(&Reverse(num), |&n| Reverse(n))
             .unwrap_or_else(|i| i);
 
-        lis[pos] = num;
+        lis_temp[pos] = num;
     }
 
-    println!("{}", lis.len());
+    println!("{}", lis_temp.len());
 }
