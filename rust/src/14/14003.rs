@@ -9,7 +9,6 @@ fn main() {
     let _n = input.next();
     let mut lis_temp = vec![input.next().unwrap()];
     let mut num_indices = vec![(lis_temp[0], 0)];
-    let mut lis = Vec::new();
 
     for num in input {
         if num > *lis_temp.last().unwrap() {
@@ -25,10 +24,11 @@ fn main() {
     }
 
     let mut lis_len = lis_temp.len();
+    let mut lis = vec![0; lis_len];
 
     for &(num, index) in num_indices.iter().rev() {
         if index + 1 == lis_len {
-            lis.push(num);
+            lis[index] = num;
             lis_len -= 1;
         }
 
@@ -39,7 +39,7 @@ fn main() {
 
     writeln!(output, "{}", lis.len()).unwrap();
 
-    for num in lis.iter().rev() {
+    for num in lis {
         write!(output, "{num} ").unwrap();
     }
 
