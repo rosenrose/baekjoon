@@ -22,10 +22,7 @@ fn main() {
     print!("{output}");
 }
 
-fn get_gcd<I>(nums: I) -> i32
-where
-    I: Iterator<Item = i32>,
-{
+fn get_gcd(nums: impl Iterator<Item = i32>) -> i32 {
     nums.reduce(|mut a, mut b| loop {
         if b == 0 {
             return a;

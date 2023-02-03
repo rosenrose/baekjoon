@@ -4,15 +4,10 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let period = get_lcm(input.skip(1));
-
-    println!("{period}");
+    println!("{}", get_lcm(input.skip(1)));
 }
 
-fn get_lcm<I>(nums: I) -> i32
-where
-    I: Iterator<Item = i32>,
-{
+fn get_lcm(nums: impl Iterator<Item = i32>) -> i32 {
     nums.reduce(|a, b| a / get_gcd(a, b) * b).unwrap()
 }
 

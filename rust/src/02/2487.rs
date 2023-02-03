@@ -35,10 +35,7 @@ fn main() {
     println!("{}", get_lcm(cycles.into_iter()));
 }
 
-fn get_lcm<I>(nums: I) -> usize
-where
-    I: Iterator<Item = usize>,
-{
+fn get_lcm(nums: impl Iterator<Item = usize>) -> usize {
     nums.reduce(|a, b| a / get_gcd(a, b) * b).unwrap()
 }
 

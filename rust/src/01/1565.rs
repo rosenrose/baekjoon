@@ -47,10 +47,7 @@ fn get_lcm(a: i64, b: i64) -> i64 {
     a / get_gcd([a, b].into_iter()) * b
 }
 
-fn get_gcd<I>(nums: I) -> i64
-where
-    I: Iterator<Item = i64>,
-{
+fn get_gcd(nums: impl Iterator<Item = i64>) -> i64 {
     nums.reduce(|mut a, mut b| loop {
         if b == 0 {
             return a;

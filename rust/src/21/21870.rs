@@ -33,10 +33,7 @@ fn gcd_sum(select: &[i32], rest: &[i32]) -> i32 {
         }
 }
 
-fn get_gcd<I>(mut nums: I) -> i32
-where
-    I: Iterator<Item = i32>,
-{
+fn get_gcd(mut nums: impl Iterator<Item = i32>) -> i32 {
     let mut gcd = nums.next().unwrap();
 
     for mut num in nums {
