@@ -3,13 +3,13 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.lines().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
     let n = input.next().unwrap() as usize;
     let mut arr: Vec<_> = input.collect();
 
-    merge_sort(&mut arr[..], n as usize);
+    merge_sort(&mut arr[..], n);
 
     for num in arr {
         writeln!(output, "{num}").unwrap();
@@ -51,5 +51,5 @@ fn merge_sort(arr: &mut [i32], len: usize) {
         }
     }
 
-    arr.copy_from_slice(&temp[..]);
+    arr.copy_from_slice(&temp);
 }

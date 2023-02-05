@@ -164,5 +164,5 @@ fn merge_sort(arr: &mut [i32], len: usize) {
         }
     }
 
-    arr.copy_from_slice(&temp[..]);
+    arr.copy_from_slice(&temp);
 }

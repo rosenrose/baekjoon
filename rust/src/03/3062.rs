@@ -16,7 +16,7 @@ fn main() {
 
         println!(
             "{}",
-            if is_palindrome(&sum.to_string()[..]) {
+            if is_palindrome(&sum.to_string()) {
                 "YES"
             } else {
                 "NO"

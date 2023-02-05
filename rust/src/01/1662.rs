@@ -26,7 +26,7 @@ fn unzipped_len(input: &str) -> usize {
                 paren_stack.pop();
 
                 if paren_stack.is_empty() {
-                    len += repeat_times * unzipped_len(&paren_str[..]);
+                    len += repeat_times * unzipped_len(&paren_str);
                     paren_str.clear();
                 } else {
                     paren_str.push(c);

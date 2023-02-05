@@ -9,7 +9,7 @@ fn main() {
     let mut bin = String::new();
 
     for i in 0.. {
-        bin = [&bin[..], &format!("{i:b}")[..]].concat();
+        bin = [&bin[..], &format!("{i:b}")].concat();
 
         if bin.len() > max_len {
             break;

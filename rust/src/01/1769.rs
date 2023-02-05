@@ -22,6 +22,6 @@ fn convert(num: &str, count: &mut i32) -> i32 {
     if sum < 10 {
         sum
     } else {
-        convert(&sum.to_string()[..], count)
+        convert(&sum.to_string(), count)
     }
 }
