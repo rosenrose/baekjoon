@@ -2,11 +2,9 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.lines();
-    let parse_time = |s: &str| -> Vec<i32> { s.split(':').flat_map(str::parse).collect() };
+    let mut input = buf.lines().map(parse_time);
 
-    let current = parse_time(input.next().unwrap());
-    let mut end = parse_time(input.next().unwrap());
+    let (current, mut end) = (input.next().unwrap(), input.next().unwrap());
 
     if end < current {
         end[0] += 24;
@@ -26,4 +24,8 @@ fn main() {
     }
 
     println!("{left_hour:02}:{left_minute:02}:{left_second:02}");
+}
+
+fn parse_time(s: &str) -> Vec<i32> {
+    s.split(':').flat_map(str::parse).collect()
 }
