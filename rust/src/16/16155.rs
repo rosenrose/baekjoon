@@ -20,11 +20,11 @@ impl Fraction {
         Self(numerator / gcd, denominator / gcd)
     }
 
-    fn multiply(self, mul: i64) -> Self {
+    fn mul(self, mul: i64) -> Self {
         Self::reduced(self.0 * mul, self.1)
     }
 
-    fn divide(self, div: i64) -> Self {
+    fn div(self, div: i64) -> Self {
         Self::reduced(self.0, self.1 * div)
     }
 
@@ -76,14 +76,14 @@ fn main() {
 
         if (x1..=x2 - 1).contains(&start_x) {
             let delta_x = start_x - x1;
-            let delta_y = gradient.multiply(delta_x);
+            let delta_y = gradient.mul(delta_x);
 
             start_h = Fraction::from_int(h1) + delta_y;
         }
 
         if (x1 + 1..=x2).contains(&end_x) {
             let delta_x = end_x - x1;
-            let delta_y = gradient.multiply(delta_x);
+            let delta_y = gradient.mul(delta_x);
 
             end_h = Fraction::from_int(h1) + delta_y;
             break;
@@ -91,7 +91,7 @@ fn main() {
     }
 
     let (delta_x, delta_y) = (end_x - start_x, end_h - start_h);
-    let avg = delta_y.divide(delta_x);
+    let avg = delta_y.div(delta_x);
 
     println!("{}", avg.abs());
 }

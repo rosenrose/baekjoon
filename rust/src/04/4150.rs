@@ -1,50 +1,71 @@
+use std::fmt;
+use std::ops::Add;
+
 const EXP: i128 = 10_000_000_000_000_000_000_000_000_000_000_000_000;
+
+struct BigInt(Vec<i128>);
+
+impl Add for BigInt {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        let mut carry = 0;
+        let mut sum: Vec<_> = (0..self.0.len().max(other.0.len()))
+            .map(|i| {
+                let temp = carry + self.0.get(i).unwrap_or(&0) + other.0.get(i).unwrap_or(&0);
+                carry = temp / EXP;
+
+                temp % EXP
+            })
+            .collect();
+
+        if carry > 0 {
+            sum.push(carry);
+        }
+
+        Self(sum)
+    }
+}
+
+impl Clone for BigInt {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+
+impl fmt::Display for BigInt {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for (i, num) in self.0.iter().rev().enumerate() {
+            if i == 0 {
+                write!(f, "{num}").unwrap();
+            } else {
+                write!(f, "{num:037}").unwrap();
+            }
+        }
+
+        write!(f, "")
+    }
+}
 
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: i128 = buf.trim().parse().unwrap();
-    let fibo_num = fibo(n);
 
-    for (i, num) in fibo_num.iter().rev().enumerate() {
-        if i == 0 {
-            print!("{num}");
-        } else {
-            print!("{num:037}");
-        }
-    }
+    println!("{}", fibo(n));
 }
 
-fn fibo(n: i128) -> Vec<i128> {
+fn fibo(n: i128) -> BigInt {
     if n <= 1 {
-        return vec![n];
+        return BigInt(vec![n]);
     }
 
-    let (mut a, mut b) = (vec![1], vec![1]);
+    let (mut a, mut b) = (BigInt(vec![1]), BigInt(vec![1]));
 
-    for _ in 2..n {
-        let next = add(&mut a, &mut b);
-        (a, b) = (b, next);
+    for _ in 0..n - 2 {
+        (a, b) = (b.clone(), a + b);
     }
 
     b
-}
-
-fn add(a: &mut Vec<i128>, b: &mut Vec<i128>) -> Vec<i128> {
-    let mut carry = 0;
-    let mut sum: Vec<_> = (0..a.len().max(b.len()))
-        .map(|i| {
-            let temp = carry + a.get(i).unwrap_or(&0) + b.get(i).unwrap_or(&0);
-            carry = temp / EXP;
-
-            temp % EXP
-        })
-        .collect();
-
-    if carry > 0 {
-        sum.push(carry);
-    }
-
-    sum
 }
