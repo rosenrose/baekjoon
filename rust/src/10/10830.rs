@@ -39,7 +39,7 @@ impl Mul for Matrix {
 
 impl Clone for Matrix {
     fn clone(&self) -> Self {
-        Self((*self.0.clone()).to_vec())
+        Self(self.0.clone())
     }
 }
 

@@ -1,49 +1,56 @@
+struct BigInt(Vec<i32>);
+
+impl BigInt {
+    fn parse(input: &str) -> Self {
+        Self(
+            input
+                .as_bytes()
+                .rchunks(3)
+                .map(|chunk| {
+                    let mut exp = 1;
+
+                    chunk.iter().rev().fold(0, |acc, &ch| {
+                        let num = (ch as i32 - '0' as i32) * exp;
+                        exp *= 10;
+
+                        acc + num
+                    })
+                })
+                .collect(),
+        )
+    }
+
+    fn rem(&self, m: i32) -> i32 {
+        let mut exp_rem = 1;
+
+        self.0.iter().fold(0, |acc, num| {
+            let rem = (num * exp_rem) % m;
+
+            for _ in 0..3 {
+                exp_rem = (exp_rem * 10) % m;
+            }
+
+            (acc + rem) % m
+        })
+    }
+}
+
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut nums = buf.split_whitespace();
-    let p: Vec<_> = nums
-        .next()
-        .unwrap()
-        .as_bytes()
-        .rchunks(3)
-        .map(|chunk| {
-            let mut exp = 1;
-
-            chunk.iter().rev().fold(0, |acc, ch| {
-                let num = (ch - '0' as u8) as i32 * exp;
-                exp *= 10;
-
-                acc + num
-            })
-        })
-        .collect();
-
-    let k: usize = nums.next().unwrap().parse().unwrap();
+    let mut input = buf.split_whitespace();
+    let p = BigInt::parse(input.next().unwrap());
+    let k: usize = input.next().unwrap().parse().unwrap();
 
     for prime in get_prime_nums(k - 1) {
-        if bigint_rem(&p, prime) == 0 {
+        if p.rem(prime) == 0 {
             println!("BAD {prime}");
             return;
         }
     }
 
     println!("GOOD");
-}
-
-fn bigint_rem(bigint: &Vec<i32>, m: i32) -> i32 {
-    let mut exp_rem = 1;
-
-    bigint.iter().fold(0, |acc, num| {
-        let rem = ((num % m) * exp_rem) % m;
-
-        for _ in 0..3 {
-            exp_rem = (exp_rem * (10 % m)) % m;
-        }
-
-        (acc + rem) % m
-    })
 }
 
 fn get_prime_nums(num: usize) -> Vec<i32> {

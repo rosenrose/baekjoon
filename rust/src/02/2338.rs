@@ -97,7 +97,6 @@ fn karatsuba_multiply(a: &BigInt, b: &BigInt) -> BigInt {
     // a = x * 10^m + y
     // b = w * 10^m + z
     // ab = xw * 10^2m + (xz + yw) * 10^m + yz
-
     let is_zero = |bigint: &BigInt| bigint.abs.iter().all(|&i| i == 0);
 
     if is_zero(a) || is_zero(b) {
@@ -209,7 +208,7 @@ fn sub(a: &BigInt, b: &BigInt) -> BigInt {
     let mut carry = 0;
     let mut diff: VecDeque<_> = (0..a.len().max(b.len()))
         .map(|i| {
-            let temp = carry + *a.abs.get(i).unwrap_or(&0) - *b.abs.get(i).unwrap_or(&0);
+            let temp = carry + a.abs.get(i).unwrap_or(&0) - b.abs.get(i).unwrap_or(&0);
 
             if temp < 0 {
                 carry = -1;

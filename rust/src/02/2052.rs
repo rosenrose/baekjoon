@@ -1,39 +1,57 @@
+use std::fmt;
+
+const EXP: i128 = 10_000_000_000_000_000_000_000_000_000_000_000_000;
+
+struct BigInt(Vec<i128>);
+
+impl BigInt {
+    fn mul(&self, num: i128) -> Self {
+        let mut carry = 0;
+        let mut result: Vec<_> = self
+            .0
+            .iter()
+            .map(|n| {
+                let temp = carry + n * num;
+                carry = temp / EXP;
+
+                temp % EXP
+            })
+            .collect();
+
+        if carry > 0 {
+            result.push(carry);
+        }
+
+        Self(result)
+    }
+}
+
+impl fmt::Display for BigInt {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for (i, num) in self.0.iter().rev().enumerate() {
+            if i == 0 {
+                write!(f, "{num}").unwrap();
+            } else {
+                write!(f, "{num:037}").unwrap();
+            }
+        }
+
+        write!(f, "")
+    }
+}
+
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: usize = buf.trim().parse().unwrap();
-    const EXP: i128 = 10_000_000_000_000_000_000_000_000_000_000_000_000;
-
-    let mut bigint = vec![1 as i128];
+    let mut bigint = BigInt(vec![1]);
 
     for _ in 0..n {
-        let mut carry = 0;
-
-        for num in bigint.iter_mut() {
-            *num = carry + *num * 5;
-
-            carry = *num / EXP;
-            *num %= EXP;
-        }
-
-        if carry > 0 {
-            bigint.push(carry);
-        }
+        bigint = bigint.mul(5);
     }
 
-    let bigint: String = bigint
-        .iter()
-        .rev()
-        .enumerate()
-        .map(|(i, num)| {
-            if i == 0 {
-                num.to_string()
-            } else {
-                format!("{num:037}")
-            }
-        })
-        .collect();
+    let result = bigint.to_string();
 
-    println!("0.{}{bigint}", "0".repeat(n - bigint.len()));
+    println!("0.{}{result}", "0".repeat(n - result.len()));
 }

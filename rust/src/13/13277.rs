@@ -42,17 +42,66 @@ impl MulAssign for Complex {
     }
 }
 
+struct BigInt(Vec<Complex>);
+
+impl BigInt {
+    fn parse(input: &str) -> Self {
+        Self(
+            input
+                .as_bytes()
+                .rchunks(2)
+                .map(|chunk| {
+                    let mut exp = 1;
+
+                    Complex(
+                        chunk.iter().rev().fold(0.0, |acc, &ch| {
+                            let num = (ch as i32 - '0' as i32) * exp;
+                            exp *= 10;
+
+                            acc + num as f64
+                        }),
+                        0.0,
+                    )
+                })
+                .collect(),
+        )
+    }
+
+    fn mul(mut self, mut other: Self) -> Vec<i32> {
+        let mut len = 2;
+
+        while len < self.0.len() + other.0.len() {
+            len *= 2;
+        }
+
+        self.0.resize(len, Complex(0.0, 0.0));
+        other.0.resize(len, Complex(0.0, 0.0));
+
+        fast_fourier_transform(&mut self.0, false);
+        fast_fourier_transform(&mut other.0, false);
+
+        let mut result: Vec<_> = self
+            .0
+            .iter()
+            .zip(other.0.iter())
+            .map(|(&a, &b)| a * b)
+            .collect();
+
+        fast_fourier_transform(&mut result, true);
+
+        normalized(result)
+    }
+}
+
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut input = buf.split_ascii_whitespace();
+    let mut input = buf.split_whitespace().map(BigInt::parse);
     let mut output = String::new();
 
-    let mut a = parse_bigint(input.next().unwrap());
-    let mut b = parse_bigint(input.next().unwrap());
-
-    let result = multiply(&mut a, &mut b);
+    let (a, b) = (input.next().unwrap(), input.next().unwrap());
+    let result = a.mul(b);
 
     for (i, num) in result.iter().rev().enumerate() {
         if i == 0 {
@@ -63,46 +112,6 @@ fn main() {
     }
 
     print!("{output}");
-}
-
-fn parse_bigint(input: &str) -> Vec<Complex> {
-    input
-        .as_bytes()
-        .rchunks(2)
-        .map(|chunk| {
-            let mut exp = 1;
-
-            Complex(
-                chunk.iter().rev().fold(0.0, |acc, ch| {
-                    let num = (ch - '0' as u8) as i32 * exp;
-                    exp *= 10;
-
-                    acc + num as f64
-                }),
-                0.0,
-            )
-        })
-        .collect()
-}
-
-fn multiply(a: &mut Vec<Complex>, b: &mut Vec<Complex>) -> Vec<u32> {
-    let mut len = 2;
-
-    while len < a.len() + b.len() {
-        len *= 2;
-    }
-
-    a.resize(len, Complex(0.0, 0.0));
-    b.resize(len, Complex(0.0, 0.0));
-
-    fast_fourier_transform(a, false);
-    fast_fourier_transform(b, false);
-
-    let mut result: Vec<_> = a.iter().zip(b.iter()).map(|(&a, &b)| a * b).collect();
-
-    fast_fourier_transform(&mut result, true);
-
-    normalize(result)
 }
 
 fn fast_fourier_transform(v: &mut Vec<Complex>, is_inverse: bool) {
@@ -154,12 +163,12 @@ fn fast_fourier_transform(v: &mut Vec<Complex>, is_inverse: bool) {
     }
 }
 
-fn normalize(v: Vec<Complex>) -> Vec<u32> {
+fn normalized(v: Vec<Complex>) -> Vec<i32> {
     let mut carry = 0;
     let mut result: Vec<_> = v
         .iter()
         .map(|complex| {
-            let temp = carry + complex.0.round() as u32;
+            let temp = carry + complex.0.round() as i32;
             carry = temp / 100;
 
             temp % 100

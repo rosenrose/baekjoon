@@ -5,46 +5,44 @@ const EXP: i128 = 10_000_000_000_000_000_000_000_000_000_000_000_000;
 struct BigInt(Vec<i128>);
 
 impl BigInt {
-    fn add(&mut self, num: i128) -> Self {
-        self.0[0] += num;
-        let mut carry = self.0[0] / EXP;
+    fn add(&self, num: i128) -> Self {
+        let mut carry = 0;
+        let mut result = self.0.clone();
+        result[0] += num;
 
-        for i in 1..self.0.len() {
-            if carry == 0 {
-                break;
-            }
-
-            self.0[i - 1] %= EXP;
-            self.0[i] += carry;
-            carry = self.0[i] / EXP;
+        for num in result.iter_mut() {
+            carry = (carry + *num) / EXP;
+            *num %= EXP;
         }
 
         if carry > 0 {
-            self.0.push(carry);
+            result.push(carry);
         }
 
-        Self(self.0.clone())
+        Self(result)
     }
 
-    fn sub(&mut self, num: i128) -> Self {
-        self.0[0] -= num;
-        let mut carry = if self.0[0] < 0 { -1 } else { 0 };
+    fn sub(&self, num: i128) -> Self {
+        let mut carry = 0;
+        let mut result = self.0.clone();
+        result[0] -= num;
 
-        for i in 1..self.0.len() {
-            if carry == 0 {
-                break;
+        for num in result.iter_mut() {
+            *num += carry;
+
+            if *num < 0 {
+                carry = -1;
+                *num += EXP;
+            } else {
+                carry = 0;
             }
-
-            self.0[i - 1] += EXP;
-            self.0[i] -= carry;
-            carry = if self.0[i] < 0 { -1 } else { 0 };
         }
 
-        while self.0.len() > 0 && *self.0.last().unwrap() == 0 {
-            self.0.pop();
+        while result.len() > 0 && *result.last().unwrap() == 0 {
+            result.pop();
         }
 
-        Self(self.0.clone())
+        Self(result.clone())
     }
 
     fn mul(&self, num: i128) -> Self {
@@ -93,7 +91,6 @@ fn main() {
     //         .collect()
     // });
     // println!("{bin}");
-
     let count = (2..=n).fold(BigInt(vec![0]), |acc, num| {
         if num % 2 == 0 {
             acc.mul(2).add(1)

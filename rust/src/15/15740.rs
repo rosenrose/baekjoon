@@ -1,13 +1,15 @@
 use std::fmt;
-const BILLION_SQUARE: i128 = 1_000_000_000_000_000_000;
+use std::ops::{Add, Sub};
+
+const EXP: i128 = 10_000_000_000_000_000_000_000_000_000_000_000_000;
 
 struct BigInt {
-    abs: Vec<i64>,
+    abs: Vec<i128>,
     sign: i8,
 }
 
 impl BigInt {
-    fn from(abs: Vec<i64>, sign: i8) -> Self {
+    fn from(abs: Vec<i128>, sign: i8) -> Self {
         Self { abs, sign }
     }
 
@@ -15,7 +17,7 @@ impl BigInt {
         let mut sign = 1;
         let mut abs: Vec<_> = input
             .as_bytes()
-            .rchunks(18)
+            .rchunks(37)
             .map(|chunk| {
                 let mut exp = 1;
 
@@ -25,7 +27,7 @@ impl BigInt {
                         return acc;
                     }
 
-                    let num = (ch - '0' as u8) as i64 * exp;
+                    let num = (ch as i128 - '0' as i128) * exp;
                     exp *= 10;
 
                     acc + num
@@ -40,8 +42,96 @@ impl BigInt {
         Self { abs, sign }
     }
 
+    fn is_less(&self, other: &Self) -> bool {
+        if self.len() == other.len() {
+            self.abs.iter().rev().lt(other.abs.iter().rev())
+        } else {
+            self.len() < other.len()
+        }
+    }
+
     fn len(&self) -> usize {
         self.abs.len()
+    }
+}
+
+impl Add for BigInt {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        if self.sign * other.sign == -1 {
+            return if self.sign == 1 {
+                self - Self::from(other.abs.clone(), 1)
+            } else {
+                other - Self::from(self.abs.clone(), 1)
+            };
+        }
+
+        let mut carry = 0;
+        let mut sum: Vec<_> = (0..self.len().max(other.len()))
+            .map(|i| {
+                let temp = carry + self.abs.get(i).unwrap_or(&0) + other.abs.get(i).unwrap_or(&0);
+                carry = temp / EXP;
+
+                temp % EXP
+            })
+            .collect();
+
+        if carry > 0 {
+            sum.push(carry);
+        }
+
+        Self::from(sum, self.sign)
+    }
+}
+impl Sub for BigInt {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        if self.sign * other.sign == -1 {
+            return if self.sign == 1 {
+                self + Self::from(other.abs.clone(), 1)
+            } else {
+                let mut result = other + Self::from(self.abs.clone(), 1);
+                result.sign = -1;
+
+                result
+            };
+        }
+
+        if self.is_less(&other) {
+            let mut result = other - self;
+            result.sign *= -1;
+
+            return result;
+        }
+
+        let mut carry = 0;
+        let mut diff: Vec<_> = (0..self.len().max(other.len()))
+            .map(|i| {
+                let temp = carry + self.abs.get(i).unwrap_or(&0) - other.abs.get(i).unwrap_or(&0);
+
+                if temp < 0 {
+                    carry = -1;
+                    temp + EXP
+                } else {
+                    carry = 0;
+                    temp
+                }
+            })
+            .collect();
+
+        while diff.len() > 1 && *diff.last().unwrap() == 0 {
+            diff.pop();
+        }
+
+        let mut result = Self::from(diff, self.sign);
+
+        if result.len() == 1 && result.abs[0] == 0 {
+            result.sign = 1;
+        }
+
+        result
     }
 }
 
@@ -55,7 +145,7 @@ impl fmt::Display for BigInt {
             if i == 0 {
                 write!(f, "{num}").unwrap();
             } else {
-                write!(f, "{num:018}").unwrap();
+                write!(f, "{num:037}").unwrap();
             }
         });
 
@@ -67,83 +157,8 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut nums = buf.split_whitespace();
-    let a = BigInt::parse(nums.next().unwrap());
-    let b = BigInt::parse(nums.next().unwrap());
+    let mut input = buf.split_whitespace().map(BigInt::parse);
+    let (a, b) = (input.next().unwrap(), input.next().unwrap());
 
-    println!("{}", add(&a, &b));
-}
-
-fn add(a: &BigInt, b: &BigInt) -> BigInt {
-    if a.sign * b.sign == -1 {
-        return if a.sign == 1 {
-            sub(a, &BigInt::from(b.abs.clone(), 1))
-        } else {
-            sub(b, &BigInt::from(a.abs.clone(), 1))
-        };
-    }
-
-    let mut carry = 0;
-    let mut sum: Vec<_> = (0..a.len().max(b.len()))
-        .map(|i| {
-            let temp =
-                carry + *a.abs.get(i).unwrap_or(&0) as i128 + *b.abs.get(i).unwrap_or(&0) as i128;
-            carry = temp / BILLION_SQUARE;
-
-            (temp % BILLION_SQUARE) as i64
-        })
-        .collect();
-
-    if carry > 0 {
-        sum.push(carry as i64);
-    }
-
-    BigInt::from(sum, a.sign)
-}
-
-fn sub(a: &BigInt, b: &BigInt) -> BigInt {
-    if a.sign * b.sign == -1 {
-        return if a.sign == 1 {
-            add(a, &BigInt::from(b.abs.clone(), 1))
-        } else {
-            let mut result = add(b, &BigInt::from(a.abs.clone(), 1));
-            result.sign = -1;
-
-            result
-        };
-    }
-
-    if a.len() < b.len() || (a.len() == b.len() && a.abs.iter().rev().lt(b.abs.iter().rev())) {
-        let mut result = sub(b, a);
-        result.sign *= -1;
-
-        return result;
-    }
-
-    let mut carry = 0;
-    let mut diff: Vec<_> = (0..a.len().max(b.len()))
-        .map(|i| {
-            let temp = carry + *a.abs.get(i).unwrap_or(&0) - *b.abs.get(i).unwrap_or(&0);
-
-            if temp < 0 {
-                carry = -1;
-                temp + BILLION_SQUARE as i64
-            } else {
-                carry = 0;
-                temp
-            }
-        })
-        .collect();
-
-    while diff.len() > 1 && *diff.last().unwrap() == 0 {
-        diff.pop();
-    }
-
-    let mut result = BigInt::from(diff, a.sign);
-
-    if result.len() == 1 && result.abs[0] == 0 {
-        result.sign = 1;
-    }
-
-    result
+    println!("{}", a + b);
 }
