@@ -1,9 +1,9 @@
 use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt;
-use std::ops::{Add, Sub};
+use std::ops::{Add, Sub, SubAssign};
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 struct BigInt(VecDeque<i8>);
 
 impl BigInt {
@@ -15,18 +15,27 @@ impl BigInt {
         Self(input.chars().rev().map(|c| c as i8 - '0' as i8).collect())
     }
 
-    fn is_zero(&self) -> bool {
-        self.0.iter().all(|&i| i == 0)
+    fn mul(&self, other: i8) -> Self {
+        let mut carry = 0;
+        let mut result: VecDeque<_> = self
+            .0
+            .iter()
+            .map(|&num| {
+                let temp = carry + num * other;
+                carry = temp / 10;
+
+                temp % 10
+            })
+            .collect();
+
+        if carry > 0 {
+            result.push_back(carry);
+        }
+
+        Self(result)
     }
 
     fn divmod(&self, other: Self) -> (Self, Self) {
-        let mut divisor_multiples = vec![other.clone()];
-
-        for _ in 0..8 {
-            let multiple = divisor_multiples.last().unwrap().clone();
-            divisor_multiples.push(multiple + other.clone());
-        }
-
         let (mut dividend, mut quotient) = (Self::new(), Self::new());
 
         for i in (0..=self.0.len() - other.0.len()).rev() {
@@ -47,18 +56,23 @@ impl BigInt {
                 continue;
             }
 
-            for (q, divisor) in divisor_multiples.iter().enumerate() {
-                let diff = dividend.clone() - divisor.clone();
-                // println!("{dividend:?} {divisor:?} {diff:?}");
-                if diff < other {
-                    quotient.0.push_front(q as i8 + 1);
-                    dividend = diff;
-                    break;
-                }
+            let mut q = 9;
+            let mut divisor = other.mul(q);
+
+            while divisor > dividend {
+                q -= 1;
+                divisor -= other.clone();
             }
+
+            quotient.0.push_front(q);
+            dividend -= divisor;
         }
 
         (quotient, dividend)
+    }
+
+    fn is_zero(&self) -> bool {
+        self.0.iter().all(|&i| i == 0)
     }
 }
 
@@ -107,6 +121,11 @@ impl Sub for BigInt {
         }
 
         Self(diff)
+    }
+}
+impl SubAssign for BigInt {
+    fn sub_assign(&mut self, other: Self) {
+        *self = (*self).clone() - other;
     }
 }
 
