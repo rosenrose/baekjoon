@@ -2,7 +2,8 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::ops::{Add, Sub};
 
-const EXP: i128 = 10_000_000_000_000_000_000_000_000_000_000_000_000;
+const DIGITS: usize = 37;
+const EXP: i128 = 10_i128.pow(DIGITS as u32);
 
 #[derive(PartialEq)]
 struct BigInt {
@@ -19,7 +20,7 @@ impl BigInt {
         let mut sign = 1;
         let mut abs: Vec<_> = input
             .as_bytes()
-            .rchunks(37)
+            .rchunks(DIGITS)
             .map(|chunk| {
                 let mut exp = 1;
 
@@ -153,7 +154,7 @@ impl fmt::Display for BigInt {
             if i == 0 {
                 write!(f, "{num}").unwrap();
             } else {
-                write!(f, "{num:037}").unwrap();
+                write!(f, "{num:0DIGITS$}").unwrap();
             }
         });
 

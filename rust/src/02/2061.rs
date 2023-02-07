@@ -1,11 +1,13 @@
 struct BigInt(Vec<i32>);
 
+const DIGITS: usize = 3;
+
 impl BigInt {
     fn parse(input: &str) -> Self {
         Self(
             input
                 .as_bytes()
-                .rchunks(3)
+                .rchunks(DIGITS)
                 .map(|chunk| {
                     let mut exp = 1;
 
@@ -26,7 +28,7 @@ impl BigInt {
         self.0.iter().fold(0, |acc, num| {
             let rem = (num * exp_rem) % m;
 
-            for _ in 0..3 {
+            for _ in 0..DIGITS {
                 exp_rem = (exp_rem * 10) % m;
             }
 

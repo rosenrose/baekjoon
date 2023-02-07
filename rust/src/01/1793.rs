@@ -2,7 +2,8 @@ use std::fmt::{self, Write};
 use std::io;
 use std::ops::Add;
 
-const EXP: i128 = 10_000_000_000_000_000_000_000_000_000_000_000_000;
+const DIGITS: usize = 37;
+const EXP: i128 = 10_i128.pow(DIGITS as u32);
 
 #[derive(Clone)]
 struct BigInt(Vec<i128>);
@@ -57,7 +58,7 @@ impl fmt::Display for BigInt {
             if i == 0 {
                 write!(f, "{num}").unwrap();
             } else {
-                write!(f, "{num:037}").unwrap();
+                write!(f, "{num:0DIGITS$}").unwrap();
             }
         }
 

@@ -2,6 +2,9 @@ use std::f64::consts::PI;
 use std::fmt::{self, Write};
 use std::ops::{Add, Mul, MulAssign, Sub};
 
+const DIGITS: usize = 3;
+const EXP: i64 = 10_i64.pow(DIGITS as u32);
+
 #[derive(Clone, Copy, Debug)]
 struct Complex(f64, f64);
 
@@ -42,19 +45,19 @@ impl MulAssign for Complex {
     }
 }
 
-struct BigInt(Vec<i32>);
+struct BigInt(Vec<i64>);
 
 impl BigInt {
     fn parse(input: &str) -> Self {
         Self(
             input
                 .as_bytes()
-                .rchunks(2)
+                .rchunks(DIGITS)
                 .map(|chunk| {
                     let mut exp = 1;
 
                     chunk.iter().rev().fold(0, |acc, &ch| {
-                        let num = (ch as i32 - '0' as i32) * exp;
+                        let num = (ch as i64 - '0' as i64) * exp;
                         exp *= 10;
 
                         acc + num
@@ -78,7 +81,7 @@ impl Mul for BigInt {
         let mut a = vec![Complex(0.0, 0.0); len];
         let mut b = vec![Complex(0.0, 0.0); len];
 
-        for i in 0..len {
+        for i in 0..self.0.len().max(other.0.len()) {
             if let Some(&num) = self.0.get(i) {
                 a[i] = Complex(num as f64, 0.0);
             }
@@ -106,7 +109,7 @@ impl fmt::Display for BigInt {
             if i == 0 {
                 write!(output, "{num}").unwrap();
             } else {
-                write!(output, "{num:02}").unwrap();
+                write!(output, "{num:0DIGITS$}").unwrap();
             }
         }
 
@@ -178,15 +181,15 @@ fn bit_reversal(v: &mut Vec<Complex>) {
     }
 }
 
-fn normalize(v: Vec<Complex>) -> Vec<i32> {
+fn normalize(v: Vec<Complex>) -> Vec<i64> {
     let mut carry = 0;
     let mut result: Vec<_> = v
         .iter()
         .map(|complex| {
-            let temp = carry + complex.0.round() as i32;
-            carry = temp / 100;
+            let temp = carry + complex.0.round() as i64;
+            carry = temp / EXP;
 
-            temp % 100
+            temp % EXP
         })
         .collect();
 
