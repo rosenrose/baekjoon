@@ -54,7 +54,7 @@ impl BigInt {
         Self { abs, sign }
     }
 
-    fn multiply(&self, other: i64) -> Self {
+    fn mul_int(&self, other: i64) -> Self {
         let mut carry = 0;
         let mut result: VecDeque<_> = self
             .abs
@@ -176,10 +176,10 @@ impl Mul for BigInt {
             return Self::new();
         }
         if self.len() == 1 {
-            return other.multiply(self.abs[0] * self.sign as i64);
+            return other.mul_int(self.abs[0] * self.sign as i64);
         }
         if other.len() == 1 {
-            return self.multiply(other.abs[0] * other.sign as i64);
+            return self.mul_int(other.abs[0] * other.sign as i64);
         }
         // a = x * 10^m + y
         // b = w * 10^m + z

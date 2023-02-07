@@ -6,10 +6,10 @@ const EXP: i128 = 10_i128.pow(DIGITS as u32);
 struct BigInt(Vec<i128>);
 
 impl BigInt {
-    fn add(&self, num: i128) -> Self {
+    fn add(&self, other: i128) -> Self {
         let mut carry = 0;
         let mut result = self.0.clone();
-        result[0] += num;
+        result[0] += other;
 
         for num in result.iter_mut() {
             carry = (carry + *num) / EXP;
@@ -23,10 +23,10 @@ impl BigInt {
         Self(result)
     }
 
-    fn sub(&self, num: i128) -> Self {
+    fn sub(&self, other: i128) -> Self {
         let mut carry = 0;
         let mut result = self.0.clone();
-        result[0] -= num;
+        result[0] -= other;
 
         for num in result.iter_mut() {
             *num += carry;
@@ -46,13 +46,13 @@ impl BigInt {
         Self(result.clone())
     }
 
-    fn mul(&self, num: i128) -> Self {
+    fn mul(&self, other: i128) -> Self {
         let mut carry = 0;
         let mut result: Vec<_> = self
             .0
             .iter()
-            .map(|n| {
-                let temp = carry + n * num;
+            .map(|num| {
+                let temp = carry + num * other;
                 carry = temp / EXP;
 
                 temp % EXP
