@@ -4,6 +4,7 @@ use std::ops::Add;
 
 const EXP: i128 = 10_000_000_000_000_000_000_000_000_000_000_000_000;
 
+#[derive(Clone)]
 struct BigInt(Vec<i128>);
 
 impl BigInt {
@@ -47,12 +48,6 @@ impl Add for BigInt {
         }
 
         Self(sum)
-    }
-}
-
-impl Clone for BigInt {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
     }
 }
 

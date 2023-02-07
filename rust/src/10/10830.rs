@@ -2,10 +2,11 @@ use std::fmt;
 use std::io;
 use std::ops::Mul;
 
+#[derive(Clone)]
 struct Matrix(Vec<Vec<i32>>);
 
 impl Matrix {
-    fn rem(self, m: i32) -> Self {
+    fn rem(&self, m: i32) -> Self {
         Self(
             self.0
                 .iter()
@@ -34,12 +35,6 @@ impl Mul for Matrix {
                 })
                 .collect(),
         )
-    }
-}
-
-impl Clone for Matrix {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
     }
 }
 
@@ -75,15 +70,15 @@ fn main() {
 
 fn pow_rem(base: &Matrix, exp: i64) -> Matrix {
     if exp == 1 {
-        return base.clone().rem(M);
+        return base.rem(M);
     }
 
-    let mut remainder = pow_rem(base, exp / 2);
-    remainder = (remainder.clone() * remainder).rem(M);
+    let mut rem = pow_rem(base, exp / 2);
+    rem = (rem.clone() * rem).rem(M);
 
     if exp % 2 == 0 {
-        remainder
+        rem
     } else {
-        (remainder * base.clone().rem(M)).rem(M)
+        (rem * base.rem(M)).rem(M)
     }
 }

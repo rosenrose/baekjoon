@@ -1,8 +1,10 @@
+use std::cmp::Ordering;
 use std::fmt;
 use std::ops::{Add, Sub};
 
 const EXP: i128 = 10_000_000_000_000_000_000_000_000_000_000_000_000;
 
+#[derive(PartialEq)]
 struct BigInt {
     abs: Vec<i128>,
     sign: i8,
@@ -42,16 +44,12 @@ impl BigInt {
         Self { abs, sign }
     }
 
-    fn is_less(&self, other: &Self) -> bool {
-        if self.len() == other.len() {
-            self.abs.iter().rev().lt(other.abs.iter().rev())
-        } else {
-            self.len() < other.len()
-        }
-    }
-
     fn len(&self) -> usize {
         self.abs.len()
+    }
+
+    fn abs(&self) -> Self {
+        Self::from(self.abs.clone(), 1)
     }
 }
 
@@ -61,9 +59,9 @@ impl Add for BigInt {
     fn add(self, other: Self) -> Self {
         if self.sign * other.sign == -1 {
             return if self.sign == 1 {
-                self - Self::from(other.abs.clone(), 1)
+                self - other.abs()
             } else {
-                other - Self::from(self.abs.clone(), 1)
+                other - self.abs()
             };
         }
 
@@ -90,16 +88,16 @@ impl Sub for BigInt {
     fn sub(self, other: Self) -> Self {
         if self.sign * other.sign == -1 {
             return if self.sign == 1 {
-                self + Self::from(other.abs.clone(), 1)
+                self + other.abs()
             } else {
-                let mut result = other + Self::from(self.abs.clone(), 1);
+                let mut result = other + self.abs();
                 result.sign = -1;
 
                 result
             };
         }
 
-        if self.is_less(&other) {
+        if self < other {
             let mut result = other - self;
             result.sign *= -1;
 
@@ -132,6 +130,16 @@ impl Sub for BigInt {
         }
 
         result
+    }
+}
+
+impl PartialOrd for BigInt {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        if self.len() == other.len() {
+            Some(self.abs.iter().rev().cmp(other.abs.iter().rev()))
+        } else {
+            Some(self.len().cmp(&other.len()))
+        }
     }
 }
 

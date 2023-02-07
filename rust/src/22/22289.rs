@@ -1,5 +1,5 @@
 use std::f64::consts::PI;
-use std::fmt::Write;
+use std::fmt::{self, Write};
 use std::ops::{Add, Mul, MulAssign, Sub};
 
 #[derive(Clone, Copy, Debug)]
@@ -42,7 +42,7 @@ impl MulAssign for Complex {
     }
 }
 
-struct BigInt(Vec<Complex>);
+struct BigInt(Vec<i32>);
 
 impl BigInt {
     fn parse(input: &str) -> Self {
@@ -53,43 +53,64 @@ impl BigInt {
                 .map(|chunk| {
                     let mut exp = 1;
 
-                    Complex(
-                        chunk.iter().rev().fold(0.0, |acc, &ch| {
-                            let num = (ch as i32 - '0' as i32) * exp;
-                            exp *= 10;
+                    chunk.iter().rev().fold(0, |acc, &ch| {
+                        let num = (ch as i32 - '0' as i32) * exp;
+                        exp *= 10;
 
-                            acc + num as f64
-                        }),
-                        0.0,
-                    )
+                        acc + num
+                    })
                 })
                 .collect(),
         )
     }
+}
 
-    fn mul(mut self, mut other: Self) -> Vec<i32> {
+impl Mul for BigInt {
+    type Output = Self;
+
+    fn mul(self, other: Self) -> Self {
         let mut len = 2;
 
         while len < self.0.len() + other.0.len() {
             len *= 2;
         }
 
-        self.0.resize(len, Complex(0.0, 0.0));
-        other.0.resize(len, Complex(0.0, 0.0));
+        let mut a = vec![Complex(0.0, 0.0); len];
+        let mut b = vec![Complex(0.0, 0.0); len];
 
-        fast_fourier_transform(&mut self.0, false);
-        fast_fourier_transform(&mut other.0, false);
+        for i in 0..len {
+            if let Some(&num) = self.0.get(i) {
+                a[i] = Complex(num as f64, 0.0);
+            }
+            if let Some(&num) = other.0.get(i) {
+                b[i] = Complex(num as f64, 0.0);
+            }
+        }
 
-        let mut result: Vec<_> = self
-            .0
-            .iter()
-            .zip(other.0.iter())
-            .map(|(&a, &b)| a * b)
-            .collect();
+        fast_fourier_transform(&mut a, false);
+        fast_fourier_transform(&mut b, false);
+
+        let mut result: Vec<_> = a.iter().zip(b.iter()).map(|(&a, &b)| a * b).collect();
 
         fast_fourier_transform(&mut result, true);
 
-        normalized(result)
+        Self(normalize(result))
+    }
+}
+
+impl fmt::Display for BigInt {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut output = String::new();
+
+        for (i, num) in self.0.iter().rev().enumerate() {
+            if i == 0 {
+                write!(output, "{num}").unwrap();
+            } else {
+                write!(output, "{num:02}").unwrap();
+            }
+        }
+
+        write!(f, "{output}")
     }
 }
 
@@ -98,72 +119,66 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let mut input = buf.split_whitespace().map(BigInt::parse);
-    let mut output = String::new();
-
     let (a, b) = (input.next().unwrap(), input.next().unwrap());
-    let result = a.mul(b);
 
-    for (i, num) in result.iter().rev().enumerate() {
-        if i == 0 {
-            write!(output, "{num}").unwrap();
-        } else {
-            write!(output, "{num:02}").unwrap();
-        }
-    }
-
-    print!("{output}");
+    println!("{}", a * b);
 }
 
 fn fast_fourier_transform(v: &mut Vec<Complex>, is_inverse: bool) {
-    let len = v.len();
-    let mut j = 0;
+    bit_reversal(v);
 
-    for i in 1..len {
-        let mut bit = len / 2;
+    let mut len = 2;
+    let direction = if is_inverse { -1.0 } else { 1.0 };
 
-        while j >= bit {
-            j -= bit;
-            bit /= 2;
-        }
+    while len <= v.len() {
+        let angle = -2.0 * PI * direction / len as f64;
+        let wlen = Complex(angle.cos(), angle.sin());
 
-        j += bit;
+        for i in (0..v.len()).step_by(len) {
+            let mut w = Complex(1.0, 0.0);
 
-        if i < j {
-            v.swap(i, j);
-        }
-    }
+            for j in 0..len / 2 {
+                let (even, odd) = (v[i + j], v[i + j + len / 2]);
 
-    let mut k = 1;
+                v[i + j] = even + odd * w;
+                v[i + j + len / 2] = even - odd * w;
 
-    while k < len {
-        let angle = (if is_inverse { PI } else { -PI }) / k as f64;
-        let direction = Complex(f64::cos(angle), f64::sin(angle));
-
-        for i in (0..len).step_by(k * 2) {
-            let mut unit = Complex(1.0, 0.0);
-
-            for j in 0..k {
-                let even = v[i + j];
-                let odd = v[i + j + k] * unit;
-
-                v[i + j] = even + odd;
-                v[i + j + k] = even - odd;
-
-                unit *= direction;
+                w *= wlen;
             }
         }
 
-        k *= 2;
+        len *= 2;
     }
 
     if is_inverse {
+        len = v.len();
+
         for num in v.iter_mut() {
             (*num).div(len as f64);
         }
     }
 }
 
-fn normalized(v: Vec<Complex>) -> Vec<i32> {
+fn bit_reversal(v: &mut Vec<Complex>) {
+    let mut rev = 0;
+
+    for i in 1..v.len() {
+        let mut bit = v.len() / 2;
+
+        while rev >= bit {
+            rev -= bit;
+            bit /= 2;
+        }
+
+        rev += bit;
+
+        if i < rev {
+            v.swap(i, rev);
+        }
+    }
+}
+
+fn normalize(v: Vec<Complex>) -> Vec<i32> {
     let mut carry = 0;
     let mut result: Vec<_> = v
         .iter()

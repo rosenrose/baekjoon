@@ -1,7 +1,9 @@
+use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt;
 use std::ops::{Add, Sub};
 
+#[derive(Clone, PartialEq)]
 struct BigInt(VecDeque<i8>);
 
 impl BigInt {
@@ -15,14 +17,6 @@ impl BigInt {
 
     fn is_zero(&self) -> bool {
         self.0.iter().all(|&i| i == 0)
-    }
-
-    fn is_less(&self, other: &Self) -> bool {
-        if self.0.len() == other.0.len() {
-            self.0.iter().rev().lt(other.0.iter().rev())
-        } else {
-            self.0.len() < other.0.len()
-        }
     }
 
     fn divmod(&self, other: Self) -> (Self, Self) {
@@ -46,7 +40,7 @@ impl BigInt {
                 dividend.0.push_front(self.0[i]);
             }
             // println!("{dividend:?} {quotient:?}");
-            if dividend.is_less(&other) {
+            if dividend < other {
                 if i < self.0.len() - other.0.len() {
                     quotient.0.push_front(0);
                 }
@@ -56,7 +50,7 @@ impl BigInt {
             for (q, divisor) in divisor_multiples.iter().enumerate() {
                 let diff = dividend.clone() - divisor.clone();
                 // println!("{dividend:?} {divisor:?} {diff:?}");
-                if diff.is_less(&other) {
+                if diff < other {
                     quotient.0.push_front(q as i8 + 1);
                     dividend = diff;
                     break;
@@ -116,9 +110,13 @@ impl Sub for BigInt {
     }
 }
 
-impl Clone for BigInt {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
+impl PartialOrd for BigInt {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        if self.0.len() == other.0.len() {
+            Some(self.0.iter().rev().cmp(other.0.iter().rev()))
+        } else {
+            Some(self.0.len().cmp(&other.0.len()))
+        }
     }
 }
 
