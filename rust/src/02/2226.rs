@@ -12,8 +12,10 @@ impl BigInt {
         result[0] += other;
 
         for num in result.iter_mut() {
-            carry = (carry + *num) / EXP;
-            *num %= EXP;
+            let temp = carry + *num;
+
+            carry = temp / EXP;
+            *num = temp % EXP;
         }
 
         if carry > 0 {
