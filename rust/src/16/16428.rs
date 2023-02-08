@@ -38,6 +38,10 @@ impl BigInt {
 
             carry = temp / 10;
             *num = temp % 10;
+
+            if carry == 0 {
+                break;
+            }
         }
 
         if carry > 0 {

@@ -16,6 +16,10 @@ impl BigInt {
 
             carry = temp / EXP;
             *num = temp % EXP;
+
+            if carry == 0 {
+                break;
+            }
         }
 
         if carry > 0 {
@@ -33,12 +37,12 @@ impl BigInt {
         for num in result.iter_mut() {
             *num += carry;
 
-            if *num < 0 {
-                carry = -1;
-                *num += EXP;
-            } else {
-                carry = 0;
+            if *num >= 0 {
+                break;
             }
+
+            carry = -1;
+            *num += EXP;
         }
 
         while result.len() > 0 && *result.last().unwrap() == 0 {
