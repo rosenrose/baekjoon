@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt;
-use std::ops::{Add, Sub, SubAssign};
+use std::ops::{Sub, SubAssign};
 
 #[derive(Clone, Debug, PartialEq)]
 struct BigInt(VecDeque<i8>);
@@ -15,88 +15,38 @@ impl BigInt {
         Self(input.chars().rev().map(|c| c as i8 - '0' as i8).collect())
     }
 
-    fn mul(&self, other: i8) -> Self {
-        let mut carry = 0;
-        let mut result: VecDeque<_> = self
-            .0
-            .iter()
-            .map(|&num| {
-                let temp = carry + num * other;
-                carry = temp / 10;
+    fn is_zero(&self) -> bool {
+        self.0.iter().all(|&i| i == 0)
+    }
 
-                temp % 10
-            })
-            .collect();
-
-        if carry > 0 {
-            result.push_back(carry);
+    fn push_front(&mut self, num: i8) {
+        if self.is_zero() {
+            self.0.clear();
         }
 
-        Self(result)
+        self.0.push_front(num);
     }
 
     fn divmod(&self, other: Self) -> (Self, Self) {
         let (mut dividend, mut quotient) = (Self::new(), Self::new());
 
-        for i in (0..=self.0.len() - other.0.len()).rev() {
-            if dividend.0.is_empty() {
-                dividend = Self(self.0.range(i..).copied().collect());
-            } else {
-                if dividend.is_zero() {
-                    dividend.0.clear();
-                }
+        for &num in self.0.iter().rev() {
+            let mut q = 0;
 
-                dividend.0.push_front(self.0[i]);
-            }
-            // println!("{dividend:?} {quotient:?}");
-            if dividend < other {
-                if i < self.0.len() - other.0.len() {
-                    quotient.0.push_front(0);
-                }
-                continue;
+            dividend.push_front(num);
+
+            while dividend >= other {
+                dividend -= other.clone();
+                q += 1;
             }
 
-            let mut q = 9;
-            let mut divisor = other.mul(q);
-
-            while divisor > dividend {
-                q -= 1;
-                divisor -= other.clone();
-            }
-
-            quotient.0.push_front(q);
-            dividend -= divisor;
+            quotient.push_front(q);
         }
 
         (quotient, dividend)
     }
-
-    fn is_zero(&self) -> bool {
-        self.0.iter().all(|&i| i == 0)
-    }
 }
 
-impl Add for BigInt {
-    type Output = Self;
-
-    fn add(self, other: Self) -> Self {
-        let mut carry = 0;
-        let mut sum: VecDeque<_> = (0..self.0.len().max(other.0.len()))
-            .map(|i| {
-                let temp = carry + self.0.get(i).unwrap_or(&0) + other.0.get(i).unwrap_or(&0);
-                carry = temp / 10;
-
-                temp % 10
-            })
-            .collect();
-
-        if carry > 0 {
-            sum.push_back(carry);
-        }
-
-        Self(sum)
-    }
-}
 impl Sub for BigInt {
     type Output = Self;
 
