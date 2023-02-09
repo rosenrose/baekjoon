@@ -9,9 +9,11 @@ subprocess.run(["cargo", "build"], cwd=base)
 
 for _ in range(randint(1000, 1000)):
     a = int(
-        f"{'-' if randint(0, 1) == 1 else ''}{str(randint(1, 9))}{''.join([str(randint(0, 9)) for _ in range(randint(10, 18))])}"
+        ("-" if randint(0, 1) == 1 else "")
+        + str(randint(1, 9))
+        + "".join([str(randint(0, 9)) for _ in range(randint(10, 18))])
     )
-    b = int(f"{str(randint(1, 9))}{''.join([str(randint(0, 9)) for _ in range(randint(10, 18))])}")
+    b = int(str(randint(1, 9)) + "".join([str(randint(0, 9)) for _ in range(randint(10, 18))]))
 
     q, r = divmod(a, b)
 

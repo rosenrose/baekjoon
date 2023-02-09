@@ -26,7 +26,6 @@ impl BigInt {
     }
 
     fn parse(input: &str) -> Self {
-        let mut sign = 1;
         let mut abs: VecDeque<_> = input
             .as_bytes()
             .rchunks(DIGITS)
@@ -35,7 +34,6 @@ impl BigInt {
 
                 chunk.iter().rev().fold(0, |acc, &ch| {
                     if ch as char == '-' {
-                        sign = -1;
                         return acc;
                     }
 
@@ -51,7 +49,10 @@ impl BigInt {
             abs.pop_back();
         }
 
-        Self { abs, sign }
+        Self {
+            abs,
+            sign: if input.starts_with('-') { -1 } else { 1 },
+        }
     }
 
     fn mul_int(&self, other: i64) -> Self {
