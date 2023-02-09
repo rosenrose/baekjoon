@@ -4,6 +4,11 @@ fn main() {
 
     let mut stack = Vec::new();
     let mut postfix = String::new();
+    let precedence = |op: char| match op {
+        '+' | '-' => 1,
+        '*' | '/' => 2,
+        _ => Default::default(),
+    };
 
     for ch in buf.trim().chars() {
         match ch {
@@ -14,19 +19,13 @@ fn main() {
                     Some(token) => postfix.push(token),
                 }
             },
-            '*' | '/' => {
-                while let Some('*' | '/') = stack.last() {
-                    postfix.push(stack.pop().unwrap());
-                }
+            '+' | '-' | '*' | '/' => {
+                while let Some(&token) = stack.last() {
+                    if precedence(ch) > precedence(token) {
+                        break;
+                    }
 
-                stack.push(ch);
-            }
-            '+' | '-' => {
-                loop {
-                    match stack.last() {
-                        Some('(') | None => break,
-                        _ => postfix.push(stack.pop().unwrap()),
-                    };
+                    postfix.push(stack.pop().unwrap());
                 }
 
                 stack.push(ch);
