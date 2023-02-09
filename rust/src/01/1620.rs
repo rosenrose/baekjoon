@@ -21,7 +21,7 @@ fn main() {
         (if let Ok(i) = query.parse::<usize>() {
             writeln!(output, "{}", pokemon_index[i - 1])
         } else {
-            writeln!(output, "{}", pokemon_name.get(query).unwrap())
+            writeln!(output, "{}", pokemon_name[query])
         })
         .unwrap();
     }
@@ -49,5 +49,5 @@ fn parse_int(buf: &str) -> i32 {
 
 // let answer = match input.parse::<usize>() {
 //     Ok(index) => Answer::Name(&pokemons_arr[index - 1]),
-//     Err(_) => Answer::Index(*pokemons_map.get(input).unwrap()),
+//     Err(_) => Answer::Index(*pokemons_map[input]),
 // };

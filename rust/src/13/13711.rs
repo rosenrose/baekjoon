@@ -8,19 +8,19 @@ fn main() {
 
     let n = input();
     let a: HashMap<_, _> = (0..n).map(|i| (input(), i)).collect();
-    let mut index_arr = (0..n).map(|_| a.get(&input()).unwrap());
+    let mut index_arr = (0..n).map(|_| a[&input()]);
 
-    let mut lis = vec![index_arr.next().unwrap()];
+    let mut lis_temp = vec![index_arr.next().unwrap()];
 
     for index in index_arr {
-        if index > *lis.last().unwrap() {
-            lis.push(index);
+        if index > *lis_temp.last().unwrap() {
+            lis_temp.push(index);
             continue;
         }
 
-        let pos = lis.binary_search(&index).unwrap_or_else(|i| i);
-        lis[pos] = index;
+        let pos = lis_temp.binary_search(&index).unwrap_or_else(|i| i);
+        lis_temp[pos] = index;
     }
 
-    println!("{}", lis.len());
+    println!("{}", lis_temp.len());
 }

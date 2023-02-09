@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
 
@@ -8,7 +7,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let digit_cycle: HashMap<_, _> = (0..=9)
+    let digit_cycle: Vec<_> = (0..=9)
         .map(|i| {
             let mut cycle = vec![i];
             let mut next = (i * i) % 10;
@@ -22,12 +21,12 @@ fn main() {
                 next = (next * i) % 10;
             }
 
-            (i, cycle)
+            cycle
         })
         .collect();
 
     for (a, b) in (0..input()).map(|_| (input(), input())) {
-        let cycle = digit_cycle.get(&(a % 10)).unwrap();
+        let cycle = &digit_cycle[a % 10];
         let number = cycle[(b - 1) % cycle.len()];
 
         writeln!(output, "{}", if number == 0 { 10 } else { number }).unwrap();
