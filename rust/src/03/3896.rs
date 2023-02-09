@@ -12,7 +12,7 @@ fn main() {
             continue;
         }
 
-        let down = (2..k).rev().find(|&i| is_prime(i)).unwrap();
+        let down = (2..k).rfind(|&i| is_prime(i)).unwrap();
         let up = (k + 1..).find(|&i| is_prime(i)).unwrap();
 
         writeln!(output, "{}", up - down).unwrap();
