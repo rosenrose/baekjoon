@@ -3,41 +3,41 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let mut stack = Vec::new();
+    let mut postfix = String::new();
 
-    for c in buf.trim().chars() {
-        match c {
-            '(' => stack.push(c),
+    for ch in buf.trim().chars() {
+        match ch {
+            '(' => stack.push(ch),
             ')' => loop {
                 match stack.pop() {
                     Some('(') | None => break,
-                    Some(c) => print!("{c}"),
+                    Some(token) => postfix.push(token),
                 }
             },
             '*' | '/' => {
-                loop {
-                    match stack.last() {
-                        Some('*' | '/') => print!("{}", stack.pop().unwrap()),
-                        _ => break,
-                    }
+                while let Some('*' | '/') = stack.last() {
+                    postfix.push(stack.pop().unwrap());
                 }
 
-                stack.push(c);
+                stack.push(ch);
             }
             '+' | '-' => {
                 loop {
                     match stack.last() {
                         Some('(') | None => break,
-                        _ => print!("{}", stack.pop().unwrap()),
+                        _ => postfix.push(stack.pop().unwrap()),
                     };
                 }
 
-                stack.push(c);
+                stack.push(ch);
             }
-            _ => print!("{c}"),
+            _ => postfix.push(ch),
         };
     }
 
-    while let Some(ch) = stack.pop() {
-        print!("{ch}");
+    while let Some(token) = stack.pop() {
+        postfix.push(token);
     }
+
+    println!("{postfix}");
 }
