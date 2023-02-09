@@ -2,14 +2,11 @@ use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt;
 use std::io;
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, AddAssign, Div, Mul, Sub, SubAssign};
 
-const DIGITS: usize = 18;
-const EXP: i128 = 10_i128.pow(DIGITS as u32);
-
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 struct BigInt {
-    abs: VecDeque<i64>,
+    abs: VecDeque<i8>,
     sign: i8,
 }
 
@@ -21,55 +18,36 @@ impl BigInt {
         }
     }
 
-    fn from(abs: VecDeque<i64>, sign: i8) -> Self {
+    fn from(abs: VecDeque<i8>, sign: i8) -> Self {
         Self { abs, sign }
     }
 
     fn parse(input: &str) -> Self {
-        let mut abs: VecDeque<_> = input
-            .as_bytes()
-            .rchunks(DIGITS)
-            .map(|chunk| {
-                let mut exp = 1;
-
-                chunk.iter().rev().fold(0, |acc, &ch| {
-                    if ch as char == '-' {
-                        return acc;
-                    }
-
-                    let num = (ch as i64 - '0' as i64) * exp;
-                    exp *= 10;
-
-                    acc + num
-                })
-            })
-            .collect();
-
-        if abs.len() > 1 && *abs.back().unwrap() == 0 {
-            abs.pop_back();
-        }
-
         Self {
-            abs,
+            abs: input
+                .chars()
+                .rev()
+                .filter_map(|c| (c != '-').then_some(c as i8 - '0' as i8))
+                .collect(),
             sign: if input.starts_with('-') { -1 } else { 1 },
         }
     }
 
-    fn mul_int(&self, other: i64) -> Self {
+    fn mul_int(&self, other: i8) -> Self {
         let mut carry = 0;
         let mut result: VecDeque<_> = self
             .abs
             .iter()
             .map(|&num| {
-                let temp = carry + num as i128 * other.abs() as i128;
-                carry = temp / EXP;
+                let temp = carry + num * other.abs();
+                carry = temp / 10;
 
-                (temp % EXP) as i64
+                temp % 10
             })
             .collect();
 
         if carry > 0 {
-            result.push_back(carry as i64);
+            result.push_back(carry);
         }
 
         Self::from(result, self.sign * other.signum() as i8)
@@ -85,6 +63,14 @@ impl BigInt {
 
     fn abs(&self) -> Self {
         Self::from(self.abs.clone(), 1)
+    }
+
+    fn push_front(&mut self, num: i8) {
+        if self.is_zero() {
+            self.abs.clear();
+        }
+
+        self.abs.push_front(num);
     }
 }
 
@@ -103,20 +89,23 @@ impl Add for BigInt {
         let mut carry = 0;
         let mut sum: VecDeque<_> = (0..self.len().max(other.len()))
             .map(|i| {
-                let temp = carry
-                    + *self.abs.get(i).unwrap_or(&0) as i128
-                    + *other.abs.get(i).unwrap_or(&0) as i128;
-                carry = temp / EXP;
+                let temp = carry + self.abs.get(i).unwrap_or(&0) + other.abs.get(i).unwrap_or(&0);
+                carry = temp / 10;
 
-                (temp % EXP) as i64
+                temp % 10
             })
             .collect();
 
         if carry > 0 {
-            sum.push_back(carry as i64);
+            sum.push_back(carry);
         }
 
         Self::from(sum, self.sign)
+    }
+}
+impl AddAssign for BigInt {
+    fn add_assign(&mut self, other: Self) {
+        *self = (*self).clone() + other;
     }
 }
 impl Sub for BigInt {
@@ -148,7 +137,7 @@ impl Sub for BigInt {
 
                 if temp < 0 {
                     carry = -1;
-                    temp + EXP as i64
+                    temp + 10
                 } else {
                     carry = 0;
                     temp
@@ -169,6 +158,11 @@ impl Sub for BigInt {
         result
     }
 }
+impl SubAssign for BigInt {
+    fn sub_assign(&mut self, other: Self) {
+        *self = (*self).clone() - other;
+    }
+}
 impl Mul for BigInt {
     type Output = Self;
 
@@ -177,14 +171,12 @@ impl Mul for BigInt {
             return Self::new();
         }
         if self.len() == 1 {
-            return other.mul_int(self.abs[0] * self.sign as i64);
+            return other.mul_int(self.abs[0] * self.sign);
         }
         if other.len() == 1 {
-            return self.mul_int(other.abs[0] * other.sign as i64);
+            return self.mul_int(other.abs[0] * other.sign);
         }
-        // a = x * 10^m + y
-        // b = w * 10^m + z
-        // ab = xw * 10^2m + (xz + yw) * 10^m + yz
+
         let m = self.len().max(other.len()) / 2;
         let mut half = m.min(self.len());
 
@@ -222,6 +214,42 @@ impl Mul for BigInt {
         Self::from((xw + xz_plus_yw + yz).abs, self.sign * other.sign)
     }
 }
+impl Div for BigInt {
+    type Output = Self;
+
+    fn div(self, other: Self) -> Self {
+        let (mut dividend, mut quotient) = (Self::new(), Self::new());
+
+        for &num in self.abs.iter().rev() {
+            let mut q = 0;
+
+            dividend.push_front(num);
+
+            while dividend >= other {
+                dividend -= other.abs();
+                q += 1;
+            }
+
+            quotient.push_front(q);
+        }
+
+        let remainder = dividend;
+
+        if self.sign * other.sign == -1 {
+            if !remainder.is_zero() {
+                quotient += BigInt::from(VecDeque::from([1]), 1);
+            }
+
+            quotient.sign = -1;
+        }
+
+        if quotient.is_zero() {
+            quotient.sign = 1;
+        }
+
+        quotient
+    }
+}
 
 impl PartialOrd for BigInt {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
@@ -239,12 +267,8 @@ impl fmt::Display for BigInt {
             write!(f, "-").unwrap();
         }
 
-        self.abs.iter().rev().enumerate().for_each(|(i, num)| {
-            if i == 0 {
-                write!(f, "{num}").unwrap();
-            } else {
-                write!(f, "{num:0DIGITS$}").unwrap();
-            }
+        self.abs.iter().rev().for_each(|num| {
+            write!(f, "{num}").unwrap();
         });
 
         write!(f, "")
@@ -253,14 +277,58 @@ impl fmt::Display for BigInt {
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.lines().map(BigInt::parse);
 
-    let (a, b) = (input.next().unwrap(), input.next().unwrap());
+    let mut stack = Vec::new();
+    let mut postfix = Vec::new();
 
-    println!(
-        "{}\n{}\n{}",
-        a.clone() + b.clone(),
-        a.clone() - b.clone(),
-        a * b
-    );
+    for input in buf.lines().skip(1) {
+        match input {
+            "+" | "-" | "*" | "/" => {
+                while let Some(&token) = stack.last() {
+                    if precedence(token) < precedence(input) {
+                        break;
+                    }
+
+                    postfix.push(stack.pop().unwrap());
+                }
+
+                stack.push(input);
+            }
+            _ => postfix.push(input),
+        };
+    }
+
+    while let Some(token) = stack.pop() {
+        postfix.push(token);
+    }
+    // println!("{postfix:?}");
+    let mut stack = Vec::<BigInt>::new();
+
+    for token in postfix {
+        if !matches!(token, "+" | "-" | "*" | "/") {
+            stack.push(BigInt::parse(token));
+            continue;
+        }
+
+        let (b, a) = (stack.pop().unwrap(), stack.pop().unwrap());
+        let result = match token {
+            "+" => a + b,
+            "-" => a - b,
+            "*" => a * b,
+            "/" => a / b,
+            _ => Default::default(),
+        };
+
+        stack.push(result);
+    }
+
+    println!("{}", stack.pop().unwrap());
+}
+
+fn precedence(op: &str) -> i32 {
+    match op {
+        "+" | "-" => 1,
+        "*" | "/" => 2,
+        _ => Default::default(),
+    }
 }

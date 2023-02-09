@@ -21,7 +21,7 @@ fn main() {
             },
             '+' | '-' | '*' | '/' => {
                 while let Some(&token) = stack.last() {
-                    if precedence(ch) > precedence(token) {
+                    if precedence(token) < precedence(ch) {
                         break;
                     }
 
