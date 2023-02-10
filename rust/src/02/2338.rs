@@ -45,7 +45,7 @@ impl BigInt {
             })
             .collect();
 
-        if abs.len() > 1 && *abs.back().unwrap() == 0 {
+        if abs.len() > 1 && abs.back() == Some(&0) {
             abs.pop_back();
         }
 
@@ -156,7 +156,7 @@ impl Sub for BigInt {
             })
             .collect();
 
-        while diff.len() > 1 && *diff.back().unwrap() == 0 {
+        while diff.len() > 1 && diff.back() == Some(&0) {
             diff.pop_back();
         }
 

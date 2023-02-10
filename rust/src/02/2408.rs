@@ -145,7 +145,7 @@ impl Sub for BigInt {
             })
             .collect();
 
-        while diff.len() > 1 && *diff.back().unwrap() == 0 {
+        while diff.len() > 1 && diff.back() == Some(&0) {
             diff.pop_back();
         }
 

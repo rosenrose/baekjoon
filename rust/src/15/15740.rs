@@ -36,7 +36,7 @@ impl BigInt {
             })
             .collect();
 
-        if abs.len() > 1 && *abs.last().unwrap() == 0 {
+        if abs.len() > 1 && abs.last() == Some(&0) {
             abs.pop();
         }
 
@@ -121,7 +121,7 @@ impl Sub for BigInt {
             })
             .collect();
 
-        while diff.len() > 1 && *diff.last().unwrap() == 0 {
+        while diff.len() > 1 && diff.last() == Some(&0) {
             diff.pop();
         }
 

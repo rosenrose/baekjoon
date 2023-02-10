@@ -3,11 +3,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let letters: Vec<_> = buf
-        .lines()
-        .skip(1)
-        .map(|s| s.chars().nth(0).unwrap())
-        .collect();
+    let letters: Vec<_> = buf.lines().skip(1).flat_map(|s| s.chars().nth(0)).collect();
     let char_set: HashSet<_> = letters.iter().collect();
 
     let mut availables: Vec<_> = char_set

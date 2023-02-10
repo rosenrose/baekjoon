@@ -3,7 +3,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.lines().map(|s| s.as_bytes());
+    let input = buf.lines().map(str::as_bytes);
     let mut output = String::new();
 
     for num in input.skip(1) {

@@ -4,7 +4,7 @@ fn main() {
 
     let sum: i32 = buf
         .split_whitespace()
-        .map(|s| s.chars().rev().collect::<String>().parse::<i32>().unwrap())
+        .flat_map(|s| s.chars().rev().collect::<String>().parse::<i32>())
         .sum::<i32>()
         .to_string()
         .chars()

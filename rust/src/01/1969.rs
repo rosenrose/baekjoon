@@ -9,7 +9,7 @@ fn main() {
         input.next(),
         input.next().unwrap().parse::<usize>().unwrap(),
     );
-    let dna_strings: Vec<_> = input.map(|s| s.as_bytes()).collect();
+    let dna_strings: Vec<_> = input.map(str::as_bytes).collect();
 
     let mut dist_sum = 0;
 

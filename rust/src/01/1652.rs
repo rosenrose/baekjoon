@@ -10,17 +10,17 @@ fn main() {
             .count()
     };
 
-    let horizontal_count = room.iter().map(count_rest).sum::<usize>();
+    let horizontal_count: usize = room.iter().map(count_rest).sum();
 
     let room_inversed: Vec<String> = (0..room[0].len())
         .map(|i| {
             (0..room.len())
-                .map(|j| room[j].chars().nth(i).unwrap())
+                .flat_map(|j| room[j].chars().nth(i))
                 .collect()
         })
         .collect();
     // println!("{room_inversed:?}");
-    let vertical_count = room_inversed.iter().map(count_rest).sum::<usize>();
+    let vertical_count: usize = room_inversed.iter().map(count_rest).sum();
 
     println!("{horizontal_count} {vertical_count}");
 }

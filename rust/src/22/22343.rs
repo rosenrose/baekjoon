@@ -65,7 +65,7 @@ fn get_paren_value(s: &str) -> BigInt {
         last = ch;
     }
     // println!("{paren_value:?}");
-    while paren_value.len() > 0 && *paren_value.last().unwrap() == 0 {
+    while paren_value.len() > 0 && paren_value.last() == Some(&0) {
         paren_value.pop();
     }
 

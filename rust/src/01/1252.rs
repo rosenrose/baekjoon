@@ -4,7 +4,7 @@ fn main() {
 
     let sum: i128 = buf
         .split_whitespace()
-        .map(|s| i128::from_str_radix(s, 2).unwrap())
+        .flat_map(|s| i128::from_str_radix(s, 2))
         .sum();
 
     println!("{sum:b}");

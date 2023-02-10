@@ -11,15 +11,14 @@ fn main() {
 
     let pattern: String = (0..file_names[0].len())
         .map(|i| {
-            let letter = file_names[0].chars().nth(i);
-
+            let letter = file_names[0].chars().nth(i).unwrap();
             let is_same = file_names[1..]
                 .iter()
-                .map(|file_name| file_name.chars().nth(i))
+                .flat_map(|file_name| file_name.chars().nth(i))
                 .all(|c| c == letter);
 
             if is_same {
-                letter.unwrap()
+                letter
             } else {
                 '?'
             }

@@ -197,7 +197,7 @@ fn normalize(v: Vec<Complex>) -> Vec<i64> {
         result.push(carry);
     }
 
-    while result.len() > 1 && *result.last().unwrap() == 0 {
+    while result.len() > 1 && result.last() == Some(&0) {
         result.pop();
     }
 

@@ -45,7 +45,7 @@ impl BigInt {
             *num += EXP;
         }
 
-        while result.len() > 0 && *result.last().unwrap() == 0 {
+        while result.len() > 0 && result.last() == Some(&0) {
             result.pop();
         }
 

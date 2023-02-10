@@ -34,7 +34,7 @@ fn get_clock_num(a: i32, b: i32, c: i32, d: i32) -> i32 {
         format!("{d}{a}{b}{c}"),
     ]
     .iter()
-    .map(|s| s.parse().unwrap())
+    .flat_map(|s| s.parse())
     .min()
     .unwrap()
 }

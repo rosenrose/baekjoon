@@ -18,7 +18,7 @@ fn main() {
                 docs.rotate_left(pos);
             }
 
-            if docs.pop_front().unwrap() == target {
+            if docs.pop_front() == Some(target) {
                 println!("{order}");
                 break;
             }

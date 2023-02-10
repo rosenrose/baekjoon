@@ -4,7 +4,7 @@ fn main() {
 
     println!(
         "{}",
-        if buf.trim().parse::<i32>().unwrap() == 0 {
+        if let Ok(0) = buf.trim().parse() {
             "YONSEI"
         } else {
             "Leading the Way to the Future"

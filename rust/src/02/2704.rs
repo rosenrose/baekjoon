@@ -8,7 +8,7 @@ fn main() {
 
     for bin_time in input.skip(1) {
         let vertical = (0..bin_time[0].len())
-            .map(|i| ((0..3).map(|j| bin_time[j].chars().nth(i).unwrap())).collect())
+            .map(|i| ((0..3).flat_map(|j| bin_time[j].chars().nth(i))).collect())
             .collect::<Vec<String>>()
             .join("");
         let horizontal = bin_time.join("");
