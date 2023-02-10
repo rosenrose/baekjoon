@@ -1,9 +1,8 @@
 use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt;
-use std::ops::{Sub, SubAssign};
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(PartialEq, Debug)]
 struct BigInt(VecDeque<i8>);
 
 impl BigInt {
@@ -36,7 +35,7 @@ impl BigInt {
             dividend.push_front(num);
 
             while dividend >= other {
-                dividend -= other.clone();
+                dividend = dividend.sub(&other);
                 q += 1;
             }
 
@@ -45,12 +44,8 @@ impl BigInt {
 
         (quotient, dividend)
     }
-}
 
-impl Sub for BigInt {
-    type Output = Self;
-
-    fn sub(self, other: Self) -> Self {
+    fn sub(&self, other: &Self) -> Self {
         let mut carry = 0;
         let mut diff: VecDeque<_> = (0..self.0.len().max(other.0.len()))
             .map(|i| {
@@ -71,11 +66,6 @@ impl Sub for BigInt {
         }
 
         Self(diff)
-    }
-}
-impl SubAssign for BigInt {
-    fn sub_assign(&mut self, other: Self) {
-        *self = (*self).clone() - other;
     }
 }
 

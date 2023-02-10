@@ -1,9 +1,8 @@
 use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt;
-use std::ops::{Sub, SubAssign};
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(PartialEq, Debug)]
 struct BigInt {
     abs: VecDeque<i8>,
     sign: i8,
@@ -54,63 +53,7 @@ impl BigInt {
         }
     }
 
-    fn push_front(&mut self, num: i8) {
-        if self.is_zero() {
-            self.abs.clear();
-        }
-
-        self.abs.push_front(num);
-    }
-
-    fn divmod(&self, other: Self) -> (Self, Self) {
-        let (mut dividend, mut quotient) = (Self::new(), Self::new());
-
-        for &num in self.abs.iter().rev() {
-            let mut q = 0;
-
-            dividend.push_front(num);
-
-            while dividend >= other {
-                dividend -= other.clone();
-                q += 1;
-            }
-
-            quotient.push_front(q);
-        }
-
-        let mut remainder = dividend;
-
-        if (self.sign, other.sign) == (1, -1) {
-            quotient.sign = -1;
-        }
-
-        if self.sign == -1 {
-            if other.sign == 1 {
-                quotient.sign = -1;
-            }
-
-            if !remainder.is_zero() {
-                quotient = quotient.add(1);
-                remainder = other - remainder;
-            }
-        }
-
-        if quotient.is_zero() {
-            quotient.sign = 1;
-        }
-
-        (quotient, remainder)
-    }
-
-    fn is_zero(&self) -> bool {
-        self.abs.iter().all(|&i| i == 0)
-    }
-}
-
-impl Sub for BigInt {
-    type Output = Self;
-
-    fn sub(self, other: Self) -> Self {
+    fn sub(&self, other: &Self) -> Self {
         let mut carry = 0;
         let mut diff: VecDeque<_> = (0..self.abs.len().max(other.abs.len()))
             .map(|i| {
@@ -132,10 +75,57 @@ impl Sub for BigInt {
 
         Self { abs: diff, sign: 1 }
     }
-}
-impl SubAssign for BigInt {
-    fn sub_assign(&mut self, other: Self) {
-        *self = (*self).clone() - other;
+
+    fn push_front(&mut self, num: i8) {
+        if self.is_zero() {
+            self.abs.clear();
+        }
+
+        self.abs.push_front(num);
+    }
+
+    fn divmod(&self, other: Self) -> (Self, Self) {
+        let (mut dividend, mut quotient) = (Self::new(), Self::new());
+
+        for &num in self.abs.iter().rev() {
+            let mut q = 0;
+
+            dividend.push_front(num);
+
+            while dividend >= other {
+                dividend = dividend.sub(&other);
+                q += 1;
+            }
+
+            quotient.push_front(q);
+        }
+
+        let mut remainder = dividend;
+
+        if (self.sign, other.sign) == (1, -1) {
+            quotient.sign = -1;
+        }
+
+        if self.sign == -1 {
+            if other.sign == 1 {
+                quotient.sign = -1;
+            }
+
+            if !remainder.is_zero() {
+                quotient = quotient.add(1);
+                remainder = other.sub(&remainder);
+            }
+        }
+
+        if quotient.is_zero() {
+            quotient.sign = 1;
+        }
+
+        (quotient, remainder)
+    }
+
+    fn is_zero(&self) -> bool {
+        self.abs.iter().all(|&i| i == 0)
     }
 }
 

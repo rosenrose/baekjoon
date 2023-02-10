@@ -2,12 +2,11 @@ use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt;
 use std::io;
-use std::ops::{Add, Mul, Sub};
 
 const DIGITS: usize = 18;
 const EXP: i128 = 10_i128.pow(DIGITS as u32);
 
-#[derive(Clone, PartialEq)]
+#[derive(PartialEq)]
 struct BigInt {
     abs: VecDeque<i64>,
     sign: i8,
@@ -55,26 +54,6 @@ impl BigInt {
         }
     }
 
-    fn mul_int(&self, other: i64) -> Self {
-        let mut carry = 0;
-        let mut result: VecDeque<_> = self
-            .abs
-            .iter()
-            .map(|&num| {
-                let temp = carry + num as i128 * other.abs() as i128;
-                carry = temp / EXP;
-
-                (temp % EXP) as i64
-            })
-            .collect();
-
-        if carry > 0 {
-            result.push_back(carry as i64);
-        }
-
-        Self::from(result, self.sign * other.signum() as i8)
-    }
-
     fn is_zero(&self) -> bool {
         self.abs.iter().all(|&i| i == 0)
     }
@@ -86,17 +65,13 @@ impl BigInt {
     fn abs(&self) -> Self {
         Self::from(self.abs.clone(), 1)
     }
-}
 
-impl Add for BigInt {
-    type Output = Self;
-
-    fn add(self, other: Self) -> Self {
+    fn add(&self, other: &Self) -> Self {
         if self.sign * other.sign == -1 {
             return if self.sign == 1 {
-                self - other.abs()
+                self.sub(&other.abs())
             } else {
-                other - self.abs()
+                other.sub(&self.abs())
             };
         }
 
@@ -118,16 +93,13 @@ impl Add for BigInt {
 
         Self::from(sum, self.sign)
     }
-}
-impl Sub for BigInt {
-    type Output = Self;
 
-    fn sub(self, other: Self) -> Self {
+    fn sub(&self, other: &Self) -> Self {
         if self.sign * other.sign == -1 {
             return if self.sign == 1 {
-                self + other.abs()
+                self.add(&other.abs())
             } else {
-                let mut result = other + self.abs();
+                let mut result = other.add(&self.abs());
                 result.sign = -1;
 
                 result
@@ -135,7 +107,7 @@ impl Sub for BigInt {
         }
 
         if self < other {
-            let mut result = other - self;
+            let mut result = other.sub(self);
             result.sign *= -1;
 
             return result;
@@ -168,11 +140,28 @@ impl Sub for BigInt {
 
         result
     }
-}
-impl Mul for BigInt {
-    type Output = Self;
 
-    fn mul(self, other: Self) -> Self {
+    fn mul_int(&self, other: i64) -> Self {
+        let mut carry = 0;
+        let mut result: VecDeque<_> = self
+            .abs
+            .iter()
+            .map(|&num| {
+                let temp = carry + num as i128 * other.abs() as i128;
+                carry = temp / EXP;
+
+                (temp % EXP) as i64
+            })
+            .collect();
+
+        if carry > 0 {
+            result.push_back(carry as i64);
+        }
+
+        Self::from(result, self.sign * other.signum() as i8)
+    }
+
+    fn mul(&self, other: &Self) -> Self {
         if self.is_zero() || other.is_zero() {
             return Self::new();
         }
@@ -204,9 +193,9 @@ impl Mul for BigInt {
             Self::new()
         };
 
-        let (mut xw, yz) = (x.clone() * w.clone(), y.clone() * z.clone());
-        let r = (x + y) * (w + z);
-        let mut xz_plus_yw = r - (xw.clone() + yz.clone());
+        let (mut xw, yz) = (x.mul(&w), y.mul(&z));
+        let r = x.add(&y).mul(&w.add(&z));
+        let mut xz_plus_yw = r.sub(&xw.add(&yz));
 
         if !xw.is_zero() {
             for _ in 0..2 * m {
@@ -219,7 +208,7 @@ impl Mul for BigInt {
             }
         }
 
-        Self::from((xw + xz_plus_yw + yz).abs, self.sign * other.sign)
+        Self::from((xw.add(&xz_plus_yw).add(&yz)).abs, self.sign * other.sign)
     }
 }
 
@@ -254,13 +243,7 @@ impl fmt::Display for BigInt {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().map(BigInt::parse);
-
     let (a, b) = (input.next().unwrap(), input.next().unwrap());
 
-    println!(
-        "{}\n{}\n{}",
-        a.clone() + b.clone(),
-        a.clone() - b.clone(),
-        a * b
-    );
+    println!("{}\n{}\n{}", a.add(&b), a.sub(&b), a.mul(&b));
 }

@@ -1,12 +1,11 @@
 use std::cmp::Ordering;
 use std::fmt;
 use std::io;
-use std::ops::Add;
 
 const DIGITS: usize = 37;
 const EXP: i128 = 10_i128.pow(DIGITS as u32);
 
-#[derive(Clone, PartialEq)]
+#[derive(PartialEq)]
 struct BigInt(Vec<i128>);
 
 impl BigInt {
@@ -29,15 +28,7 @@ impl BigInt {
         )
     }
 
-    fn is_zero(&self) -> bool {
-        self.0.iter().all(|&i| i == 0)
-    }
-}
-
-impl Add for BigInt {
-    type Output = Self;
-
-    fn add(self, other: Self) -> Self {
+    fn add(&self, other: &Self) -> Self {
         let mut carry = 0;
         let mut sum: Vec<_> = (0..self.0.len().max(other.0.len()))
             .map(|i| {
@@ -53,6 +44,10 @@ impl Add for BigInt {
         }
 
         Self(sum)
+    }
+
+    fn is_zero(&self) -> bool {
+        self.0.iter().all(|&i| i == 0)
     }
 }
 
@@ -88,7 +83,7 @@ fn main() {
 
     while cache.last().unwrap().to_string().len() <= 100 {
         let len = cache.len();
-        cache.push(cache[len - 2].clone() + cache[len - 1].clone());
+        cache.push(cache[len - 2].add(&cache[len - 1]));
     }
 
     while let (Some(a), Some(b)) = (input.next(), input.next()) {

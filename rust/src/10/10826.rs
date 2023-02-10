@@ -1,16 +1,12 @@
 use std::fmt;
-use std::ops::Add;
 
 const DIGITS: usize = 37;
 const EXP: i128 = 10_i128.pow(DIGITS as u32);
 
-#[derive(Clone)]
 struct BigInt(Vec<i128>);
 
-impl Add for BigInt {
-    type Output = Self;
-
-    fn add(self, other: Self) -> Self {
+impl BigInt {
+    fn add(&self, other: &Self) -> Self {
         let mut carry = 0;
         let mut sum: Vec<_> = (0..self.0.len().max(other.0.len()))
             .map(|i| {
@@ -60,7 +56,8 @@ fn fibo(n: i128) -> BigInt {
     let (mut a, mut b) = (BigInt(vec![1]), BigInt(vec![1]));
 
     for _ in 0..n - 2 {
-        (a, b) = (b.clone(), a + b);
+        let next = a.add(&b);
+        (a, b) = (b, next);
     }
 
     b
