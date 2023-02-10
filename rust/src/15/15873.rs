@@ -9,9 +9,9 @@ fn main() {
         .collect::<Vec<_>>()[..]
     {
         [a, b] => a + b,
-        [a, b, c] => 10 + if b == 0 { c } else { a },
-        [_, _, _, _] => 20,
-        _ => Default::default(),
+        [1, 0, c] => 10 + c,
+        [a, 1, 0] => 10 + a,
+        _ => 20,
     };
 
     println!("{sum}");

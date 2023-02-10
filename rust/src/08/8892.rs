@@ -3,7 +3,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace();
+    let mut input = buf.lines();
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
@@ -19,7 +19,7 @@ fn main() {
                     continue;
                 }
                 // let merged = format!("{}{}", words[i], words[j]);
-                let merged = [&words[i][..], &words[j][..]].concat();
+                let merged = [words[i], words[j]].concat();
 
                 if is_palindrome(merged.as_bytes()) {
                     writeln!(output, "{merged}").unwrap();

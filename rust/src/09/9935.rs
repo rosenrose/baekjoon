@@ -11,7 +11,7 @@ fn main() {
     for c in s.chars() {
         stack.push(c);
 
-        if stack[stack.len().saturating_sub(bomb_len)..] == bomb[..] {
+        if &stack[stack.len().saturating_sub(bomb_len)..] == bomb {
             stack.truncate(stack.len() - bomb_len);
         }
     }

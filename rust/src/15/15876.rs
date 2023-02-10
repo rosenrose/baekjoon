@@ -9,15 +9,15 @@ fn main() {
     let mut bin = String::new();
 
     for i in 0.. {
-        bin = [&bin[..], &format!("{i:b}")].concat();
+        bin = format!("{bin}{i:b}");
 
         if bin.len() > max_len {
             break;
         }
     }
     // println!("{bin}");
-    for i in 0..5 {
-        print!("{} ", bin.chars().nth(k + n * i).unwrap());
+    for ch in (0..5).flat_map(|i| bin.chars().nth(k + n * i)) {
+        print!("{ch} ");
     }
 }
 
