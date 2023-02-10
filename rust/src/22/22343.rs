@@ -1,61 +1,8 @@
 use std::cmp::Ordering;
 use std::io;
-use std::ops::{Add, AddAssign};
 
-const DIGITS: usize = 18;
-const EXP: i128 = 10_i128.pow(DIGITS as u32);
-
-#[derive(Clone, Eq, PartialEq, Debug)]
-struct BigInt(Vec<i128>);
-
-impl BigInt {
-    fn mul(&self, other: i128) -> Self {
-        let mut carry = 0;
-        let mut result: Vec<_> = self
-            .0
-            .iter()
-            .map(|&num| {
-                let temp = carry + num * other;
-                carry = temp / EXP;
-
-                temp % EXP
-            })
-            .collect();
-
-        if carry > 0 {
-            result.push(carry);
-        }
-
-        Self(result)
-    }
-}
-
-impl Add for BigInt {
-    type Output = Self;
-
-    fn add(self, other: Self) -> Self {
-        let mut carry = 0;
-        let mut sum: Vec<_> = (0..self.0.len().max(other.0.len()))
-            .map(|i| {
-                let temp = carry + self.0.get(i).unwrap_or(&0) + other.0.get(i).unwrap_or(&0);
-                carry = temp / EXP;
-
-                temp % EXP
-            })
-            .collect();
-
-        if carry > 0 {
-            sum.push(carry);
-        }
-
-        Self(sum)
-    }
-}
-impl AddAssign for BigInt {
-    fn add_assign(&mut self, other: Self) {
-        *self = (*self).clone() + other;
-    }
-}
+#[derive(Eq, PartialEq, Debug)]
+struct BigInt(Vec<i32>);
 
 impl Ord for BigInt {
     fn cmp(&self, other: &Self) -> Ordering {
@@ -84,12 +31,11 @@ fn main() {
 
     let n: i32 = input().parse().unwrap();
 
-    for (a, b) in (0..n).map(|_| (input(), input())) {
-        let (a_value, b_value) = (get_paren_value(a), get_paren_value(b));
-        // println!("{a_value:?} {b_value:?}");
+    for (a, b) in (0..n).map(|_| (get_paren_value(input()), get_paren_value(input()))) {
+        // println!("{a:?} {b:?}");
         println!(
             "{}",
-            match a_value.cmp(&b_value) {
+            match a.cmp(&b) {
                 Ordering::Less => '<',
                 Ordering::Equal => '=',
                 Ordering::Greater => '>',
@@ -99,31 +45,45 @@ fn main() {
 }
 
 fn get_paren_value(s: &str) -> BigInt {
-    let mut paren_value = BigInt(vec![0]);
-    let mut stack = String::new();
-    let mut count = 0;
+    let mut paren_value = vec![0; s.len() / 2];
+    let mut depth = 0;
+    let mut last = '\0';
 
     for ch in s.chars() {
-        stack.push(ch);
-
         match ch {
-            '(' => count += 1,
+            '(' => depth += 1,
             ')' => {
-                count -= 1;
+                depth -= 1;
 
-                if count == 0 {
-                    paren_value += if stack == "()" {
-                        BigInt(vec![1])
-                    } else {
-                        get_paren_value(&stack[1..stack.len() - 1]).mul(2)
-                    };
-
-                    stack.clear();
+                if last == '(' {
+                    paren_value[depth] += 1;
                 }
             }
             _ => (),
         }
+
+        last = ch;
+    }
+    // println!("{paren_value:?}");
+    while paren_value.len() > 0 && *paren_value.last().unwrap() == 0 {
+        paren_value.pop();
     }
 
-    paren_value
+    let mut carry = 0;
+    let mut result: Vec<_> = paren_value
+        .iter()
+        .map(|&num| {
+            let temp = carry + num;
+            carry = temp / 2;
+
+            temp % 2
+        })
+        .collect();
+
+    while carry > 0 {
+        result.push(carry % 2);
+        carry /= 2;
+    }
+
+    BigInt(result)
 }
