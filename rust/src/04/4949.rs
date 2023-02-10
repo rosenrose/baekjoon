@@ -6,14 +6,14 @@ fn main() {
     let mut output = String::new();
 
     'outer: for input in buf.lines().take_while(|&input| input != ".") {
-        let mut open_close = Vec::new();
+        let mut parens = Vec::new();
 
-        for input_char in input.chars() {
-            match input_char {
-                '(' | '[' => open_close.push(input_char),
+        for ch in input.chars() {
+            match ch {
+                '(' | '[' => parens.push(ch),
                 ')' | ']' => {
-                    if let Some(ch) = open_close.pop() {
-                        if (input_char == ')' && ch != '(') || (input_char == ']' && ch != '[') {
+                    if let Some(last) = parens.pop() {
+                        if !matches!((last, ch), ('(', ')') | ('[', ']')) {
                             writeln!(output, "no").unwrap();
                             continue 'outer;
                         }
@@ -26,12 +26,7 @@ fn main() {
             };
         }
 
-        writeln!(
-            output,
-            "{}",
-            if open_close.is_empty() { "yes" } else { "no" }
-        )
-        .unwrap();
+        writeln!(output, "{}", if parens.is_empty() { "yes" } else { "no" }).unwrap();
     }
 
     print!("{output}")

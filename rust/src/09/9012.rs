@@ -2,22 +2,25 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+
     'outer: for input in buf.lines().skip(1) {
-        let mut stack = Vec::new();
+        let mut count = 0;
 
         for c in input.chars() {
             match c {
-                '(' => stack.push(c),
+                '(' => count += 1,
                 ')' => {
-                    if stack.pop().is_none() {
+                    if count == 0 {
                         println!("NO");
                         continue 'outer;
                     }
+
+                    count -= 1;
                 }
                 _ => (),
             };
         }
 
-        println!("{}", if stack.is_empty() { "YES" } else { "NO" });
+        println!("{}", if count == 0 { "YES" } else { "NO" });
     }
 }

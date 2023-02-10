@@ -5,39 +5,37 @@ fn main() {
     println!("{}", unzipped_len(buf.trim()));
 }
 
-fn unzipped_len(input: &str) -> usize {
+fn unzipped_len(input: &str) -> i32 {
     let mut len = 0;
-    let mut paren_stack = Vec::new();
-    let mut paren_str = String::new();
+    let mut substr = String::new();
     let mut repeat_times = 0;
+    let mut count = 0;
 
-    for c in input.chars() {
-        match c {
+    for ch in input.chars() {
+        if count > 0 {
+            substr.push(ch);
+        }
+
+        match ch {
             '(' => {
-                if paren_stack.is_empty() {
+                if count == 0 {
                     len -= 1;
-                } else {
-                    paren_str.push(c);
                 }
 
-                paren_stack.push(c);
+                count += 1;
             }
             ')' => {
-                paren_stack.pop();
+                count -= 1;
 
-                if paren_stack.is_empty() {
-                    len += repeat_times * unzipped_len(&paren_str);
-                    paren_str.clear();
-                } else {
-                    paren_str.push(c);
+                if count == 0 {
+                    len += repeat_times * unzipped_len(&substr);
+                    substr.clear();
                 }
             }
             _ => {
-                if paren_stack.is_empty() {
+                if count == 0 {
                     len += 1;
-                    repeat_times = c as usize - '0' as usize;
-                } else {
-                    paren_str.push(c);
+                    repeat_times = ch as i32 - '0' as i32;
                 }
             }
         }
