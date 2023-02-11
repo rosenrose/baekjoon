@@ -32,7 +32,7 @@ fn formula_min_max(
         return (result, result);
     }
 
-    nums.iter().fold((9876543210, 1), |(min, max), &num| {
+    nums.iter().fold((9_876_543_210, 1), |(min, max), &num| {
         if selected.contains(&num) {
             return (min, max);
         }

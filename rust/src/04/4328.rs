@@ -1,24 +1,15 @@
 use std::io;
 
-struct BigInt {
-    nums: Vec<u32>,
-    radix: u32,
-}
+struct BigInt;
 
 impl BigInt {
-    fn parse(input: &str, radix: u32) -> Self {
-        Self {
-            nums: input.chars().rev().map(|c| c as u32 - '0' as u32).collect(),
-            radix,
-        }
-    }
-
-    fn rem(&self, m: u32) -> u32 {
+    fn rem(input: &str, m: u32, radix: u32) -> u32 {
         let mut exp_rem = 1;
 
-        self.nums.iter().fold(0, |acc, num| {
+        input.chars().rev().fold(0, |acc, ch| {
+            let num = ch as u32 - '0' as u32;
             let rem = (num * exp_rem) % m;
-            exp_rem = (exp_rem * self.radix) % m;
+            exp_rem = (exp_rem * radix) % m;
 
             (acc + rem) % m
         })
@@ -35,12 +26,11 @@ fn main() {
         }
 
         let radix: u32 = b.parse().unwrap();
-        let p = BigInt::parse(p, radix);
         let m = u32::from_str_radix(m, radix).unwrap();
-
-        let mut rem = p.rem(m);
-        let mut result = Vec::new();
+        let mut rem = BigInt::rem(p, m, radix);
         // println!("{rem}");
+        let mut result = Vec::new();
+
         loop {
             result.push(rem % radix);
             rem /= radix;

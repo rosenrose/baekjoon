@@ -3,7 +3,7 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     const R: i64 = 31;
-    const M: i64 = 1234567891;
+    const M: i64 = 1_234_567_891;
 
     let hash = buf
         .lines()

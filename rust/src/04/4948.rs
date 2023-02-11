@@ -6,7 +6,7 @@ fn main() {
     let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let prime_nums = get_prime_nums(123456 * 2);
+    let prime_nums = get_prime_nums(123_456 * 2);
 
     for num in input.take_while(|&num| num != 0) {
         let count = prime_nums
