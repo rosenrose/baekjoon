@@ -4,21 +4,21 @@ use std::fmt;
 
 #[derive(PartialEq, Debug)]
 struct BigInt {
-    abs: VecDeque<i8>,
+    nums: VecDeque<i8>,
     sign: i8,
 }
 
 impl BigInt {
     fn new() -> Self {
         Self {
-            abs: VecDeque::new(),
+            nums: VecDeque::new(),
             sign: 1,
         }
     }
 
     fn parse(input: &str) -> Self {
         Self {
-            abs: input
+            nums: input
                 .chars()
                 .rev()
                 .filter_map(|c| (c != '-').then_some(c as i8 - '0' as i8))
@@ -28,12 +28,12 @@ impl BigInt {
     }
 
     fn is_zero(&self) -> bool {
-        self.abs.iter().all(|&i| i == 0)
+        self.nums.iter().all(|&i| i == 0)
     }
 
     fn zero_justify(&mut self) {
-        while self.abs.len() > 1 && self.abs.back() == Some(&0) {
-            self.abs.pop_back();
+        while self.nums.len() > 1 && self.nums.back() == Some(&0) {
+            self.nums.pop_back();
         }
 
         if self.is_zero() {
@@ -43,7 +43,7 @@ impl BigInt {
 
     fn add(&self, other: i8) -> Self {
         let mut carry = 0;
-        let mut result = self.abs.clone();
+        let mut result = self.nums.clone();
         result[0] += other;
 
         for num in result.iter_mut() {
@@ -62,16 +62,16 @@ impl BigInt {
         }
 
         Self {
-            abs: result,
+            nums: result,
             sign: self.sign,
         }
     }
 
     fn sub(&self, other: &Self) -> Self {
         let mut carry = 0;
-        let diff: VecDeque<_> = (0..self.abs.len().max(other.abs.len()))
+        let diff: VecDeque<_> = (0..self.nums.len().max(other.nums.len()))
             .map(|i| {
-                let temp = carry + self.abs.get(i).unwrap_or(&0) - other.abs.get(i).unwrap_or(&0);
+                let temp = carry + self.nums.get(i).unwrap_or(&0) - other.nums.get(i).unwrap_or(&0);
 
                 if temp < 0 {
                     carry = -1;
@@ -83,7 +83,10 @@ impl BigInt {
             })
             .collect();
 
-        let mut result = Self { abs: diff, sign: 1 };
+        let mut result = Self {
+            nums: diff,
+            sign: 1,
+        };
 
         result.zero_justify();
         result
@@ -91,16 +94,16 @@ impl BigInt {
 
     fn push_front(&mut self, num: i8) {
         if self.is_zero() {
-            self.abs.clear();
+            self.nums.clear();
         }
 
-        self.abs.push_front(num);
+        self.nums.push_front(num);
     }
 
     fn divmod(&self, other: Self) -> (Self, Self) {
         let (mut dividend, mut quotient) = (Self::new(), Self::new());
 
-        for &num in self.abs.iter().rev() {
+        for &num in self.nums.iter().rev() {
             let mut q = 0;
 
             dividend.push_front(num);
@@ -140,10 +143,10 @@ impl BigInt {
 
 impl PartialOrd for BigInt {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        if self.abs.len() == other.abs.len() {
-            Some(self.abs.iter().rev().cmp(other.abs.iter().rev()))
+        if self.nums.len() == other.nums.len() {
+            Some(self.nums.iter().rev().cmp(other.nums.iter().rev()))
         } else {
-            Some(self.abs.len().cmp(&other.abs.len()))
+            Some(self.nums.len().cmp(&other.nums.len()))
         }
     }
 }
@@ -154,7 +157,7 @@ impl fmt::Display for BigInt {
             write!(f, "-").unwrap();
         }
 
-        self.abs.iter().rev().for_each(|num| {
+        self.nums.iter().rev().for_each(|num| {
             write!(f, "{num}").unwrap();
         });
 

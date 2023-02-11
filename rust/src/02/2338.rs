@@ -8,25 +8,25 @@ const EXP: i128 = 10_i128.pow(DIGITS as u32);
 
 #[derive(PartialEq)]
 struct BigInt {
-    abs: VecDeque<i64>,
+    nums: VecDeque<i64>,
     sign: i8,
 }
 
 impl BigInt {
     fn new() -> Self {
         Self {
-            abs: VecDeque::from([0]),
+            nums: VecDeque::from([0]),
             sign: 1,
         }
     }
 
-    fn from(abs: VecDeque<i64>, sign: i8) -> Self {
-        Self { abs, sign }
+    fn from(nums: VecDeque<i64>, sign: i8) -> Self {
+        Self { nums, sign }
     }
 
     fn parse(input: &str) -> Self {
         let mut result = Self {
-            abs: input
+            nums: input
                 .as_bytes()
                 .rchunks(DIGITS)
                 .map(|chunk| {
@@ -52,12 +52,12 @@ impl BigInt {
     }
 
     fn is_zero(&self) -> bool {
-        self.abs.iter().all(|&i| i == 0)
+        self.nums.iter().all(|&i| i == 0)
     }
 
     fn zero_justify(&mut self) {
-        while self.abs.len() > 1 && self.abs.back() == Some(&0) {
-            self.abs.pop_back();
+        while self.nums.len() > 1 && self.nums.back() == Some(&0) {
+            self.nums.pop_back();
         }
 
         if self.is_zero() {
@@ -66,11 +66,11 @@ impl BigInt {
     }
 
     fn len(&self) -> usize {
-        self.abs.len()
+        self.nums.len()
     }
 
     fn abs(&self) -> Self {
-        Self::from(self.abs.clone(), 1)
+        Self::from(self.nums.clone(), 1)
     }
 
     fn add(&self, other: &Self) -> Self {
@@ -86,8 +86,8 @@ impl BigInt {
         let mut sum: VecDeque<_> = (0..self.len().max(other.len()))
             .map(|i| {
                 let temp = carry
-                    + *self.abs.get(i).unwrap_or(&0) as i128
-                    + *other.abs.get(i).unwrap_or(&0) as i128;
+                    + *self.nums.get(i).unwrap_or(&0) as i128
+                    + *other.nums.get(i).unwrap_or(&0) as i128;
                 carry = temp / EXP;
 
                 (temp % EXP) as i64
@@ -123,7 +123,7 @@ impl BigInt {
         let mut carry = 0;
         let diff: VecDeque<_> = (0..self.len().max(other.len()))
             .map(|i| {
-                let temp = carry + self.abs.get(i).unwrap_or(&0) - other.abs.get(i).unwrap_or(&0);
+                let temp = carry + self.nums.get(i).unwrap_or(&0) - other.nums.get(i).unwrap_or(&0);
 
                 if temp < 0 {
                     carry = -1;
@@ -144,7 +144,7 @@ impl BigInt {
     fn mul_int(&self, other: i64) -> Self {
         let mut carry = 0;
         let mut result: VecDeque<_> = self
-            .abs
+            .nums
             .iter()
             .map(|&num| {
                 let temp = carry + num as i128 * other.abs() as i128;
@@ -166,10 +166,10 @@ impl BigInt {
             return Self::new();
         }
         if self.len() == 1 {
-            return other.mul_int(self.abs[0] * self.sign as i64);
+            return other.mul_int(self.nums[0] * self.sign as i64);
         }
         if other.len() == 1 {
-            return self.mul_int(other.abs[0] * other.sign as i64);
+            return self.mul_int(other.nums[0] * other.sign as i64);
         }
         // a = x * 10^m + y
         // b = w * 10^m + z
@@ -177,18 +177,18 @@ impl BigInt {
         let m = self.len().max(other.len()) / 2;
         let mut half = m.min(self.len());
 
-        let y = Self::from(self.abs.range(0..half).copied().collect(), 1);
+        let y = Self::from(self.nums.range(0..half).copied().collect(), 1);
         let x = if half < self.len() {
-            Self::from(self.abs.range(half..).copied().collect(), 1)
+            Self::from(self.nums.range(half..).copied().collect(), 1)
         } else {
             Self::new()
         };
 
         half = m.min(other.len());
 
-        let z = Self::from(other.abs.range(0..half).copied().collect(), 1);
+        let z = Self::from(other.nums.range(0..half).copied().collect(), 1);
         let w = if half < other.len() {
-            Self::from(other.abs.range(half..).copied().collect(), 1)
+            Self::from(other.nums.range(half..).copied().collect(), 1)
         } else {
             Self::new()
         };
@@ -199,23 +199,23 @@ impl BigInt {
 
         if !xw.is_zero() {
             for _ in 0..2 * m {
-                xw.abs.push_front(0);
+                xw.nums.push_front(0);
             }
         }
         if !xz_plus_yw.is_zero() {
             for _ in 0..m {
-                xz_plus_yw.abs.push_front(0);
+                xz_plus_yw.nums.push_front(0);
             }
         }
 
-        Self::from((xw.add(&xz_plus_yw).add(&yz)).abs, self.sign * other.sign)
+        Self::from((xw.add(&xz_plus_yw).add(&yz)).nums, self.sign * other.sign)
     }
 }
 
 impl PartialOrd for BigInt {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         if self.len() == other.len() {
-            Some(self.abs.iter().rev().cmp(other.abs.iter().rev()))
+            Some(self.nums.iter().rev().cmp(other.nums.iter().rev()))
         } else {
             Some(self.len().cmp(&other.len()))
         }
@@ -228,7 +228,7 @@ impl fmt::Display for BigInt {
             write!(f, "-").unwrap();
         }
 
-        self.abs.iter().rev().enumerate().for_each(|(i, num)| {
+        self.nums.iter().rev().enumerate().for_each(|(i, num)| {
             if i == 0 {
                 write!(f, "{num}").unwrap();
             } else {
