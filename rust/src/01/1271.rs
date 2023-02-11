@@ -18,6 +18,12 @@ impl BigInt {
         self.0.iter().all(|&i| i == 0)
     }
 
+    fn zero_justify(&mut self) {
+        while self.0.len() > 1 && self.0.back() == Some(&0) {
+            self.0.pop_back();
+        }
+    }
+
     fn push_front(&mut self, num: i8) {
         if self.is_zero() {
             self.0.clear();
@@ -47,7 +53,7 @@ impl BigInt {
 
     fn sub(&self, other: &Self) -> Self {
         let mut carry = 0;
-        let mut diff: VecDeque<_> = (0..self.0.len().max(other.0.len()))
+        let diff: VecDeque<_> = (0..self.0.len().max(other.0.len()))
             .map(|i| {
                 let temp = carry + self.0.get(i).unwrap_or(&0) - other.0.get(i).unwrap_or(&0);
 
@@ -61,11 +67,10 @@ impl BigInt {
             })
             .collect();
 
-        while diff.len() > 1 && diff.back() == Some(&0) {
-            diff.pop_back();
-        }
+        let mut result = Self(diff);
 
-        Self(diff)
+        result.zero_justify();
+        result
     }
 }
 

@@ -25,37 +25,44 @@ impl BigInt {
     }
 
     fn parse(input: &str) -> Self {
-        let mut abs: VecDeque<_> = input
-            .as_bytes()
-            .rchunks(DIGITS)
-            .map(|chunk| {
-                let mut exp = 1;
+        let mut result = Self {
+            abs: input
+                .as_bytes()
+                .rchunks(DIGITS)
+                .map(|chunk| {
+                    let mut exp = 1;
 
-                chunk.iter().rev().fold(0, |acc, &ch| {
-                    if ch as char == '-' {
-                        return acc;
-                    }
+                    chunk.iter().rev().fold(0, |acc, &ch| {
+                        if ch as char == '-' {
+                            return acc;
+                        }
 
-                    let num = (ch as i64 - '0' as i64) * exp;
-                    exp *= 10;
+                        let num = (ch as i64 - '0' as i64) * exp;
+                        exp *= 10;
 
-                    acc + num
+                        acc + num
+                    })
                 })
-            })
-            .collect();
-
-        if abs.len() > 1 && abs.back() == Some(&0) {
-            abs.pop_back();
-        }
-
-        Self {
-            abs,
+                .collect(),
             sign: if input.starts_with('-') { -1 } else { 1 },
-        }
+        };
+
+        result.zero_justify();
+        result
     }
 
     fn is_zero(&self) -> bool {
         self.abs.iter().all(|&i| i == 0)
+    }
+
+    fn zero_justify(&mut self) {
+        while self.abs.len() > 1 && self.abs.back() == Some(&0) {
+            self.abs.pop_back();
+        }
+
+        if self.is_zero() {
+            self.sign = 1;
+        }
     }
 
     fn len(&self) -> usize {
@@ -114,7 +121,7 @@ impl BigInt {
         }
 
         let mut carry = 0;
-        let mut diff: VecDeque<_> = (0..self.len().max(other.len()))
+        let diff: VecDeque<_> = (0..self.len().max(other.len()))
             .map(|i| {
                 let temp = carry + self.abs.get(i).unwrap_or(&0) - other.abs.get(i).unwrap_or(&0);
 
@@ -128,16 +135,9 @@ impl BigInt {
             })
             .collect();
 
-        while diff.len() > 1 && diff.back() == Some(&0) {
-            diff.pop_back();
-        }
-
         let mut result = Self::from(diff, self.sign);
 
-        if result.is_zero() {
-            result.sign = 1;
-        }
-
+        result.zero_justify();
         result
     }
 

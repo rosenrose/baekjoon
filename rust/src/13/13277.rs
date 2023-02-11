@@ -66,6 +66,12 @@ impl BigInt {
                 .collect(),
         )
     }
+
+    fn zero_justify(&mut self) {
+        while self.0.len() > 1 && self.0.last() == Some(&0) {
+            self.0.pop();
+        }
+    }
 }
 
 impl Mul for BigInt {
@@ -93,11 +99,14 @@ impl Mul for BigInt {
         fast_fourier_transform(&mut a, false);
         fast_fourier_transform(&mut b, false);
 
-        let mut result: Vec<_> = a.iter().zip(b.iter()).map(|(&a, &b)| a * b).collect();
+        let mut mul: Vec<_> = a.iter().zip(b.iter()).map(|(&a, &b)| a * b).collect();
 
-        fast_fourier_transform(&mut result, true);
+        fast_fourier_transform(&mut mul, true);
 
-        Self(normalize(result))
+        let mut result = Self(normalize(mul));
+
+        result.zero_justify();
+        result
     }
 }
 
@@ -195,10 +204,6 @@ fn normalize(v: Vec<Complex>) -> Vec<i64> {
 
     if carry > 0 {
         result.push(carry);
-    }
-
-    while result.len() > 1 && result.last() == Some(&0) {
-        result.pop();
     }
 
     result
