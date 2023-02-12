@@ -2,9 +2,7 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut input = buf.split_whitespace();
-    let (a, b) = (input.next().unwrap(), input.next().unwrap());
-
+    let (a, b) = buf.trim().split_once(' ').unwrap();
     let five_to_six = |s: &str| s.replace("5", "6");
     let six_to_five = |s: &str| s.replace("6", "5");
 

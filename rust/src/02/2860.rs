@@ -22,14 +22,11 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut p = buf.trim().split('.');
-    let (integer, decimal) = (p.next().unwrap(), p.next().unwrap());
-
-    let integer = parse_int(integer);
+    let (integer, decimal) = buf.trim().split_once('.').unwrap();
     let fraction = decimal
         .char_indices()
         .map(|(i, c)| Fraction(c as i64 - '0' as i64, 10_i64.pow(i as u32 + 1)))
-        .fold(Fraction(integer, 1), |acc, a| acc + a);
+        .fold(Fraction(integer.parse().unwrap(), 1), |acc, a| acc + a);
 
     let papers = fraction.1;
     let mut sum = fraction.0;
@@ -57,8 +54,4 @@ fn get_gcd(mut a: i64, mut b: i64) -> i64 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn parse_int(buf: &str) -> i64 {
-    buf.trim().parse().unwrap()
 }

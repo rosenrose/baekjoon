@@ -26,17 +26,15 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut number = buf.trim().split('.');
-    let integer = Fraction(number.next().unwrap().parse().unwrap(), 1);
-    let Some(decimal) = number.next() else {
-        println!("{integer}");
+    let input = buf.trim();
+    let Some((integer, decimal)) = input.split_once('.') else {
+        println!("{}", Fraction(parse_int(input), 1));
         return;
     };
 
+    let mut fraction = Fraction(parse_int(integer), 1);
     let mut tokens = decimal.split(['(', ')']);
     let non_repeat = tokens.next().unwrap();
-
-    let mut fraction = integer;
 
     for (i, c) in non_repeat.char_indices() {
         fraction += Fraction(c as i64 - '0' as i64, 10_i64.pow(i as u32 + 1));
@@ -70,4 +68,8 @@ fn get_gcd(mut a: i64, mut b: i64) -> i64 {
 
         (a, b) = (b, a % b);
     }
+}
+
+fn parse_int(buf: &str) -> i64 {
+    buf.parse().unwrap()
 }

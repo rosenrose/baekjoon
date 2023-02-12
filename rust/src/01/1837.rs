@@ -41,9 +41,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut input = buf.split_whitespace();
-    let p = BigInt::parse(input.next().unwrap());
-    let k: usize = input.next().unwrap().parse().unwrap();
+    let (p, k) = buf.trim().split_once(' ').unwrap();
+    let p = BigInt::parse(p);
+    let k: usize = k.parse().unwrap();
 
     for prime in get_prime_nums(k - 1) {
         if p.rem(prime) == 0 {

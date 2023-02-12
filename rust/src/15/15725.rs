@@ -2,16 +2,18 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    if !buf.contains('x') {
-        println!("0");
+    if let Some((coef_x, _)) = buf.split_once('x') {
+        println!(
+            "{}",
+            match coef_x {
+                "" => 1,
+                "-" => -1,
+                x => x.parse().unwrap(),
+            }
+        );
+
         return;
     }
 
-    let coef: i32 = match buf.split('x').next().unwrap() {
-        "" => 1,
-        "-" => -1,
-        s => s.parse().unwrap(),
-    };
-
-    println!("{coef}");
+    println!("0");
 }

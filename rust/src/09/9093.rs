@@ -6,8 +6,10 @@ fn main() {
     let mut output = String::new();
 
     for input in buf.lines().skip(1) {
-        let words = input.split_whitespace();
-        let reversed: Vec<String> = words.map(|word| word.chars().rev().collect()).collect();
+        let reversed: Vec<String> = input
+            .split_whitespace()
+            .map(|word| word.chars().rev().collect())
+            .collect();
 
         writeln!(output, "{}", reversed.join(" ")).unwrap();
     }

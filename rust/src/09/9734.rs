@@ -27,15 +27,12 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
 
     for input in buf.lines() {
-        let mut number = input.split('.');
-        let integer = Fraction(number.next().unwrap().parse().unwrap(), 1);
-        let decimal = number.next().unwrap();
+        let (integer, decimal) = input.split_once('.').unwrap();
+        let mut fraction = Fraction(integer.parse().unwrap(), 1);
 
         let mut tokens = decimal.split(['(', ')']);
         let non_repeat = tokens.next().unwrap();
         let repeating = tokens.next().unwrap();
-
-        let mut fraction = integer;
 
         for (i, c) in non_repeat.char_indices() {
             fraction += Fraction(c as i32 - '0' as i32, 10_i32.pow(i as u32 + 1));
