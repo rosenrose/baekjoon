@@ -32,17 +32,18 @@ fn main() {
                 continue;
             }
 
-            if let Some(path) = find_path(&prevs, i, j) {
-                write!(output, "{} ", path.len() + 1).unwrap();
-
-                for p in path {
-                    write!(output, "{} ", p + 1).unwrap();
-                }
-
-                writeln!(output, "{}", j + 1).unwrap();
-            } else {
+            let Some(path) = find_path(&prevs, i, j) else {
                 writeln!(output, "0").unwrap();
+                continue;
+            };
+
+            write!(output, "{} ", path.len() + 1).unwrap();
+
+            for p in path {
+                write!(output, "{} ", p + 1).unwrap();
             }
+
+            writeln!(output, "{}", j + 1).unwrap();
         }
     }
 

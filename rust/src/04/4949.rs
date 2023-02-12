@@ -13,12 +13,12 @@ fn main() {
             match ch {
                 '(' | '[' => parens.push(ch),
                 ')' | ']' => {
-                    if let Some(last) = parens.pop() {
-                        if !matches!((last, ch), ('(', ')') | ('[', ']')) {
-                            writeln!(output, "{NO}").unwrap();
-                            continue 'outer;
-                        }
-                    } else {
+                    let Some(last) = parens.pop() else {
+                        writeln!(output, "{NO}").unwrap();
+                        continue 'outer;
+                    };
+
+                    if !matches!((last, ch), ('(', ')') | ('[', ']')) {
                         writeln!(output, "{NO}").unwrap();
                         continue 'outer;
                     }
