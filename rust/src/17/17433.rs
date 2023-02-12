@@ -4,12 +4,13 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
+    const INF: &str = "INFINITY";
 
     for _ in 0..input() {
         let n = input();
 
         if n == 1 {
-            println!("INFINITY");
+            println!("{INF}");
             continue;
         }
 
@@ -18,7 +19,7 @@ fn main() {
         let gcd = get_gcd(diffs);
 
         if gcd == 0 {
-            println!("INFINITY");
+            println!("{INF}");
             continue;
         }
 

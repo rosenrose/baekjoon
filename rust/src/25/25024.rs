@@ -6,6 +6,8 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
     let mut output = String::new();
+    const YES: &str = "Yes";
+    const NO: &str = "No";
 
     for (x, y) in (0..input()).map(|_| (input(), input())) {
         let is_time = matches!((x, y), (0..=23, 0..=59));
@@ -21,8 +23,8 @@ fn main() {
         writeln!(
             output,
             "{} {}",
-            if is_time { "Yes" } else { "No" },
-            if is_date { "Yes" } else { "No" }
+            if is_time { YES } else { NO },
+            if is_date { YES } else { NO }
         )
         .unwrap();
     }

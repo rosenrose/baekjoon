@@ -2,6 +2,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+    const NO: &str = "NO";
 
     'outer: for input in buf.lines().skip(1) {
         let mut count = 0;
@@ -11,7 +12,7 @@ fn main() {
                 '(' => count += 1,
                 ')' => {
                     if count == 0 {
-                        println!("NO");
+                        println!("{NO}");
                         continue 'outer;
                     }
 
@@ -21,6 +22,6 @@ fn main() {
             };
         }
 
-        println!("{}", if count == 0 { "YES" } else { "NO" });
+        println!("{}", if count == 0 { "YES" } else { NO });
     }
 }

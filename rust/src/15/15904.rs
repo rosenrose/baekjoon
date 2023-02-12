@@ -3,8 +3,8 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     const COMPARE: &str = "UCPC";
+    let comapre_chars: Vec<_> = COMPARE.chars().collect();
 
-    let comapre_chars: Vec<_> = "UCPC".chars().collect();
     let mut stack = String::new();
 
     for c in buf.trim().chars() {

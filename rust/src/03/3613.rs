@@ -8,6 +8,7 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let name = buf.trim();
+    const ERROR: &str = "Error!";
 
     if name.chars().all(char::is_lowercase) {
         println!("{name}");
@@ -17,7 +18,7 @@ fn main() {
     let first = name.chars().nth(0).unwrap();
 
     if first.is_uppercase() {
-        println!("Error!");
+        println!("{ERROR}");
         return;
     };
 
@@ -25,15 +26,15 @@ fn main() {
         let last = name.chars().last().unwrap();
 
         if first == '_' || last == '_' {
-            println!("Error!");
+            println!("{ERROR}");
             return;
         }
         if name.split('_').any(str::is_empty) {
-            println!("Error!");
+            println!("{ERROR}");
             return;
         }
         if name.chars().any(char::is_uppercase) {
-            println!("Error!");
+            println!("{ERROR}");
             return;
         }
 
