@@ -257,31 +257,10 @@ impl fmt::Display for BigInt {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
 
-    let mut stack = Vec::new();
-    let mut postfix = Vec::new();
-
-    for input in buf.lines().skip(1) {
-        match input {
-            "+" | "-" | "*" | "/" => {
-                while let Some(&token) = stack.last() {
-                    if precedence(token) < precedence(input) {
-                        break;
-                    }
-
-                    postfix.push(stack.pop().unwrap());
-                }
-
-                stack.push(input);
-            }
-            _ => postfix.push(input),
-        };
-    }
-
-    while let Some(token) = stack.pop() {
-        postfix.push(token);
-    }
+    let infix: Vec<_> = buf.lines().skip(1).collect();
+    let postfix = infix_to_postfix(infix);
     // println!("{postfix:?}");
-    let mut stack = Vec::<BigInt>::new();
+    let mut stack = Vec::new();
 
     for token in postfix {
         if !matches!(token, "+" | "-" | "*" | "/") {
@@ -304,10 +283,35 @@ fn main() {
     println!("{}", stack.pop().unwrap());
 }
 
-fn precedence(op: &str) -> i32 {
-    match op {
+fn infix_to_postfix(infix: Vec<&str>) -> Vec<&str> {
+    let mut stack = Vec::new();
+    let mut postfix = Vec::new();
+    let precedence = |op: &str| match op {
         "+" | "-" => 1,
         "*" | "/" => 2,
         _ => Default::default(),
+    };
+
+    for input in infix {
+        match input {
+            "+" | "-" | "*" | "/" => {
+                while let Some(&token) = stack.last() {
+                    if precedence(token) < precedence(input) {
+                        break;
+                    }
+
+                    postfix.push(stack.pop().unwrap());
+                }
+
+                stack.push(input);
+            }
+            _ => postfix.push(input),
+        };
     }
+
+    while let Some(token) = stack.pop() {
+        postfix.push(token);
+    }
+
+    postfix
 }
