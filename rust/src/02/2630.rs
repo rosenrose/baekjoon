@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.lines();
 
     let n: usize = input.next().unwrap().parse().unwrap();
-    let paper: Vec<String> = input.map(|row| row.split_whitespace().collect()).collect();
+    let paper: Vec<String> = input.map(|row| row.split(' ').collect()).collect();
     let (mut white, mut blue) = (0, 0);
 
     cut(&paper, 0, 0, n, &mut white, &mut blue);

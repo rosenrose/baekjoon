@@ -2,12 +2,9 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let nums: Vec<_> = buf
-        .split_ascii_whitespace()
-        .skip(1)
-        .flat_map(str::parse::<u32>)
-        .collect();
+    let input = buf.lines().flat_map(str::parse::<u32>);
 
+    let nums: Vec<_> = input.skip(1).collect();
     let mut gcd = nums[0].abs_diff(nums[1]);
 
     for i in 2..nums.len() {

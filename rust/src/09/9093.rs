@@ -7,7 +7,7 @@ fn main() {
 
     for input in buf.lines().skip(1) {
         let reversed: Vec<String> = input
-            .split_whitespace()
+            .split(' ')
             .map(|word| word.chars().rev().collect())
             .collect();
 
