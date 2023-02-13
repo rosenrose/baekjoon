@@ -2,9 +2,15 @@ use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
 
-#[derive(Debug)]
+#[derive(Copy, Clone)]
+struct Datetime {
+    month: i8,
+    date: i8,
+    hour: i8,
+    minute: i8,
+}
 struct RentInfo<'a> {
-    gears: HashMap<&'a str, Vec<i64>>,
+    gears: HashMap<&'a str, Datetime>,
     fee: i64,
 }
 
@@ -26,13 +32,13 @@ fn main() {
             fee: 0,
         });
 
-        let time = parse_time(date, time);
-        let Some(start) = info.gears.get(gear) else {
-            info.gears.insert(gear, time);
+        let dt = parse_datetime(date, time);
+        let Some(&start) = info.gears.get(gear) else {
+            info.gears.insert(gear, dt);
             continue;
         };
 
-        let minutes = elapsed_minutes(&start, &time);
+        let minutes = elapsed_minutes(start, dt);
 
         if minutes > max_minutes {
             info.fee += (minutes - max_minutes) * penalty;
@@ -40,7 +46,7 @@ fn main() {
 
         info.gears.remove(gear);
     }
-    // println!("{rent_infos:?}");
+
     let mut payers: Vec<_> = rent_infos
         .iter()
         .filter_map(|(name, &RentInfo { fee, .. })| (fee > 0).then_some((name, fee)))
@@ -60,24 +66,33 @@ fn main() {
     print!("{output}");
 }
 
-fn parse_time(date: &str, time: &str) -> Vec<i64> {
-    date.split('-')
+fn parse_datetime(date: &str, time: &str) -> Datetime {
+    let mut tokens = date
+        .split('-')
+        .skip(1)
         .chain(time.split(':'))
-        .map(parse_int)
-        .collect()
+        .map(|s| parse_int(s) as i8);
+    let mut token = || tokens.next().unwrap();
+
+    Datetime {
+        month: token(),
+        date: token(),
+        hour: token(),
+        minute: token(),
+    }
 }
 
-fn elapsed_minutes(start: &Vec<i64>, end: &Vec<i64>) -> i64 {
-    let past_minutes = |time: &Vec<i64>| {
-        ((1..time[1]).map(get_days).sum::<i64>() + time[2] - 1) * 24 * 60 + time[3] * 60 + time[4]
+fn elapsed_minutes(start: Datetime, end: Datetime) -> i64 {
+    let past_minutes = |dt: Datetime| {
+        ((1..dt.month).map(get_days).sum::<i64>() + dt.date as i64 - 1) * 24 * 60
+            + dt.hour as i64 * 60
+            + dt.minute as i64
     };
-    let start_minutes = past_minutes(start);
-    let end_minutes = past_minutes(end);
 
-    end_minutes - start_minutes
+    past_minutes(end) - past_minutes(start)
 }
 
-fn get_days(month: i64) -> i64 {
+fn get_days(month: i8) -> i64 {
     match month {
         1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
         4 | 6 | 9 | 11 => 30,
