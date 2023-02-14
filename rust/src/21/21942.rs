@@ -2,15 +2,8 @@ use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
 
-#[derive(Copy, Clone)]
-struct Datetime {
-    month: i8,
-    date: i8,
-    hour: i8,
-    minute: i8,
-}
 struct RentInfo<'a> {
-    gears: HashMap<&'a str, Datetime>,
+    gears: HashMap<&'a str, i64>,
     fee: i64,
 }
 
@@ -32,16 +25,16 @@ fn main() {
             fee: 0,
         });
 
-        let dt = parse_datetime(date, time);
+        let time = parse_time(date, time);
         let Some(&start) = info.gears.get(gear) else {
-            info.gears.insert(gear, dt);
+            info.gears.insert(gear, time);
             continue;
         };
 
-        let minutes = elapsed_minutes(start, dt);
+        let elapsed_minutes = time - start;
 
-        if minutes > max_minutes {
-            info.fee += (minutes - max_minutes) * penalty;
+        if elapsed_minutes > max_minutes {
+            info.fee += (elapsed_minutes - max_minutes) * penalty;
         }
 
         info.gears.remove(gear);
@@ -66,33 +59,19 @@ fn main() {
     print!("{output}");
 }
 
-fn parse_datetime(date: &str, time: &str) -> Datetime {
+fn parse_time(date: &str, time: &str) -> i64 {
     let mut tokens = date
         .split('-')
         .skip(1)
         .chain(time.split(':'))
-        .map(|s| parse_int(s) as i8);
+        .map(parse_int);
     let mut token = || tokens.next().unwrap();
+    let (month, date, hour, minute) = (token(), token(), token(), token());
 
-    Datetime {
-        month: token(),
-        date: token(),
-        hour: token(),
-        minute: token(),
-    }
+    ((1..month).map(get_days).sum::<i64>() + date - 1) * 24 * 60 + hour * 60 + minute
 }
 
-fn elapsed_minutes(start: Datetime, end: Datetime) -> i64 {
-    let past_minutes = |dt: Datetime| {
-        ((1..dt.month).map(get_days).sum::<i64>() + dt.date as i64 - 1) * 24 * 60
-            + dt.hour as i64 * 60
-            + dt.minute as i64
-    };
-
-    past_minutes(end) - past_minutes(start)
-}
-
-fn get_days(month: i8) -> i64 {
+fn get_days(month: i64) -> i64 {
     match month {
         1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
         4 | 6 | 9 | 11 => 30,
