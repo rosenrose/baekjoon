@@ -19,8 +19,8 @@ fn main() {
         }
 
         let Some(i) = (1..len).rfind(|&i| word[i - 1] < word[i]) else {
-          break;
-      };
+            break;
+        };
         let j = (i..len).rfind(|&j| word[j] > word[i - 1]).unwrap();
 
         word.swap(i - 1, j);

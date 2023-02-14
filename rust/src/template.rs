@@ -15,6 +15,11 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
 }
 
+// fn main() -> Result<(), Box<dyn std::error::Error>> {
+//     writeln!(stdout, "{}", a + b)?;
+//     Ok(())
+// }
+
 fn parse_int(buf: &str) -> i32 {
     buf.parse().unwrap()
 }

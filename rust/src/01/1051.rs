@@ -8,7 +8,7 @@ fn main() {
         parse_int(input.next().unwrap()),
         parse_int(input.next().unwrap()),
     );
-    let matrix: Vec<_> = input.map(|row| row.as_bytes()).collect();
+    let matrix: Vec<_> = input.map(str::as_bytes).collect();
     let max_size = n.min(m);
 
     for size in (1..=max_size).rev() {

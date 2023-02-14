@@ -20,6 +20,7 @@ fn main() {
             );
 
         print!("Distances: ");
+
         for dist in distances {
             print!("{dist} ");
         }

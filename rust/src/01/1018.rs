@@ -2,18 +2,15 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace();
+    let mut input = buf.lines();
 
-    let (n, m) = (
-        parse_int(input.next().unwrap()),
-        parse_int(input.next().unwrap()),
-    );
-    let board: Vec<_> = input.map(|row| row.as_bytes()).collect();
+    let (n, m) = input.next().unwrap().split_once(' ').unwrap();
+    let board: Vec<_> = input.map(str::as_bytes).collect();
 
     let mut min_paint = 32;
 
-    for i in 0..=n - 8 {
-        for j in 0..=m - 8 {
+    for i in 0..=parse_int(n) - 8 {
+        for j in 0..=parse_int(m) - 8 {
             min_paint = get_paint_count(&board, i, j).min(min_paint);
         }
     }
