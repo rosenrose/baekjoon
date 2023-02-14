@@ -19,18 +19,13 @@ impl Regex {
     }
 
     fn find(&self, text: &str) -> Option<(usize, usize)> {
-        let end = unsafe { text.as_ptr().cast_mut().add(text.len()) };
-        let save = unsafe { end.read_volatile() };
-        unsafe { end.write_volatile(0) };
+        let mut text = text.as_bytes().to_vec();
+        text.push(0);
 
         let mut m = [0; 2];
-        let result = unsafe { regexec(self.0.as_ptr(), text.as_ptr(), 1, m.as_mut_ptr(), 0) };
-        unsafe { end.write_volatile(save) };
 
-        if result == 0 {
-            Some((m[0] as usize, m[1] as usize))
-        } else {
-            None
-        }
+        let result = unsafe { regexec(self.0.as_ptr(), text.as_ptr(), 1, m.as_mut_ptr(), 0) };
+
+        (result == 0).then_some((m[0] as usize, m[1] as usize))
     }
 }
