@@ -24,28 +24,28 @@ fn main() {
     let mut stack = Vec::new();
 
     for token in postfix {
-        match token {
-            Num(n) => stack.push(n),
-            _ => {
-                if token == Print {
-                    write!(output, "{} ", stack.last().unwrap()).unwrap();
-                    continue;
-                }
-
-                let (Some(b), Some(a)) = (stack.pop(), stack.pop()) else {
-                    break;
-                };
-                let result = match token {
-                    Add => a + b,
-                    Sub => a - b,
-                    Mul => a * b,
-                    Div => a / b,
-                    _ => Default::default(),
-                };
-
-                stack.push(result);
-            }
+        if let Num(n) = token {
+            stack.push(n);
+            continue;
         }
+
+        if token == Print {
+            write!(output, "{} ", stack.last().unwrap()).unwrap();
+            continue;
+        }
+
+        let (Some(b), Some(a)) = (stack.pop(), stack.pop()) else {
+            break;
+        };
+        let result = match token {
+            Add => a + b,
+            Sub => a - b,
+            Mul => a * b,
+            Div => a / b,
+            _ => Default::default(),
+        };
+
+        stack.push(result);
     }
 
     println!(
