@@ -8,13 +8,13 @@ fn main() {
     let mut stack = Vec::new();
 
     for token in postfix {
-        if !matches!(token.as_str(), "+" | "-" | "<?" | ">?") {
+        if !matches!(token, "+" | "-" | "<?" | ">?") {
             stack.push(token.parse::<i32>().unwrap());
             continue;
         }
 
         let (b, a) = (stack.pop().unwrap(), stack.pop().unwrap());
-        let result = match token.as_str() {
+        let result = match token {
             "+" => a + b,
             "-" => a - b,
             "<?" => a.min(b),
@@ -28,60 +28,36 @@ fn main() {
     println!("{}", stack.pop().unwrap());
 }
 
-fn parse_to_infix(input: &str) -> Vec<String> {
+fn parse_to_infix(input: &str) -> Vec<&str> {
     let mut infix = Vec::new();
-    let mut number = String::new();
-    let mut min_max = String::new();
+    let regex = Regex::new(r"[0-9]+|[+-\()]|<\?|>\?", false);
+    let mut cursor = 0;
 
-    let flush = |s: &mut String, infix: &mut Vec<_>| {
-        if !s.is_empty() {
-            infix.push(s.clone());
-            s.clear();
-        }
-    };
+    while let Some((start, end)) = regex.find(&input[cursor..]) {
+        let token = &input[cursor + start..cursor + end];
+        infix.push(token);
 
-    for ch in input.chars() {
-        match ch {
-            '+' | '-' | '(' | ')' | '<' | '>' | '?' => {
-                flush(&mut number, &mut infix);
-
-                match ch {
-                    '+' | '-' | '(' | ')' => {
-                        flush(&mut min_max, &mut infix);
-                        infix.push(ch.to_string());
-                    }
-                    '<' | '>' | '?' => min_max.push(ch),
-                    _ => (),
-                }
-            }
-            '0'..='9' => {
-                flush(&mut min_max, &mut infix);
-                number.push(ch);
-            }
-            _ => (),
-        }
+        cursor += end;
     }
 
-    flush(&mut number, &mut infix);
     infix
 }
 
-fn infix_to_postfix(infix: Vec<String>) -> Vec<String> {
+fn infix_to_postfix(infix: Vec<&str>) -> Vec<&str> {
     let mut stack = Vec::new();
     let mut postfix = Vec::new();
-    let precedence = |op: &String| match op.as_str() {
+    let precedence = |op: &str| match op {
         "+" | "-" => 1,
         "<?" | ">?" => 2,
         _ => Default::default(),
     };
 
-    for input in infix.into_iter() {
-        match input.as_str() {
+    for input in infix {
+        match input {
             "(" => stack.push(input),
             ")" => loop {
                 match stack.pop() {
-                    None => break,
-                    Some(token) if token == "(" => break,
+                    Some("(") | None => break,
                     Some(token) => postfix.push(token),
                 }
             },

@@ -23,7 +23,6 @@ impl Regex {
         text.push(0);
 
         let mut m = [0; 2];
-
         let result = unsafe { regexec(self.0.as_ptr(), text.as_ptr(), 1, m.as_mut_ptr(), 0) };
 
         (result == 0).then_some((m[0] as usize, m[1] as usize))

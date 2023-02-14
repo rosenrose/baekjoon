@@ -15,17 +15,13 @@ fn main() {
         return;
     }
 
-    let first = name.chars().nth(0).unwrap();
-
-    if first.is_uppercase() {
+    if name.chars().nth(0).unwrap().is_uppercase() {
         println!("{ERROR}");
         return;
     };
 
     let format = if name.contains('_') {
-        let last = name.chars().last().unwrap();
-
-        if first == '_' || last == '_' {
+        if name.starts_with('_') || name.ends_with('_') {
             println!("{ERROR}");
             return;
         }

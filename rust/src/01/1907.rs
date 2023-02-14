@@ -28,28 +28,25 @@ fn main() {
     }
 }
 
-fn get_coef_counts(s: &str) -> [i32; 3] {
-    let mut last_atom = '\0';
-    let idx = |ch: char| match ch {
-        'C' => 0,
-        'H' => 1,
-        'O' => 2,
-        _ => Default::default(),
-    };
+fn get_coef_counts(input: &str) -> [i32; 3] {
+    let regex = Regex::new(r"[CHO][2-9]?", false);
+    let mut cursor = 0;
+    let mut counts = [0; 3];
 
-    s.chars().fold([0; 3], |mut acc, ch| {
-        match ch {
-            'C' | 'H' | 'O' => {
-                acc[idx(ch)] += 1;
-                last_atom = ch;
-            }
-            num @ '2'..='9' => {
-                acc[idx(last_atom)] -= 1;
-                acc[idx(last_atom)] += num as i32 - '0' as i32;
-            }
+    while let Some((start, end)) = regex.find(&input[cursor..]) {
+        let molar = &input[cursor + start..cursor + end];
+        let (atom, count) = molar.split_at(1);
+        let count: i32 = count.parse().unwrap_or(1);
+
+        match atom {
+            "C" => counts[0] += count,
+            "H" => counts[1] += count,
+            "O" => counts[2] += count,
             _ => (),
         }
 
-        acc
-    })
+        cursor += end;
+    }
+
+    counts
 }
