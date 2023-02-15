@@ -73,6 +73,79 @@ impl BigInt {
             self.0.pop();
         }
     }
+
+    fn fast_fourier_transform(v: &mut Vec<Complex>, is_inverse: bool) {
+        Self::bit_reversal(v);
+
+        let mut len = 2;
+        let direction = if is_inverse { -1.0 } else { 1.0 };
+
+        while len <= v.len() {
+            let angle = -2.0 * PI * direction / len as f64;
+            let wlen = Complex(angle.cos(), angle.sin());
+
+            for i in (0..v.len()).step_by(len) {
+                let mut w = Complex(1.0, 0.0);
+
+                for j in 0..len / 2 {
+                    let (even, odd) = (v[i + j], v[i + j + len / 2]);
+
+                    v[i + j] = even + odd * w;
+                    v[i + j + len / 2] = even - odd * w;
+
+                    w *= wlen;
+                }
+            }
+
+            len *= 2;
+        }
+
+        if is_inverse {
+            len = v.len();
+
+            for num in v.iter_mut() {
+                (*num).div(len as f64);
+            }
+        }
+    }
+
+    fn bit_reversal(v: &mut Vec<Complex>) {
+        let mut rev = 0;
+
+        for i in 1..v.len() {
+            let mut bit = v.len() / 2;
+
+            while rev >= bit {
+                rev -= bit;
+                bit /= 2;
+            }
+
+            rev += bit;
+
+            if i < rev {
+                v.swap(i, rev);
+            }
+        }
+    }
+
+    fn normalize(v: Vec<Complex>) -> Vec<i64> {
+        let mut carry = 0;
+        let mut result: Vec<_> = v
+            .iter()
+            .map(|complex| {
+                let temp = carry + complex.0.round() as i64;
+                carry = temp / EXP;
+
+                temp % EXP
+            })
+            .collect();
+
+        if carry > 0 {
+            result.push(carry);
+        }
+
+        result
+    }
 }
 
 impl Mul for BigInt {
@@ -97,14 +170,14 @@ impl Mul for BigInt {
             }
         }
 
-        fast_fourier_transform(&mut a, false);
-        fast_fourier_transform(&mut b, false);
+        Self::fast_fourier_transform(&mut a, false);
+        Self::fast_fourier_transform(&mut b, false);
 
         let mut mul: Vec<_> = a.iter().zip(b.iter()).map(|(&a, &b)| a * b).collect();
 
-        fast_fourier_transform(&mut mul, true);
+        Self::fast_fourier_transform(&mut mul, true);
 
-        let mut result = Self(normalize(mul));
+        let mut result = Self(Self::normalize(mul));
 
         result.zero_justify();
         result
@@ -134,77 +207,4 @@ fn main() {
     let (a, b) = (input.next().unwrap(), input.next().unwrap());
 
     println!("{}", a * b);
-}
-
-fn fast_fourier_transform(v: &mut Vec<Complex>, is_inverse: bool) {
-    bit_reversal(v);
-
-    let mut len = 2;
-    let direction = if is_inverse { -1.0 } else { 1.0 };
-
-    while len <= v.len() {
-        let angle = -2.0 * PI * direction / len as f64;
-        let wlen = Complex(angle.cos(), angle.sin());
-
-        for i in (0..v.len()).step_by(len) {
-            let mut w = Complex(1.0, 0.0);
-
-            for j in 0..len / 2 {
-                let (even, odd) = (v[i + j], v[i + j + len / 2]);
-
-                v[i + j] = even + odd * w;
-                v[i + j + len / 2] = even - odd * w;
-
-                w *= wlen;
-            }
-        }
-
-        len *= 2;
-    }
-
-    if is_inverse {
-        len = v.len();
-
-        for num in v.iter_mut() {
-            (*num).div(len as f64);
-        }
-    }
-}
-
-fn bit_reversal(v: &mut Vec<Complex>) {
-    let mut rev = 0;
-
-    for i in 1..v.len() {
-        let mut bit = v.len() / 2;
-
-        while rev >= bit {
-            rev -= bit;
-            bit /= 2;
-        }
-
-        rev += bit;
-
-        if i < rev {
-            v.swap(i, rev);
-        }
-    }
-}
-
-fn normalize(v: Vec<Complex>) -> Vec<i64> {
-    let mut carry = 0;
-    let mut result: Vec<_> = v
-        .iter()
-        .map(|complex| {
-            let temp = carry + complex.0.round() as i64;
-            carry = temp / EXP;
-
-            temp % EXP
-        })
-        .collect();
-
-    if carry > 0 {
-        result.push(carry);
-    }
-
-    result
 }
