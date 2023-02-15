@@ -8,7 +8,7 @@ fn main() {
     let mut nums: Vec<_> = input.skip(1).collect();
     nums.sort_unstable();
 
-    let mid = nums.binary_search(&((x + 1) / 2)).unwrap_or_else(|i| i);
+    let mid = nums.partition_point(|&n| n < (x + 1) / 2);
     let (left, right) = nums.split_at(mid);
     // println!("{left:?} {right:?}");
     let count = left

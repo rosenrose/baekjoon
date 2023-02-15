@@ -17,22 +17,22 @@ fn main() {
     println!("{}", binary_search(&heights, m, 0, max_height - 1));
 }
 
-fn binary_search(heights: &Vec<i64>, m: i64, start: i64, end: i64) -> i64 {
-    // println!("{start} {} {end}", (start + end) / 2);
+fn binary_search(heights: &Vec<i64>, m: i64, left: i64, right: i64) -> i64 {
+    // println!("{left} {} {right}", (left + right) / 2);
     let is_ok = |num: i64| heights.iter().map(|h| (h - num).max(0)).sum::<i64>() >= m;
 
-    if is_ok(end) {
-        return end;
+    if is_ok(right) {
+        return right;
     }
-    if end - start == 1 {
-        return start;
+    if right - left == 1 {
+        return left;
     }
 
-    let mid = (start + end) / 2;
+    let mid = (left + right) / 2;
 
     if is_ok(mid) {
-        binary_search(heights, m, mid, end)
+        binary_search(heights, m, mid, right)
     } else {
-        binary_search(heights, m, start, mid)
+        binary_search(heights, m, left, mid)
     }
 }
