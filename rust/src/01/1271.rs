@@ -1,21 +1,18 @@
 use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt;
+use std::ops::SubAssign;
 
 #[derive(PartialEq, Debug)]
 struct BigInt(VecDeque<i8>);
 
 impl BigInt {
     fn new() -> Self {
-        Self(VecDeque::new())
+        Self(VecDeque::from([0]))
     }
 
     fn parse(input: &str) -> Self {
         Self(input.chars().rev().map(|c| c as i8 - '0' as i8).collect())
-    }
-
-    fn is_zero(&self) -> bool {
-        self.0.iter().all(|&i| i == 0)
     }
 
     fn zero_justify(&mut self) {
@@ -24,53 +21,46 @@ impl BigInt {
         }
     }
 
-    fn push_front(&mut self, num: i8) {
-        if self.is_zero() {
-            self.0.clear();
-        }
-
-        self.0.push_front(num);
-    }
-
     fn divmod(&self, other: Self) -> (Self, Self) {
         let (mut dividend, mut quotient) = (Self::new(), Self::new());
 
         for &num in self.0.iter().rev() {
             let mut q = 0;
 
-            dividend.push_front(num);
+            dividend.0.push_front(num);
+            dividend.zero_justify();
 
             while dividend >= other {
-                dividend = dividend.sub(&other);
+                dividend -= &other;
                 q += 1;
             }
 
-            quotient.push_front(q);
+            quotient.0.push_front(q);
         }
+
+        quotient.zero_justify();
 
         (quotient, dividend)
     }
+}
 
-    fn sub(&self, other: &Self) -> Self {
+impl SubAssign<&BigInt> for BigInt {
+    fn sub_assign(&mut self, other: &Self) {
         let mut carry = 0;
-        let diff: VecDeque<_> = (0..self.0.len().max(other.0.len()))
-            .map(|i| {
-                let temp = carry + self.0.get(i).unwrap_or(&0) - other.0.get(i).unwrap_or(&0);
 
-                if temp < 0 {
-                    carry = -1;
-                    temp + 10
-                } else {
-                    carry = 0;
-                    temp
-                }
-            })
-            .collect();
+        for i in 0..self.0.len() {
+            let temp = carry + self.0[i] - other.0.get(i).unwrap_or(&0);
 
-        let mut result = Self(diff);
+            if temp < 0 {
+                carry = -1;
+                self.0[i] = temp + 10;
+            } else {
+                carry = 0;
+                self.0[i] = temp;
+            }
+        }
 
-        result.zero_justify();
-        result
+        self.zero_justify();
     }
 }
 
@@ -98,9 +88,8 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut input = buf.split_whitespace().map(BigInt::parse);
-    let (n, m) = (input.next().unwrap(), input.next().unwrap());
-    let (q, r) = n.divmod(m);
+    let (n, m) = buf.trim().split_once(' ').unwrap();
+    let (q, r) = BigInt::parse(n).divmod(BigInt::parse(m));
 
     println!("{q}\n{r}");
 }

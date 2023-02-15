@@ -16,11 +16,11 @@ impl Matrix {
     }
 }
 
-impl Mul for Matrix {
-    type Output = Self;
+impl Mul for &Matrix {
+    type Output = Matrix;
 
-    fn mul(self, other: Self) -> Self {
-        Self(
+    fn mul(self, other: Self) -> Self::Output {
+        Matrix(
             self.0
                 .iter()
                 .map(|row| {
@@ -74,11 +74,11 @@ fn pow_rem(base: &Matrix, exp: i64) -> Matrix {
     }
 
     let mut rem = pow_rem(base, exp / 2);
-    rem = (rem.clone() * rem).rem(M);
+    rem = (&rem * &rem).rem(M);
 
     if exp % 2 == 0 {
         rem
     } else {
-        (rem * base.rem(M)).rem(M)
+        (&rem * &base.rem(M)).rem(M)
     }
 }

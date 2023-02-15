@@ -6,24 +6,19 @@ const EXP: i128 = 10_i128.pow(DIGITS as u32);
 struct BigInt(Vec<i128>);
 
 impl BigInt {
-    fn mul(&self, other: i128) -> Self {
+    fn mul_assign(&mut self, other: i128) {
         let mut carry = 0;
-        let mut result: Vec<_> = self
-            .0
-            .iter()
-            .map(|num| {
-                let temp = carry + num * other;
-                carry = temp / EXP;
 
-                temp % EXP
-            })
-            .collect();
+        for num in self.0.iter_mut() {
+            let temp = carry + *num * other;
 
-        if carry > 0 {
-            result.push(carry);
+            carry = temp / EXP;
+            *num = temp % EXP;
         }
 
-        Self(result)
+        if carry > 0 {
+            self.0.push(carry);
+        }
     }
 }
 
@@ -49,7 +44,7 @@ fn main() {
     let mut bigint = BigInt(vec![1]);
 
     for _ in 0..n {
-        bigint = bigint.mul(5);
+        bigint.mul_assign(5);
     }
 
     let result = bigint.to_string();

@@ -2,6 +2,7 @@ use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt;
 use std::io;
+use std::ops::{Add, Div, Mul, Sub};
 
 #[derive(Default, PartialEq)]
 struct BigInt {
@@ -54,20 +55,36 @@ impl BigInt {
         Self::from(self.nums.clone(), 1)
     }
 
-    fn push_front(&mut self, num: i8) {
-        if self.is_zero() {
-            self.nums.clear();
+    fn mul_int(&self, other: i8) -> Self {
+        let mut carry = 0;
+        let mut result: VecDeque<_> = self
+            .nums
+            .iter()
+            .map(|&num| {
+                let temp = carry + num * other.abs();
+                carry = temp / 10;
+
+                temp % 10
+            })
+            .collect();
+
+        if carry > 0 {
+            result.push_back(carry);
         }
 
-        self.nums.push_front(num);
+        Self::from(result, self.sign * other.signum() as i8)
     }
+}
 
-    fn add(&self, other: &Self) -> Self {
+impl Add for &BigInt {
+    type Output = BigInt;
+
+    fn add(self, other: Self) -> Self::Output {
         if self.sign * other.sign == -1 {
             return if self.sign == 1 {
-                self.sub(&other.abs())
+                self - &other.abs()
             } else {
-                other.sub(&self.abs())
+                other - &self.abs()
             };
         }
 
@@ -85,15 +102,18 @@ impl BigInt {
             sum.push_back(carry);
         }
 
-        Self::from(sum, self.sign)
+        BigInt::from(sum, self.sign)
     }
+}
+impl Sub for &BigInt {
+    type Output = BigInt;
 
-    fn sub(&self, other: &Self) -> Self {
+    fn sub(self, other: Self) -> Self::Output {
         if self.sign * other.sign == -1 {
             return if self.sign == 1 {
-                self.add(&other.abs())
+                self + &other.abs()
             } else {
-                let mut result = other.add(&self.abs());
+                let mut result = other + &self.abs();
                 result.sign = -1;
 
                 result
@@ -101,7 +121,7 @@ impl BigInt {
         }
 
         if self < other {
-            let mut result = other.sub(self);
+            let mut result = other - self;
             result.sign *= -1;
 
             return result;
@@ -122,35 +142,18 @@ impl BigInt {
             })
             .collect();
 
-        let mut result = Self::from(diff, self.sign);
+        let mut result = BigInt::from(diff, self.sign);
 
         result.zero_justify();
         result
     }
+}
+impl Mul for &BigInt {
+    type Output = BigInt;
 
-    fn mul_int(&self, other: i8) -> Self {
-        let mut carry = 0;
-        let mut result: VecDeque<_> = self
-            .nums
-            .iter()
-            .map(|&num| {
-                let temp = carry + num * other.abs();
-                carry = temp / 10;
-
-                temp % 10
-            })
-            .collect();
-
-        if carry > 0 {
-            result.push_back(carry);
-        }
-
-        Self::from(result, self.sign * other.signum() as i8)
-    }
-
-    fn mul(&self, other: &Self) -> Self {
+    fn mul(self, other: Self) -> Self::Output {
         if self.is_zero() || other.is_zero() {
-            return Self::new();
+            return BigInt::new();
         }
         if self.len() == 1 {
             return other.mul_int(self.nums[0] * self.sign);
@@ -162,25 +165,25 @@ impl BigInt {
         let m = self.len().max(other.len()) / 2;
         let mut half = m.min(self.len());
 
-        let y = Self::from(self.nums.range(0..half).copied().collect(), 1);
+        let y = BigInt::from(self.nums.range(0..half).copied().collect(), 1);
         let x = if half < self.len() {
-            Self::from(self.nums.range(half..).copied().collect(), 1)
+            BigInt::from(self.nums.range(half..).copied().collect(), 1)
         } else {
-            Self::new()
+            BigInt::new()
         };
 
         half = m.min(other.len());
 
-        let z = Self::from(other.nums.range(0..half).copied().collect(), 1);
+        let z = BigInt::from(other.nums.range(0..half).copied().collect(), 1);
         let w = if half < other.len() {
-            Self::from(other.nums.range(half..).copied().collect(), 1)
+            BigInt::from(other.nums.range(half..).copied().collect(), 1)
         } else {
-            Self::new()
+            BigInt::new()
         };
 
-        let (mut xw, yz) = (x.mul(&w), y.mul(&z));
-        let r = x.add(&y).mul(&w.add(&z));
-        let mut xz_plus_yw = r.sub(&xw.add(&yz));
+        let (mut xw, yz) = (&x * &w, &y * &z);
+        let r = &(&x + &y) * &(&w + &z);
+        let mut xz_plus_yw = &r - &(&xw + &yz);
 
         if !xw.is_zero() {
             for _ in 0..2 * m {
@@ -193,39 +196,40 @@ impl BigInt {
             }
         }
 
-        Self::from((xw.add(&xz_plus_yw).add(&yz)).nums, self.sign * other.sign)
+        BigInt::from((&xw + &(&xz_plus_yw + &yz)).nums, self.sign * other.sign)
     }
+}
+impl Div for &BigInt {
+    type Output = BigInt;
 
-    fn div(&self, other: &Self) -> Self {
-        let (mut dividend, mut quotient) = (Self::new(), Self::new());
+    fn div(self, other: Self) -> Self::Output {
+        let (mut dividend, mut quotient) = (BigInt::new(), BigInt::new());
 
         for &num in self.nums.iter().rev() {
             let mut q = 0;
 
-            dividend.push_front(num);
+            dividend.nums.push_front(num);
+            dividend.zero_justify();
 
             while dividend >= *other {
-                dividend = dividend.sub(&other.abs());
+                dividend = &dividend - &other.abs();
                 q += 1;
             }
 
-            quotient.push_front(q);
+            quotient.nums.push_front(q);
         }
 
         let remainder = dividend;
 
         if self.sign * other.sign == -1 {
             if !remainder.is_zero() {
-                quotient = quotient.add(&BigInt::from(VecDeque::from([1]), 1));
+                quotient = &quotient + &BigInt::from(VecDeque::from([1]), 1);
             }
 
             quotient.sign = -1;
         }
 
-        if quotient.is_zero() {
-            quotient.sign = 1;
-        }
-
+        quotient.zero_justify();
         quotient
     }
 }
@@ -270,10 +274,10 @@ fn main() {
 
         let (b, a) = (stack.pop().unwrap(), stack.pop().unwrap());
         let result = match token {
-            "+" => a.add(&b),
-            "-" => a.sub(&b),
-            "*" => a.mul(&b),
-            "/" => a.div(&b),
+            "+" => &a + &b,
+            "-" => &a - &b,
+            "*" => &a * &b,
+            "/" => &a / &b,
             _ => Default::default(),
         };
 

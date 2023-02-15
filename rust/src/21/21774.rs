@@ -12,7 +12,11 @@ fn main() {
 
     for _ in 0..parse_int(n) {
         let (time, level) = input().split_once('#').unwrap();
-        logs[parse_int(level) as usize].push(parse_time(time));
+        let (time, level) = (parse_time(time), parse_int(level) as usize);
+
+        for lv in 1..=level {
+            logs[lv].push(time);
+        }
     }
 
     for _ in 0..parse_int(q) {
@@ -23,16 +27,10 @@ fn main() {
             parse_int(tokens.next().unwrap()) as usize,
         );
 
-        let count: usize = (level..=6)
-            .map(|lv| {
-                let start_idx = logs[lv].partition_point(|&log| log < start);
-                let end_idx = logs[lv].partition_point(|&log| log <= end);
+        let start_idx = logs[level].partition_point(|&log| log < start);
+        let end_idx = logs[level].partition_point(|&log| log <= end);
 
-                end_idx - start_idx
-            })
-            .sum();
-
-        writeln!(output, "{count}").unwrap();
+        writeln!(output, "{}", end_idx - start_idx).unwrap();
     }
 
     print!("{output}");

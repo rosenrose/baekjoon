@@ -171,8 +171,7 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut input = buf.split_whitespace().map(BigInt::parse);
-    let (a, b) = (input.next().unwrap(), input.next().unwrap());
+    let (a, b) = buf.trim().split_once(' ').unwrap();
 
-    println!("{}", a + b);
+    println!("{}", BigInt::parse(a) + BigInt::parse(b));
 }

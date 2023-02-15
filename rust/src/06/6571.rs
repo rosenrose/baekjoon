@@ -1,6 +1,7 @@
 use std::cmp::Ordering;
 use std::fmt;
 use std::io;
+use std::ops::Add;
 
 const DIGITS: usize = 37;
 const EXP: i128 = 10_i128.pow(DIGITS as u32);
@@ -28,7 +29,15 @@ impl BigInt {
         )
     }
 
-    fn add(&self, other: &Self) -> Self {
+    fn is_zero(&self) -> bool {
+        self.0.iter().all(|&i| i == 0)
+    }
+}
+
+impl Add for &BigInt {
+    type Output = BigInt;
+
+    fn add(self, other: Self) -> Self::Output {
         let mut carry = 0;
         let mut sum: Vec<_> = (0..self.0.len().max(other.0.len()))
             .map(|i| {
@@ -43,11 +52,7 @@ impl BigInt {
             sum.push(carry);
         }
 
-        Self(sum)
-    }
-
-    fn is_zero(&self) -> bool {
-        self.0.iter().all(|&i| i == 0)
+        BigInt(sum)
     }
 }
 
@@ -83,7 +88,7 @@ fn main() {
 
     while cache.last().unwrap().to_string().len() <= 100 {
         let len = cache.len();
-        cache.push(cache[len - 2].add(&cache[len - 1]));
+        cache.push(&cache[len - 2] + &cache[len - 1]);
     }
 
     while let (Some(a), Some(b)) = (input.next(), input.next()) {

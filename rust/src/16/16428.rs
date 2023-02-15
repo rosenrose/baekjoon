@@ -1,6 +1,7 @@
 use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt;
+use std::ops::Sub;
 
 #[derive(PartialEq, Debug)]
 struct BigInt {
@@ -10,10 +11,11 @@ struct BigInt {
 
 impl BigInt {
     fn new() -> Self {
-        Self {
-            nums: VecDeque::new(),
-            sign: 1,
-        }
+        Self::from(VecDeque::from([0]), 1)
+    }
+
+    fn from(nums: VecDeque<i8>, sign: i8) -> Self {
+        Self { nums, sign }
     }
 
     fn parse(input: &str) -> Self {
@@ -61,43 +63,7 @@ impl BigInt {
             result.push_back(carry);
         }
 
-        Self {
-            nums: result,
-            sign: self.sign,
-        }
-    }
-
-    fn sub(&self, other: &Self) -> Self {
-        let mut carry = 0;
-        let diff: VecDeque<_> = (0..self.nums.len().max(other.nums.len()))
-            .map(|i| {
-                let temp = carry + self.nums.get(i).unwrap_or(&0) - other.nums.get(i).unwrap_or(&0);
-
-                if temp < 0 {
-                    carry = -1;
-                    temp + 10
-                } else {
-                    carry = 0;
-                    temp
-                }
-            })
-            .collect();
-
-        let mut result = Self {
-            nums: diff,
-            sign: 1,
-        };
-
-        result.zero_justify();
-        result
-    }
-
-    fn push_front(&mut self, num: i8) {
-        if self.is_zero() {
-            self.nums.clear();
-        }
-
-        self.nums.push_front(num);
+        Self::from(result, self.sign)
     }
 
     fn divmod(&self, other: Self) -> (Self, Self) {
@@ -106,14 +72,15 @@ impl BigInt {
         for &num in self.nums.iter().rev() {
             let mut q = 0;
 
-            dividend.push_front(num);
+            dividend.nums.push_front(num);
+            dividend.zero_justify();
 
             while dividend >= other {
-                dividend = dividend.sub(&other);
+                dividend = &dividend - &other;
                 q += 1;
             }
 
-            quotient.push_front(q);
+            quotient.nums.push_front(q);
         }
 
         let mut remainder = dividend;
@@ -129,15 +96,39 @@ impl BigInt {
 
             if !remainder.is_zero() {
                 quotient = quotient.add(1);
-                remainder = other.sub(&remainder);
+                remainder = &other - &remainder;
             }
         }
 
-        if quotient.is_zero() {
-            quotient.sign = 1;
-        }
+        quotient.zero_justify();
 
         (quotient, remainder)
+    }
+}
+
+impl Sub for &BigInt {
+    type Output = BigInt;
+
+    fn sub(self, other: Self) -> Self::Output {
+        let mut carry = 0;
+        let diff: VecDeque<_> = (0..self.nums.len().max(other.nums.len()))
+            .map(|i| {
+                let temp = carry + self.nums.get(i).unwrap_or(&0) - other.nums.get(i).unwrap_or(&0);
+
+                if temp < 0 {
+                    carry = -1;
+                    temp + 10
+                } else {
+                    carry = 0;
+                    temp
+                }
+            })
+            .collect();
+
+        let mut result = BigInt::from(diff, 1);
+
+        result.zero_justify();
+        result
     }
 }
 
@@ -169,9 +160,8 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut input = buf.split_whitespace().map(BigInt::parse);
-    let (a, b) = (input.next().unwrap(), input.next().unwrap());
-    let (q, r) = a.divmod(b);
+    let (a, b) = buf.trim().split_once(' ').unwrap();
+    let (q, r) = BigInt::parse(a).divmod(BigInt::parse(b));
 
     println!("{q}\n{r}");
 }
