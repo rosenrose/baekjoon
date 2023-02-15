@@ -9,11 +9,13 @@ use Tag::{Close, Open, SelfClose};
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+    let tag_regex = Regex::new(r"<[^>]+>", false);
+    let amp_regex = Regex::new(r"&(lt|gt|amp|x[0-9a-zA-Z]+);", false);
 
     for input in buf.lines() {
         println!(
             "{}",
-            if is_valid_xml(input) {
+            if is_valid_xml(input, &tag_regex, &amp_regex) {
                 "valid"
             } else {
                 "invalid"
@@ -22,24 +24,22 @@ fn main() {
     }
 }
 
-fn is_valid_xml(input: &str) -> bool {
+fn is_valid_xml(input: &str, tag_regex: &Regex, amp_regex: &Regex) -> bool {
     let mut cursor = 0;
     let mut stack = Vec::new();
 
-    while let Some(mut tag_start) = input[cursor..].find('<') {
-        tag_start += cursor;
-        let plain_text = &input[cursor..tag_start];
+    while let Some((mut start, mut end)) = tag_regex.find(&input[cursor..]) {
+        start += cursor;
+        end += cursor;
 
-        if !is_valid_text(plain_text) {
+        let plain_text = &input[cursor..start];
+        // println!("p: {plain_text}");
+        if !is_valid_text(plain_text, amp_regex) {
             return false;
         }
 
-        let Some(mut tag_end) = input[tag_start..].find('>') else {
-          return false;
-      };
-        tag_end += tag_start;
-
-        let tag = &input[tag_start + 1..tag_end];
+        let tag = &input[start + 1..end - 1];
+        // println!("t: {tag}");
         let tag_kind = if tag.starts_with('/') {
             Close
         } else if tag.ends_with('/') {
@@ -72,42 +72,36 @@ fn is_valid_xml(input: &str) -> bool {
             SelfClose => (),
         }
 
-        cursor = tag_end + 1;
+        cursor = end;
     }
 
-    stack.is_empty() && is_valid_text(&input[cursor..])
+    stack.is_empty() && is_valid_text(&input[cursor..], amp_regex)
 }
 
-fn is_valid_text(input: &str) -> bool {
+fn is_valid_text(input: &str, amp_regex: &Regex) -> bool {
     if input.is_empty() {
         return true;
     }
     if input.contains(['<', '>']) {
         return false;
     }
-    if !input.contains("&") {
-        return input.chars().all(|ch| matches!(ch as u8, 32..=127));
-    }
 
     let mut cursor = 0;
 
-    while let Some(mut amp_start) = input[cursor..].find('&') {
-        amp_start += cursor;
-        let plain_text = &input[cursor..amp_start];
+    while let Some((mut start, mut end)) = amp_regex.find(&input[cursor..]) {
+        start += cursor;
+        end += cursor;
 
-        if !is_valid_text(plain_text) {
+        let plain_text = &input[cursor..start];
+
+        if !is_valid_text(plain_text, amp_regex) {
             return false;
         }
 
-        let Some(mut semicolon) = input[amp_start..].find(';') else {
-          return false;
-      };
-        semicolon += amp_start;
+        let token = &input[start + 1..end - 1];
 
-        let token = &input[amp_start + 1..semicolon];
-
-        if token == "lt" || token == "gt" || token == "amp" {
-            cursor = semicolon + 1;
+        if matches!(token, "lt" | "gt" | "amp") {
+            cursor = end;
             continue;
         }
         if !token.starts_with('x') {
@@ -125,10 +119,16 @@ fn is_valid_text(input: &str) -> bool {
             return false;
         }
 
-        cursor = semicolon + 1;
+        cursor = end;
     }
 
-    is_valid_text(&input[cursor..])
+    if input[cursor..].contains('&') {
+        return false;
+    }
+
+    input[cursor..]
+        .chars()
+        .all(|ch| matches!(ch as u8, 32..=127))
 }
 
 fn is_valid_tag_name(input: &str) -> bool {
