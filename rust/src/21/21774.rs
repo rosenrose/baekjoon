@@ -4,14 +4,13 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
-    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, q) = input().split_once(' ').unwrap();
+    let (n, _) = input.next().unwrap().split_once(' ').unwrap();
     let mut logs = vec![Vec::new(); 7];
 
     for _ in 0..parse_int(n) {
-        let (time, level) = input().split_once('#').unwrap();
+        let (time, level) = input.next().unwrap().split_once('#').unwrap();
         let (time, level) = (parse_time(time), parse_int(level) as usize);
 
         for lv in 1..=level {
@@ -19,8 +18,7 @@ fn main() {
         }
     }
 
-    for _ in 0..parse_int(q) {
-        let mut tokens = input().split('#');
+    for mut tokens in input.map(|s| s.split('#')) {
         let (start, end, level) = (
             parse_time(tokens.next().unwrap()),
             parse_time(tokens.next().unwrap()),
