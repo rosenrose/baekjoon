@@ -88,12 +88,12 @@ impl fmt::Display for BigInt {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
+    let mut input = || input.next().unwrap();
 
-    let n: i32 = input.next().unwrap().parse().unwrap();
-    let mut input = input.map(BigInt::parse);
+    let n: i32 = input().parse().unwrap();
 
-    for (a, b) in (0..n).map(|_| (input.next().unwrap(), input.next().unwrap())) {
-        let (q, r) = a.divmod(b);
+    for (a, b) in (0..n).map(|_| (input(), input())) {
+        let (q, r) = BigInt::parse(a).divmod(BigInt::parse(b));
 
         println!("{q}\n{r}");
         println!("");

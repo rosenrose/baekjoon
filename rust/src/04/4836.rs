@@ -16,7 +16,7 @@ fn main() {
             continue;
         }
 
-        let last_error = *errors.last().unwrap();
+        let last_error = errors.last().unwrap();
         let rest_errors = format!("{:?}", &errors[..errors.len() - 1]).replace(['[', ']'], "");
 
         println!("form errors {rest_errors} and {last_error}: {dance_output}");
