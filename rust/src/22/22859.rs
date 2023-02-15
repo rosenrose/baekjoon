@@ -3,35 +3,21 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let input = buf.trim();
-    const DIV_START: &str = r#"<div title=""#;
-    const DIV_END: &str = r#"</div>"#;
-    const P_START: &str = r#"<p>"#;
-    const P_END: &str = r#"</p>"#;
 
-    let mut cursor = 0;
+    for (div_start, div_prefix) in input.match_indices(r#"<div title=""#) {
+        let div_end = input[div_start..].find("</div>").unwrap() + div_start;
 
-    while let Some(div_start) = input[cursor..].find(DIV_START) {
-        cursor += div_start + DIV_START.len();
+        let quote_start = div_start + div_prefix.len();
+        let quote_end = input[quote_start..].find('"').unwrap() + quote_start;
 
-        let i = input[cursor..].find('"').unwrap() + cursor;
-        let title = &input[cursor..i];
-        cursor = i + 1;
-
+        let title = &input[quote_start..quote_end];
         println!("title : {title}");
 
-        let div_end = input[cursor..].find(DIV_END).unwrap() + cursor;
+        for (p_start, p_prefix) in input[quote_end..div_end].match_indices("<p>") {
+            let p_start = p_start + quote_end;
+            let p_end = input[p_start..].find("</p>").unwrap() + p_start;
 
-        while let Some(p_start) = input[cursor..].find(P_START) {
-            if p_start + cursor > div_end {
-                break;
-            }
-
-            cursor += p_start + P_START.len();
-
-            let p_end = input[cursor..].find(P_END).unwrap() + cursor;
-            let paragraph = parse_paragraph(&input[cursor..p_end]);
-            cursor = p_end + 1;
-
+            let paragraph = parse_paragraph(&input[p_start + p_prefix.len()..p_end]);
             println!("{paragraph}");
         }
     }
