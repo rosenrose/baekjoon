@@ -1,9 +1,9 @@
 use std::f64::consts::PI;
-use std::fmt::{self, Write};
+use std::fmt;
 use std::io;
 use std::ops::{Add, Mul, MulAssign, Sub};
 
-const DIGITS: usize = 3;
+const DIGITS: usize = 4;
 const EXP: i64 = 10_i64.pow(DIGITS as u32);
 
 #[derive(Clone, Copy, Debug)]
@@ -186,17 +186,15 @@ impl Mul for BigInt {
 
 impl fmt::Display for BigInt {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut output = String::new();
-
         for (i, num) in self.0.iter().rev().enumerate() {
             if i == 0 {
-                write!(output, "{num}").unwrap();
+                write!(f, "{num}").unwrap();
             } else {
-                write!(output, "{num:0DIGITS$}").unwrap();
+                write!(f, "{num:0DIGITS$}").unwrap();
             }
         }
 
-        write!(f, "{output}")
+        write!(f, "")
     }
 }
 

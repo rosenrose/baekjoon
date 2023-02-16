@@ -91,7 +91,7 @@ impl BigInt {
             result.push_back(carry as i64);
         }
 
-        BigInt::from(result, self.sign * other.signum() as i8)
+        Self::from(result, self.sign * other.signum() as i8)
     }
 }
 
