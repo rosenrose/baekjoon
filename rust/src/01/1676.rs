@@ -5,16 +5,16 @@ fn main() {
     let n: i32 = buf.trim().parse().unwrap();
     let (mut count_2, mut count_5) = (0, 0);
 
-    let mut exp = 2;
-    while exp <= n {
-        count_2 += n / exp;
-        exp *= 2;
+    let mut pow = 2;
+    while pow <= n {
+        count_2 += n / pow;
+        pow *= 2;
     }
 
-    exp = 5;
-    while exp <= n {
-        count_5 += n / exp;
-        exp *= 5;
+    pow = 5;
+    while pow <= n {
+        count_5 += n / pow;
+        pow *= 5;
     }
 
     println!("{}", count_2.min(count_5));

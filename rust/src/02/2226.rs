@@ -1,7 +1,7 @@
 use std::fmt;
 
 const DIGITS: usize = 37;
-const EXP: i128 = 10_i128.pow(DIGITS as u32);
+const POW: i128 = 10_i128.pow(DIGITS as u32);
 
 struct BigInt(Vec<i128>);
 
@@ -14,8 +14,8 @@ impl BigInt {
         for num in result.iter_mut() {
             let temp = carry + *num;
 
-            carry = temp / EXP;
-            *num = temp % EXP;
+            carry = temp / POW;
+            *num = temp % POW;
 
             if carry == 0 {
                 break;
@@ -42,7 +42,7 @@ impl BigInt {
             }
 
             carry = -1;
-            *num += EXP;
+            *num += POW;
         }
 
         while result.len() > 0 && result.last() == Some(&0) {
@@ -59,9 +59,9 @@ impl BigInt {
             .iter()
             .map(|num| {
                 let temp = carry + num * other;
-                carry = temp / EXP;
+                carry = temp / POW;
 
-                temp % EXP
+                temp % POW
             })
             .collect();
 

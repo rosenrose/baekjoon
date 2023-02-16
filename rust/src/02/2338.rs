@@ -5,7 +5,7 @@ use std::io;
 use std::ops::{Add, Mul, Sub};
 
 const DIGITS: usize = 18;
-const EXP: i128 = 10_i128.pow(DIGITS as u32);
+const POW: i128 = 10_i128.pow(DIGITS as u32);
 
 #[derive(PartialEq)]
 struct BigInt {
@@ -31,15 +31,15 @@ impl BigInt {
                 .as_bytes()
                 .rchunks(DIGITS)
                 .map(|chunk| {
-                    let mut exp = 1;
+                    let mut pow = 1;
 
                     chunk.iter().rev().fold(0, |acc, &ch| {
                         if ch as char == '-' {
                             return acc;
                         }
 
-                        let num = (ch as i64 - '0' as i64) * exp;
-                        exp *= 10;
+                        let num = (ch as i64 - '0' as i64) * pow;
+                        pow *= 10;
 
                         acc + num
                     })
@@ -81,9 +81,9 @@ impl BigInt {
             .iter()
             .map(|&num| {
                 let temp = carry + num as i128 * other.abs() as i128;
-                carry = temp / EXP;
+                carry = temp / POW;
 
-                (temp % EXP) as i64
+                (temp % POW) as i64
             })
             .collect();
 
@@ -113,9 +113,9 @@ impl Add for &BigInt {
                 let temp = carry
                     + *self.nums.get(i).unwrap_or(&0) as i128
                     + *other.nums.get(i).unwrap_or(&0) as i128;
-                carry = temp / EXP;
+                carry = temp / POW;
 
-                (temp % EXP) as i64
+                (temp % POW) as i64
             })
             .collect();
 
@@ -155,7 +155,7 @@ impl Sub for &BigInt {
 
                 if temp < 0 {
                     carry = -1;
-                    temp + EXP as i64
+                    temp + POW as i64
                 } else {
                     carry = 0;
                     temp

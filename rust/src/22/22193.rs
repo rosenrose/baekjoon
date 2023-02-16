@@ -4,7 +4,7 @@ use std::io;
 use std::ops::{Add, Mul, MulAssign, Sub};
 
 const DIGITS: usize = 4;
-const EXP: i64 = 10_i64.pow(DIGITS as u32);
+const POW: i64 = 10_i64.pow(DIGITS as u32);
 
 #[derive(Clone, Copy, Debug)]
 struct Complex(f64, f64);
@@ -55,11 +55,11 @@ impl BigInt {
                 .as_bytes()
                 .rchunks(DIGITS)
                 .map(|chunk| {
-                    let mut exp = 1;
+                    let mut pow = 1;
 
                     chunk.iter().rev().fold(0, |acc, &ch| {
-                        let num = (ch as i64 - '0' as i64) * exp;
-                        exp *= 10;
+                        let num = (ch as i64 - '0' as i64) * pow;
+                        pow *= 10;
 
                         acc + num
                     })
@@ -134,9 +134,9 @@ impl BigInt {
             .iter()
             .map(|complex| {
                 let temp = carry + complex.0.round() as i64;
-                carry = temp / EXP;
+                carry = temp / POW;
 
-                temp % EXP
+                temp % POW
             })
             .collect();
 

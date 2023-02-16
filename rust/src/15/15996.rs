@@ -3,11 +3,11 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let [n, a] = parse_int_vec(&buf)[..] else { return };
-    let (mut count, mut exp) = (0, a);
+    let (mut count, mut pow) = (0, a);
 
-    while exp <= n {
-        count += n / exp;
-        exp *= a;
+    while pow <= n {
+        count += n / pow;
+        pow *= a;
     }
 
     println!("{count}");

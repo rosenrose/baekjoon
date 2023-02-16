@@ -3,7 +3,7 @@ use std::io;
 use std::ops::Add;
 
 const DIGITS: usize = 37;
-const EXP: i128 = 10_i128.pow(DIGITS as u32);
+const POW: i128 = 10_i128.pow(DIGITS as u32);
 
 struct BigInt(Vec<i128>);
 
@@ -15,9 +15,9 @@ impl BigInt {
             .iter()
             .map(|num| {
                 let temp = carry + num * other;
-                carry = temp / EXP;
+                carry = temp / POW;
 
-                temp % EXP
+                temp % POW
             })
             .collect();
 
@@ -37,9 +37,9 @@ impl Add for &BigInt {
         let mut sum: Vec<_> = (0..self.0.len().max(other.0.len()))
             .map(|i| {
                 let temp = carry + self.0.get(i).unwrap_or(&0) + other.0.get(i).unwrap_or(&0);
-                carry = temp / EXP;
+                carry = temp / POW;
 
-                temp % EXP
+                temp % POW
             })
             .collect();
 

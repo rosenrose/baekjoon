@@ -9,11 +9,11 @@ impl BigInt {
                 .as_bytes()
                 .rchunks(DIGITS)
                 .map(|chunk| {
-                    let mut exp = 1;
+                    let mut pow = 1;
 
                     chunk.iter().rev().fold(0, |acc, &ch| {
-                        let num = (ch as i32 - '0' as i32) * exp;
-                        exp *= 10;
+                        let num = (ch as i32 - '0' as i32) * pow;
+                        pow *= 10;
 
                         acc + num
                     })
@@ -23,13 +23,13 @@ impl BigInt {
     }
 
     fn rem(&self, m: i32) -> i32 {
-        let mut exp_rem = 1;
+        let mut pow_rem = 1;
 
         self.0.iter().fold(0, |acc, num| {
-            let rem = (num * exp_rem) % m;
+            let rem = (num * pow_rem) % m;
 
             for _ in 0..DIGITS {
-                exp_rem = (exp_rem * 10) % m;
+                pow_rem = (pow_rem * 10) % m;
             }
 
             (acc + rem) % m

@@ -3,7 +3,7 @@ use std::fmt;
 use std::ops::{Add, Sub};
 
 const DIGITS: usize = 37;
-const EXP: i128 = 10_i128.pow(DIGITS as u32);
+const POW: i128 = 10_i128.pow(DIGITS as u32);
 
 #[derive(PartialEq)]
 struct BigInt {
@@ -22,15 +22,15 @@ impl BigInt {
                 .as_bytes()
                 .rchunks(DIGITS)
                 .map(|chunk| {
-                    let mut exp = 1;
+                    let mut pow = 1;
 
                     chunk.iter().rev().fold(0, |acc, &ch| {
                         if ch as char == '-' {
                             return acc;
                         }
 
-                        let num = (ch as i128 - '0' as i128) * exp;
-                        exp *= 10;
+                        let num = (ch as i128 - '0' as i128) * pow;
+                        pow *= 10;
 
                         acc + num
                     })
@@ -82,9 +82,9 @@ impl Add for BigInt {
         let mut sum: Vec<_> = (0..self.len().max(other.len()))
             .map(|i| {
                 let temp = carry + self.nums.get(i).unwrap_or(&0) + other.nums.get(i).unwrap_or(&0);
-                carry = temp / EXP;
+                carry = temp / POW;
 
-                temp % EXP
+                temp % POW
             })
             .collect();
 
@@ -124,7 +124,7 @@ impl Sub for BigInt {
 
                 if temp < 0 {
                     carry = -1;
-                    temp + EXP
+                    temp + POW
                 } else {
                     carry = 0;
                     temp

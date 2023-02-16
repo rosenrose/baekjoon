@@ -4,12 +4,12 @@ struct BigInt;
 
 impl BigInt {
     fn rem(input: &str, m: u32, radix: u32) -> u32 {
-        let mut exp_rem = 1;
+        let mut pow_rem = 1;
 
         input.chars().rev().fold(0, |acc, ch| {
             let num = ch as u32 - '0' as u32;
-            let rem = (num * exp_rem) % m;
-            exp_rem = (exp_rem * radix) % m;
+            let rem = (num * pow_rem) % m;
+            pow_rem = (pow_rem * radix) % m;
 
             (acc + rem) % m
         })

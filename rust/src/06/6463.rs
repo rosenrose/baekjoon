@@ -1,7 +1,7 @@
 use std::io;
 
 const DIGITS: usize = 18;
-const EXP: i128 = 10_i128.pow(DIGITS as u32);
+const POW: i128 = 10_i128.pow(DIGITS as u32);
 
 struct BigInt(Vec<i64>);
 
@@ -13,9 +13,9 @@ impl BigInt {
             .iter()
             .map(|&num| {
                 let temp = carry + num as i128 * other as i128;
-                carry = temp / EXP;
+                carry = temp / POW;
 
-                (temp % EXP) as i64
+                (temp % POW) as i64
             })
             .collect();
 

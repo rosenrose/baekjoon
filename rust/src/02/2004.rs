@@ -12,11 +12,11 @@ fn main() {
 }
 
 fn get_multiple_count(num: i64, divisor: i64) -> i64 {
-    let (mut count, mut exp) = (0, divisor);
+    let (mut count, mut pow) = (0, divisor);
 
-    while exp <= num {
-        count += num / exp;
-        exp *= divisor;
+    while pow <= num {
+        count += num / pow;
+        pow *= divisor;
     }
 
     count
