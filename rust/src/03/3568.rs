@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let type_ = input.next().unwrap();
 
-    for var in input.flat_map(|s| s.strip_suffix([',', ';'])) {
+    for var in input.map(|s| s.trim_end_matches([',', ';'])) {
         let (name, extra) = if let Some(i) = var.find(['[', ']', '&', '*']) {
             var.split_at(i)
         } else {

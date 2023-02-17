@@ -71,7 +71,7 @@ impl BigInt {
     }
 
     fn abs(&self) -> Self {
-        BigInt::from(self.nums.clone(), 1)
+        Self::from(self.nums.clone(), 1)
     }
 
     fn mul_int(&self, other: i64) -> Self {

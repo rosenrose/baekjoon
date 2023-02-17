@@ -7,9 +7,9 @@ fn main() {
 
     buf.trim().split_inclusive(['<', '>']).for_each(|s| {
         if s.ends_with('>') {
-            tags.push(s.strip_suffix('>').unwrap());
+            tags.push(s.trim_end_matches('>'));
         } else {
-            words.push(s.strip_suffix('<').unwrap_or(s));
+            words.push(s.trim_end_matches('<'));
         }
     });
 
