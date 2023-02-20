@@ -19,36 +19,7 @@ fn next_permutation(mut chars: Vec<u8>) -> Vec<u8> {
     let j = (i..len).rfind(|&j| chars[j] > chars[i - 1]).unwrap();
 
     chars.swap(i - 1, j);
-    quick_sort(&mut chars[i..], len - i);
+    (&mut chars[i..]).sort();
 
     chars
-}
-
-fn quick_sort(arr: &mut [u8], len: usize) {
-    if len <= 1 {
-        return;
-    }
-
-    let (mut i, mut j) = (0, len - 1);
-    let pivot = arr[(len / 2)];
-
-    while i <= j {
-        while arr[i] < pivot {
-            i += 1;
-        }
-        while arr[j] > pivot {
-            j -= 1;
-        }
-
-        if i > j {
-            break;
-        }
-
-        arr.swap(i, j);
-        i += 1;
-        j -= 1;
-    }
-
-    quick_sort(&mut arr[..=j], j + 1);
-    quick_sort(&mut arr[i..], len - i);
 }

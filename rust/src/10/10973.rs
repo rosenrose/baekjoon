@@ -22,36 +22,7 @@ fn prev_permutation(mut nums: Vec<i32>) -> Option<Vec<i32>> {
     let j = (i..len).rfind(|&j| nums[j] < nums[i - 1]).unwrap();
 
     nums.swap(i - 1, j);
-    quick_sort_reverse(&mut nums[i..], len - i);
+    (&mut nums[i..]).sort_by(|a, b| b.cmp(&a));
 
     Some(nums)
-}
-
-fn quick_sort_reverse(arr: &mut [i32], len: usize) {
-    if len <= 1 {
-        return;
-    }
-
-    let (mut i, mut j) = (0, len - 1);
-    let pivot = arr[(len / 2)];
-
-    while i <= j {
-        while arr[i] > pivot {
-            i += 1;
-        }
-        while arr[j] < pivot {
-            j -= 1;
-        }
-
-        if i > j {
-            break;
-        }
-
-        arr.swap(i, j);
-        i += 1;
-        j -= 1;
-    }
-
-    quick_sort_reverse(&mut arr[..=j], j + 1);
-    quick_sort_reverse(&mut arr[i..], len - i);
 }

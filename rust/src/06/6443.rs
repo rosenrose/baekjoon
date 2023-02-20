@@ -20,38 +20,9 @@ fn main() {
             let j = (i..len).rfind(|&j| word[j] > word[i - 1]).unwrap();
 
             word.swap(i - 1, j);
-            quick_sort(&mut word[i..], len - i);
+            (&mut word[i..]).sort();
         }
     }
 
     print!("{output}");
-}
-
-fn quick_sort(arr: &mut [u8], len: usize) {
-    if len <= 1 {
-        return;
-    }
-
-    let (mut i, mut j) = (0, len - 1);
-    let pivot = arr[(len / 2)];
-
-    while i <= j {
-        while arr[i] < pivot {
-            i += 1;
-        }
-        while arr[j] > pivot {
-            j -= 1;
-        }
-
-        if i > j {
-            break;
-        }
-
-        arr.swap(i, j);
-        i += 1;
-        j -= 1;
-    }
-
-    quick_sort(&mut arr[..=j], j + 1);
-    quick_sort(&mut arr[i..], len - i);
 }
