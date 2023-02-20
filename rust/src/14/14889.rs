@@ -7,7 +7,7 @@ fn main() {
     let n = input.next().unwrap();
     let numbers: Vec<_> = (0..n).collect();
     let matrix: Vec<Vec<_>> = (0..n)
-        .map(|_| (0..n).map(|_| input.next().unwrap()).collect())
+        .map(|_| input.by_ref().take(n as usize).collect())
         .collect();
 
     let mut min_diff = u32::MAX;
