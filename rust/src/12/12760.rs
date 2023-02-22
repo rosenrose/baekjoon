@@ -28,7 +28,7 @@ fn main() {
             .for_each(|(player, _)| {
                 scores[player] += 1;
                 max_score = scores[player].max(max_score);
-            })
+            });
     }
 
     for (player, _) in scores.iter().enumerate().filter(|(_, &s)| s == max_score) {

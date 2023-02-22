@@ -4,8 +4,7 @@ fn main() {
 
     let word = buf.trim();
 
-    let mut prefixes: Vec<&str> = (0..word.len()).map(|i| &word[i..]).collect();
-
+    let mut prefixes: Vec<_> = (0..word.len()).map(|i| &word[i..]).collect();
     prefixes.sort();
 
     println!("{}", prefixes.join("\n"));

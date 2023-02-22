@@ -13,7 +13,7 @@ fn main() {
         })
         .collect();
 
-    problems.sort();
+    let (_, easy) = problems.select_nth_unstable(0).1;
 
-    println!("{}", problems[0].1);
+    println!("{easy}");
 }

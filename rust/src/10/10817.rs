@@ -4,7 +4,5 @@ fn main() {
 
     let mut nums: Vec<i32> = buf.split_whitespace().flat_map(str::parse).collect();
 
-    nums.sort();
-
-    println!("{}", nums[1]);
+    println!("{}", nums.select_nth_unstable(1).1);
 }

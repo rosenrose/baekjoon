@@ -10,7 +10,6 @@ fn main() {
     for num in input {
         nums.push(num);
     }
-    nums.sort_unstable();
 
-    println!("{}", nums[k as usize - 1]);
+    println!("{}", nums.select_nth_unstable(k as usize - 1).1);
 }

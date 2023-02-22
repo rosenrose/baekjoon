@@ -9,6 +9,7 @@ fn main() {
     let mut required_mileages: Vec<_> = (0..n)
         .map(|_| {
             let (p, max_people) = (input() as usize, input() as usize);
+
             let mut mileages: Vec<_> = (0..p).map(|_| input()).collect();
             mileages.sort_by(|a, b| b.cmp(a));
 

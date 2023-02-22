@@ -11,7 +11,8 @@ fn main() {
         })
         .collect();
 
-    level_number.sort();
+    let len = level_number.len();
+    let (_, number) = level_number.select_nth_unstable(len - 1).1;
 
-    println!("{}", level_number.last().unwrap().1);
+    println!("{number}");
 }

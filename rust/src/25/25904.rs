@@ -18,7 +18,7 @@ fn main() {
         })
         .collect();
 
-    order.sort();
+    let (_, first) = order.select_nth_unstable(0).1;
 
-    println!("{}", order[0].1);
+    println!("{first}");
 }

@@ -7,7 +7,5 @@ fn main() {
     let (_, k) = (input.next(), input.next().unwrap());
     let mut arr: Vec<_> = input.collect();
 
-    arr.sort_by(|a, b| b.cmp(a));
-
-    println!("{}", arr[k - 1]);
+    println!("{}", arr.select_nth_unstable_by(k - 1, |a, b| b.cmp(a)).1);
 }

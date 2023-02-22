@@ -9,13 +9,15 @@ fn main() {
         .map(|i| (i, (input(), input(), input())))
         .collect();
 
-    infos.sort_by(|(_, (s1, c1, t1)), (_, (s2, c2, t2))| {
-        if s1 == s2 {
-            (c1, t1).cmp(&(c2, t2))
-        } else {
-            s2.cmp(s1)
-        }
-    });
+    let (first, _) = infos
+        .select_nth_unstable_by(0, |(_, (s1, c1, t1)), (_, (s2, c2, t2))| {
+            if s1 == s2 {
+                (c1, t1).cmp(&(c2, t2))
+            } else {
+                s2.cmp(s1)
+            }
+        })
+        .1;
 
-    println!("{}", infos[0].0);
+    println!("{first}");
 }

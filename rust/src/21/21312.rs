@@ -7,13 +7,15 @@ fn main() {
     let [a, b, c] = parse_int_vec(&buf)[..] else { return };
     let mut tastes = [a, b, c, a * b, a * c, b * c, a * b * c];
 
-    tastes.sort_by(|a, b| match (a % 2, b % 2) {
-        (1, 0) => Ordering::Greater,
-        (0, 1) => Ordering::Less,
-        _ => a.cmp(b),
-    });
+    let delicious = tastes
+        .select_nth_unstable_by(tastes.len() - 1, |a, b| match (a % 2, b % 2) {
+            (1, 0) => Ordering::Greater,
+            (0, 1) => Ordering::Less,
+            _ => a.cmp(b),
+        })
+        .1;
 
-    println!("{}", tastes.iter().last().unwrap());
+    println!("{delicious}");
 }
 
 fn parse_int_vec(buf: &String) -> Vec<i32> {
