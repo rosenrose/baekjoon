@@ -8,9 +8,8 @@ fn main() {
 
     for _ in 0..input.next().unwrap() {
         let mut scores: Vec<_> = (0..10).map(|_| input.next().unwrap()).collect();
-        scores.sort();
 
-        writeln!(output, "{}", scores.iter().nth_back(2).unwrap()).unwrap();
+        writeln!(output, "{}", scores.select_nth_unstable(7).1).unwrap();
     }
 
     print!("{output}");

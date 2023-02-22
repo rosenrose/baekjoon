@@ -20,7 +20,5 @@ fn main() {
         .filter_map(|&(title, count)| (count == max_count).then_some(title))
         .collect();
 
-    best_sellers.sort();
-
-    println!("{}", best_sellers[0]);
+    println!("{}", best_sellers.select_nth_unstable(0).1);
 }

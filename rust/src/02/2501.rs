@@ -17,7 +17,11 @@ fn main() {
         });
 
     divisors.dedup();
-    divisors.sort();
 
-    println!("{}", divisors.get(k - 1).unwrap_or(&0));
+    if divisors.len() < k {
+        println!("0");
+        return;
+    }
+
+    println!("{}", divisors.select_nth_unstable(k - 1).1);
 }

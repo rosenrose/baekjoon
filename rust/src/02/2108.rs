@@ -30,8 +30,7 @@ fn main() {
         .collect();
 
     let most = if max_counts.len() > 1 {
-        max_counts.sort_unstable();
-        max_counts[1]
+        *max_counts.select_nth_unstable(1).1
     } else {
         max_counts[0]
     };

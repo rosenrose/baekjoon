@@ -25,7 +25,5 @@ fn main() {
         })
         .collect();
 
-    split_reversed.sort();
-
-    println!("{}", split_reversed[0]);
+    println!("{}", split_reversed.select_nth_unstable(0).1);
 }

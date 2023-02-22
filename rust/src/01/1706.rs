@@ -18,11 +18,9 @@ fn main() {
             .collect()
     };
 
-    let horizontal: Vec<_> = room.iter().flat_map(get_words).collect();
-    let vertical: Vec<_> = room_inversed.iter().flat_map(get_words).collect();
+    let horizontal = room.iter().flat_map(get_words);
+    let vertical = room_inversed.iter().flat_map(get_words);
+    let mut words: Vec<_> = horizontal.chain(vertical).collect();
 
-    let mut words = [horizontal, vertical].concat();
-    words.sort();
-
-    println!("{}", words[0]);
+    println!("{}", words.select_nth_unstable(0).1);
 }
