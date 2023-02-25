@@ -11,7 +11,7 @@ fn main() {
 
             (
                 s,
-                weight as f32 / if price >= 5000 { price - 500 } else { price } as f32,
+                weight as f64 / if price >= 5000 { price - 500 } else { price } as f64,
             )
         })
         .max_by(|(_, e1), (_, e2)| e1.total_cmp(&e2))

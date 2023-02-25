@@ -4,8 +4,8 @@ fn main() {
 
     let r = buf
         .split_whitespace()
-        .map(|s| (s.parse::<f32>().unwrap()).recip())
-        .sum::<f32>()
+        .map(|s| (s.parse::<f64>().unwrap()).recip())
+        .sum::<f64>()
         .recip();
 
     println!("{r}");

@@ -72,7 +72,7 @@ fn main() {
 
     edges.sort_unstable_by(|&(_, _, d1), (_, _, d2)| d1.total_cmp(d2));
 
-    let min_weight: f32 = edges
+    let min_weight: f64 = edges
         .iter()
         .filter_map(|&(p1, p2, dist)| {
             (!disjoint_set.is_same(p1, p2)).then(|| {
@@ -85,10 +85,10 @@ fn main() {
     println!("{min_weight:.2}");
 }
 
-fn distance_of_points((x1, y1): (f32, f32), (x2, y2): (f32, f32)) -> f32 {
+fn distance_of_points((x1, y1): (f64, f64), (x2, y2): (f64, f64)) -> f64 {
     (x1 - x2).hypot(y1 - y2)
 }
 
-fn parse_float(buf: &str) -> f32 {
+fn parse_float(buf: &str) -> f64 {
     buf.parse().unwrap()
 }

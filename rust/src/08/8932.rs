@@ -6,7 +6,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    const CONSTANTS: [(f32, f32, f32); 7] = [
+    const CONSTANTS: [(f64, f64, f64); 7] = [
         (9.23076, 26.7, 1.835),
         (1.84523, 75.0, 1.348),
         (56.0211, 1.5, 1.05),
@@ -21,7 +21,7 @@ fn main() {
             .iter()
             .enumerate()
             .map(|(i, &(a, b, c))| {
-                let p = input.next().unwrap() as f32;
+                let p = input.next().unwrap() as f64;
 
                 (match i {
                     0 | 3 | 6 => a * (b - p).powf(c),

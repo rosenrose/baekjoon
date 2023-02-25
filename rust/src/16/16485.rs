@@ -7,6 +7,6 @@ fn main() {
     println!("{}", c / b);
 }
 
-fn parse_float_vec(buf: &String) -> Vec<f32> {
+fn parse_float_vec(buf: &String) -> Vec<f64> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

@@ -6,9 +6,9 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let mut credit_sum = 0.0;
-    let sum: f32 = (0..20)
+    let sum: f64 = (0..20)
         .filter_map(|_| {
-            let (_, credit, grade) = (input(), input().parse::<f32>().unwrap(), input());
+            let (_, credit, grade) = (input(), input().parse::<f64>().unwrap(), input());
 
             (grade != "P").then(|| {
                 credit_sum += credit;

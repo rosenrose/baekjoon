@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, k) = (input(), input() as f32);
+    let (n, k) = (input(), input() as f64);
     let mut students = [[0, 0]; 6];
 
     for (gender, grade) in (0..n).map(|_| (input(), input() - 1)) {
@@ -14,7 +14,7 @@ fn main() {
 
     let count: i32 = students
         .iter()
-        .map(|&[f, m]| (f as f32 / k).ceil() as i32 + (m as f32 / k).ceil() as i32)
+        .map(|&[f, m]| (f as f64 / k).ceil() as i32 + (m as f64 / k).ceil() as i32)
         .sum();
 
     println!("{count}");
