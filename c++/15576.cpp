@@ -19,13 +19,13 @@ int main()
     vector<cpx> f, g;
 
     cin >> str;
-    for (int i = (int)str.size() - 1; i >= 0; i--) {
-        f.push_back(cpx(str[i] - '0', 0));
+    for (auto i = str.rbegin(); i != str.rend(); i++) {
+        f.push_back(cpx(*i - '0', 0));
     }
 
     cin >> str;
-    for (int i = (int)str.size() - 1; i >= 0; i--) {
-        g.push_back(cpx(str[i] - '0', 0));
+    for (auto i = str.rbegin(); i != str.rend(); i++) {
+        g.push_back(cpx(*i - '0', 0));
     }
 
     vector<int> result = multiply(f, g);
@@ -36,8 +36,8 @@ int main()
 }
 
 void print(vector<int>& arr) {
-    for (int i = (int)arr.size() - 1; i >= 0; i--) {
-        cout << arr[i];
+    for (auto i = arr.rbegin(); i != arr.rend(); i++) {
+        cout << *i;
     }
 }
 
@@ -45,7 +45,7 @@ void fast_fourier_transform(vector<cpx>& v, bool is_inverse) {
     size_t len = v.size();
 
     for (size_t i = 1, j = 0; i < len; i++) {
-        size_t bit = len / 2;
+        auto bit = len / 2;
 
         while (j >= bit) {
             j -= bit;
@@ -59,14 +59,14 @@ void fast_fourier_transform(vector<cpx>& v, bool is_inverse) {
         }
     }
 
-    for (size_t k = 1; k < len; k *= 2) {
+    for (auto k = 1; k < len; k *= 2) {
         double angle = is_inverse ? PI / k : -PI / k;
         cpx direction(cos(angle), sin(angle));
 
-        for (size_t i = 0; i < len; i += k * 2) {
+        for (auto i = 0; i < len; i += k * 2) {
             cpx unit(1, 0);
 
-            for (size_t j = 0; j < k; j++) {
+            for (auto j = 0; j < k; j++) {
                 cpx even = v[i + j];
                 cpx odd = v[i + j + k] * unit;
 
@@ -79,8 +79,8 @@ void fast_fourier_transform(vector<cpx>& v, bool is_inverse) {
     }
 
     if (is_inverse) {
-        for (size_t i = 0; i < len; i++) {
-            v[i] /= cpx((double)len, 0);
+        for (auto& i : v) {
+            i /= cpx((double)len, 0);
         }
     }
 }
@@ -90,7 +90,7 @@ vector<int> flatten(vector<cpx>& v) {
     vector<int> result(len);
     int carry = 0;
 
-    for (size_t i = 0; i < len; i++) {
+    for (auto i = 0; i < len; i++) {
         result[i] = carry + (int)round(v[i].real());
 
         carry = result[i] / 10;
@@ -126,7 +126,7 @@ vector<int> multiply(vector<cpx>& f, vector<cpx>& g) {
 
     vector<cpx> w(len);
 
-    for (size_t i = 0; i < w.size(); i++) {
+    for (auto i = 0; i < w.size(); i++) {
         w[i] = f[i] * g[i];
     }
 
