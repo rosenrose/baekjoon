@@ -1,9 +1,8 @@
 use std::io::{self, Read};
 
 fn main() {
-    let mut stdin = io::stdin().lock();
     let mut buf = Vec::new();
-    stdin.read_to_end(&mut buf).unwrap();
+    io::stdin().read_to_end(&mut buf).unwrap();
 
     let sum: i64 = buf
         .split(|&byte| byte == '\n' as u8)

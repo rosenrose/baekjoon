@@ -6,7 +6,6 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (nodes, edges) = (input(), input());
-
     let adjacency_list = (0..edges).fold(vec![Vec::new(); nodes + 1], |mut acc, _| {
         let (u, v) = (input(), input());
         acc[u].push(v);

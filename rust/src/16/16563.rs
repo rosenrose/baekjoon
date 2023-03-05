@@ -8,7 +8,6 @@ fn main() {
 
     let min_factors = get_min_factors(5_000_000);
     // println!("{min_factors:?}");
-
     for mut num in input.skip(1) {
         while num > 1 {
             let min_factor = min_factors[num as usize];
