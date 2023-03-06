@@ -1,6 +1,6 @@
 $Folders = ls $PSScriptRoot/src -Directory
 
-for ($i = 0; $i -lt $Folders.Length; $i++) {
+foreach ($i in 0..($Folders.Length-1)) {
   $Files = ls $Folders[$i].FullName
 
   foreach ($File in $Files) {

@@ -6,8 +6,8 @@ fn main() {
     let mut input = buf.lines().flat_map(str::parse::<i128>);
 
     for _ in 0..3 {
-        let n = input.next().unwrap();
-        let sum: i128 = (0..n).map(|_| input.next().unwrap()).sum();
+        let n = input.next().unwrap() as usize;
+        let sum: i128 = input.by_ref().take(n).sum();
 
         println!(
             "{}",
