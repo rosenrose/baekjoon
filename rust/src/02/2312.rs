@@ -38,7 +38,7 @@ fn main() {
 }
 
 fn is_prime(num: i32) -> bool {
-    if num == 1 {
+    if num <= 1 {
         return false;
     }
 
