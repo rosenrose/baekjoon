@@ -29,7 +29,7 @@ fn main() {
                         arr.pop_front()
                     };
 
-                    if removed.is_none() {
+                    if removed == None {
                         writeln!(output, "error").unwrap();
                         continue 'outer;
                     }
