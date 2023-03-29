@@ -6,7 +6,7 @@ fn main() {
 
     let max_prize = (0..input.next().unwrap())
         .map(|_| {
-            let nums: Vec<_> = (0..4).map(|_| input.next().unwrap()).collect();
+            let nums: Vec<_> = input.by_ref().take(4).collect();
             let counts: Vec<_> = nums
                 .iter()
                 .map(|num| {

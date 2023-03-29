@@ -7,12 +7,11 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let n = input.next().unwrap();
-    let nums1: HashSet<_> = (0..n).map(|_| input.next().unwrap()).collect();
-    let nums2 = input.skip(1);
+    let n = input.next().unwrap() as usize;
+    let nums: HashSet<_> = input.by_ref().take(n).collect();
 
-    for num in nums2 {
-        writeln!(output, "{}", if nums1.contains(&num) { 1 } else { 0 }).unwrap();
+    for num in input.skip(1) {
+        writeln!(output, "{}", if nums.contains(&num) { 1 } else { 0 }).unwrap();
     }
 
     print!("{output}");

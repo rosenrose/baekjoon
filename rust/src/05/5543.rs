@@ -4,10 +4,8 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().flat_map(str::parse::<i32>);
 
-    let burgers: Vec<_> = (0..3).map(|_| input.next().unwrap()).collect();
-    let drinks = (0..2).map(|_| input.next().unwrap());
-
-    let prices = drinks.flat_map(|drink| burgers.iter().map(move |burger| burger + drink));
+    let burgers: Vec<_> = input.by_ref().take(3).collect();
+    let prices = input.flat_map(|drink| burgers.iter().map(move |burger| burger + drink));
 
     println!("{}", prices.min().unwrap() - 50);
 }

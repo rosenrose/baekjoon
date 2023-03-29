@@ -7,8 +7,11 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut output = String::new();
 
-    let (n, _) = (input.next().unwrap().parse::<i32>().unwrap(), input.next());
-    let mut memo: HashSet<_> = (0..n).map(|_| input.next().unwrap()).collect();
+    let (n, _) = (
+        input.next().unwrap().parse::<usize>().unwrap(),
+        input.next(),
+    );
+    let mut memo: HashSet<_> = input.by_ref().take(n).collect();
 
     for blog in input {
         for keyword in blog.split(',') {

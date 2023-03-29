@@ -5,6 +5,6 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     for _ in 0..input.next().unwrap() {
-        println!("{}", (0..3).map(|_| input.next().unwrap()).min().unwrap());
+        println!("{}", input.by_ref().take(3).min().unwrap());
     }
 }

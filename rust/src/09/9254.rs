@@ -148,12 +148,8 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<f64>);
 
-    let n = input.next().unwrap() as i32;
-    let mut a = Matrix(
-        (0..n)
-            .map(|_| (0..n).map(|_| input.next().unwrap()).collect())
-            .collect(),
-    );
+    let n = input.next().unwrap() as usize;
+    let mut a = Matrix((0..n).map(|_| input.by_ref().take(n).collect()).collect());
 
     if let Some(inv) = a.inverse() {
         print!("{inv}");

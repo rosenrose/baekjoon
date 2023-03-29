@@ -3,11 +3,11 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut output = String::new();
 
     while let Some(k @ 7..) = input.next() {
-        let nums: Vec<_> = (0..k).map(|_| input.next().unwrap()).collect();
+        let nums: Vec<_> = input.by_ref().take(k).collect();
 
         combination(&nums, 6, 0, &mut Vec::new(), &mut output);
 
@@ -18,10 +18,10 @@ fn main() {
 }
 
 fn combination(
-    nums: &Vec<i32>,
+    nums: &Vec<usize>,
     m: i32,
     start: usize,
-    selected: &mut Vec<i32>,
+    selected: &mut Vec<usize>,
     output: &mut String,
 ) {
     if m == 0 {

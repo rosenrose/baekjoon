@@ -6,7 +6,7 @@ fn main() {
 
     let (number, score) = (1..=5)
         .map(|i| {
-            let sum: i32 = (0..4).map(|_| input.next().unwrap()).sum();
+            let sum: i32 = input.by_ref().take(4).sum();
             (i, sum)
         })
         .max_by_key(|&(_, score)| score)

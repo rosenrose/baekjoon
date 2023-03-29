@@ -4,8 +4,8 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let team1: Vec<_> = (0..9).map(|_| input.next().unwrap()).collect();
-    let team2: Vec<_> = (0..9).map(|_| input.next().unwrap()).collect();
+    let team1: Vec<_> = input.by_ref().take(9).collect();
+    let team2: Vec<_> = input.by_ref().take(9).collect();
 
     let mut was_winning = false;
     let (mut score1, mut score2) = (0, 0);

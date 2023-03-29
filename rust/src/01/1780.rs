@@ -5,9 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
-    let paper: Vec<_> = (0..n)
-        .map(|_| (0..n).map(|_| input.next().unwrap()).collect())
-        .collect();
+    let paper: Vec<_> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
 
     let (mut minus, mut zero, mut plus) = (0, 0, 0);
 
