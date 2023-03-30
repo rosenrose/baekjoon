@@ -37,9 +37,5 @@ fn get_paren_value(s: &str) -> Option<i64> {
         }
     }
 
-    if validation.is_empty() {
-        Some(paren_value)
-    } else {
-        None
-    }
+    validation.is_empty().then_some(paren_value)
 }
