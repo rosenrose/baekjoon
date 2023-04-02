@@ -22,13 +22,7 @@ fn main() {
         })
         .collect();
 
-    nums.sort_by(|a, b| {
-        if a.len() == b.len() {
-            a.cmp(b)
-        } else {
-            a.len().cmp(&b.len())
-        }
-    });
+    nums.sort_by(|a, b| (a.len(), a).cmp(&(b.len(), b)));
 
     for num in nums {
         println!("{num}");

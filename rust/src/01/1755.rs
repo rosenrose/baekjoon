@@ -3,7 +3,7 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let [m, n] = parse_int_vec(&buf)[..] else { return };
-    let mut nums: Vec<_> = (m..=n)
+    let mut num_engs: Vec<_> = (m..=n)
         .map(|num| {
             let eng: String = num
                 .to_string()
@@ -27,9 +27,9 @@ fn main() {
         })
         .collect();
 
-    nums.sort_by(|(_, eng1), (_, eng2)| eng1.cmp(eng2));
+    num_engs.sort_by(|(_, eng1), (_, eng2)| eng1.cmp(eng2));
 
-    for chunk in nums.chunks(10) {
+    for chunk in num_engs.chunks(10) {
         for (num, _) in chunk {
             print!("{num} ");
         }

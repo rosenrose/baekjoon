@@ -10,19 +10,13 @@ fn main() {
     let mut members: Vec<_> = (0..parse_int(input()))
         .map(|order| {
             let (age, name) = (parse_int(input()), input());
-            (age, name, order)
+            (age, order, name)
         })
         .collect();
 
-    members.sort_unstable_by(|(age1, _, order1), (age2, _, order2)| {
-        if age1 == age2 {
-            order1.cmp(order2)
-        } else {
-            age1.cmp(age2)
-        }
-    });
+    members.sort_unstable();
 
-    for (age, name, _) in members {
+    for (age, _, name) in members {
         writeln!(output, "{age} {name}").unwrap();
     }
 

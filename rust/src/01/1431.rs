@@ -11,17 +11,11 @@ fn main() {
     };
 
     numbers.sort_by(|a, b| {
-        if a.len() == b.len() {
+        a.len().cmp(&b.len()).then_with(|| {
             let (a_sum, b_sum) = (digit_sum(a), digit_sum(b));
 
-            if a_sum == b_sum {
-                a.cmp(b)
-            } else {
-                a_sum.cmp(&b_sum)
-            }
-        } else {
-            a.len().cmp(&b.len())
-        }
+            (a_sum, a).cmp(&(b_sum, b))
+        })
     });
 
     println!("{}", numbers.join("\n"));

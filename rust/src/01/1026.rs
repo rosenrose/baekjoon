@@ -9,7 +9,7 @@ fn main() {
     let mut b: Vec<_> = input.by_ref().take(n).collect();
 
     a.sort();
-    b.sort_by(|x, y| y.cmp(x));
+    b.sort_by(|x, y| x.cmp(y).reverse());
 
     let product_sum: usize = a.iter().zip(b).map(|(a, b)| a * b).sum();
 

@@ -17,7 +17,7 @@ fn main() {
         return;
     }
 
-    n.sort_by(|a, b| b.cmp(a));
+    n.sort_by(|a, b| a.cmp(b).reverse());
 
     println!("{}", String::from_iter(n));
 }

@@ -5,10 +5,9 @@ fn main() {
     let input = buf.split_ascii_whitespace();
 
     let mut nums: Vec<_> = input.skip(1).collect();
-
     nums.sort_by(|&a, &b| {
         if a.len() == b.len() {
-            b.cmp(&a)
+            a.cmp(b).reverse()
         } else {
             [b, a].concat().cmp(&[a, b].concat())
         }
