@@ -7,15 +7,15 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: i64 = buf.trim().parse().unwrap();
-    let mut cache = HashMap::new();
+    let mut memo = HashMap::new();
 
     println!(
         "{}",
-        ((fibo_rem(n, &mut cache) % M) * (fibo_rem(n + 1, &mut cache) % M)) % M
+        ((fibo_rem(n, &mut memo) % M) * (fibo_rem(n + 1, &mut memo) % M)) % M
     );
 }
 
-fn fibo_rem(n: i64, cache: &mut HashMap<i64, i64>) -> i64 {
+fn fibo_rem(n: i64, memo: &mut HashMap<i64, i64>) -> i64 {
     if n <= 1 {
         return n;
     }
@@ -27,11 +27,11 @@ fn fibo_rem(n: i64, cache: &mut HashMap<i64, i64>) -> i64 {
     let j = if n % 2 == 0 { i } else { i + 1 };
 
     let mut get_or_insert = |n: i64| {
-        if let Some(num) = cache.get(&n) {
+        if let Some(num) = memo.get(&n) {
             *num
         } else {
-            let ret = fibo_rem(n, cache);
-            cache.insert(n, ret);
+            let ret = fibo_rem(n, memo);
+            memo.insert(n, ret);
 
             ret
         }

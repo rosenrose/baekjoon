@@ -31,10 +31,10 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.lines().flat_map(str::parse::<usize>);
 
-    let mut cache = vec![BigInt(vec![1])];
+    let mut memo = vec![BigInt(vec![1])];
 
     for i in 1..=9999 {
-        let mut factorial = cache.last().unwrap().mul(i);
+        let mut factorial = memo.last().unwrap().mul(i);
 
         while factorial.0[0] == 0 {
             factorial.0.remove(0);
@@ -42,11 +42,11 @@ fn main() {
 
         let next = factorial.0.into_iter().take(2).collect();
 
-        cache.push(BigInt(next));
+        memo.push(BigInt(next));
     }
 
     for n in input {
-        let non_zero = cache[n].0[0]
+        let non_zero = memo[n].0[0]
             .to_string()
             .chars()
             .rev()

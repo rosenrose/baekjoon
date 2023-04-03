@@ -7,30 +7,30 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let mut cache = HashMap::new();
+    let mut memo = HashMap::new();
 
     while let (Some(a), Some(b), Some(c)) = (input.next(), input.next(), input.next()) {
         if (a, b, c) == (-1, -1, -1) {
             break;
         }
 
-        writeln!(output, "w({a}, {b}, {c}) = {}", w(a, b, c, &mut cache)).unwrap();
+        writeln!(output, "w({a}, {b}, {c}) = {}", w(a, b, c, &mut memo)).unwrap();
     }
 
     print!("{output}");
 }
 
-fn w(a: i32, b: i32, c: i32, cache: &mut HashMap<(i32, i32, i32), i32>) -> i32 {
+fn w(a: i32, b: i32, c: i32, memo: &mut HashMap<(i32, i32, i32), i32>) -> i32 {
     if a <= 0 || b <= 0 || c <= 0 {
         return 1;
     }
 
     let mut get_or_insert = |a: i32, b: i32, c: i32| {
-        if let Some(i) = cache.get(&(a, b, c)) {
+        if let Some(i) = memo.get(&(a, b, c)) {
             *i
         } else {
-            let ret = w(a, b, c, cache);
-            cache.insert((a, b, c), ret);
+            let ret = w(a, b, c, memo);
+            memo.insert((a, b, c), ret);
 
             ret
         }

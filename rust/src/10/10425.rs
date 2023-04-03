@@ -23,24 +23,24 @@ fn main() {
     let mut output = String::new();
 
     const M: i64 = 1_000_000_009;
-    let mut cache = vec![(0, 0); 100_000 + 1];
-    cache[1] = (1, 1);
+    let mut memo = vec![(0, 0); 100_000 + 1];
+    memo[1] = (1, 1);
 
-    for i in 2..cache.len() {
-        cache[i] = (i, (cache[i - 2].1 + cache[i - 1].1) % M);
+    for i in 2..memo.len() {
+        memo[i] = (i, (memo[i - 2].1 + memo[i - 1].1) % M);
     }
-    // println!("{cache:?}");
-    cache.sort_unstable_by_key(|&(_, rem)| rem);
+    // println!("{memo:?}");
+    memo.sort_unstable_by_key(|&(_, rem)| rem);
 
     for fibo_rem in input.skip(1).map(|s| BigInt::rem(s, M)) {
         let n = if fibo_rem == 1 {
             2
         } else {
-            let i = cache
+            let i = memo
                 .binary_search_by_key(&fibo_rem, |&(_, rem)| rem)
                 .unwrap();
 
-            cache[i].0
+            memo[i].0
         };
 
         writeln!(output, "{n}").unwrap();

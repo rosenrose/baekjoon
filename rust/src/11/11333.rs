@@ -5,19 +5,19 @@ fn main() {
     let input = buf.lines().flat_map(str::parse::<usize>);
 
     const M: i64 = 1_000_000_007;
-    let mut cache = [0; 3334];
-    (cache[0], cache[1], cache[2]) = (1, 3, 13);
+    let mut memo = [0; 3334];
+    (memo[0], memo[1], memo[2]) = (1, 3, 13);
 
     for i in 3..=3333 {
-        cache[i] = ((5 * cache[i - 1]) % M - (3 * cache[i - 2]) % M + cache[i - 3] + M) % M;
+        memo[i] = ((5 * memo[i - 1]) % M - (3 * memo[i - 2]) % M + memo[i - 3] + M) % M;
     }
-    // println!("{cache:?}");
+    // println!("{memo:?}");
     for n in input.skip(1) {
         if n % 3 != 0 {
             println!("0");
             continue;
         }
 
-        println!("{}", cache[n / 3]);
+        println!("{}", memo[n / 3]);
     }
 }

@@ -4,12 +4,12 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.lines().flat_map(str::parse::<i64>);
 
-    let mut cache = [0; 100];
+    let mut memo = [0; 100];
     let coins = [25, 10, 1];
 
     for i in 1..100 {
         if i > 25 {
-            cache[i] = (cache[i - 10] + cache[10]).min(cache[i - 25] + cache[25]);
+            memo[i] = (memo[i - 10] + memo[10]).min(memo[i - 25] + memo[25]);
             continue;
         }
 
@@ -24,14 +24,14 @@ fn main() {
             price -= coin * (price / coin);
         }
 
-        cache[i] = count;
+        memo[i] = count;
     }
 
     for mut price in input.skip(1) {
         let mut count = 0;
 
         while price > 0 {
-            count += cache[(price % 100) as usize];
+            count += memo[(price % 100) as usize];
             price /= 100;
         }
 

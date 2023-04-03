@@ -45,16 +45,16 @@ fn parse_int_vec(buf: &String) -> Vec<i32> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }
 
-// fn combination_rem(n: i32, r: i32, cache: &mut HashMap<(i32, i32), i32>) -> i32 {
+// fn combination_rem(n: i32, r: i32, memo: &mut HashMap<(i32, i32), i32>) -> i32 {
 //     if n == r || r == 0 {
 //         return 1;
 //     }
 
-//     let mut get_or_insert = |n: i32, r: i32| match cache.get(&(n, r)) {
+//     let mut get_or_insert = |n: i32, r: i32| match memo.get(&(n, r)) {
 //         Some(i) => *i,
 //         None => {
-//             let ret = combination_rem(n, r, cache);
-//             cache.insert((n, r), ret);
+//             let ret = combination_rem(n, r, memo);
+//             memo.insert((n, r), ret);
 
 //             ret
 //         }

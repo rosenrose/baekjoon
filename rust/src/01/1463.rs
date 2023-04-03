@@ -5,33 +5,33 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: i32 = buf.trim().parse().unwrap();
-    let mut cache = HashMap::from([(1, 0), (2, 1), (3, 1)]);
+    let mut memo = HashMap::from([(1, 0), (2, 1), (3, 1)]);
 
-    println!("{}", make_1_count(n, &mut cache));
+    println!("{}", make_1_count(n, &mut memo));
 }
 
-fn make_1_count(n: i32, cache: &mut HashMap<i32, i32>) -> i32 {
-    if let Some(count) = cache.get(&n) {
+fn make_1_count(n: i32, memo: &mut HashMap<i32, i32>) -> i32 {
+    if let Some(count) = memo.get(&n) {
         return *count;
     }
 
     let mut list = Vec::new();
 
     if n % 3 == 0 {
-        list.push(make_1_count(n / 3, cache) + 1);
+        list.push(make_1_count(n / 3, memo) + 1);
     }
     if n % 2 == 0 {
-        list.push(make_1_count(n / 2, cache) + 1);
+        list.push(make_1_count(n / 2, memo) + 1);
     }
     if (n - 1) % 3 == 0 || (n - 1) % 2 == 0 {
-        list.push(make_1_count(n - 1, cache) + 1);
+        list.push(make_1_count(n - 1, memo) + 1);
     }
     if (n - 2) % 3 == 0 {
-        list.push(make_1_count(n - 2, cache) + 2);
+        list.push(make_1_count(n - 2, memo) + 2);
     }
     // println!("{n} {list:?}");
     let count = *list.iter().min().unwrap();
-    cache.insert(n, count);
+    memo.insert(n, count);
 
     count
 }

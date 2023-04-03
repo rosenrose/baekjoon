@@ -5,13 +5,13 @@ fn main() {
     let n: usize = buf.trim().parse().unwrap();
     const M: i32 = 9901;
 
-    let mut cache = vec![0; n + 1];
-    (cache[0], cache[1]) = (1, 3);
+    let mut memo = vec![0; n + 1];
+    (memo[0], memo[1]) = (1, 3);
 
     for i in 2..=n {
-        // 2 * cache[i - 1] + cache[i - 2];
-        cache[i] = ((2 * cache[i - 1]) % M + cache[i - 2] % M) % M;
+        // 2 * memo[i - 1] + memo[i - 2];
+        memo[i] = ((2 * memo[i - 1]) % M + memo[i - 2] % M) % M;
     }
 
-    println!("{}", cache[n]);
+    println!("{}", memo[n]);
 }

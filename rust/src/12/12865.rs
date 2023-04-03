@@ -6,31 +6,31 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, k) = (input(), input() as usize);
-    let mut cache = vec![0; k + 1];
+    let mut memo = vec![0; k + 1];
 
     for i in 0..n {
         let (w, v) = (input() as usize, input());
 
         if i == 0 {
             for j in w..=k {
-                cache[j] = v;
+                memo[j] = v;
             }
 
             continue;
         }
 
-        cache = cache
+        memo = memo
             .iter()
             .enumerate()
             .map(|(j, &max_val)| {
                 if j < w {
                     max_val
                 } else {
-                    max_val.max(v + cache[j - w])
+                    max_val.max(v + memo[j - w])
                 }
             })
             .collect();
     }
 
-    println!("{}", cache[k]);
+    println!("{}", memo[k]);
 }

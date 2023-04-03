@@ -84,11 +84,11 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().map(BigInt::parse);
 
-    let mut cache = vec![BigInt(vec![1]), BigInt(vec![2])];
+    let mut memo = vec![BigInt(vec![1]), BigInt(vec![2])];
 
-    while cache.last().unwrap().to_string().len() <= 100 {
-        let len = cache.len();
-        cache.push(&cache[len - 2] + &cache[len - 1]);
+    while memo.last().unwrap().to_string().len() <= 100 {
+        let len = memo.len();
+        memo.push(&memo[len - 2] + &memo[len - 1]);
     }
 
     while let (Some(a), Some(b)) = (input.next(), input.next()) {
@@ -96,8 +96,8 @@ fn main() {
             return;
         }
 
-        let start = cache.iter().position(|num| num >= &a).unwrap();
-        let end = cache.iter().rposition(|num| num <= &b).unwrap();
+        let start = memo.iter().position(|num| num >= &a).unwrap();
+        let end = memo.iter().rposition(|num| num <= &b).unwrap();
 
         println!("{}", end as i32 - start as i32 + 1);
     }

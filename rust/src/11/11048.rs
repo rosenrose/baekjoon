@@ -6,7 +6,7 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, m) = (input(), input());
-    let mut cache = vec![0; m];
+    let mut memo = vec![0; m];
 
     for _ in 0..n {
         let mut next = vec![0; m];
@@ -14,12 +14,12 @@ fn main() {
         for c in 0..m {
             next[c] = input()
                 + next[c.saturating_sub(1)]
-                    .max(cache[c])
-                    .max(cache[c.saturating_sub(1)]);
+                    .max(memo[c])
+                    .max(memo[c.saturating_sub(1)]);
         }
 
-        cache = next;
+        memo = next;
     }
 
-    println!("{}", cache[m - 1]);
+    println!("{}", memo[m - 1]);
 }
