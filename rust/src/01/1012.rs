@@ -7,7 +7,7 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     for _ in 0..input() {
-        let (_, _, k) = (input(), input(), input());
+        let (m, n, k) = (input(), input(), input());
         let plant_coords: HashSet<_> = (0..k).map(|_| (input(), input())).collect();
 
         let mut visited = HashSet::new();
@@ -21,23 +21,20 @@ fn main() {
             let mut stack = vec![coord];
 
             while let Some((x, y)) = stack.pop() {
-                let adjacent = [
+                let adjacents = [
                     (x.saturating_sub(1), y),
                     (x, y.saturating_sub(1)),
-                    (x + 1, y),
-                    (x, y + 1),
+                    ((x + 1).min(m - 1), y),
+                    (x, (y + 1).min(n - 1)),
                 ];
-                let adjacent = adjacent
-                    .iter()
-                    .filter(|&coord| plant_coords.contains(coord));
 
-                for &ad in adjacent {
-                    if visited.contains(&ad) {
+                for &adj in adjacents.iter().filter(|adj| plant_coords.contains(adj)) {
+                    if visited.contains(&adj) {
                         continue;
                     }
 
-                    stack.push(ad);
-                    visited.insert(ad);
+                    stack.push(adj);
+                    visited.insert(adj);
                 }
             }
 
