@@ -5,7 +5,7 @@ fn main() {
     let mut longest_len = 0;
 
     let words: Vec<_> = buf
-        .split(|c| !matches!(c, 'a'..='z' | 'A'..='Z' | '-'))
+        .split(|ch| !matches!(ch, 'a'..='z' | 'A'..='Z' | '-'))
         .filter(|s| {
             longest_len = s.len().max(longest_len);
             !s.is_empty()

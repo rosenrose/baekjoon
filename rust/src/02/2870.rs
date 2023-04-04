@@ -7,17 +7,15 @@ fn main() {
         .skip(1)
         .flat_map(|input| {
             input.split(char::is_alphabetic).filter_map(|s| {
-                if s.is_empty() {
-                    return None;
-                }
+                (!s.is_empty()).then(|| {
+                    let mut s = s.to_owned();
 
-                let mut s = s.to_owned();
+                    while s.len() > 1 && s.chars().nth(0) == Some('0') {
+                        s.remove(0);
+                    }
 
-                while s.len() > 1 && s.chars().nth(0) == Some('0') {
-                    s.remove(0);
-                }
-
-                Some(s)
+                    s
+                })
             })
         })
         .collect();

@@ -25,7 +25,7 @@ fn is_acceptable(pwd: &str) -> bool {
     if pwd.split(VOWELS).any(|s| s.len() >= 3) {
         return false;
     }
-    if pwd.split(|c| !VOWELS.contains(&c)).any(|s| s.len() >= 3) {
+    if pwd.split(|ch| !VOWELS.contains(&ch)).any(|s| s.len() >= 3) {
         return false;
     }
 

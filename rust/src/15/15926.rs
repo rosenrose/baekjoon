@@ -8,19 +8,19 @@ fn main() {
     let mut max_len = 0;
 
     for (i, ch) in input.char_indices() {
-        let idx = i as i32;
+        let i = i as i32;
 
         match ch {
-            '(' => stack.push(idx),
+            '(' => stack.push(i),
             ')' => {
                 stack.pop();
 
                 if stack.is_empty() {
-                    stack.push(idx);
+                    stack.push(i);
                     continue;
                 }
 
-                max_len = max_len.max(idx - stack.last().unwrap());
+                max_len = max_len.max(i - stack.last().unwrap());
             }
             _ => (),
         }
