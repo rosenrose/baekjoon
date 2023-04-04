@@ -230,7 +230,7 @@ impl fmt::Display for BigFloat {
             write!(f, "{num}").unwrap();
         });
 
-        write!(f, "")
+        Ok(())
     }
 }
 

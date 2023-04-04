@@ -68,7 +68,7 @@ impl fmt::Display for MixedFraction {
             write!(f, "{}/{}", self.numerator, self.denominator).unwrap();
         }
 
-        write!(f, "")
+        Ok(())
     }
 }
 

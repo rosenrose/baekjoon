@@ -46,7 +46,7 @@ impl fmt::Display for Matrix {
             writeln!(f, "").unwrap();
         }
 
-        write!(f, "")
+        Ok(())
     }
 }
 

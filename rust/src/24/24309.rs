@@ -89,7 +89,7 @@ impl fmt::Display for BigInt {
             write!(f, "{num}").unwrap();
         });
 
-        write!(f, "")
+        Ok(())
     }
 }
 

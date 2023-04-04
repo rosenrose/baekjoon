@@ -163,7 +163,7 @@ impl fmt::Display for BigInt {
             }
         });
 
-        write!(f, "")
+        Ok(())
     }
 }
 

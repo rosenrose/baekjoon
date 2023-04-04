@@ -186,7 +186,7 @@ impl fmt::Display for BigFloat {
             }
         });
 
-        write!(f, "")
+        Ok(())
     }
 }
 
