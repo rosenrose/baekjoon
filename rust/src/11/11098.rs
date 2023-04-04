@@ -5,9 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut input = || input.next().unwrap();
 
-    let n = parse_int(input());
-
-    for _ in 0..n {
+    for _ in 0..parse_int(input()) {
         let p = parse_int(input());
         let (_, vip) = (0..p)
             .map(|_| (parse_int(input()), input()))

@@ -6,12 +6,7 @@ fn main() {
     let mut input = buf.lines();
     let mut output = String::new();
 
-    while let Some(pages) = input.next() {
-        if pages == "0" {
-            break;
-        }
-
-        let pages = parse_int(pages);
+    while let pages @ 1.. = parse_int(input.next().unwrap()) {
         let mut is_print = vec![false; pages + 1];
 
         for range in input.next().unwrap().split(',') {

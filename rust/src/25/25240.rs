@@ -8,9 +8,10 @@ fn main() {
     let mut output = String::new();
 
     let (u, f) = input.next().unwrap().split_once(' ').unwrap();
+    let (u, f) = (parse_int(u), parse_int(f));
     let mut group_infos = HashMap::new();
 
-    for _ in 0..parse_int(u) {
+    for _ in 0..u {
         let user_info = input.next().unwrap();
         let (user, groups) = if let Some((user, groups)) = user_info.split_once(' ') {
             let mut g = vec![user];
@@ -33,7 +34,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut file_infos = HashMap::new();
 
-    for _ in 0..parse_int(f) {
+    for _ in 0..f {
         let (file, perm, owner, group) = (input(), input(), input(), input());
         let perm: Vec<_> = perm.chars().map(|ch| ch as u8 - '0' as u8).collect();
 

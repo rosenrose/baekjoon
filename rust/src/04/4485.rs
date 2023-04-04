@@ -7,11 +7,9 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     for i in 1.. {
-        let n = input.next().unwrap() as usize;
-
-        if n == 0 {
-            break;
-        }
+        let n @ 1.. = input.next().unwrap() as usize else {
+            return;
+        };
 
         let cave: Vec<Vec<_>> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
         let distances = dijkstra(&cave, (0, 0));
