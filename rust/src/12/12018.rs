@@ -11,7 +11,7 @@ fn main() {
             let (p, max_people) = (input() as usize, input() as usize);
 
             let mut mileages: Vec<_> = (0..p).map(|_| input()).collect();
-            mileages.sort_by(|a, b| a.cmp(b).reverse());
+            mileages.sort_by_key(|&m| std::cmp::Reverse(m));
 
             let top = &mileages[..max_people.min(p)];
 

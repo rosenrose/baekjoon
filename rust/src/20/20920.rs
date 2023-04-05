@@ -21,7 +21,10 @@ fn main() {
 
     let mut word_counts = Vec::from_iter(word_counts);
     word_counts.sort_unstable_by(|(a_word, a_count), (b_word, b_count)| {
-        (b_count, b_word.len(), a_word).cmp(&(a_count, a_word.len(), b_word))
+        b_count
+            .cmp(a_count)
+            .then_with(|| b_word.len().cmp(&a_word.len()))
+            .then_with(|| a_word.cmp(b_word))
     });
 
     for (word, _) in word_counts {

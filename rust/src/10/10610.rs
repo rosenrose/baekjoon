@@ -17,7 +17,7 @@ fn main() {
         return;
     }
 
-    n.sort_by(|a, b| a.cmp(b).reverse());
+    n.sort_by_key(|&ch| std::cmp::Reverse(ch));
 
     println!("{}", String::from_iter(n));
 }

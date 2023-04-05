@@ -7,5 +7,9 @@ fn main() {
     let (_, k) = (input.next(), input.next().unwrap());
     let mut arr: Vec<_> = input.collect();
 
-    println!("{}", arr.select_nth_unstable_by(k - 1, |a, b| b.cmp(a)).1);
+    println!(
+        "{}",
+        arr.select_nth_unstable_by_key(k - 1, |&x| std::cmp::Reverse(x))
+            .1
+    );
 }

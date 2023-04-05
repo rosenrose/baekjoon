@@ -22,7 +22,7 @@ fn prev_permutation(mut nums: Vec<i32>) -> Option<Vec<i32>> {
     let j = (i..len).rfind(|&j| nums[j] < nums[i - 1]).unwrap();
 
     nums.swap(i - 1, j);
-    (&mut nums[i..]).sort_by(|a, b| a.cmp(b).reverse());
+    (&mut nums[i..]).sort_by_key(|&num| std::cmp::Reverse(num));
 
     Some(nums)
 }
