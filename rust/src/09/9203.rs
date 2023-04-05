@@ -9,38 +9,32 @@ fn main() {
 
     for _ in 0..parse_int(input()) {
         let (bookings, clean_time) = (parse_int(input()), parse_int(input()));
-        let mut booking_infos: Vec<_> = (0..bookings)
-            .map(|_| {
+        let mut booking_times: Vec<_> = (0..bookings)
+            .flat_map(|_| {
                 let (_, enter_time, leave_time) = (
                     input(),
                     parse_time(input(), input()),
                     parse_time(input(), input()),
                 );
 
-                ((enter_time, leave_time + clean_time), 1)
+                [(enter_time, true), (leave_time + clean_time, false)]
             })
             .collect();
-        booking_infos.sort_unstable();
-        // println!("{booking_infos:?}");
-        let mut max_overlap = 1;
+        booking_times.sort_unstable();
+        // println!("{booking_times:?}");
+        let (mut count, mut max_count) = (0, 1);
 
-        for i in 0..booking_infos.len() {
-            let ((_, cur_end), _) = booking_infos[i];
-
-            for j in i + 1..booking_infos.len() {
-                let ((next_start, _), _) = booking_infos[j];
-
-                if next_start >= cur_end {
-                    break;
-                }
-
-                booking_infos[j].1 += 1;
+        for (_, is_enter) in booking_times {
+            if is_enter {
+                count += 1;
+            } else {
+                count -= 1;
             }
 
-            max_overlap = booking_infos[i].1.max(max_overlap);
+            max_count = count.max(max_count);
         }
 
-        writeln!(output, "{max_overlap}").unwrap();
+        writeln!(output, "{max_count}").unwrap();
     }
 
     print!("{output}");
