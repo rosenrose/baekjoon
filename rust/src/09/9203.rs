@@ -17,28 +17,27 @@ fn main() {
                     parse_time(input(), input()),
                 );
 
-                (enter_time, leave_time + clean_time)
+                ((enter_time, leave_time + clean_time), 1)
             })
             .collect();
         booking_infos.sort_unstable();
         // println!("{booking_infos:?}");
-        let mut overlaps = vec![1; booking_infos.len()];
         let mut max_overlap = 1;
 
         for i in 0..booking_infos.len() {
-            let cur_end = booking_infos[i].1;
+            let ((_, cur_end), _) = booking_infos[i];
 
             for j in i + 1..booking_infos.len() {
-                let next_start = booking_infos[j].0;
+                let ((next_start, _), _) = booking_infos[j];
 
                 if next_start >= cur_end {
                     break;
                 }
 
-                overlaps[j] += 1;
+                booking_infos[j].1 += 1;
             }
 
-            max_overlap = overlaps[i].max(max_overlap);
+            max_overlap = booking_infos[i].1.max(max_overlap);
         }
 
         writeln!(output, "{max_overlap}").unwrap();
