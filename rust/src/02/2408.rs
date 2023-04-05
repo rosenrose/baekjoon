@@ -236,11 +236,12 @@ impl Div for &BigInt {
 
 impl PartialOrd for BigInt {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        if self.len() == other.len() {
-            Some(self.nums.iter().rev().cmp(other.nums.iter().rev()))
-        } else {
-            Some(self.len().cmp(&other.len()))
-        }
+        Some(
+            self.nums
+                .len()
+                .cmp(&other.nums.len())
+                .then_with(|| self.nums.iter().rev().cmp(other.nums.iter().rev())),
+        )
     }
 }
 

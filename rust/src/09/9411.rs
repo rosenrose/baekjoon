@@ -195,15 +195,11 @@ impl PartialOrd for BigFloat {
             return Some(Ordering::Greater);
         }
 
-        if self.point != other.point {
-            return Some(self.point.cmp(&other.point));
-        }
-
-        Some(
+        Some(self.point.cmp(&other.point).then_with(|| {
             format!("{self}")
                 .replace(['-', '.'], "")
-                .cmp(&format!("{other}").replace(['-', '.'], "")),
-        )
+                .cmp(&format!("{other}").replace(['-', '.'], ""))
+        }))
     }
 }
 

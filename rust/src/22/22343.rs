@@ -6,21 +6,21 @@ struct BigInt(Vec<i32>);
 
 impl Ord for BigInt {
     fn cmp(&self, other: &Self) -> Ordering {
-        if self.0.len() == other.0.len() {
-            self.0.iter().rev().cmp(other.0.iter().rev())
-        } else {
-            self.0.len().cmp(&other.0.len())
-        }
+        self.0
+            .len()
+            .cmp(&other.0.len())
+            .then_with(|| self.0.iter().rev().cmp(other.0.iter().rev()))
     }
 }
 
 impl PartialOrd for BigInt {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        if self.0.len() == other.0.len() {
-            Some(self.0.iter().rev().cmp(other.0.iter().rev()))
-        } else {
-            Some(self.0.len().cmp(&other.0.len()))
-        }
+        Some(
+            self.0
+                .len()
+                .cmp(&other.0.len())
+                .then_with(|| self.0.iter().rev().cmp(other.0.iter().rev())),
+        )
     }
 }
 

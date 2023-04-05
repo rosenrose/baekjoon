@@ -66,11 +66,12 @@ impl SubAssign<&BigInt> for BigInt {
 
 impl PartialOrd for BigInt {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        if self.0.len() == other.0.len() {
-            Some(self.0.iter().rev().cmp(other.0.iter().rev()))
-        } else {
-            Some(self.0.len().cmp(&other.0.len()))
-        }
+        Some(
+            self.0
+                .len()
+                .cmp(&other.0.len())
+                .then_with(|| self.0.iter().rev().cmp(other.0.iter().rev())),
+        )
     }
 }
 
