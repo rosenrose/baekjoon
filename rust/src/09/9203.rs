@@ -20,11 +20,12 @@ fn main() {
                 (enter_time, leave_time + clean_time)
             })
             .collect();
-        booking_infos.sort();
+        booking_infos.sort_unstable();
         // println!("{booking_infos:?}");
         let mut overlaps = vec![1; booking_infos.len()];
+        let mut max_overlap = 1;
 
-        for i in 0..booking_infos.len() - 1 {
+        for i in 0..booking_infos.len() {
             let cur_end = booking_infos[i].1;
 
             for j in i + 1..booking_infos.len() {
@@ -36,9 +37,11 @@ fn main() {
 
                 overlaps[j] += 1;
             }
+
+            max_overlap = overlaps[i].max(max_overlap);
         }
 
-        writeln!(output, "{}", overlaps.iter().max().unwrap()).unwrap();
+        writeln!(output, "{max_overlap}").unwrap();
     }
 
     print!("{output}");
