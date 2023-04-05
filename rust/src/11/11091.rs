@@ -7,12 +7,12 @@ fn main() {
         let letters = input
             .to_lowercase()
             .chars()
-            .fold([false; 26], |mut acc, c| {
-                if !c.is_alphabetic() {
+            .fold([false; 26], |mut acc, ch| {
+                if !ch.is_alphabetic() {
                     return acc;
                 }
 
-                acc[c as usize - 'a' as usize] = true;
+                acc[ch as usize - 'a' as usize] = true;
                 acc
             });
 

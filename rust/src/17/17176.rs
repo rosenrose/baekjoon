@@ -12,14 +12,14 @@ fn main() {
     });
 
     let decrypted_count = input().chars().fold([0; 53], |mut acc, ch| {
-        let ch = match ch {
+        let idx = match ch {
             'A'..='Z' => ch as usize - 'A' as usize + 1,
             'a'..='z' => ch as usize - 'a' as usize + 27,
             ' ' => 0,
             _ => Default::default(),
         };
 
-        acc[ch] += 1;
+        acc[idx] += 1;
         acc
     });
 

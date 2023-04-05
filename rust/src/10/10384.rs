@@ -4,12 +4,12 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
 
     for (i, input) in buf.lines().enumerate().skip(1) {
-        let counts = input.to_lowercase().chars().fold([0; 26], |mut acc, c| {
-            if !c.is_alphabetic() {
+        let counts = input.to_lowercase().chars().fold([0; 26], |mut acc, ch| {
+            if !ch.is_alphabetic() {
                 return acc;
             }
 
-            acc[c as usize - 'a' as usize] += 1;
+            acc[ch as usize - 'a' as usize] += 1;
             acc
         });
 

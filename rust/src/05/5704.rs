@@ -6,12 +6,12 @@ fn main() {
     let mut output = String::new();
 
     for input in buf.lines().take_while(|&input| input != "*") {
-        let letters = input.chars().fold([false; 26], |mut acc, c| {
-            if c == ' ' {
+        let letters = input.chars().fold([false; 26], |mut acc, ch| {
+            if ch == ' ' {
                 return acc;
             }
 
-            acc[c as usize - 'a' as usize] = true;
+            acc[ch as usize - 'a' as usize] = true;
             acc
         });
 
