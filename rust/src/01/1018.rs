@@ -6,36 +6,35 @@ fn main() {
 
     let (n, m) = input.next().unwrap().split_once(' ').unwrap();
     let (n, m) = (parse_int(n), parse_int(m));
-    let board: Vec<_> = input.map(str::as_bytes).collect();
+    let board: Vec<_> = input.collect();
 
     let mut min_paint = 32;
 
-    for i in 0..=n - 8 {
-        for j in 0..=m - 8 {
-            min_paint = get_paint_count(&board, i, j).min(min_paint);
+    for y in 0..=n - 8 {
+        for x in 0..=m - 8 {
+            min_paint = get_paint_count(&board, x, y).min(min_paint);
         }
     }
 
     println!("{min_paint}");
 }
 
-fn get_paint_count(board: &Vec<&[u8]>, i: usize, j: usize) -> i32 {
-    let mut paint_start_from_black = 0;
+fn get_paint_count(board: &Vec<&str>, x: usize, y: usize) -> i32 {
+    let mut paint_start_black = 0;
 
-    for y in 0..8 {
-        for (x, &bw) in board[y + i].iter().skip(j).take(8).enumerate() {
-            match (y % 2, x % 2, bw as char) {
-                (0, 0, 'W') | (0, 1, 'B') | (1, 0, 'B') | (1, 1, 'W') => {
-                    paint_start_from_black += 1
-                }
-                _ => (),
-            };
+    for (i, row) in board[y..y + 8].iter().enumerate() {
+        for (j, ch) in row[x..x + 8].char_indices() {
+            if matches!(
+                (i % 2, j % 2, ch),
+                (0, 0, 'W') | (0, 1, 'B') | (1, 0, 'B') | (1, 1, 'W')
+            ) {
+                paint_start_black += 1
+            }
         }
     }
 
-    let paint_start_from_white = 64 - paint_start_from_black;
-
-    paint_start_from_black.min(paint_start_from_white)
+    let paint_start_white = 64 - paint_start_black;
+    paint_start_black.min(paint_start_white)
 }
 
 fn parse_int(buf: &str) -> usize {

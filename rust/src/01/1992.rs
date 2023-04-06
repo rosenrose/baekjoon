@@ -17,13 +17,15 @@ fn compress(video: &Vec<&str>, x: usize, y: usize, n: usize) -> String {
 
     let (mut count_0, mut count_1) = (0, 0);
 
-    video.iter().skip(y).take(n).for_each(|row| {
-        row.chars().skip(x).take(n).for_each(|cell| match cell {
-            '0' => count_0 += 1,
-            '1' => count_1 += 1,
-            _ => (),
-        })
-    });
+    for row in video[y..y + n].iter() {
+        for cell in row[x..x + n].chars() {
+            match cell {
+                '0' => count_0 += 1,
+                '1' => count_1 += 1,
+                _ => (),
+            }
+        }
+    }
 
     if count_0 == n * n {
         return '0'.to_string();

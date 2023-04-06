@@ -17,9 +17,8 @@ fn n_queen(n: usize, row: usize, selected: &mut Vec<usize>, count: &mut i32) {
     }
 
     for col in 0..n {
-        if selected
+        if selected[..row]
             .iter()
-            .take(row)
             .enumerate()
             .any(|(r, &c)| c == col || c.abs_diff(col) == r.abs_diff(row))
         {

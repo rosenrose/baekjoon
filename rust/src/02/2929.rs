@@ -3,9 +3,8 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let tokens: Vec<_> = buf.trim().split(char::is_uppercase).skip(1).collect();
-    let nop_count = tokens
+    let nop_count = tokens[..tokens.len() - 1]
         .iter()
-        .take(tokens.len() - 1)
         .fold(0, |acc, params| acc + 3 - (params.len() % 4));
 
     println!("{nop_count}");

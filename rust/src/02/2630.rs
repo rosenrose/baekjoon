@@ -16,23 +16,23 @@ fn main() {
 fn cut(paper: &Vec<String>, x: usize, y: usize, n: usize, white: &mut i32, blue: &mut i32) {
     let (mut count_0, mut count_1) = (0, 0);
 
-    paper.iter().skip(y).take(n).for_each(|row| {
-        row.chars().skip(x).take(n).for_each(|cell| match cell {
-            '0' => count_0 += 1,
-            '1' => count_1 += 1,
-            _ => (),
-        })
-    });
+    for row in paper[y..y + n].iter() {
+        for cell in row[x..x + n].chars() {
+            match cell {
+                '0' => count_0 += 1,
+                '1' => count_1 += 1,
+                _ => (),
+            }
+        }
+    }
 
     if count_0 == n * n {
         *white += 1;
-
         return;
     }
 
     if count_1 == n * n {
         *blue += 1;
-
         return;
     }
 
