@@ -34,11 +34,13 @@ fn compress(video: &Vec<&str>, x: usize, y: usize, n: usize) -> String {
         return '1'.to_string();
     }
 
+    let half = n / 2;
+
     format!(
         "({}{}{}{})",
-        compress(video, x, y, n / 2),
-        compress(video, x + n / 2, y, n / 2),
-        compress(video, x, y + n / 2, n / 2),
-        compress(video, x + n / 2, y + n / 2, n / 2)
+        compress(video, x, y, half),
+        compress(video, x + half, y, half),
+        compress(video, x, y + half, half),
+        compress(video, x + half, y + half, half)
     )
 }

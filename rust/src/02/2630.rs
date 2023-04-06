@@ -36,8 +36,10 @@ fn cut(paper: &Vec<String>, x: usize, y: usize, n: usize, white: &mut i32, blue:
         return;
     }
 
-    cut(paper, x, y, n / 2, white, blue);
-    cut(paper, x + n / 2, y, n / 2, white, blue);
-    cut(paper, x, y + n / 2, n / 2, white, blue);
-    cut(paper, x + n / 2, y + n / 2, n / 2, white, blue);
+    let half = n / 2;
+
+    cut(paper, x, y, half, white, blue);
+    cut(paper, x + half, y, half, white, blue);
+    cut(paper, x, y + half, half, white, blue);
+    cut(paper, x + half, y + half, half, white, blue);
 }

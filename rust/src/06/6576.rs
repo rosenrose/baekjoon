@@ -73,9 +73,10 @@ fn fill_map(map: &mut Vec<Vec<char>>, quad_tree: &str, x: usize, y: usize, n: us
     let right_top = &quad_tree[indices[1]..indices[2]];
     let left_bottom = &quad_tree[indices[2]..indices[3]];
     let right_bottom = &quad_tree[indices[3]..];
+    let half = n / 2;
 
-    fill_map(map, left_top, x, y, n / 2);
-    fill_map(map, right_top, x + n / 2, y, n / 2);
-    fill_map(map, left_bottom, x, y + n / 2, n / 2);
-    fill_map(map, right_bottom, x + n / 2, y + n / 2, n / 2);
+    fill_map(map, left_top, x, y, half);
+    fill_map(map, right_top, x + half, y, half);
+    fill_map(map, left_bottom, x, y + half, half);
+    fill_map(map, right_bottom, x + half, y + half, half);
 }

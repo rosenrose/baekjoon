@@ -14,12 +14,13 @@ fn visit_z(r: u32, c: u32, x: u32, y: u32, n: u32, start: u32) -> u32 {
     }
 
     let diff = n * n;
+    let half = n / 2;
 
-    match (r < y + n / 2, c < x + n / 2) {
-        (true, true) => visit_z(r, c, x, y, n / 2, start),
-        (true, false) => visit_z(r, c, x + n / 2, y, n / 2, start + diff / 4),
-        (false, true) => visit_z(r, c, x, y + n / 2, n / 2, start + diff / 4 * 2),
-        (false, false) => visit_z(r, c, x + n / 2, y + n / 2, n / 2, start + diff / 4 * 3),
+    match (r < y + half, c < x + half) {
+        (true, true) => visit_z(r, c, x, y, half, start),
+        (true, false) => visit_z(r, c, x + half, y, half, start + diff / 4),
+        (false, true) => visit_z(r, c, x, y + half, half, start + diff / 4 * 2),
+        (false, false) => visit_z(r, c, x + half, y + half, half, start + diff / 4 * 3),
     }
 }
 

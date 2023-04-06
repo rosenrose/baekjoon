@@ -53,11 +53,13 @@ fn compress(map: &Vec<Vec<char>>, x: usize, y: usize, n: usize) -> String {
         return 'B'.to_string();
     }
 
+    let half = n / 2;
+
     format!(
         "Q{}{}{}{}",
-        compress(map, x, y, n / 2),
-        compress(map, x + n / 2, y, n / 2),
-        compress(map, x, y + n / 2, n / 2),
-        compress(map, x + n / 2, y + n / 2, n / 2)
+        compress(map, x, y, half),
+        compress(map, x + half, y, half),
+        compress(map, x, y + half, half),
+        compress(map, x + half, y + half, half)
     )
 }
