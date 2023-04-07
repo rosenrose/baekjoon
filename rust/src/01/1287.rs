@@ -275,13 +275,13 @@ fn calculate(input: &str) -> Option<BigInt> {
     let mut stack = Vec::new();
 
     for token in postfix {
-        if !matches!(token.as_str(), "+" | "-" | "*" | "/") {
+        if !matches!(token, "+" | "-" | "*" | "/") {
             stack.push(BigInt::parse(&token));
             continue;
         }
 
         let (b, a) = (stack.pop()?, stack.pop()?);
-        let result = match token.as_str() {
+        let result = match token {
             "+" => &a + &b,
             "-" => &a - &b,
             "*" => &a * &b,
@@ -297,50 +297,56 @@ fn calculate(input: &str) -> Option<BigInt> {
     stack.is_empty().then_some(result)
 }
 
-fn parse_to_infix(input: &str) -> Option<Vec<String>> {
+fn parse_to_infix(input: &str) -> Option<Vec<&str>> {
     let mut infix = Vec::new();
-    let mut number = String::new();
     let mut last = '\0';
+    let mut num_idx = 0;
+    let mut is_number = false;
 
-    for ch in input.chars() {
+    for (i, ch) in input.char_indices() {
         match ch {
             '+' | '-' | '*' | '/' | '(' | ')' => {
                 if matches!((last, ch), ('0'..='9', '(') | ('(', ')') | (')', '0'..='9')) {
                     return None;
                 }
 
-                if !number.is_empty() {
-                    infix.push(number.clone());
-                    number.clear();
+                if is_number {
+                    infix.push(&input[num_idx..i]);
+                    is_number = false;
                 }
 
-                infix.push(ch.to_string());
+                infix.push(&input[i..i + 1]);
             }
-            '0'..='9' => number.push(ch),
+            '0'..='9' => {
+                if !is_number {
+                    num_idx = i;
+                    is_number = true;
+                }
+            }
             _ => return None,
         }
 
         last = ch;
     }
 
-    if !number.is_empty() {
-        infix.push(number);
+    if is_number {
+        infix.push(&input[num_idx..]);
     }
 
     Some(infix)
 }
 
-fn infix_to_postfix(infix: Vec<String>) -> Option<Vec<String>> {
+fn infix_to_postfix(infix: Vec<&str>) -> Option<Vec<&str>> {
     let mut stack = Vec::new();
     let mut postfix = Vec::new();
-    let precedence = |op: &String| match op.as_str() {
+    let precedence = |op: &str| match op {
         "+" | "-" => 1,
         "*" | "/" => 2,
         _ => Default::default(),
     };
 
-    for input in infix.into_iter() {
-        match input.as_str() {
+    for input in infix {
+        match input {
             "(" => stack.push(input),
             ")" => loop {
                 match stack.pop() {
@@ -368,5 +374,5 @@ fn infix_to_postfix(infix: Vec<String>) -> Option<Vec<String>> {
         postfix.push(token);
     }
 
-    (!postfix.contains(&"(".to_owned())).then_some(postfix)
+    (!postfix.contains(&"(")).then_some(postfix)
 }

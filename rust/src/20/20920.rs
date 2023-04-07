@@ -1,3 +1,4 @@
+use std::cmp::Reverse;
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
@@ -20,12 +21,7 @@ fn main() {
         });
 
     let mut word_counts = Vec::from_iter(word_counts);
-    word_counts.sort_unstable_by(|(a_word, a_count), (b_word, b_count)| {
-        b_count
-            .cmp(a_count)
-            .then_with(|| b_word.len().cmp(&a_word.len()))
-            .then_with(|| a_word.cmp(b_word))
-    });
+    word_counts.sort_unstable_by_key(|&(word, count)| (Reverse(count), Reverse(word.len()), word));
 
     for (word, _) in word_counts {
         writeln!(output, "{word}").unwrap();

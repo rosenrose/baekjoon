@@ -92,12 +92,12 @@ impl Matrix {
                 .iter()
                 .enumerate()
                 .filter_map(|(i, row)| {
-                    (i != r).then_some(
+                    (i != r).then(|| {
                         row.iter()
                             .enumerate()
                             .filter_map(|(j, &cell)| (j != c).then_some(cell))
-                            .collect(),
-                    )
+                            .collect()
+                    })
                 })
                 .collect(),
         )

@@ -24,13 +24,12 @@ fn main() {
     let mut stack = Vec::new();
 
     for token in postfix {
-        if let Num(n) = token {
-            stack.push(n);
-            continue;
-        }
-
         if token == Print {
             write!(output, "{} ", stack.last().unwrap()).unwrap();
+            continue;
+        }
+        if let Num(n) = token {
+            stack.push(n);
             continue;
         }
 
@@ -60,14 +59,15 @@ fn main() {
 
 fn parse_to_infix(input: &str) -> Vec<Tokens> {
     let mut infix = Vec::new();
-    let mut number = String::new();
+    let mut num_idx = 0;
+    let mut is_number = false;
 
-    for ch in input.chars() {
+    for (i, ch) in input.char_indices() {
         match ch {
             'S' | 'M' | 'U' | 'P' | 'C' => {
-                if !number.is_empty() {
-                    infix.push(Num(number.parse().unwrap()));
-                    number.clear();
+                if is_number {
+                    infix.push(Num(input[num_idx..i].parse().unwrap()));
+                    is_number = false;
                 }
 
                 infix.push(match ch {
@@ -79,13 +79,19 @@ fn parse_to_infix(input: &str) -> Vec<Tokens> {
                     _ => Default::default(),
                 });
             }
-            '0'..='9' => number.push(ch),
+            '0'..='9' => {
+                if !is_number {
+                    num_idx = i;
+                    is_number = true;
+                }
+            }
             _ => (),
         }
     }
 
-    if !number.is_empty() {
-        infix.push(Num(number.parse().unwrap()));
+    if is_number {
+        infix.push(Num(input[num_idx..].parse().unwrap()));
+        is_number = false;
     }
 
     infix
@@ -96,16 +102,16 @@ fn infix_to_postfix(infix: Vec<Tokens>) -> Vec<Tokens> {
     let mut postfix = Vec::new();
 
     for input in infix {
-        match input {
-            Num(_) => postfix.push(input),
-            _ => {
-                while let Some(token) = stack.pop() {
-                    postfix.push(token);
-                }
+        if let Num(_) = input {
+            postfix.push(input);
+            continue;
+        }
 
-                stack.push(input);
-            }
-        };
+        while let Some(token) = stack.pop() {
+            postfix.push(token);
+        }
+
+        stack.push(input)
     }
 
     while let Some(token) = stack.pop() {

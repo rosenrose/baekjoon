@@ -8,19 +8,19 @@ fn main() {
         .flat_map(|input| {
             input.split(char::is_alphabetic).filter_map(|s| {
                 (!s.is_empty()).then(|| {
-                    let mut s = s.to_owned();
+                    let num = s.trim_start_matches('0');
 
-                    while s.len() > 1 && s.chars().nth(0) == Some('0') {
-                        s.remove(0);
+                    if num.is_empty() {
+                        "0"
+                    } else {
+                        num
                     }
-
-                    s
                 })
             })
         })
         .collect();
 
-    nums.sort_by(|a, b| a.len().cmp(&b.len()).then_with(|| a.cmp(b)));
+    nums.sort_by_key(|&n| (n.len(), n));
 
     for num in nums {
         println!("{num}");

@@ -3,38 +3,40 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
+    let mut input = || input.next().unwrap();
 
-    let time: usize = input.next_back().unwrap().parse().unwrap();
-    let (ants2, ants1) = (input.next_back().unwrap(), input.next_back().unwrap());
+    let (_n1, _n2) = (input(), input());
+    let (ants1, ants2) = (input(), input());
+    let time: usize = input().parse().unwrap();
 
-    let mut order: Vec<_> = ants1
+    let mut idx_ants: Vec<_> = ants1
         .chars()
         .rev()
         .chain(ants2.chars())
         .enumerate()
         .collect();
 
-    for (i, (pos, _)) in order.iter_mut().enumerate() {
-        let original_pos;
-        let t = time.min(ants1.len() + ants2.len() - 1);
+    for (i, (idx, _)) in idx_ants.iter_mut().enumerate() {
+        let original_idx;
         let offset;
+        let t = time.min(ants1.len() + ants2.len() - 1);
 
         if i < ants1.len() {
-            original_pos = (ants1.len() - 1) - i;
-            offset = t.saturating_sub(original_pos).min(ants2.len());
+            original_idx = (ants1.len() - 1) - i;
+            offset = t.saturating_sub(original_idx).min(ants2.len());
 
-            *pos += offset;
+            *idx += offset;
         } else {
-            original_pos = i - ants1.len();
-            offset = t.saturating_sub(original_pos).min(ants1.len());
+            original_idx = i - ants1.len();
+            offset = t.saturating_sub(original_idx).min(ants1.len());
 
-            *pos -= offset;
+            *idx -= offset;
         }
     }
 
-    order.sort_by_key(|&(pos, _)| pos);
+    idx_ants.sort();
 
-    for (_, ant) in order {
+    for (_, ant) in idx_ants {
         print!("{ant}");
     }
 }

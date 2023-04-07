@@ -15,7 +15,7 @@ fn main() {
     });
 
     let mut ext_counts = Vec::from_iter(ext_counts);
-    ext_counts.sort_unstable_by_key(|&(ext, _)| ext);
+    ext_counts.sort_unstable();
 
     for (ext, count) in ext_counts {
         writeln!(output, "{ext} {count}").unwrap();

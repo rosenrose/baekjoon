@@ -9,7 +9,9 @@ fn main() {
         .map(|i| (i, (input(), input(), input())))
         .collect();
 
-    infos.sort_unstable_by(|(_, (s1, c1, t1)), (_, (s2, c2, t2))| (s2, c1, t1).cmp(&(s1, c2, t2)));
+    let (first, _) = infos
+        .select_nth_unstable_by_key(0, |&(_, (s, c, t))| (std::cmp::Reverse(s), c, t))
+        .1;
 
-    println!("{}", infos[0].0);
+    println!("{first}");
 }

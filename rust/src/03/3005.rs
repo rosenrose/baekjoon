@@ -14,7 +14,7 @@ fn main() {
 
     let get_words = |row: &String| -> Vec<String> {
         row.split('#')
-            .filter_map(|s| (s.len() >= 2).then_some(s.to_owned()))
+            .filter_map(|s| (s.len() >= 2).then(|| s.to_owned()))
             .collect()
     };
 

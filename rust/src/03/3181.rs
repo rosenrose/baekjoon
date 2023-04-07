@@ -10,10 +10,10 @@ fn main() {
         .split_whitespace()
         .enumerate()
         .filter_map(|(i, word)| {
-            (i == 0 || !ignore.contains(&word))
-                .then_some(word.to_uppercase().chars().nth(0).unwrap())
+            (i == 0 || !ignore.contains(&word)).then(|| word.chars().nth(0).unwrap().to_uppercase())
         })
+        .flatten()
         .collect();
 
-    println!("{short}")
+    println!("{short}");
 }

@@ -21,10 +21,10 @@ fn main() {
     )
 }
 
-fn calculate(postfix: Vec<char>) -> i32 {
+fn calculate(postfix: String) -> i32 {
     let mut stack = Vec::new();
 
-    for token in postfix {
+    for token in postfix.chars() {
         if !matches!(token, '+' | '-' | '*' | '/') {
             stack.push(token as i32 - '0' as i32);
             continue;
@@ -45,9 +45,9 @@ fn calculate(postfix: Vec<char>) -> i32 {
     stack.pop().unwrap()
 }
 
-fn infix_to_postfix(infix: &str) -> (Vec<char>, Vec<char>) {
+fn infix_to_postfix(infix: &str) -> (String, String) {
     let mut stack = Vec::new();
-    let (mut multi_first, mut left_to_right) = (Vec::new(), Vec::new());
+    let (mut multi_first, mut left_to_right) = (String::new(), String::new());
 
     let precedence = |op: char| match op {
         '+' | '-' => 1,

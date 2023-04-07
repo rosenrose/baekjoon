@@ -50,7 +50,7 @@ fn main() {
         return;
     }
 
-    payers.sort_unstable_by_key(|(&name, _)| name);
+    payers.sort_unstable();
 
     for (name, fee) in payers {
         writeln!(output, "{name} {fee}").unwrap();

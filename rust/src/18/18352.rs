@@ -31,7 +31,7 @@ fn main() {
         return;
     }
 
-    result.sort_unstable_by_key(|&(node, _)| node);
+    result.sort_unstable();
 
     for (node, _) in result {
         writeln!(output, "{node}").unwrap();

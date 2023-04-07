@@ -7,7 +7,7 @@ fn main() {
         .iter()
         .enumerate()
         .filter_map(|(i, &(limit, count))| {
-            (n <= limit).then_some(((limit + 1).min(n + count), i + 1))
+            (n <= limit).then(|| ((limit + 1).min(n + count), i + 1))
         })
         .collect();
 

@@ -15,7 +15,7 @@ fn main() {
     });
 
     let mut tree_counts = Vec::from_iter(tree_counts);
-    tree_counts.sort_unstable_by_key(|&(name, _)| name);
+    tree_counts.sort_unstable();
 
     for (tree, count) in tree_counts {
         let percentage = (count as f64 / total as f64) * 100.0;
