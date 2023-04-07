@@ -1,4 +1,3 @@
-use std::fmt::Write;
 use std::io;
 
 fn main() {
@@ -15,16 +14,15 @@ fn main() {
 
         let outer_tags = get_tags(&text[..begin]);
         let inner_tags = get_tags(selected);
-        let mut output = String::new();
         // println!("{outer_tags:?} {inner_tags:?}");
         for out_tag in outer_tags.iter() {
-            write!(output, "<{out_tag}>").unwrap();
+            print!("<{out_tag}>");
         }
 
-        write!(output, "{selected}").unwrap();
+        print!("{selected}");
 
         for in_tag in inner_tags.iter().rev() {
-            write!(output, "</{in_tag}>").unwrap();
+            print!("</{in_tag}>");
         }
 
         for out_tag in outer_tags.iter().rev() {
@@ -34,10 +32,9 @@ fn main() {
                 continue;
             }
 
-            write!(output, "{closing}").unwrap();
+            print!("{closing}");
         }
-
-        println!("{output}");
+        println!("");
     }
 }
 
