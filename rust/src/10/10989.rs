@@ -1,8 +1,8 @@
 use std::io::{self, BufRead, Write};
 
 fn main() {
-    let (stdin, stdout) = (io::stdin(), io::stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), io::BufWriter::new(stdout.lock()));
+    let mut stdin = io::stdin().lock();
+    let mut stdout = io::BufWriter::new(io::stdout().stdout.lock());
 
     let mut buf = String::new();
     stdin.read_line(&mut buf).unwrap();
@@ -20,8 +20,7 @@ fn main() {
         let num: usize = buf.trim_end().parse().unwrap();
         count[num] += 1;
 
-        min = num.min(min);
-        max = num.max(max);
+        (min, max) = (num.min(min), num.max(max));
     }
 
     for num in min..=max {

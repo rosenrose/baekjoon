@@ -1,8 +1,8 @@
 use std::io::{self, BufRead, Write};
 
 fn main() {
-    let (stdin, stdout) = (io::stdin(), io::stdout());
-    let (mut stdin, mut stdout) = (stdin.lock(), io::BufWriter::new(stdout.lock()));
+    let mut stdin = io::stdin().lock();
+    let mut stdout = io::BufWriter::new(io::stdout().lock());
 
     let mut buf = String::new();
     stdin.read_line(&mut buf).unwrap();
@@ -25,7 +25,8 @@ fn main() {
             "add" => s |= 1 << x,
             "remove" => s &= !(1 << x),
             "check" => {
-                writeln!(stdout, "{}", if (s & (1 << x)) >> x == 1 { 1 } else { 0 }).unwrap();
+                let check = 1 << x;
+                writeln!(stdout, "{}", if s & check == check { 1 } else { 0 }).unwrap();
             }
             "toggle" => s ^= 1 << x,
             "all" => s |= !0,

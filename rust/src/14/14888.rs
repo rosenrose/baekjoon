@@ -21,13 +21,14 @@ fn main() {
     let operators: Vec<_> = input
         .enumerate()
         .flat_map(|(i, count)| {
-            (0..count).map(move |_| match i {
+            std::iter::repeat(match i {
                 0 => Add,
                 1 => Sub,
                 2 => Mul,
                 3 => Div,
                 _ => Default::default(),
             })
+            .take(count as usize)
         })
         .collect();
 

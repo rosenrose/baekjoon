@@ -3,7 +3,8 @@ use std::io;
 use std::io::{self, BufRead, Write};
 
 fn main() {
-    let (mut stdin, mut stdout) = (io::stdin().lock(), io::BufWriter::new(io::stdout().lock()));
+    let mut stdin = io::stdin().lock();
+    let mut stdout = io::BufWriter::new(io::stdout().lock());
 
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();

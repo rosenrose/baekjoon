@@ -4,8 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
     let mut input = || input.next().unwrap();
-    let stdout = io::stdout();
-    let mut stdout = io::BufWriter::new(stdout.lock());
+    let mut stdout = io::BufWriter::new(io::stdout().lock());
 
     let n = parse_int(input());
     let offset = 'A' as u8;
