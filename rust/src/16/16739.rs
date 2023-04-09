@@ -22,12 +22,7 @@ impl Ord for Items {
 
 impl PartialOrd for Items {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(match (self, other) {
-            (Number(a), Number(b)) => a.cmp(b),
-            (Number(_), Letter(_)) => Ordering::Less,
-            (Letter(_), Number(_)) => Ordering::Greater,
-            (Letter(a), Letter(b)) => a.cmp(b),
-        })
+        Some(self.cmp(other))
     }
 }
 

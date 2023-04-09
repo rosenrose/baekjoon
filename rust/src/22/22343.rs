@@ -15,12 +15,7 @@ impl Ord for BigInt {
 
 impl PartialOrd for BigInt {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(
-            self.0
-                .len()
-                .cmp(&other.0.len())
-                .then_with(|| self.0.iter().rev().cmp(other.0.iter().rev())),
-        )
+        Some(self.cmp(other))
     }
 }
 
