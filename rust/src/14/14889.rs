@@ -2,93 +2,77 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<u32>);
 
-    let n = input.next().unwrap();
-    let numbers: Vec<_> = (0..n).collect();
-    let matrix: Vec<Vec<_>> = (0..n)
-        .map(|_| input.by_ref().take(n as usize).collect())
-        .collect();
+    let n = input.next().unwrap() as usize;
+    let matrix: Vec<Vec<_>> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
 
-    let mut min_diff = u32::MAX;
-    combination_pairs(&numbers, n / 2, 0, &mut Vec::new(), &mut min_diff, &matrix);
+    let min_diff = combination_pairs(0, 0, &mut vec![0; n / 2], n, &matrix);
 
     println!("{min_diff}");
 }
 
 fn combination_pairs(
-    nums: &Vec<i32>,
-    m: i32,
+    depth: usize,
     start: usize,
-    selected: &mut Vec<i32>,
-    min_diff: &mut u32,
-    matrix: &Vec<Vec<i32>>,
-) {
-    if m == 0 {
-        let rest = nums
-            .iter()
-            .copied()
-            .filter(|n| !selected.contains(n))
-            .collect();
-        let (mut start, mut link) = (0, 0);
+    selected: &mut Vec<usize>,
+    numbers: usize,
+    matrix: &Vec<Vec<u32>>,
+) -> u32 {
+    if depth == selected.len() {
+        let rest = (0..numbers).filter(|n| !selected.contains(n)).collect();
+        // println!("{selected:?} {rest:?}");
+        let start = combinations(0, 0, &mut vec![0; 2], selected, matrix);
+        let link = combinations(0, 0, &mut vec![0; 2], &rest, matrix);
 
-        combinations(selected, 2, 0, &mut Vec::new(), &mut start, matrix);
-        combinations(&rest, 2, 0, &mut Vec::new(), &mut link, matrix);
-
-        *min_diff = start.abs_diff(link).min(*min_diff);
-
-        return;
+        return start.abs_diff(link);
     }
 
-    nums.iter()
+    (0..numbers)
         .enumerate()
         .skip(start)
         .take(if start == 0 {
             1
         } else {
-            nums.len() - m as usize + 1
+            numbers - selected.len() + 1
         })
-        .for_each(|(i, &num)| {
-            if selected.contains(&num) {
-                return;
+        .fold(u32::MAX, |diff, (i, num)| {
+            if selected[..depth].contains(&num) {
+                return diff;
             }
 
-            selected.push(num);
+            selected[depth] = num;
 
-            combination_pairs(nums, m - 1, i + 1, selected, min_diff, matrix);
+            let result = combination_pairs(depth + 1, i + 1, selected, numbers, matrix);
 
-            selected.pop();
+            result.min(diff)
         })
 }
 
 fn combinations(
-    nums: &Vec<i32>,
-    m: i32,
+    depth: usize,
     start: usize,
-    selected: &mut Vec<i32>,
-    score: &mut i32,
-    matrix: &Vec<Vec<i32>>,
-) {
-    if m == 0 {
-        let (a, b) = (selected[0] as usize, selected[1] as usize);
-        *score += matrix[a][b] + matrix[b][a];
-
-        return;
+    selected: &mut Vec<usize>,
+    nums: &Vec<usize>,
+    matrix: &Vec<Vec<u32>>,
+) -> u32 {
+    if depth == selected.len() {
+        let (a, b) = (selected[0], selected[1]);
+        return matrix[a][b] + matrix[b][a];
     }
 
     nums.iter()
         .enumerate()
         .skip(start)
-        .take(nums.len() - m as usize + 1)
-        .for_each(|(i, &num)| {
-            if selected.contains(&num) {
-                return;
+        .take(nums.len() - selected.len() + 1)
+        .map(|(i, &num)| {
+            if selected[..depth].contains(&num) {
+                return 0;
             }
 
-            selected.push(num);
+            selected[depth] = num;
 
-            combinations(nums, m - 1, i + 1, selected, score, matrix);
-
-            selected.pop();
-        });
+            combinations(depth + 1, i + 1, selected, nums, matrix)
+        })
+        .sum()
 }

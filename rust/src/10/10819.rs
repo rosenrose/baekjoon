@@ -4,35 +4,32 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let n = input.next().unwrap();
+    let n = input.next().unwrap() as usize;
     let nums: Vec<_> = input.collect();
 
-    let max_sum = formula_max(&nums, n, &mut Vec::new());
+    let max_sum = formula_max(0, &mut vec![0; n], &nums);
 
     println!("{max_sum}");
 }
 
-fn formula_max(nums: &Vec<i32>, m: i32, selected: &mut Vec<usize>) -> u32 {
-    if m == 0 {
-        let formula: Vec<_> = selected.iter().map(|&i| nums[i]).collect();
-        let sum: u32 = (1..formula.len())
-            .map(|i| formula[i - 1].abs_diff(formula[i]))
+fn formula_max(depth: usize, selected: &mut Vec<usize>, nums: &Vec<i32>) -> u32 {
+    if depth == selected.len() {
+        let sum = (1..selected.len())
+            .map(|i| nums[selected[i - 1]].abs_diff(nums[selected[i]]))
             .sum();
 
         return sum;
     }
 
     (0..nums.len()).fold(0, |max, i| {
-        if selected.contains(&i) {
+        if selected[..depth].contains(&i) {
             return max;
         }
 
-        selected.push(i);
+        selected[depth] = i;
 
-        let max = formula_max(nums, m - 1, selected).max(max);
+        let result = formula_max(depth + 1, selected, nums);
 
-        selected.pop();
-
-        max
+        result.max(max)
     })
 }

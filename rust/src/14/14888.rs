@@ -1,5 +1,3 @@
-use std::io;
-
 #[derive(Copy, Clone, Default)]
 enum Ops {
     #[default]
@@ -8,6 +6,9 @@ enum Ops {
     Mul,
     Div,
 }
+
+use std::io;
+use Ops::{Add, Div, Mul, Sub};
 
 const MAX: i32 = 1_000_000_000;
 
@@ -21,35 +22,35 @@ fn main() {
         .enumerate()
         .flat_map(|(i, count)| {
             (0..count).map(move |_| match i {
-                0 => Ops::Add,
-                1 => Ops::Sub,
-                2 => Ops::Mul,
-                3 => Ops::Div,
+                0 => Add,
+                1 => Sub,
+                2 => Mul,
+                3 => Div,
                 _ => Default::default(),
             })
         })
         .collect();
 
-    let (min, max) = formula_min_max(0, &operators, &mut Vec::new(), &nums);
+    let (min, max) = formula_min_max(0, &mut vec![0; n - 1], &operators, &nums);
 
     println!("{max}\n{min}");
 }
 
 fn formula_min_max(
     depth: usize,
-    operators: &Vec<Ops>,
     selected: &mut Vec<usize>,
+    operators: &Vec<Ops>,
     nums: &Vec<i32>,
 ) -> (i32, i32) {
-    if depth == operators.len() {
+    if depth == selected.len() {
         let result = selected.iter().enumerate().fold(nums[0], |acc, (i, &sel)| {
             let num = nums[i + 1];
 
             match operators[sel] {
-                Ops::Add => acc + num,
-                Ops::Sub => acc - num,
-                Ops::Mul => acc * num,
-                Ops::Div => acc / num,
+                Add => acc + num,
+                Sub => acc - num,
+                Mul => acc * num,
+                Div => acc / num,
             }
         });
 
@@ -62,16 +63,14 @@ fn formula_min_max(
         .iter()
         .enumerate()
         .fold((MAX, -MAX), |(min, max), (i, &op)| {
-            if selected.contains(&i) || visited[op as usize] {
+            if visited[op as usize] || selected[..depth].contains(&i) {
                 return (min, max);
             }
 
             visited[op as usize] = true;
-            selected.push(i);
+            selected[depth] = i;
 
-            let result = formula_min_max(depth + 1, operators, selected, nums);
-
-            selected.pop();
+            let result = formula_min_max(depth + 1, selected, operators, nums);
 
             (result.0.min(min), result.1.max(max))
         })
