@@ -9,19 +9,19 @@ fn main() {
 
     let nums: Vec<_> = (1..=n).collect();
 
-    combination_with_replacement(&nums, m, 0, &mut Vec::new(), &mut output);
+    combinations_with_replacement(0, 0, &mut vec![0; m], &nums, &mut output);
 
     print!("{output}");
 }
 
-fn combination_with_replacement(
-    nums: &Vec<i32>,
-    m: i32,
+fn combinations_with_replacement(
+    depth: usize,
     start: usize,
-    selected: &mut Vec<i32>,
+    selected: &mut Vec<usize>,
+    nums: &Vec<usize>,
     output: &mut String,
 ) {
-    if m == 0 {
+    if depth == selected.len() {
         for num in selected {
             write!(output, "{num} ").unwrap();
         }
@@ -31,14 +31,11 @@ fn combination_with_replacement(
     }
 
     for (i, &num) in nums.iter().enumerate().skip(start) {
-        selected.push(num);
-
-        combination_with_replacement(nums, m - 1, i, selected, output);
-
-        selected.pop();
+        selected[depth] = num;
+        combinations_with_replacement(depth + 1, i, selected, nums, output);
     }
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
+fn parse_int_vec(buf: &String) -> Vec<usize> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

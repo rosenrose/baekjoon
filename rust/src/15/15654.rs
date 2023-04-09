@@ -3,7 +3,7 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut output = String::new();
 
     let (_, m) = (input.next(), input.next().unwrap());
@@ -11,13 +11,13 @@ fn main() {
     let mut nums: Vec<_> = input.collect();
     nums.sort();
 
-    permutation(&nums, m, &mut Vec::new(), &mut output);
+    permutations(0, &mut vec![0; m], &nums, &mut output);
 
     print!("{output}");
 }
 
-fn permutation(nums: &Vec<i32>, m: i32, selected: &mut Vec<i32>, output: &mut String) {
-    if m == 0 {
+fn permutations(depth: usize, selected: &mut Vec<usize>, nums: &Vec<usize>, output: &mut String) {
+    if depth == selected.len() {
         for num in selected {
             write!(output, "{num} ").unwrap();
         }
@@ -27,14 +27,11 @@ fn permutation(nums: &Vec<i32>, m: i32, selected: &mut Vec<i32>, output: &mut St
     }
 
     for &num in nums {
-        if selected.contains(&num) {
+        if selected[..depth].contains(&num) {
             continue;
         }
 
-        selected.push(num);
-
-        permutation(nums, m - 1, selected, output);
-
-        selected.pop();
+        selected[depth] = num;
+        permutations(depth + 1, selected, nums, output);
     }
 }

@@ -9,13 +9,13 @@ fn main() {
 
     let nums: Vec<_> = (1..=n).collect();
 
-    product(&nums, m, &mut Vec::new(), &mut output);
+    product(0, &mut vec![0; m], &nums, &mut output);
 
     print!("{output}");
 }
 
-fn product(nums: &Vec<i32>, m: i32, selected: &mut Vec<i32>, output: &mut String) {
-    if m == 0 {
+fn product(depth: usize, selected: &mut Vec<usize>, nums: &Vec<usize>, output: &mut String) {
+    if depth == selected.len() {
         for num in selected {
             write!(output, "{num} ").unwrap();
         }
@@ -25,14 +25,11 @@ fn product(nums: &Vec<i32>, m: i32, selected: &mut Vec<i32>, output: &mut String
     }
 
     for &num in nums {
-        selected.push(num);
-
-        product(nums, m - 1, selected, output);
-
-        selected.pop();
+        selected[depth] = num;
+        product(depth + 1, selected, nums, output);
     }
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
+fn parse_int_vec(buf: &String) -> Vec<usize> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }
