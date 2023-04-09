@@ -1,48 +1,37 @@
+use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::fmt::Write;
 use std::io;
 
-struct Heap<T>(Vec<T>);
+struct Heap<T: Ord>(Vec<T>);
 
-impl<T> Heap<T>
-where
-    T: Copy + std::cmp::PartialOrd + std::fmt::Debug,
-{
+impl<T: Ord> Heap<T> {
     fn new() -> Self {
         Self(Vec::new())
     }
 
-    fn get_parent(&self, i: usize) -> Option<(usize, T)> {
-        if i > 0 {
-            let idx = (i - 1) / 2;
-            Some((idx, self.0[idx]))
-        } else {
-            None
-        }
+    fn len(&self) -> usize {
+        self.0.len()
     }
 
-    fn get_children(&self, i: usize) -> (Option<(usize, T)>, Option<(usize, T)>) {
+    fn get_parent_idx(&self, i: usize) -> Option<usize> {
+        (i > 0).then_some((i - 1) / 2)
+    }
+
+    fn get_children_idx(&self, i: usize) -> (Option<usize>, Option<usize>) {
         let left_idx = i * 2 + 1;
         let right_idx = i * 2 + 2;
+        let len = self.len();
 
-        let left = if let Some(v) = self.0.get(left_idx) {
-            Some((left_idx, *v))
-        } else {
-            None
-        };
-        let right = if let Some(v) = self.0.get(right_idx) {
-            Some((right_idx, *v))
-        } else {
-            None
-        };
-
-        (left, right)
+        (
+            (left_idx < len).then_some(left_idx),
+            (right_idx < len).then_some(right_idx),
+        )
     }
 
     fn push(&mut self, value: T) {
         self.0.push(value);
-
-        Self::up_heapify(self, self.0.len() - 1, value);
+        self.up_heapify(self.0.len() - 1);
     }
 
     fn pop(&mut self) -> Option<T> {
@@ -50,7 +39,7 @@ where
             return None;
         }
 
-        let len = self.0.len();
+        let len = self.len();
 
         if len > 1 {
             self.0.swap(0, len - 1);
@@ -58,43 +47,39 @@ where
 
         let ret = self.0.pop().unwrap();
 
-        Self::down_heapify(self, 0);
+        self.down_heapify(0);
 
         Some(ret)
     }
 
-    fn up_heapify(&mut self, i: usize, value: T) {
-        if let Some((parent_idx, parent_value)) = Self::get_parent(self, i) {
-            if parent_value < value {
+    fn up_heapify(&mut self, i: usize) {
+        if let Some(parent_idx) = self.get_parent_idx(i) {
+            if self.0[parent_idx] < self.0[i] {
                 self.0.swap(parent_idx, i);
             }
 
-            Self::up_heapify(self, parent_idx, value);
+            self.up_heapify(parent_idx);
         }
     }
 
     fn down_heapify(&mut self, i: usize) {
-        let (child_idx, child_val) = match Self::get_children(self, i) {
-            (Some((left_idx, left_val)), Some((right_idx, right_val))) => {
-                if left_val > right_val {
-                    (left_idx, left_val)
+        let child_idx = match self.get_children_idx(i) {
+            (None, None) => return,
+            (Some(left_idx), None) => left_idx,
+            (None, Some(right_idx)) => right_idx,
+            (Some(left_idx), Some(right_idx)) => {
+                if self.0[left_idx] > self.0[right_idx] {
+                    left_idx
                 } else {
-                    (right_idx, right_val)
+                    right_idx
                 }
             }
-            (Some((left_idx, left_val)), None) => (left_idx, left_val),
-            (None, Some((right_idx, right_val))) => (right_idx, right_val),
-            (None, None) => return,
         };
 
-        if child_val > self.0[i] {
+        if self.0[child_idx] > self.0[i] {
             self.0.swap(i, child_idx);
-            Self::down_heapify(self, child_idx);
+            self.down_heapify(child_idx);
         }
-    }
-
-    fn is_empty(&self) -> bool {
-        self.0.is_empty()
     }
 }
 
@@ -113,17 +98,10 @@ fn main() {
     }
 
     // let mut heap = Heap::new();
-    // lines.for_each(|line| heap.push(line.parse::<i32>().unwrap()));
+    // input.for_each(|num| heap.push(Reverse(num)));
+    // // let mut heap: BinaryHeap<_> = input.collect();
 
-    // // let mut heap: BinaryHeap<i32> = lines.map(|line| line.parse().unwrap()).collect();
-
-    // let mut arr = Vec::new();
-
-    // while !heap.is_empty() {
-    //     arr.push(heap.pop().unwrap());
-    // }
-
-    // for num in arr.iter().rev() {
+    // while let Some(Reverse(num)) = heap.pop() {
     //     writeln!(output, "{num}").unwrap();
     // }
 
