@@ -5,23 +5,18 @@ fn main() {
     let input = buf.lines().flat_map(str::parse::<i32>);
 
     for num in input.skip(1) {
-        println!("{}", permutation_123(num));
-    }
-}
+        match num {
+            1 | 2 => println!("{num}"),
+            3 => println!("4"),
+            _ => {
+                let (mut a, mut b, mut c) = (1, 2, 4);
 
-fn permutation_123(num: i32) -> i32 {
-    if num <= 2 {
-        return num;
-    }
-    if num == 3 {
-        return 4;
-    }
-    //(num - 3..=num - 1).map(|n| permutation_123(n)).sum()
-    let (mut a, mut b, mut c) = (1, 2, 4);
+                for _ in 0..num - 3 {
+                    (a, b, c) = (b, c, a + b + c);
+                }
 
-    for _ in 4..=num {
-        (a, b, c) = (b, c, a + b + c);
+                println!("{c}");
+            }
+        }
     }
-
-    c
 }
