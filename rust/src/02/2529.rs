@@ -14,12 +14,12 @@ fn main() {
         })
         .collect();
 
-    let (min, max) = formula_min_max(0, &mut vec![0; k + 1], &operators);
+    let (min, max) = permutations(0, &mut vec![0; k + 1], &operators);
 
     println!("{max:0digits$}\n{min:0digits$}", digits = k + 1);
 }
 
-fn formula_min_max(depth: usize, selected: &mut Vec<i64>, operators: &Vec<Ordering>) -> (i64, i64) {
+fn permutations(depth: usize, selected: &mut Vec<i64>, operators: &Vec<Ordering>) -> (i64, i64) {
     if depth == selected.len() {
         let result = selected.iter().fold(0, |acc, num| acc * 10 + num);
 
@@ -38,7 +38,7 @@ fn formula_min_max(depth: usize, selected: &mut Vec<i64>, operators: &Vec<Orderi
 
             selected[depth] = num;
 
-            let result = formula_min_max(depth + 1, selected, operators);
+            let result = permutations(depth + 1, selected, operators);
 
             (result.0.min(min), result.1.max(max))
         })

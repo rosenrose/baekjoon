@@ -33,12 +33,12 @@ fn main() {
         })
         .collect();
 
-    let (min, max) = formula_min_max(0, &mut vec![0; n - 1], &operators, &nums);
+    let (min, max) = permutations(0, &mut vec![0; n - 1], &operators, &nums);
 
     println!("{max}\n{min}");
 }
 
-fn formula_min_max(
+fn permutations(
     depth: usize,
     selected: &mut Vec<usize>,
     operators: &Vec<Tokens>,
@@ -78,7 +78,7 @@ fn formula_min_max(
             visited[get_idx(op)] = true;
             selected[depth] = i;
 
-            let result = formula_min_max(depth + 1, selected, operators, nums);
+            let result = permutations(depth + 1, selected, operators, nums);
 
             (result.0.min(min), result.1.max(max))
         })
