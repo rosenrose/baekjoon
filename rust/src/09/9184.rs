@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
 
@@ -7,7 +6,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let mut memo = HashMap::new();
+    let mut memo = [[[0; 21]; 21]; 21];
 
     while let (Some(a), Some(b), Some(c)) = (input.next(), input.next(), input.next()) {
         if (a, b, c) == (-1, -1, -1) {
@@ -20,31 +19,27 @@ fn main() {
     print!("{output}");
 }
 
-fn w(a: i32, b: i32, c: i32, memo: &mut HashMap<(i32, i32, i32), i32>) -> i32 {
+fn w(a: i32, b: i32, c: i32, memo: &mut [[[i32; 21]; 21]; 21]) -> i32 {
     if a <= 0 || b <= 0 || c <= 0 {
         return 1;
     }
 
-    let mut get_or_insert = |a: i32, b: i32, c: i32| {
-        if let Some(i) = memo.get(&(a, b, c)) {
-            *i
-        } else {
-            let ret = w(a, b, c, memo);
-            memo.insert((a, b, c), ret);
+    if a > 20 || b > 20 || c > 20 {
+        return w(20, 20, 20, memo);
+    }
 
-            ret
-        }
+    let (a_idx, b_idx, c_idx) = (a as usize, b as usize, c as usize);
+
+    if memo[a_idx][b_idx][c_idx] != 0 {
+        return memo[a_idx][b_idx][c_idx];
+    }
+
+    memo[a_idx][b_idx][c_idx] = if a < b && b < c {
+        w(a, b, c - 1, memo) + w(a, b - 1, c - 1, memo) - w(a, b - 1, c, memo)
+    } else {
+        w(a - 1, b, c, memo) + w(a - 1, b - 1, c, memo) + w(a - 1, b, c - 1, memo)
+            - w(a - 1, b - 1, c - 1, memo)
     };
 
-    if a > 20 || b > 20 || c > 20 {
-        return get_or_insert(20, 20, 20);
-    }
-
-    if a < b && b < c {
-        return get_or_insert(a, b, c - 1) + get_or_insert(a, b - 1, c - 1)
-            - get_or_insert(a, b - 1, c);
-    }
-
-    get_or_insert(a - 1, b, c) + get_or_insert(a - 1, b - 1, c) + get_or_insert(a - 1, b, c - 1)
-        - get_or_insert(a - 1, b - 1, c - 1)
+    memo[a_idx][b_idx][c_idx]
 }
