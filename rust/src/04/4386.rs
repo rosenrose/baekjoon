@@ -1,82 +1,60 @@
-use std::collections::HashMap;
 use std::io;
 
-#[derive(Eq, PartialEq, Copy, Clone, Hash)]
-struct Point<'a>(&'a str, &'a str);
+struct DisjointSet(Vec<usize>);
 
-struct DisjointSet<'a>(HashMap<Point<'a>, Point<'a>>);
-
-impl<'a> DisjointSet<'a> {
-    fn new() -> Self {
-        Self(HashMap::new())
+impl DisjointSet {
+    fn make(n: usize) -> Self {
+        Self((0..=n).collect())
     }
 
-    fn insert(&mut self, a: Point<'a>, b: Point<'a>) {
-        self.0.entry(a).or_insert(a);
-        self.0.entry(b).or_insert(b);
-
-        self.union(a, b);
-    }
-
-    fn find(&mut self, a: Point<'a>) -> Option<Point<'a>> {
-        if let Some(&result) = self.0.get(&a) {
-            if result != a {
-                let parent = self.find(result).unwrap();
-                self.0.insert(a, parent);
-            }
+    fn find(&mut self, a: usize) -> usize {
+        if self.0[a] != a {
+            self.0[a] = self.find(self.0[a]);
         }
 
-        self.0.get(&a).copied()
+        self.0[a]
     }
 
-    fn union(&mut self, a: Point<'a>, b: Point<'a>) {
-        let (a, b) = (self.find(a).unwrap(), self.find(b).unwrap());
+    fn union(&mut self, a: usize, b: usize) {
+        let (a, b) = (self.find(a), self.find(b));
 
         if a == b {
             return;
         }
 
-        self.0.insert(b, a);
+        self.0[b] = a;
     }
 
-    fn is_same(&mut self, a: Point<'a>, b: Point<'a>) -> bool {
-        match (self.find(a), self.find(b)) {
-            (Some(a), Some(b)) => a == b,
-            _ => false,
-        }
+    fn is_same(&mut self, a: usize, b: usize) -> bool {
+        self.find(a) == self.find(b)
     }
 }
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<f64>);
     let mut input = || input.next().unwrap();
 
-    let n: i32 = input().parse().unwrap();
-    let points: Vec<_> = (0..n).map(|_| Point(input(), input())).collect();
+    let n = input() as usize;
+    let points: Vec<_> = (0..n).map(|_| (input(), input())).collect();
 
-    let mut disjoint_set = DisjointSet::new();
+    let mut disjoint_set = DisjointSet::make(n);
     let mut edges = Vec::new();
 
     for i in 0..points.len() - 1 {
         for j in i + 1..points.len() {
-            let (p1, p2) = (points[i], points[j]);
-            let dist = distance_of_points(
-                (parse_float(p1.0), parse_float(p1.1)),
-                (parse_float(p2.0), parse_float(p2.1)),
-            );
-
-            edges.push((points[i], points[j], dist));
+            let dist = distance_of_points(points[i], points[j]);
+            edges.push(((i, j), dist));
         }
     }
 
-    edges.sort_unstable_by(|&(_, _, d1), (_, _, d2)| d1.total_cmp(d2));
+    edges.sort_unstable_by(|&(_, d1), (_, d2)| d1.total_cmp(d2));
 
     let min_weight: f64 = edges
         .iter()
-        .filter_map(|&(p1, p2, dist)| {
-            (!disjoint_set.is_same(p1, p2)).then(|| {
-                disjoint_set.insert(p1, p2);
+        .filter_map(|&((a, b), dist)| {
+            (!disjoint_set.is_same(a, b)).then(|| {
+                disjoint_set.union(a, b);
                 dist
             })
         })
@@ -87,8 +65,4 @@ fn main() {
 
 fn distance_of_points((x1, y1): (f64, f64), (x2, y2): (f64, f64)) -> f64 {
     (x1 - x2).hypot(y1 - y2)
-}
-
-fn parse_float(buf: &str) -> f64 {
-    buf.parse().unwrap()
 }

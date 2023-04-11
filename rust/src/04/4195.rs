@@ -17,14 +17,14 @@ impl<'a> DisjointSet<'a> {
     }
 
     fn find(&mut self, a: &'a str) -> (&'a str, i32) {
-        let (result, _) = (*self).0[a];
+        let (parent, _) = self.0[a];
 
-        if result != a {
-            let parent = self.find(result);
-            self.0.insert(a, parent);
+        if parent != a {
+            let temp = self.find(parent);
+            self.0.insert(a, temp);
         }
 
-        (*self).0[a]
+        self.0[a]
     }
 
     fn union(&mut self, a: &'a str, b: &'a str) {
@@ -35,11 +35,11 @@ impl<'a> DisjointSet<'a> {
         }
 
         if a_size > b_size {
-            self.0.insert(b, (a, a_size));
             self.0.entry(a).and_modify(|c| (*c).1 += b_size);
+            self.0.entry(b).and_modify(|c| (*c).0 = a);
         } else {
-            self.0.insert(a, (b, b_size));
             self.0.entry(b).and_modify(|c| (*c).1 += a_size);
+            self.0.entry(a).and_modify(|c| (*c).0 = b);
         }
     }
 
