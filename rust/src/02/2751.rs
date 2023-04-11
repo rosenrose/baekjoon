@@ -3,9 +3,9 @@ use std::collections::BinaryHeap;
 use std::fmt::Write;
 use std::io;
 
-struct Heap<T: Ord>(Vec<T>);
+struct Heap<T>(Vec<T>);
 
-impl<T: Ord> Heap<T> {
+impl<T: Ord + Copy> Heap<T> {
     fn new() -> Self {
         Self(Vec::new())
     }
@@ -15,18 +15,18 @@ impl<T: Ord> Heap<T> {
     }
 
     fn get_parent_idx(&self, i: usize) -> Option<usize> {
-        (i > 0).then_some((i - 1) / 2)
+        (i > 0).then(|| (i - 1) / 2)
     }
 
-    fn get_children_idx(&self, i: usize) -> (Option<usize>, Option<usize>) {
-        let left_idx = i * 2 + 1;
-        let right_idx = i * 2 + 2;
+    fn get_child_idx(&self, i: usize) -> Option<usize> {
+        let left_idx = (i + 1) * 2 - 1;
+        let right_idx = (i + 1) * 2;
         let len = self.len();
 
-        (
-            (left_idx < len).then_some(left_idx),
-            (right_idx < len).then_some(right_idx),
-        )
+        [left_idx, right_idx]
+            .iter()
+            .filter_map(|&idx| (idx < len).then_some(idx))
+            .max_by_key(|&idx| self.0[idx])
     }
 
     fn push(&mut self, value: T) {
@@ -35,49 +35,36 @@ impl<T: Ord> Heap<T> {
     }
 
     fn pop(&mut self) -> Option<T> {
-        if self.0.is_empty() {
-            return None;
-        }
-
         let len = self.len();
 
         if len > 1 {
             self.0.swap(0, len - 1);
         }
 
-        let ret = self.0.pop().unwrap();
-
+        let value = self.0.pop();
         self.down_heapify(0);
 
-        Some(ret)
+        value
     }
 
     fn up_heapify(&mut self, i: usize) {
-        if let Some(parent_idx) = self.get_parent_idx(i) {
-            if self.0[parent_idx] < self.0[i] {
-                self.0.swap(parent_idx, i);
-            }
+        let Some(parent_idx) = self.get_parent_idx(i) else {
+            return;
+        };
 
+        if self.0[parent_idx] < self.0[i] {
+            self.0.swap(parent_idx, i);
             self.up_heapify(parent_idx);
         }
     }
 
     fn down_heapify(&mut self, i: usize) {
-        let child_idx = match self.get_children_idx(i) {
-            (None, None) => return,
-            (Some(left_idx), None) => left_idx,
-            (None, Some(right_idx)) => right_idx,
-            (Some(left_idx), Some(right_idx)) => {
-                if self.0[left_idx] > self.0[right_idx] {
-                    left_idx
-                } else {
-                    right_idx
-                }
-            }
+        let Some(child_idx) = self.get_child_idx(i) else {
+            return;
         };
 
         if self.0[child_idx] > self.0[i] {
-            self.0.swap(i, child_idx);
+            self.0.swap(child_idx, i);
             self.down_heapify(child_idx);
         }
     }
