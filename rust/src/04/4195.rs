@@ -9,11 +9,8 @@ impl<'a> DisjointSet<'a> {
         Self(HashMap::new())
     }
 
-    fn insert(&mut self, a: &'a str, b: &'a str) {
+    fn insert(&mut self, a: &'a str) {
         self.0.entry(a).or_insert((a, 1));
-        self.0.entry(b).or_insert((b, 1));
-
-        self.union(a, b);
     }
 
     fn find(&mut self, a: &'a str) -> (&'a str, i32) {
@@ -59,7 +56,9 @@ fn main() {
         let mut disjoint_set = DisjointSet::new();
 
         for (friend1, friend2) in (0..n).map(|_| (input(), input())) {
-            disjoint_set.insert(friend1, friend2);
+            disjoint_set.insert(friend1);
+            disjoint_set.insert(friend2);
+            disjoint_set.union(friend1, friend2);
 
             writeln!(output, "{}", disjoint_set.get_size(friend1)).unwrap();
         }
