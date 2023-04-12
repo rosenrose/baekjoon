@@ -1,5 +1,5 @@
 use std::fmt::Write;
-use std::{io, iter};
+use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -7,12 +7,12 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let sum_accum: Vec<_> = iter::once(0)
-        .chain((0..input()).scan(0, |acc, _| {
-            *acc += input();
-            Some(*acc)
-        }))
-        .collect();
+    let n = input() as usize;
+    let mut sum_accum = vec![0; n + 1];
+
+    for (i, num) in (1..=n).map(|i| (i, input())) {
+        sum_accum[i] = sum_accum[i - 1] + num;
+    }
 
     for (i, j) in (0..input()).map(|_| (input() as usize, input() as usize)) {
         writeln!(output, "{}", sum_accum[j] - sum_accum[i - 1]).unwrap();

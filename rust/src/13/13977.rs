@@ -1,5 +1,5 @@
 use std::fmt::Write;
-use std::{io, iter};
+use std::io;
 
 const M: i64 = 1_000_000_007;
 
@@ -9,12 +9,13 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let factorial_rem: Vec<_> = iter::once(1)
-        .chain((1..=4_000_000).scan(1, |acc, i| {
-            *acc = (*acc * i) % M;
-            Some(*acc)
-        }))
-        .collect();
+    const MAX: usize = 4_000_000;
+    let mut factorial_rem = vec![0; MAX + 1];
+    factorial_rem[0] = 1;
+
+    for i in 1..=MAX {
+        factorial_rem[i] = (factorial_rem[i - 1] * i as i64) % M;
+    }
 
     for (n, k) in (0..input()).map(|_| (input(), input())) {
         writeln!(output, "{}", combination_rem(n, k, &factorial_rem)).unwrap();

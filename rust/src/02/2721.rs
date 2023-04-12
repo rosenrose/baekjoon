@@ -7,12 +7,11 @@ fn main() {
     let mut output = String::new();
 
     let t = |n: usize| n * (n + 1) / 2;
-    let w: Vec<_> = (0..=300)
-        .scan(0, |acc, i| {
-            *acc += i * t(i + 1);
-            Some(*acc)
-        })
-        .collect();
+    let mut w = [0; 301];
+
+    for i in 1..=300 {
+        w[i] = w[i - 1] + (i * t(i + 1));
+    }
 
     for n in input.skip(1) {
         writeln!(output, "{}", w[n]).unwrap();

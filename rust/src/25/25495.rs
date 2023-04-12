@@ -4,21 +4,25 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (consume_accum, _, _) = input
-        .skip(1)
-        .fold((0, 2, 0), |(acc, mut consume, phone), next| {
-            if next == phone {
-                consume *= 2;
-            } else {
-                consume = 2;
-            }
+    let mut consume = 2;
+    let mut consume_accum = 0;
+    let mut prev_phone = 0;
 
-            if acc + consume >= 100 {
-                (0, 2, 0)
-            } else {
-                (acc + consume, consume, next)
-            }
-        });
+    for cur_phone in input.skip(1) {
+        if cur_phone == prev_phone {
+            consume *= 2;
+        } else {
+            consume = 2;
+        }
+
+        if consume_accum + consume >= 100 {
+            (consume, consume_accum, prev_phone) = (2, 0, 0);
+            continue;
+        }
+
+        consume_accum += consume;
+        prev_phone = cur_phone;
+    }
 
     println!("{consume_accum}");
 }
