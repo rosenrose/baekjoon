@@ -45,8 +45,8 @@ impl<T: Ord + Copy> MinMaxHeap<T> {
         let quad = (i + 1) * 4;
         let len = self.len();
 
-        (double..=double + 1)
-            .chain(quad..=quad + 3)
+        [double, double + 1, quad, quad + 1, quad + 2, quad + 3]
+            .iter()
             .filter_map(|idx| (idx - 1 < len).then_some(idx - 1))
             .min_by_key(|&idx| self.0[idx])
     }
@@ -55,8 +55,8 @@ impl<T: Ord + Copy> MinMaxHeap<T> {
         let quad = (i + 1) * 4;
         let len = self.len();
 
-        (double..=double + 1)
-            .chain(quad..=quad + 3)
+        [double, double + 1, quad, quad + 1, quad + 2, quad + 3]
+            .iter()
             .filter_map(|idx| (idx - 1 < len).then_some(idx - 1))
             .max_by_key(|&idx| self.0[idx])
     }
