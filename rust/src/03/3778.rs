@@ -8,10 +8,13 @@ fn main() {
     let mut output = String::new();
 
     let get_count = |s: &str| {
-        s.chars().fold([0_i32; 26], |mut acc, ch| {
-            acc[ch as usize - 'a' as usize] += 1;
-            acc
-        })
+        let mut count = [0_i32; 26];
+
+        for ch in s.chars() {
+            count[ch as usize - 'a' as usize] += 1;
+        }
+
+        count
     };
 
     for (i, (a, b)) in (1..=parse_int(input())).map(|i| (i, (input(), input()))) {

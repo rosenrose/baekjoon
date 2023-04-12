@@ -6,13 +6,12 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (nodes, edges) = (input(), input());
-    let adjacency_list = (0..edges).fold(vec![Vec::new(); nodes + 1], |mut acc, _| {
-        let (u, v) = (input(), input());
-        acc[u].push(v);
-        acc[v].push(u);
+    let mut adjacency_list = vec![Vec::new(); nodes + 1];
 
-        acc
-    });
+    for (u, v) in (0..edges).map(|_| (input(), input())) {
+        adjacency_list[u].push(v);
+        adjacency_list[v].push(u);
+    }
 
     dfs(&adjacency_list, 1);
 }

@@ -6,14 +6,15 @@ fn main() {
     let mut output = String::new();
 
     for input in buf.lines().take_while(|&input| input != "*") {
-        let letters = input.chars().fold([false; 26], |mut acc, ch| {
+        let mut letters = [false; 26];
+
+        for ch in input.chars() {
             if ch == ' ' {
-                return acc;
+                continue;
             }
 
-            acc[ch as usize - 'a' as usize] = true;
-            acc
-        });
+            letters[ch as usize - 'a' as usize] = true;
+        }
 
         writeln!(
             output,

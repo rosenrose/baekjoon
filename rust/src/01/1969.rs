@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::io;
 
 fn main() {
@@ -16,26 +15,41 @@ fn main() {
     let closest_dna: String = (0..m)
         .map(|i| {
             let mut max_count = 1;
-            let atgc_count = dna_strings.iter().fold(HashMap::new(), |mut acc, dna| {
-                acc.entry(dna[i])
-                    .and_modify(|c: &mut i32| {
-                        *c += 1;
-                        max_count = max_count.max(*c);
-                    })
-                    .or_insert(1);
+            let mut atgc_count = [0; 4];
 
-                acc
-            });
+            for dna in dna_strings.iter() {
+                let idx = match dna[i] as char {
+                    'A' => 0,
+                    'C' => 1,
+                    'G' => 2,
+                    'T' => 3,
+                    _ => Default::default(),
+                };
 
-            let (&most_char, _) = atgc_count
+                atgc_count[idx] += 1;
+                max_count = atgc_count[idx].max(max_count);
+            }
+
+            let (most_char_idx, _) = atgc_count
                 .iter()
-                .filter(|&(_, v)| *v == max_count)
-                .min_by_key(|&(k, _)| k)
+                .enumerate()
+                .filter(|(_, &count)| count == max_count)
+                .min_by_key(|&(i, _)| i)
                 .unwrap();
+            let most_char = match most_char_idx {
+                0 => 'A',
+                1 => 'C',
+                2 => 'G',
+                3 => 'T',
+                _ => Default::default(),
+            };
 
-            dist_sum += dna_strings.iter().filter(|dna| dna[i] != most_char).count();
+            dist_sum += dna_strings
+                .iter()
+                .filter(|dna| dna[i] != most_char as u8)
+                .count();
 
-            most_char as char
+            most_char
         })
         .collect();
 

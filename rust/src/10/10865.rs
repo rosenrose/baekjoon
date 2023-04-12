@@ -8,13 +8,12 @@ fn main() {
     let mut output = String::new();
 
     let (n, m) = (input(), input());
-    let friends = (0..m).fold(vec![0; n], |mut acc, _| {
-        let (a, b) = (input() - 1, input() - 1);
-        acc[a] += 1;
-        acc[b] += 1;
+    let mut friends = vec![0; n];
 
-        acc
-    });
+    for (a, b) in (0..m).map(|_| (input() - 1, input() - 1)) {
+        friends[a] += 1;
+        friends[b] += 1;
+    }
 
     for f in friends {
         writeln!(output, "{f}").unwrap();

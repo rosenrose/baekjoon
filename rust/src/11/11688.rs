@@ -8,18 +8,20 @@ fn main() {
     let lcm1 = get_lcm(input(), input());
     let lcm2 = input();
 
-    let mut divisors = (1..)
-        .take_while(|i| i * i <= lcm2)
-        .fold(Vec::new(), |mut acc, i| {
-            if lcm2 % i == 0 {
-                acc.push(i);
-                acc.push(lcm2 / i);
-            }
+    let mut divisors = Vec::new();
 
-            acc
-        });
+    for i in (1..).take_while(|i| i * i <= lcm2) {
+        if lcm2 % i != 0 {
+            continue;
+        }
 
-    divisors.dedup();
+        divisors.push(i);
+
+        if i != lcm2 / i {
+            divisors.push(lcm2 / i);
+        }
+    }
+
     divisors.sort();
 
     for c in divisors {

@@ -5,18 +5,19 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let (n, k) = (input.next().unwrap(), input.next().unwrap());
-    let mut divisors = (1..)
-        .take_while(|i| i * i <= n)
-        .fold(Vec::new(), |mut acc, i| {
-            if n % i == 0 {
-                acc.push(i);
-                acc.push(n / i);
-            }
+    let mut divisors = Vec::new();
 
-            acc
-        });
+    for i in (1..).take_while(|i| i * i <= n) {
+        if n % i != 0 {
+            continue;
+        }
 
-    divisors.dedup();
+        divisors.push(i);
+
+        if i != n / i {
+            divisors.push(n / i);
+        }
+    }
 
     if divisors.len() < k {
         println!("0");

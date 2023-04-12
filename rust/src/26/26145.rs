@@ -9,18 +9,20 @@ fn main() {
 
     let (n, m) = (input() as usize, input() as usize);
     let s: Vec<_> = (0..n).map(|_| input()).collect();
+    let mut money = vec![0; n + m];
 
-    let money = (0..n).fold(vec![0; n + m], |mut acc, i| {
-        let given = (0..n + m).fold(s[i], |given_acc, j| {
+    for i in 0..n {
+        let mut given = s[i];
+
+        for j in 0..n + m {
             let deploy = input();
-            acc[j] += deploy;
 
-            given_acc - deploy
-        });
+            money[j] += deploy;
+            given -= deploy;
+        }
 
-        acc[i] += given;
-        acc
-    });
+        money[i] += given;
+    }
 
     for m in money {
         write!(output, "{m} ").unwrap();

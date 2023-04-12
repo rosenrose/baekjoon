@@ -5,27 +5,28 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..input() {
-        let n = input() as usize;
-        let mut logs: Vec<_> = (0..n).map(|_| input()).collect();
+    for _ in 0..input.next().unwrap() {
+        let n = input.next().unwrap() as usize;
+        let mut logs: Vec<_> = input.by_ref().take(n).collect();
         logs.sort_unstable();
 
-        let logs = logs.iter().fold(VecDeque::new(), |mut acc, &log| {
-            if acc.len() % 2 == 0 {
-                acc.push_back(log);
+        let mut new_logs = VecDeque::new();
+
+        for log in logs {
+            if new_logs.len() & 1 == 0 {
+                new_logs.push_back(log);
             } else {
-                acc.push_front(log);
+                new_logs.push_front(log);
             }
+        }
 
-            acc
-        });
+        let mut max_diff = new_logs[0].abs_diff(new_logs[n - 1]);
 
-        let max_diff = (1..n).fold(logs[0].abs_diff(logs[n - 1]), |max, i| {
-            max.max(logs[i - 1].abs_diff(logs[i]))
-        });
+        for i in 1..n {
+            max_diff = new_logs[i - 1].abs_diff(new_logs[i]).max(max_diff);
+        }
 
         writeln!(output, "{max_diff}").unwrap();
     }

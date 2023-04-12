@@ -5,14 +5,14 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut output = String::new();
+
+    let mut tree_counts = HashMap::new();
     let mut total = 0;
 
-    let tree_counts = buf.lines().fold(HashMap::new(), |mut acc, name| {
-        acc.entry(name).and_modify(|c| *c += 1).or_insert(1);
+    for name in buf.lines() {
+        tree_counts.entry(name).and_modify(|c| *c += 1).or_insert(1);
         total += 1;
-
-        acc
-    });
+    }
 
     let mut tree_counts = Vec::from_iter(tree_counts);
     tree_counts.sort_unstable();

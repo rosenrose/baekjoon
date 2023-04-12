@@ -6,19 +6,21 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
-    let (q1, q2, q3, q4, axis) = (0..input()).fold((0, 0, 0, 0, 0), |mut acc, _| {
-        let (x, y) = (input(), input());
+    let mut counts = [0; 5];
 
-        match (x.cmp(&0), y.cmp(&0)) {
-            (Greater, Greater) => acc.0 += 1,
-            (Less, Greater) => acc.1 += 1,
-            (Less, Less) => acc.2 += 1,
-            (Greater, Less) => acc.3 += 1,
-            _ => acc.4 += 1,
+    for (x, y) in (0..input()).map(|_| (input(), input())) {
+        let idx = match (x.cmp(&0), y.cmp(&0)) {
+            (Greater, Greater) => 0,
+            (Less, Greater) => 1,
+            (Less, Less) => 2,
+            (Greater, Less) => 3,
+            _ => 4,
         };
 
-        acc
-    });
+        counts[idx] += 1;
+    }
+
+    let [q1, q2, q3, q4, axis] = counts;
 
     println!("Q1: {q1}\nQ2: {q2}\nQ3: {q3}\nQ4: {q4}\nAXIS: {axis}");
 }

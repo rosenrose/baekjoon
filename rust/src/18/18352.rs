@@ -10,13 +10,11 @@ fn main() {
     let mut output = String::new();
 
     let (n, m, k, x) = (input() as usize, input(), input(), input());
+    let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    let adjacency_list = (0..m).fold(vec![Vec::new(); n + 1], |mut acc, _| {
-        let (u, v) = (input() as usize, input());
-        acc[u].push(v);
-
-        acc
-    });
+    for (u, v) in (0..m).map(|_| (input() as usize, input())) {
+        adjacency_list[u].push(v);
+    }
 
     let distances = dijkstra(&adjacency_list, x, k);
     let mut result: Vec<_> = distances

@@ -6,15 +6,13 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, m) = (input(), input());
-    let balls = (0..m).fold(vec![0; n], |mut acc, _| {
-        let (i, j, k) = (input() - 1, input() - 1, input());
+    let mut balls = vec![0; n];
 
+    for (i, j, k) in (0..m).map(|_| (input() - 1, input() - 1, input())) {
         for idx in i..=j {
-            acc[idx] = k;
+            balls[idx] = k;
         }
-
-        acc
-    });
+    }
 
     for b in balls {
         print!("{b} ");

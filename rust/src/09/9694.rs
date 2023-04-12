@@ -11,14 +11,12 @@ fn main() {
 
     for i in 1..=input() {
         let (n, m) = (input(), input());
+        let mut adjacency_list = vec![Vec::new(); m];
 
-        let adjacency_list = (0..n).fold(vec![Vec::new(); m], |mut acc, _| {
-            let (x, y, z) = (input(), input(), input() as i32);
-            acc[x].push((y, z));
-            acc[y].push((x, z));
-
-            acc
-        });
+        for (x, y, z) in (0..n).map(|_| (input(), input(), input() as i32)) {
+            adjacency_list[x].push((y, z));
+            adjacency_list[y].push((x, z));
+        }
 
         let (start, mut end) = (0, m - 1);
         let (distances, prevs) = dijkstra_with_path(&adjacency_list, start);

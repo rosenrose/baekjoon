@@ -8,13 +8,11 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, m, k) = (input(), input(), input());
+    let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    let adjacency_list = (0..m).fold(vec![Vec::new(); n + 1], |mut acc, _| {
-        let (a, b, c) = (input(), input(), input() as i32);
-        acc[a].push((b, c));
-
-        acc
-    });
+    for (a, b, c) in (0..m).map(|_| (input(), input(), input() as i32)) {
+        adjacency_list[a].push((b, c));
+    }
 
     let distances = dijkstra_nth(&adjacency_list, 1, k);
     // println!("{distances:?}");

@@ -5,18 +5,20 @@ fn main() {
     let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let gcd = get_gcd(input.skip(1));
-    let mut divisors = (1..)
-        .take_while(|i| i * i <= gcd)
-        .fold(Vec::new(), |mut acc, i| {
-            if gcd % i == 0 {
-                acc.push(i);
-                acc.push(gcd / i);
-            }
+    let mut divisors = Vec::new();
 
-            acc
-        });
+    for i in (1..).take_while(|i| i * i <= gcd) {
+        if gcd % i != 0 {
+            continue;
+        }
 
-    divisors.dedup();
+        divisors.push(i);
+
+        if i != gcd / i {
+            divisors.push(gcd / i);
+        }
+    }
+
     divisors.sort();
 
     for divisor in divisors {

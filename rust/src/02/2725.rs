@@ -8,7 +8,9 @@ fn main() {
     let mut output = String::new();
 
     let min_factors = get_min_factors(1000);
-    let euler_phi = (2..=1000).fold(vec![0, 0], |mut acc, mut i| {
+    let mut euler_phi = vec![0, 0];
+
+    for mut i in 2..=1000 {
         let mut phi = i;
         let mut factors = HashSet::new();
 
@@ -18,9 +20,8 @@ fn main() {
         }
 
         phi = factors.iter().fold(phi, |acc, p| acc * (p - 1) / p);
-        acc.push(phi);
-        acc
-    });
+        euler_phi.push(phi);
+    }
 
     for n in input.skip(1) {
         let count = 3 + (2..=n).map(|x| euler_phi[x] * 2).sum::<usize>();

@@ -6,29 +6,33 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
+    let mut output = String::new();
 
     let (n, m, r) = (input(), input(), input());
+    let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    let mut adjacency_list = (0..m).fold(vec![Vec::new(); n + 1], |mut acc, _| {
-        let (u, v) = (input(), input());
-        acc[u].push(v);
-        acc[v].push(u);
-
-        acc
-    });
+    for (u, v) in (0..m).map(|_| (input(), input())) {
+        adjacency_list[u].push(v);
+        adjacency_list[v].push(u);
+    }
 
     for list in adjacency_list.iter_mut() {
         (*list).sort_unstable();
     }
 
-    bfs(&adjacency_list, r);
+    let visited = bfs(&adjacency_list, r);
+
+    for order in visited.iter().skip(1) {
+        writeln!(output, "{order}").unwrap();
+    }
+
+    print!("{output}");
 }
 
-fn bfs(graph: &Vec<Vec<usize>>, start: usize) {
+fn bfs(graph: &Vec<Vec<usize>>, start: usize) -> Vec<usize> {
     let mut visited = vec![0; graph.len()];
     let mut queue = VecDeque::from([start]);
     let mut count = 1;
-    let mut output = String::new();
 
     while let Some(node) = queue.pop_front() {
         if visited[node] != 0 {
@@ -43,9 +47,5 @@ fn bfs(graph: &Vec<Vec<usize>>, start: usize) {
         }
     }
 
-    for order in visited.iter().skip(1) {
-        writeln!(output, "{order}").unwrap();
-    }
-
-    print!("{output}");
+    visited
 }

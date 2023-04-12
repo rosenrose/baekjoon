@@ -13,12 +13,11 @@ fn main() {
         input.next().unwrap().parse::<usize>().unwrap(),
     );
 
-    let word_counts = input
-        .filter(|word| word.len() >= m)
-        .fold(HashMap::new(), |mut acc, word| {
-            acc.entry(word).and_modify(|c| *c += 1).or_insert(1);
-            acc
-        });
+    let mut word_counts = HashMap::new();
+
+    for word in input.filter(|word| word.len() >= m) {
+        word_counts.entry(word).and_modify(|c| *c += 1).or_insert(1);
+    }
 
     let mut word_counts = Vec::from_iter(word_counts);
     word_counts.sort_unstable_by_key(|&(word, count)| (Reverse(count), Reverse(word.len()), word));

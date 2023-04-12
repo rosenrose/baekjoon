@@ -6,15 +6,13 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (a, b, c) = (input(), input(), input());
-    let car_count = (0..3).fold([0; 100], |mut acc, _| {
-        let (on, off) = (input() as usize - 1, input() as usize - 1);
+    let mut car_count = [0; 100];
 
+    for (on, off) in (0..3).map(|_| (input() as usize - 1, input() as usize - 1)) {
         for t in on..off {
-            acc[t] += 1;
+            car_count[t] += 1;
         }
-
-        acc
-    });
+    }
 
     let cost: i32 = car_count
         .iter()

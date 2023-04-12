@@ -12,14 +12,12 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, m, v) = (input(), input(), input());
+    let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    let mut adjacency_list = (0..m).fold(vec![Vec::new(); n + 1], |mut acc, _| {
-        let (v1, v2) = (input(), input());
-        acc[v1].push(v2);
-        acc[v2].push(v1);
-
-        acc
-    });
+    for (v1, v2) in (0..m).map(|_| (input(), input())) {
+        adjacency_list[v1].push(v2);
+        adjacency_list[v2].push(v1);
+    }
 
     for list in adjacency_list.iter_mut() {
         (*list).sort();

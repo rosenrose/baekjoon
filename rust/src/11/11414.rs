@@ -12,16 +12,19 @@ fn main() {
         return;
     }
 
-    let divisors = (1..)
-        .take_while(|i| i * i <= diff)
-        .fold(HashSet::new(), |mut acc, i| {
-            if diff % i == 0 {
-                acc.insert(i);
-                acc.insert(diff / i);
-            }
+    let mut divisors = Vec::new();
 
-            acc
-        });
+    for i in (1..).take_while(|i| i * i <= diff) {
+        if diff % i != 0 {
+            continue;
+        }
+
+        divisors.push(i);
+
+        if i != diff / i {
+            divisors.push(diff / i);
+        }
+    }
 
     let n_lcm: HashSet<_> = divisors
         .iter()

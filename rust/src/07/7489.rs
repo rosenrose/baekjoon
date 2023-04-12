@@ -32,15 +32,15 @@ fn main() {
     let input = buf.lines().flat_map(str::parse::<i64>);
 
     for n in input.skip(1) {
-        let factorial = (1..=n).fold(BigInt(vec![1]), |mut acc, num| {
-            acc = acc.mul(num);
+        let mut factorial = BigInt(vec![1]);
 
-            while acc.0[0] == 0 {
-                acc.0.remove(0);
+        for num in 1..=n {
+            factorial = factorial.mul(num);
+
+            while factorial.0[0] == 0 {
+                factorial.0.remove(0);
             }
-
-            acc
-        });
+        }
 
         let non_zero = factorial.0[0]
             .to_string()

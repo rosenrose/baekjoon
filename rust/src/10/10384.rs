@@ -4,14 +4,13 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
 
     for (i, input) in buf.lines().enumerate().skip(1) {
-        let counts = input.to_lowercase().chars().fold([0; 26], |mut acc, ch| {
-            if !ch.is_alphabetic() {
-                return acc;
-            }
+        let mut counts = [0; 26];
 
-            acc[ch as usize - 'a' as usize] += 1;
-            acc
-        });
+        for ch in input.to_lowercase().chars() {
+            if ch.is_alphabetic() {
+                counts[ch as usize - 'a' as usize] += 1;
+            }
+        }
 
         print!("Case {i}: ");
 

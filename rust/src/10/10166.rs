@@ -10,17 +10,19 @@ fn main() {
     let mut count = 0;
 
     for mut d in d1..=d2 {
-        let mut divisors = (1..)
-            .take_while(|i| i * i <= d)
-            .fold(Vec::new(), |mut acc, i| {
-                if d % i == 0 {
-                    acc.push(i);
-                    acc.push(d / i);
-                }
+        let mut divisors = Vec::new();
 
-                acc
-            });
-        divisors.dedup();
+        for i in (1..).take_while(|i| i * i <= d) {
+            if d % i != 0 {
+                continue;
+            }
+
+            divisors.push(i);
+
+            if i != d / i {
+                divisors.push(d / i);
+            }
+        }
 
         for divisor in divisors {
             let div = divisor as usize;
@@ -40,8 +42,9 @@ fn main() {
 
 fn get_euler_phi(num: usize) -> Vec<i32> {
     let min_factors = get_min_factors(num);
+    let mut euler_phi = vec![0, 1];
 
-    (2..=num).fold(vec![0, 1], |mut acc, mut i| {
+    for mut i in 2..=num {
         let mut phi = i as i32;
         let mut factors = HashSet::new();
 
@@ -51,10 +54,10 @@ fn get_euler_phi(num: usize) -> Vec<i32> {
         }
 
         phi = factors.iter().fold(phi, |acc, &p| acc * (p - 1) / p);
-        acc.push(phi);
+        euler_phi.push(phi);
+    }
 
-        acc
-    })
+    euler_phi
 }
 
 fn get_min_factors(num: usize) -> Vec<i32> {

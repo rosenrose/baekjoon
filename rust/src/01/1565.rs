@@ -1,14 +1,12 @@
-use std::collections::HashSet;
 use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
-    let mut input = || input.next().unwrap();
 
-    let (d_len, m_len) = (input(), input());
-    let d: Vec<_> = (0..d_len).map(|_| input()).collect();
-    let m: Vec<_> = (0..m_len).map(|_| input()).collect();
+    let (d_len, _) = (input.next().unwrap() as usize, input.next());
+    let d: Vec<_> = input.by_ref().take(d_len).collect();
+    let m: Vec<_> = input.collect();
 
     let gcd = get_gcd(m.into_iter());
     let mut lcm = 1;
@@ -22,23 +20,22 @@ fn main() {
         }
     }
 
-    let count = (1..)
-        .take_while(|i| i * i <= gcd)
-        .fold(HashSet::new(), |mut acc, i| {
-            if gcd % i != 0 {
-                return acc;
-            }
+    let mut count = 0;
 
-            if i % lcm == 0 {
-                acc.insert(i);
-            }
-            if (gcd / i) % lcm == 0 {
-                acc.insert(gcd / i);
-            }
+    for small in (1..).take_while(|i| i * i <= gcd) {
+        if gcd % small != 0 {
+            continue;
+        }
 
-            acc
-        })
-        .len();
+        let big = gcd / small;
+
+        if small % lcm == 0 {
+            count += 1;
+        }
+        if small != big && big % lcm == 0 {
+            count += 1;
+        }
+    }
 
     println!("{count}");
 }

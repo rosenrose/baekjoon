@@ -8,14 +8,12 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, e) = (input(), input());
+    let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    let adjacency_list = (0..e).fold(vec![Vec::new(); n + 1], |mut acc, _| {
-        let (a, b, c) = (input(), input(), input() as i32);
-        acc[a].push((b, c));
-        acc[b].push((a, c));
-
-        acc
-    });
+    for (a, b, c) in (0..e).map(|_| (input(), input(), input() as i32)) {
+        adjacency_list[a].push((b, c));
+        adjacency_list[b].push((a, c));
+    }
 
     let (v1, v2) = (input(), input());
 
