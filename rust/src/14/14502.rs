@@ -79,12 +79,14 @@ fn simulate(
         ];
 
         for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
-            if room[adj_r][adj_c] == Cells::Empty {
-                room[adj_r][adj_c] = Cells::Virus;
-                safe_area -= 1;
-
-                stack.push((adj_r, adj_c));
+            if room[adj_r][adj_c] != Cells::Empty {
+                continue;
             }
+
+            room[adj_r][adj_c] = Cells::Virus;
+            safe_area -= 1;
+
+            stack.push((adj_r, adj_c));
         }
     }
 
