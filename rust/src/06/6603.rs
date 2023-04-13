@@ -9,7 +9,7 @@ fn main() {
     while let Some(k @ 7..) = input.next() {
         let nums: Vec<_> = input.by_ref().take(k).collect();
 
-        combination(&nums, 6, 0, &mut Vec::new(), &mut output);
+        combinations(0, 0, &mut [0; 6], &nums, &mut output);
 
         writeln!(output, "").unwrap();
     }
@@ -17,14 +17,14 @@ fn main() {
     print!("{output}")
 }
 
-fn combination(
-    nums: &Vec<usize>,
-    m: i32,
+fn combinations(
+    depth: usize,
     start: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize; 6],
+    nums: &Vec<usize>,
     output: &mut String,
 ) {
-    if m == 0 {
+    if depth == selected.len() {
         for num in selected {
             write!(output, "{num} ").unwrap();
         }
@@ -33,15 +33,14 @@ fn combination(
         return;
     }
 
-    for i in start..nums.len() - (m as usize - 1) {
-        if selected.contains(&nums[i]) {
+    let takes = nums.len() - selected.len() + 1;
+
+    for (i, &num) in nums.iter().enumerate().skip(start).take(takes) {
+        if selected[..depth].contains(&num) {
             continue;
         }
 
-        selected.push(nums[i]);
-
-        combination(nums, m - 1, i + 1, selected, output);
-
-        selected.pop();
+        selected[depth] = num;
+        combinations(depth + 1, i + 1, selected, nums, output);
     }
 }

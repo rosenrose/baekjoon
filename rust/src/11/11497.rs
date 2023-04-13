@@ -12,7 +12,7 @@ fn main() {
         let mut logs: Vec<_> = input.by_ref().take(n).collect();
         logs.sort_unstable();
 
-        let mut new_logs = VecDeque::new();
+        let mut new_logs = VecDeque::with_capacity(n);
 
         for log in logs {
             if new_logs.len() & 1 == 0 {

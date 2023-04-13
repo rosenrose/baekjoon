@@ -6,37 +6,37 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let len: i32 = input.next().unwrap().parse().unwrap();
-
-    let mut chars: Vec<_> = input.skip(1).collect();
+    let len: usize = input.next().unwrap().parse().unwrap();
+    let mut chars: Vec<_> = input.skip(1).flat_map(|s| s.chars().nth(0)).collect();
     chars.sort();
 
-    combination(&chars, len, 0, &mut String::new());
+    combinations(0, 0, &mut vec!['\0'; len], &chars);
 }
 
-fn combination(chars: &Vec<&str>, m: i32, start: usize, selected: &mut String) {
-    if m == 0 {
-        if selected.matches(VOWELS).count() < 1 {
+fn combinations(depth: usize, start: usize, selected: &mut Vec<char>, chars: &Vec<char>) {
+    if depth == selected.len() {
+        let result = String::from_iter(selected.iter());
+
+        if result.matches(VOWELS).count() < 1 {
             return;
         }
-        if selected.matches(|c| !VOWELS.contains(&c)).count() < 2 {
+        if result.matches(|c| !VOWELS.contains(&c)).count() < 2 {
             return;
         }
 
-        println!("{selected}");
+        println!("{result}");
 
         return;
     }
 
-    for i in start..chars.len() - (m as usize - 1) {
-        if selected.contains(chars[i]) {
+    let takes = chars.len() - selected.len() + 1;
+
+    for (i, &ch) in chars.iter().enumerate().skip(start).take(takes) {
+        if selected[..depth].contains(&ch) {
             continue;
         }
 
-        selected.push_str(chars[i]);
-
-        combination(chars, m - 1, i + 1, selected);
-
-        selected.pop();
+        selected[depth] = ch;
+        combinations(depth + 1, i + 1, selected, chars);
     }
 }

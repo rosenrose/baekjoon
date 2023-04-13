@@ -15,7 +15,7 @@ fn main() {
     let closest_dna: String = (0..m)
         .map(|i| {
             let mut max_count = 1;
-            let mut atgc_count = [0; 4];
+            let mut acgt_count = [0; 4];
 
             for dna in dna_strings.iter() {
                 let idx = match dna[i] as char {
@@ -26,11 +26,11 @@ fn main() {
                     _ => Default::default(),
                 };
 
-                atgc_count[idx] += 1;
-                max_count = atgc_count[idx].max(max_count);
+                acgt_count[idx] += 1;
+                max_count = acgt_count[idx].max(max_count);
             }
 
-            let (most_char_idx, _) = atgc_count
+            let (most_char_idx, _) = acgt_count
                 .iter()
                 .enumerate()
                 .filter(|(_, &count)| count == max_count)

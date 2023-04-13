@@ -8,17 +8,11 @@ fn main() {
 
     for _ in 0..n {
         let sounds = input.next().unwrap();
-        let mut animals = Vec::new();
-
-        loop {
-            let line = input.next().unwrap();
-
-            if line == "what does the fox say?" {
-                break;
-            }
-
-            animals.push(line.split(' ').next_back().unwrap());
-        }
+        let animals: Vec<_> = input
+            .by_ref()
+            .take_while(|&line| line != "what does the fox say?")
+            .map(|line| line.split(' ').next_back().unwrap())
+            .collect();
 
         let fox: Vec<_> = sounds.split(' ').filter(|s| !animals.contains(s)).collect();
 

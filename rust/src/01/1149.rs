@@ -5,7 +5,6 @@ enum RGB {
 }
 
 use std::io;
-use RGB::{B, G, R};
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -14,7 +13,7 @@ fn main() {
 
     let costs: Vec<_> = (0..input()).map(|_| [input(), input(), input()]).collect();
     let mut min_costs = vec![costs[0]];
-    let (r, g, b) = (R as usize, G as usize, B as usize);
+    let (r, g, b) = (RGB::R as usize, RGB::G as usize, RGB::B as usize);
 
     for i in 1..costs.len() {
         min_costs.push([

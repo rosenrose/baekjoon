@@ -2,34 +2,30 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
+    let mut input = buf.lines();
 
-    let mut left = input().to_owned();
+    let mut left = input.next().unwrap().to_owned();
     let mut right = String::new();
-    let n: i32 = input().parse().unwrap();
 
-    for _ in 0..n {
-        match input() {
+    for op in input.skip(1) {
+        match op {
             "L" => {
-                if let Some(c) = left.pop() {
-                    right.push(c);
+                if let Some(ch) = left.pop() {
+                    right.push(ch);
                 }
             }
             "D" => {
-                if let Some(c) = right.pop() {
-                    left.push(c);
+                if let Some(ch) = right.pop() {
+                    left.push(ch);
                 }
             }
             "B" => {
                 left.pop();
             }
-            "P" => {
-                if let Some(c) = input().chars().nth(0) {
-                    left.push(c);
-                }
+            _ => {
+                let (_, param) = op.split_once(' ').unwrap();
+                left.push_str(param);
             }
-            _ => (),
         };
     }
 

@@ -5,12 +5,11 @@ enum Time {
 }
 
 use std::io;
-use Time::{H, M, S};
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().map(parse_time);
-    let (h, m, s) = (H as usize, M as usize, S as usize);
+    let (h, m, s) = (Time::H as usize, Time::M as usize, Time::S as usize);
 
     for (mut start, end) in (0..3).map(|_| (input.next().unwrap(), input.next().unwrap())) {
         let mut count = 0;

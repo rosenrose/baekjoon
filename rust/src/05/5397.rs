@@ -7,22 +7,22 @@ fn main() {
     let (mut left, mut right) = (String::new(), String::new());
 
     for input in buf.lines().skip(1) {
-        for c in input.chars() {
-            match c {
+        for ch in input.chars() {
+            match ch {
                 '-' => {
                     left.pop();
                 }
                 '<' => {
-                    if let Some(c) = left.pop() {
-                        right.push(c);
+                    if let Some(ch) = left.pop() {
+                        right.push(ch);
                     }
                 }
                 '>' => {
                     if let Some(c) = right.pop() {
-                        left.push(c);
+                        left.push(ch);
                     }
                 }
-                _ => left.push(c),
+                _ => left.push(ch),
             };
         }
 
