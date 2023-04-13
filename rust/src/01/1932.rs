@@ -17,11 +17,12 @@ fn main() {
         let mut next = vec![0; i];
 
         for (j, num) in (0..i).map(|j| (j, input())) {
-            match j {
-                0 => next[0] = max_sum[0] + num,
-                j if j == i - 1 => next[j] = max_sum[j - 1] + num,
-                _ => next[j] = max_sum[j - 1].max(max_sum[j]) + num,
-            }
+            next[j] = num
+                + match j {
+                    0 => max_sum[0],
+                    j if j == i - 1 => max_sum[j - 1],
+                    _ => max_sum[j - 1].max(max_sum[j]),
+                };
         }
 
         max_sum = next;

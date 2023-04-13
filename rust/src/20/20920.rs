@@ -8,12 +8,12 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut output = String::new();
 
-    let (_, m) = (
-        input.next(),
-        input.next().unwrap().parse::<usize>().unwrap(),
+    let (n, m) = (
+        parse_int(input.next().unwrap()),
+        parse_int(input.next().unwrap()),
     );
 
-    let mut word_counts = HashMap::new();
+    let mut word_counts = HashMap::with_capacity(n);
 
     for word in input.filter(|word| word.len() >= m) {
         word_counts.entry(word).and_modify(|c| *c += 1).or_insert(1);
@@ -27,4 +27,8 @@ fn main() {
     }
 
     print!("{output}");
+}
+
+fn parse_int(buf: &str) -> usize {
+    buf.parse().unwrap()
 }
