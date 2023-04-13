@@ -16,10 +16,10 @@ fn pow_rem(base: i64, exp: i64) -> i64 {
         return base % M;
     }
 
-    let mut rem = pow_rem(base, exp / 2);
+    let mut rem = pow_rem(base, exp >> 1);
     rem = (rem * rem) % M;
 
-    if exp % 2 == 0 {
+    if exp & 1 == 0 {
         rem
     } else {
         (rem * (base % M)) % M

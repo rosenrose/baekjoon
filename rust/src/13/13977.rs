@@ -46,12 +46,12 @@ fn pow_rem(mut base: i64, mut exp: i64) -> i64 {
     let mut rem = 1;
 
     while exp > 0 {
-        if exp % 2 == 1 {
+        if exp & 1 == 1 {
             rem = (rem * base) % M;
         }
 
         base = (base * base) % M;
-        exp /= 2;
+        exp >>= 1;
     }
 
     rem

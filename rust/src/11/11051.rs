@@ -30,12 +30,12 @@ fn pow_rem(mut base: i32, mut exp: i32) -> i32 {
     let mut rem = 1;
 
     while exp > 0 {
-        if exp % 2 == 1 {
+        if exp & 1 == 1 {
             rem = (rem * base) % M;
         }
 
         base = (base * base) % M;
-        exp /= 2;
+        exp >>= 1;
     }
 
     rem
