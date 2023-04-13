@@ -45,10 +45,19 @@ fn combination_pairs(
     matrix: &Vec<Vec<u32>>,
 ) -> u32 {
     if depth == selected.len() {
-        let rest = (0..numbers).filter(|n| !selected.contains(n)).collect();
+        let rest: Vec<_> = (0..numbers).filter(|n| !selected.contains(n)).collect();
         // println!("{selected:?} {rest:?}");
-        let start = combinations(0, 0, &mut [0; 2], selected, matrix);
-        let link = combinations(0, 0, &mut [0; 2], &rest, matrix);
+        let (mut start, mut link) = (0, 0);
+
+        for i in 0..selected.len() - 1 {
+            for j in i + 1..selected.len() {
+                let (a, b) = (selected[i], selected[j]);
+                start += matrix[a][b] + matrix[b][a];
+
+                let (a, b) = (rest[i], rest[j]);
+                link += matrix[a][b] + matrix[b][a];
+            }
+        }
 
         return start.abs_diff(link);
     }
@@ -70,34 +79,4 @@ fn combination_pairs(
 
         result.min(diff)
     })
-}
-
-fn combinations(
-    depth: usize,
-    start: usize,
-    selected: &mut [usize; 2],
-    nums: &Vec<usize>,
-    matrix: &Vec<Vec<u32>>,
-) -> u32 {
-    if depth == selected.len() {
-        let [a, b] = &selected;
-        return matrix[*a][*b] + matrix[*b][*a];
-    }
-
-    let takes = nums.len() - selected.len() + 1;
-
-    nums.iter()
-        .enumerate()
-        .skip(start)
-        .take(takes)
-        .map(|(i, &num)| {
-            if selected[..depth].contains(&num) {
-                return 0;
-            }
-
-            selected[depth] = num;
-
-            combinations(depth + 1, i + 1, selected, nums, matrix)
-        })
-        .sum()
 }
