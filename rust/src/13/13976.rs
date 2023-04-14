@@ -11,6 +11,21 @@ impl Matrix {
                 .collect(),
         )
     }
+
+    fn pow_rem(&self, exp: i64, m: i64) -> Self {
+        if exp == 1 {
+            return self.rem(m);
+        }
+
+        let mut half = self.pow_rem(exp >> 1, m);
+        half = (&half * &half).rem(m);
+
+        if exp & 1 == 0 {
+            half
+        } else {
+            (&half * &self.rem(m)).rem(m)
+        }
+    }
 }
 
 impl Mul for &Matrix {
@@ -35,47 +50,30 @@ impl Mul for &Matrix {
     }
 }
 
-const M: i64 = 1_000_000_007;
-
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let n: i64 = buf.trim().parse().unwrap();
+    let mut n: i64 = buf.trim().parse().unwrap();
+    const M: i64 = 1_000_000_007;
 
     if n % 2 == 1 {
         println!("0");
         return;
     }
 
-    println!("{}", matrix_pow_rem(n / 2));
-}
+    n /= 2;
 
-fn matrix_pow_rem(n: i64) -> i64 {
-    if n == 1 {
-        return 3;
-    }
-    if n == 2 {
-        return 11;
-    }
+    match n {
+        1 => println!("3"),
+        2 => println!("11"),
+        _ => {
+            let mut matrix = Matrix(vec![vec![4, -1], vec![1, 0]]);
+            matrix = matrix.pow_rem(n - 2, M);
+            // println!("{:?}", matrix.0);
+            let count = ((matrix.0[0][0] * 11) % M + (matrix.0[0][1] * 3) % M) % M;
 
-    let mut matrix = Matrix(vec![vec![4, -1], vec![1, 0]]);
-    matrix = pow_rem(&mut matrix, n - 2);
-    // println!("{:?}", matrix.0);
-    ((matrix.0[0][0] * 11) % M + (matrix.0[0][1] * 3) % M) % M
-}
-
-fn pow_rem(base: &Matrix, exp: i64) -> Matrix {
-    if exp == 1 {
-        return base.rem(M);
-    }
-
-    let mut rem = pow_rem(base, exp >> 1);
-    rem = (&rem * &rem).rem(M);
-
-    if exp & 1 == 0 {
-        rem
-    } else {
-        (&rem * &base.rem(M)).rem(M)
+            println!("{count}");
+        }
     }
 }

@@ -2,16 +2,31 @@ use std::fmt;
 use std::io;
 use std::ops::Mul;
 
-struct Matrix(Vec<Vec<i32>>);
+struct Matrix(Vec<Vec<i64>>);
 
 impl Matrix {
-    fn rem(&self, m: i32) -> Self {
+    fn rem(&self, m: i64) -> Self {
         Self(
             self.0
                 .iter()
                 .map(|row| row.iter().map(|num| num % m).collect())
                 .collect(),
         )
+    }
+
+    fn pow_rem(&self, exp: i64, m: i64) -> Self {
+        if exp == 1 {
+            return self.rem(m);
+        }
+
+        let mut half = self.pow_rem(exp >> 1, m);
+        half = (&half * &half).rem(m);
+
+        if exp & 1 == 0 {
+            half
+        } else {
+            (&half * &self.rem(m)).rem(m)
+        }
     }
 }
 
@@ -50,34 +65,12 @@ impl fmt::Display for Matrix {
     }
 }
 
-const M: i32 = 1_000;
-
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
-    let mut input = || input.next().unwrap();
 
-    let (n, b) = (input(), input());
-    let a = Matrix(
-        (0..n)
-            .map(|_| (0..n).map(|_| input() as i32).collect())
-            .collect(),
-    );
+    let (n, b) = (input.next().unwrap() as usize, input.next().unwrap());
+    let a = Matrix((0..n).map(|_| input.by_ref().take(n).collect()).collect());
 
-    print!("{}", pow_rem(&a, b));
-}
-
-fn pow_rem(base: &Matrix, exp: i64) -> Matrix {
-    if exp == 1 {
-        return base.rem(M);
-    }
-
-    let mut rem = pow_rem(base, exp >> 1);
-    rem = (&rem * &rem).rem(M);
-
-    if exp & 1 == 0 {
-        rem
-    } else {
-        (&rem * &base.rem(M)).rem(M)
-    }
+    print!("{}", a.pow_rem(b, 1000));
 }
