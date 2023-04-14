@@ -5,12 +5,11 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let [n, k] = parse_int_vec(&buf)[..] else { return };
-    let mut power_sums = [0; 51];
-    power_sums[0] = n;
+    const MAX: usize = 50;
 
-    let mut combination_rem = [[0; 52]; 52];
+    let mut combination_rem = [[0; MAX + 2]; MAX + 2];
 
-    for i in 0..combination_rem.len() {
+    for i in 0..=k + 1 {
         combination_rem[i][0] = 1;
         combination_rem[i][i] = 1;
 
@@ -18,6 +17,9 @@ fn main() {
             combination_rem[i][j] = (combination_rem[i - 1][j] + combination_rem[i - 1][j - 1]) % M;
         }
     }
+
+    let mut power_sums = [0; MAX + 1];
+    power_sums[0] = n;
 
     for i in 1..=k {
         let mut power_sum = (pow_rem(n + 1, i + 1) - 1 + M) % M;
