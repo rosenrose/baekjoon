@@ -7,20 +7,20 @@ fn main() {
     let input = buf.lines().flat_map(str::parse::<usize>);
     let mut output = String::new();
 
-    let min_factors = get_min_factors(1000);
-    let mut euler_phi = vec![0, 0];
+    const MAX: usize = 1000;
+    let min_factors = get_min_factors(MAX);
+    let mut euler_phi = vec![0; MAX + 1];
 
-    for mut i in 2..=1000 {
-        let mut phi = i;
+    for i in 2..=1000 {
+        let mut num = i;
         let mut factors = HashSet::new();
 
-        while i > 1 {
-            factors.insert(min_factors[i]);
-            i /= min_factors[i];
+        while num > 1 {
+            factors.insert(min_factors[num]);
+            num /= min_factors[num];
         }
 
-        phi = factors.iter().fold(phi, |acc, p| acc * (p - 1) / p);
-        euler_phi.push(phi);
+        euler_phi[i] = factors.iter().fold(i, |acc, p| acc * (p - 1) / p);
     }
 
     for n in input.skip(1) {
