@@ -10,15 +10,14 @@ fn main() {
         1 => println!("{}", scores[0]),
         2 => println!("{}", scores[0] + scores[1]),
         _ => {
-            let mut max_scores = vec![
-                scores[0],
-                scores[0] + scores[1],
-                scores[0].max(scores[1]) + scores[2],
-            ];
+            let mut max_scores = vec![0; scores.len()];
+            max_scores[0] = scores[0];
+            max_scores[1] = scores[0] + scores[1];
+            max_scores[2] = scores[0].max(scores[1]) + scores[2];
 
             for i in 3..scores.len() {
-                max_scores
-                    .push(max_scores[i - 2].max(max_scores[i - 3] + scores[i - 1]) + scores[i]);
+                max_scores[i] =
+                    max_scores[i - 2].max(max_scores[i - 3] + scores[i - 1]) + scores[i];
             }
 
             println!("{}", max_scores.last().unwrap());
