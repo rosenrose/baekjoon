@@ -128,7 +128,7 @@ impl BigInt {
         }
     }
 
-    fn normalize(v: Vec<Complex>) -> Vec<i64> {
+    fn normalize(v: Vec<Complex>) -> Self {
         let mut carry = 0;
         let mut result: Vec<_> = v
             .iter()
@@ -144,7 +144,7 @@ impl BigInt {
             result.push(carry);
         }
 
-        result
+        Self(result)
     }
 }
 
@@ -177,9 +177,9 @@ impl Mul for BigInt {
 
         Self::fast_fourier_transform(&mut mul, true);
 
-        let mut result = Self(Self::normalize(mul));
-
+        let mut result = Self::normalize(mul);
         result.zero_justify();
+
         result
     }
 }
