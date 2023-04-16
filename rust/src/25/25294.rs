@@ -19,14 +19,17 @@ fn main() {
             let mut max_nums = vec![0; half + 1];
             let mut side_len = n as u32;
 
-            for j in 1..=half {
-                max_nums[j] = max_nums[j - 1] + if side_len == 1 { 1 } else { (side_len - 1) * 4 };
-                side_len -= 2;
+            for j in 0..=half {
+                let last = if j == 0 { 0 } else { max_nums[j - 1] };
+
+                max_nums[j] = last + if side_len == 1 { 1 } else { (side_len - 1) * 4 };
+                side_len = side_len.saturating_sub(2);
             }
 
             memo[i] = max_nums;
+            // println!("{:?} {:?}", &memo[..=2], memo[4998]);
         }
-        // println!("{:?} {:?}", &memo[..=2], memo[4998]);
+
         match query {
             1 => {
                 let (x, y) = (input(), input());
@@ -34,7 +37,11 @@ fn main() {
                 let num = x.abs().max(y.abs());
                 let diff = num as u32 * 2;
                 // println!("{y} {x} {num}");
-                let left_top = memo[i][half - num as usize] + 1;
+                let left_top = if i as i32 - num == -1 {
+                    1
+                } else {
+                    memo[i][i - num as usize] + 1
+                };
                 if y == -num {
                     writeln!(output, "{}", left_top + x.abs_diff(-num)).unwrap();
                     continue;
@@ -59,12 +66,11 @@ fn main() {
             2 => {
                 let z = input() as u32;
                 let idx = memo[i].partition_point(|&max_num| z > max_num);
-                let num = ((half + 1) - idx) as i32;
+                let num = (half - idx) as i32;
                 let diff = num as u32 * 2;
                 // println!("idx: {idx}, num: {num}");
                 let (x, y);
-
-                let left_top = memo[i][idx - 1] as u32 + 1;
+                let left_top = if idx == 0 { 1 } else { memo[i][idx - 1] + 1 };
                 let right_top = left_top + diff;
                 if z <= right_top {
                     (y, x) = (-num, -num + z.abs_diff(left_top) as i32);
