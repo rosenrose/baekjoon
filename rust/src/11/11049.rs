@@ -6,22 +6,15 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let n = input() as usize;
-    let mut sizes = vec![0; n + 1];
-    (sizes[0], sizes[1]) = (input(), input());
+    let sizes: Vec<_> = (0..n).map(|_| (input(), input())).collect();
+    let mut memo = vec![vec![0; n]; n];
 
-    for i in 2..=n {
-        input();
-        sizes[i] = input();
-    }
+    for window_size in 2..=n {
+        let (mut i, mut j) = (0, window_size - 1);
 
-    let mut memo = vec![vec![0; n + 1]; n + 1];
-
-    for start in 2..=n {
-        let (mut i, mut j) = (1, start);
-
-        for _ in 0..n - start + 1 {
+        while j < n {
             memo[i][j] = (i..j)
-                .map(|k| memo[i][k] + memo[k + 1][j] + (sizes[i - 1] * sizes[k] * sizes[j]))
+                .map(|k| memo[i][k] + memo[k + 1][j] + (sizes[i].0 * sizes[k].1 * sizes[j].1))
                 .min()
                 .unwrap();
             i += 1;
@@ -29,5 +22,5 @@ fn main() {
         }
     }
     // println!("{memo:?}");
-    println!("{}", memo[1][n]);
+    println!("{}", memo[0][n - 1]);
 }
