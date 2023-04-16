@@ -12,19 +12,19 @@ fn main() {
         students[grade][gender] += 1;
     }
 
-    let mut count = (students[1..=2]
+    let mut sum: i32 = students[1..=2]
         .iter()
         .map(|row| row.iter().sum::<i32>())
-        .sum::<i32>() as f64
-        / k)
-        .ceil() as i32;
-    count += (0..=1)
-        .map(|gender| {
-            ((3..=4).map(|grade| students[grade][gender]).sum::<i32>() as f64 / k).ceil() as i32
-                + ((5..=6).map(|grade| students[grade][gender]).sum::<i32>() as f64 / k).ceil()
-                    as i32
-        })
-        .sum::<i32>();
+        .sum();
+    let mut count = (sum as f64 / k).ceil() as i32;
+
+    for gender in 0..=1 {
+        sum = (3..=4).map(|grade| students[grade][gender]).sum();
+        count += (sum as f64 / k).ceil() as i32;
+
+        sum = (5..=6).map(|grade| students[grade][gender]).sum();
+        count += (sum as f64 / k).ceil() as i32;
+    }
 
     println!("{count}");
 }
