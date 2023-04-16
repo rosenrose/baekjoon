@@ -18,7 +18,7 @@ fn main() {
 
     let distances = dijkstra(&adjacency_list, k);
     // println!("{distances:?}");
-    for &dist in distances.iter().skip(1) {
+    for &dist in &distances[1..] {
         (if dist == i32::MAX {
             writeln!(output, "INF")
         } else {

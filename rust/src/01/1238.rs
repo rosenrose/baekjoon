@@ -19,10 +19,9 @@ fn main() {
     let dists_reverse = dijkstra(&adjacency_list_reverse, x);
     let dists = dijkstra(&adjacency_list, x);
 
-    let max_dist = dists_reverse
+    let max_dist = dists_reverse[1..]
         .iter()
-        .skip(1)
-        .zip(dists.iter().skip(1))
+        .zip(&dists[1..])
         .map(|(a, b)| a + b)
         .max()
         .unwrap();

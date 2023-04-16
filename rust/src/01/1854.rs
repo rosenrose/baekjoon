@@ -16,7 +16,7 @@ fn main() {
 
     let distances = dijkstra_nth(&adjacency_list, 1, k);
     // println!("{distances:?}");
-    for dists in distances.iter().skip(1) {
+    for dists in &distances[1..] {
         println!(
             "{}",
             if dists.len() < k {

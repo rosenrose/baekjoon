@@ -10,7 +10,7 @@ fn main() {
     // println!("{cables:?}");
     let mut lis_temp = vec![cables[0].1];
 
-    for &(_, num) in cables.iter().skip(1) {
+    for &(_, num) in &cables[1..] {
         if num > *lis_temp.last().unwrap() {
             lis_temp.push(num);
             continue;

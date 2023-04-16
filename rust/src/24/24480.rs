@@ -21,7 +21,7 @@ fn main() {
 
     let visited = dfs(&adjacency_list, r);
 
-    for order in visited.iter().skip(1) {
+    for order in &visited[1..] {
         writeln!(output, "{order}").unwrap();
     }
 

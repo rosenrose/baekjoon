@@ -24,7 +24,7 @@ fn main() {
         }
     }
 
-    for area in visible_areas.iter().skip(1) {
+    for area in &visible_areas[1..] {
         writeln!(output, "{area}").unwrap();
     }
 

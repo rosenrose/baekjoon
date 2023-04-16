@@ -9,13 +9,11 @@ use Tag::{Close, Open, SelfClose};
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let tag_regex = Regex::new(r"<[^>]+>", false);
-    let amp_regex = Regex::new(r"&(lt|gt|amp|x[0-9a-zA-Z]+);", false);
 
     for input in buf.lines() {
         println!(
             "{}",
-            if is_valid_xml(input, &tag_regex, &amp_regex) {
+            if is_valid_xml(input) {
                 "valid"
             } else {
                 "invalid"
@@ -24,22 +22,23 @@ fn main() {
     }
 }
 
-fn is_valid_xml(input: &str, tag_regex: &Regex, amp_regex: &Regex) -> bool {
+fn is_valid_xml(input: &str) -> bool {
     let mut cursor = 0;
     let mut stack = Vec::new();
 
-    while let Some((mut start, mut end)) = tag_regex.find(&input[cursor..]) {
-        start += cursor;
-        end += cursor;
+    for (tag_start, _) in input.match_indices('<') {
+        let plain_text = &input[cursor..tag_start];
 
-        let plain_text = &input[cursor..start];
-        // println!("p: {plain_text}");
-        if !is_valid_text(plain_text, amp_regex) {
+        if !is_valid_text(plain_text) {
             return false;
         }
 
-        let tag = &input[start + 1..end - 1];
-        // println!("t: {tag}");
+        let Some(mut tag_end) = input[tag_start..].find('>') else {
+            return false;
+        };
+        tag_end += tag_start;
+
+        let tag = &input[tag_start + 1..tag_end];
         let tag_kind = if tag.starts_with('/') {
             Close
         } else if tag.ends_with('/') {
@@ -50,8 +49,8 @@ fn is_valid_xml(input: &str, tag_regex: &Regex, amp_regex: &Regex) -> bool {
 
         let tag_name = match tag_kind {
             Open => tag,
-            Close => tag.strip_prefix('/').unwrap(),
-            SelfClose => tag.strip_suffix('/').unwrap(),
+            Close => tag.trim_start_matches('/'),
+            SelfClose => tag.trim_end_matches('/'),
         };
 
         if !is_valid_tag_name(tag_name) {
@@ -62,8 +61,8 @@ fn is_valid_xml(input: &str, tag_regex: &Regex, amp_regex: &Regex) -> bool {
             Open => stack.push(tag_name),
             Close => {
                 let Some(opening_tag_name) = stack.pop() else {
-                  return false;
-              };
+                    return false;
+                };
 
                 if opening_tag_name != tag_name {
                     return false;
@@ -72,13 +71,13 @@ fn is_valid_xml(input: &str, tag_regex: &Regex, amp_regex: &Regex) -> bool {
             SelfClose => (),
         }
 
-        cursor = end;
+        cursor = tag_end + 1;
     }
 
-    stack.is_empty() && is_valid_text(&input[cursor..], amp_regex)
+    stack.is_empty() && is_valid_text(&input[cursor..])
 }
 
-fn is_valid_text(input: &str, amp_regex: &Regex) -> bool {
+fn is_valid_text(input: &str) -> bool {
     if input.is_empty() {
         return true;
     }
@@ -88,20 +87,22 @@ fn is_valid_text(input: &str, amp_regex: &Regex) -> bool {
 
     let mut cursor = 0;
 
-    while let Some((mut start, mut end)) = amp_regex.find(&input[cursor..]) {
-        start += cursor;
-        end += cursor;
+    for (amp, _) in input.match_indices('&') {
+        let plain_text = &input[cursor..amp];
 
-        let plain_text = &input[cursor..start];
-
-        if !is_valid_text(plain_text, amp_regex) {
+        if !is_valid_text(plain_text) {
             return false;
         }
 
-        let token = &input[start + 1..end - 1];
+        let Some(mut semicolon) = input[amp..].find(';') else {
+            return false;
+        };
+        semicolon += amp;
+
+        let token = &input[amp + 1..semicolon];
 
         if matches!(token, "lt" | "gt" | "amp") {
-            cursor = end;
+            cursor = semicolon + 1;
             continue;
         }
         if !token.starts_with('x') {
@@ -110,20 +111,12 @@ fn is_valid_text(input: &str, amp_regex: &Regex) -> bool {
 
         let hex = &token[1..];
 
-        if !(hex.len() > 0
-            && hex.len() % 2 == 0
-            && hex
-                .chars()
-                .all(|ch| matches!(ch, '0'..='9' | 'a'..='f' | 'A'..='F')))
+        if !(hex.len() > 0 && (hex.len() & 1 == 0) && hex.chars().all(|ch| ch.is_ascii_hexdigit()))
         {
             return false;
         }
 
-        cursor = end;
-    }
-
-    if input[cursor..].contains('&') {
-        return false;
+        cursor = semicolon + 1;
     }
 
     input[cursor..]

@@ -19,7 +19,7 @@ fn main() {
         return;
     }
 
-    for &dist in distances.iter().skip(2) {
+    for &dist in &distances[2..] {
         writeln!(output, "{}", if dist == i64::MAX { -1 } else { dist }).unwrap();
     }
 

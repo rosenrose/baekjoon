@@ -24,7 +24,7 @@ fn main() {
 
     divisors.sort();
 
-    for num in divisors.iter().skip(1) {
+    for num in &divisors[1..] {
         print!("{num} ");
     }
 }
