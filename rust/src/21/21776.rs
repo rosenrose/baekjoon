@@ -24,7 +24,7 @@ fn main() {
         .collect();
     // println!("{card_orders:?}\n{cards:?}");
     let mut result = Vec::new();
-    play_game(
+    product(
         &mut vec![0; n],
         &mut vec![0; c],
         &card_orders,
@@ -37,14 +37,14 @@ fn main() {
     println!("{}", result.join("\n"));
 }
 
-fn play_game(
-    depth: &mut Vec<usize>,
+fn product(
+    depths: &mut Vec<usize>,
     selected: &mut Vec<usize>,
     card_orders: &Vec<Vec<usize>>,
     cards: &Vec<Vec<(&str, char)>>,
     result: &mut Vec<String>,
 ) {
-    let total_depth: usize = depth.iter().sum();
+    let total_depth: usize = depths.iter().sum();
 
     if total_depth == selected.len() {
         let mut ret = String::new();
@@ -78,16 +78,16 @@ fn play_game(
     }
 
     for (i, orders) in card_orders.iter().enumerate() {
-        let Some(&card_num) = orders.get(depth[i]) else {
+        let Some(&card_num) = orders.get(depths[i]) else {
             continue;
         };
 
         selected[total_depth] = card_num;
-        depth[i] += 1;
+        depths[i] += 1;
 
-        play_game(depth, selected, card_orders, cards, result);
+        product(depths, selected, card_orders, cards, result);
 
-        depth[i] -= 1;
+        depths[i] -= 1;
     }
 }
 

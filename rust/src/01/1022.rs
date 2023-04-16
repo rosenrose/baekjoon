@@ -2,8 +2,7 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let nums = parse_int_vec(&buf);
-    let (r1, c1, r2, c2) = (nums[0], nums[1], nums[2], nums[3]);
+    let [r1, c1, r2, c2] = parse_int_vec(&buf)[..] else { return };
     let mut max = 0;
 
     let vortex: Vec<Vec<_>> = (r1..=r2)
