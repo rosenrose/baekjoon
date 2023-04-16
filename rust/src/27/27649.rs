@@ -8,7 +8,9 @@ fn main() {
     let mut output = String::new();
     let mut cursor = 0;
 
-    while let Some((start, end)) = find_delims(input, cursor) {
+    while let Some((mut start, mut end)) = find_delims(&input[cursor..]) {
+        start += cursor;
+        end += cursor;
         let token = &input[cursor..start];
         let delim = &input[start..end];
 
@@ -23,40 +25,30 @@ fn main() {
         cursor = end;
     }
 
-    write!(output, "{}", buf[cursor..].trim()).unwrap();
+    write!(output, "{}", &input[cursor..]).unwrap();
     print!("{output}");
 }
 
-fn find_delims(input: &str, start: usize) -> Option<(usize, usize)> {
-    let input = &input[start..];
-    let mut i = 0;
-
-    while i < input.len() {
-        let ch = &input[i..i + 1];
-
+fn find_delims(input: &str) -> Option<(usize, usize)> {
+    for (i, ch) in input.char_indices() {
         match ch {
-            "<" | ">" | "(" | ")" => {
-                return Some((start + i, start + i + 1));
+            '<' | '>' | '(' | ')' => {
+                return Some((i, i + 1));
             }
-            "&" | "|" => {
-                if i + 1 == input.len() {
-                    return None;
-                }
-
-                let next_ch = &input[i + 1..i + 2];
+            '&' | '|' => {
+                let next_ch = input[i + 1..].chars().nth(0)?;
 
                 if ch == next_ch {
-                    return Some((start + i, start + i + 2));
+                    return Some((i, i + 2));
                 }
             }
-            " " => {
+            ' ' => {
                 let end = input[i..].find(|c| c != ' ')?;
-                return Some((start + i, start + i + end));
+
+                return Some((i, i + end));
             }
             _ => (),
         }
-
-        i += 1;
     }
 
     None
