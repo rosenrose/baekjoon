@@ -36,6 +36,24 @@ fn get_prime_sieve(num: usize, mut k: i32, deleted: &mut usize) -> Vec<bool> {
 
     prime_sieve
 }
+
+// fn get_prime_sieve(num: usize) -> Vec<bool> {
+//     let mut sieve = vec![true; num + 1];
+//     (sieve[0], sieve[1]) = (false, false);
+
+//     for i in (2..).take_while(|i| i * i <= num) {
+//         if !sieve[i] {
+//             continue;
+//         }
+
+//         for j in (i * i..=num).step_by(i) {
+//             sieve[j] = false;
+//         }
+//     }
+
+//     sieve
+// }
+
 fn parse_int_vec(buf: &String) -> Vec<usize> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }
