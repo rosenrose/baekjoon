@@ -12,41 +12,37 @@ fn main() {
 }
 
 fn kmp(source: &[u8], target: &[u8]) -> i32 {
-    let (mut count, mut start) = (0, 0);
-    let partial_match = get_partial_match(target);
+    let mut partial_match = vec![0; target.len()];
+    let mut i = 0;
 
-    for &s in source {
-        while target[start] != s && start > 0 {
-            start = partial_match[start - 1];
+    for j in 1..target.len() {
+        while (target[i] != target[j]) && i > 0 {
+            i = partial_match[i - 1];
         }
 
-        if target[start] == s {
-            if start < target.len() - 1 {
-                start += 1;
+        if target[i] == target[j] {
+            i += 1;
+            partial_match[j] = i;
+        }
+    }
+
+    i = 0;
+    let mut count = 0;
+
+    for &s in source {
+        while target[i] != s && i > 0 {
+            i = partial_match[i - 1];
+        }
+
+        if target[i] == s {
+            if i < target.len() - 1 {
+                i += 1;
             } else {
                 count += 1;
-                start = partial_match[start];
+                i = partial_match[i];
             }
         }
     }
 
     count
-}
-
-fn get_partial_match(chars: &[u8]) -> Vec<usize> {
-    let mut partial_match = vec![0; chars.len()];
-    let mut start = 0;
-
-    for i in 1..chars.len() {
-        while (chars[start] != chars[i]) && start > 0 {
-            start = partial_match[start - 1];
-        }
-
-        if chars[start] == chars[i] {
-            start += 1;
-            partial_match[i] = start;
-        }
-    }
-
-    partial_match
 }

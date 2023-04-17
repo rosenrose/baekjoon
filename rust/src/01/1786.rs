@@ -19,45 +19,40 @@ fn main() {
 }
 
 fn kmp_with_index(source: &[u8], target: &[u8]) -> (i32, Vec<usize>) {
-    let (mut count, mut start) = (0, 0);
-    let mut indices = Vec::new();
+    let mut partial_match = vec![0; target.len()];
+    let mut i = 0;
 
-    let partial_match = get_partial_match(target);
-    // println!("{partial_match:?}");
-    for (i, &s) in source.iter().enumerate() {
-        while target[start] != s && start > 0 {
-            start = partial_match[start - 1];
+    for j in 1..target.len() {
+        while (target[i] != target[j]) && i > 0 {
+            i = partial_match[i - 1];
         }
 
-        if target[start] == s {
-            if start < target.len() - 1 {
-                start += 1;
+        if target[i] == target[j] {
+            i += 1;
+            partial_match[j] = i;
+        }
+    }
+    // println!("{partial_match:?}");
+    i = 0;
+    let mut count = 0;
+    let mut indices = Vec::new();
+
+    for (idx, &s) in source.iter().enumerate() {
+        while target[i] != s && i > 0 {
+            i = partial_match[i - 1];
+        }
+
+        if target[i] == s {
+            if i < target.len() - 1 {
+                i += 1;
             } else {
                 count += 1;
-                indices.push(i + 1 - target.len());
+                indices.push(idx + 1 - target.len());
 
-                start = partial_match[start];
+                i = partial_match[i];
             }
         }
     }
 
     (count, indices)
-}
-
-fn get_partial_match(chars: &[u8]) -> Vec<usize> {
-    let mut partial_match = vec![0; chars.len()];
-    let mut start = 0;
-
-    for i in 1..chars.len() {
-        while (chars[start] != chars[i]) && start > 0 {
-            start = partial_match[start - 1];
-        }
-
-        if chars[start] == chars[i] {
-            start += 1;
-            partial_match[i] = start;
-        }
-    }
-
-    partial_match
 }
