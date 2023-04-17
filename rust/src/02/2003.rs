@@ -7,8 +7,8 @@ fn main() {
     let (_, m) = (input.next(), input.next().unwrap());
     let nums: Vec<_> = input.collect();
 
-    let (mut i, mut j) = (0, 0);
-    let mut sum = nums[i];
+    let (mut start, mut end) = (0, 0);
+    let mut sum = nums[start];
     let mut count = 0;
 
     loop {
@@ -17,16 +17,16 @@ fn main() {
         }
 
         if sum < m {
-            j += 1;
+            end += 1;
 
-            if j == nums.len() {
+            if end == nums.len() {
                 break;
             }
 
-            sum += nums[j];
+            sum += nums[end];
         } else {
-            sum -= nums[i];
-            i += 1;
+            sum -= nums[start];
+            start += 1;
         }
     }
 
