@@ -69,12 +69,7 @@ fn combination_pairs(
     };
 
     (start..numbers).take(takes).fold(u32::MAX, |diff, num| {
-        if selected[..depth].contains(&num) {
-            return diff;
-        }
-
         selected[depth] = num;
-
         let result = combination_pairs(depth + 1, num + 1, selected, numbers, matrix);
 
         result.min(diff)

@@ -37,7 +37,7 @@ fn combinations(
     let mut visited = HashSet::new();
 
     for (i, &num) in nums.iter().enumerate().skip(start).take(takes) {
-        if visited.contains(&num) || selected[..depth].contains(&i) {
+        if visited.contains(&num) {
             continue;
         }
 

@@ -54,12 +54,7 @@ fn combinations(
     (start..viruse_places.len())
         .take(takes)
         .map(|i| {
-            if selected[..depth].contains(&i) {
-                return i32::MAX;
-            }
-
             selected[depth] = i;
-
             combinations(depth + 1, i + 1, selected, viruse_places, room)
         })
         .filter(|&t| t != -1)

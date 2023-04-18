@@ -57,10 +57,6 @@ fn combinations(
         .skip(start)
         .take(takes)
         .map(|(i, &chicken)| {
-            if selected[..depth].contains(&chicken) {
-                return 0;
-            }
-
             selected[depth] = chicken;
             combinations(depth + 1, i + 1, selected, chickens, houses)
         })

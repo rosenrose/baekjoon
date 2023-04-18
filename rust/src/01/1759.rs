@@ -32,10 +32,6 @@ fn combinations(depth: usize, start: usize, selected: &mut Vec<char>, chars: &Ve
     let takes = chars.len() - selected.len() + 1;
 
     for (i, &ch) in chars.iter().enumerate().skip(start).take(takes) {
-        if selected[..depth].contains(&ch) {
-            continue;
-        }
-
         selected[depth] = ch;
         combinations(depth + 1, i + 1, selected, chars);
     }

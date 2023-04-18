@@ -35,10 +35,6 @@ fn combinations(
     (start..nums.len())
         .take(takes)
         .map(|i| {
-            if selected[..depth].contains(&i) {
-                return 0;
-            }
-
             selected[depth] = i;
             combinations(depth + 1, i + 1, selected, sum, nums)
         })
