@@ -9,9 +9,7 @@ fn main() {
     let mut output = String::new();
 
     let (mut under, mut over) = (BinaryHeap::new(), BinaryHeap::new());
-
-    let _n = input.next();
-    under.push(input.next().unwrap());
+    under.push(input.by_ref().skip(1).next().unwrap());
 
     println!("{}", under.peek().unwrap());
 
