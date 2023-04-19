@@ -1,28 +1,3 @@
-// use std::io;
-
-// fn main() {
-//     let buf = io::read_to_string(io::stdin()).unwrap();
-//     let input = buf.lines().flat_map(str::parse::<i32>);
-
-//     let mut nums: Vec<_> = input.skip(1).collect();
-//     nums.sort_unstable();
-
-//     if nums.len() == 1 {
-//         println!("0");
-//         return;
-//     }
-
-//     let mut merged = nums[0] + nums[1];
-//     let mut count = merged;
-
-//     for i in 2..nums.len() {
-//         count += merged + nums[i];
-//         merged += nums[i];
-//     }
-
-//     println!("{count}");
-// }
-
 use std::io;
 
 fn main() {
@@ -46,9 +21,8 @@ fn combination_pairs(
 ) -> u32 {
     if depth == selected.len() {
         let rest: Vec<_> = (0..numbers).filter(|n| !selected.contains(n)).collect();
-        // println!("{selected:?} {rest:?}");
         let (mut start, mut link) = (0, 0);
-
+        // println!("{selected:?} {rest:?}");
         for i in 0..selected.len() - 1 {
             for j in i + 1..selected.len() {
                 let (a, b) = (selected[i], selected[j]);
@@ -62,16 +36,18 @@ fn combination_pairs(
         return start.abs_diff(link);
     }
 
-    let takes = if start == 0 {
-        1
-    } else {
-        numbers - selected.len() + 1
-    };
+    if depth == 0 {
+        selected[depth] = 0;
+        return combination_pairs(depth + 1, 1, selected, numbers, matrix);
+    }
 
-    (start..numbers).take(takes).fold(u32::MAX, |diff, num| {
-        selected[depth] = num;
-        let result = combination_pairs(depth + 1, num + 1, selected, numbers, matrix);
+    let takes = numbers - selected.len() + 1;
 
-        result.min(diff)
-    })
+    (start..depth + takes)
+        .map(|num| {
+            selected[depth] = num;
+            combination_pairs(depth + 1, num + 1, selected, numbers, matrix)
+        })
+        .min()
+        .unwrap()
 }

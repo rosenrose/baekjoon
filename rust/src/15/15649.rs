@@ -7,14 +7,12 @@ fn main() {
     let mut output = String::new();
     let [n, m] = parse_int_vec(&buf)[..] else { return };
 
-    let nums: Vec<_> = (1..=n).collect();
-
-    permutations(0, &mut vec![0; m], &nums, &mut output);
+    permutations(0, &mut vec![0; m], n, &mut output);
 
     print!("{output}");
 }
 
-fn permutations(depth: usize, selected: &mut Vec<usize>, nums: &Vec<usize>, output: &mut String) {
+fn permutations(depth: usize, selected: &mut Vec<usize>, nums: usize, output: &mut String) {
     if depth == selected.len() {
         for num in selected {
             write!(output, "{num} ").unwrap();
@@ -24,7 +22,7 @@ fn permutations(depth: usize, selected: &mut Vec<usize>, nums: &Vec<usize>, outp
         return;
     }
 
-    for &num in nums {
+    for num in 1..=nums {
         if selected[..depth].contains(&num) {
             continue;
         }

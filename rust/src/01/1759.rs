@@ -31,8 +31,8 @@ fn combinations(depth: usize, start: usize, selected: &mut Vec<char>, chars: &Ve
 
     let takes = chars.len() - selected.len() + 1;
 
-    for (i, &ch) in chars.iter().enumerate().skip(start).take(takes) {
-        selected[depth] = ch;
+    for i in start..depth + takes {
+        selected[depth] = chars[i];
         combinations(depth + 1, i + 1, selected, chars);
     }
 }

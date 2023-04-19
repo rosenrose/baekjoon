@@ -7,14 +7,12 @@ fn main() {
     let mut output = String::new();
     let [n, m] = parse_int_vec(&buf)[..] else { return };
 
-    let nums: Vec<_> = (1..=n).collect();
-
-    product(0, &mut vec![0; m], &nums, &mut output);
+    product(0, &mut vec![0; m], n, &mut output);
 
     print!("{output}");
 }
 
-fn product(depth: usize, selected: &mut Vec<usize>, nums: &Vec<usize>, output: &mut String) {
+fn product(depth: usize, selected: &mut Vec<usize>, nums: usize, output: &mut String) {
     if depth == selected.len() {
         for num in selected {
             write!(output, "{num} ").unwrap();
@@ -24,7 +22,7 @@ fn product(depth: usize, selected: &mut Vec<usize>, nums: &Vec<usize>, output: &
         return;
     }
 
-    for &num in nums {
+    for num in 1..=nums {
         selected[depth] = num;
         product(depth + 1, selected, nums, output);
     }

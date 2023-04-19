@@ -51,15 +51,11 @@ fn combinations(
 
     let takes = chickens.len() - selected.len() + 1;
 
-    chickens
-        .iter()
-        .enumerate()
-        .skip(start)
-        .take(takes)
-        .map(|(i, &chicken)| {
-            selected[depth] = chicken;
+    (start..depth + takes)
+        .map(|i| {
+            selected[depth] = chickens[i];
             combinations(depth + 1, i + 1, selected, chickens, houses)
         })
         .min()
-        .unwrap_or(usize::MAX)
+        .unwrap()
 }

@@ -35,8 +35,8 @@ fn combinations(
 
     let takes = nums.len() - selected.len() + 1;
 
-    for (i, &num) in nums.iter().enumerate().skip(start).take(takes) {
-        selected[depth] = num;
+    for i in start..depth + takes {
+        selected[depth] = nums[i];
         combinations(depth + 1, i + 1, selected, nums, output);
     }
 }

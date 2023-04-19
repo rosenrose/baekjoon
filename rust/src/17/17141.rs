@@ -51,8 +51,7 @@ fn combinations(
 
     let takes = viruse_places.len() - selected.len() + 1;
 
-    (start..viruse_places.len())
-        .take(takes)
+    (start..depth + takes)
         .map(|i| {
             selected[depth] = i;
             combinations(depth + 1, i + 1, selected, viruse_places, room)

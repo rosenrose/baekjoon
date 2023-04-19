@@ -7,7 +7,7 @@ fn main() {
 
     let n = input() as usize;
     let sizes: Vec<_> = (0..n).map(|_| (input(), input())).collect();
-    let mut memo = vec![vec![0; n]; n];
+    let mut memo = vec![[0; 500]; 500];
 
     for window_size in 2..=n {
         let (mut i, mut j) = (0, window_size - 1);

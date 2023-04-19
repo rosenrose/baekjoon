@@ -35,12 +35,12 @@ fn combinations_with_replacement(
 
     let mut visited = HashSet::new();
 
-    for (i, &num) in nums.iter().enumerate().skip(start) {
-        if visited.contains(&num) {
+    for i in start..nums.len() {
+        if visited.contains(&nums[i]) {
             continue;
         }
 
-        visited.insert(num);
+        visited.insert(nums[i]);
         selected[depth] = i;
 
         combinations_with_replacement(depth + 1, i, selected, nums, output);

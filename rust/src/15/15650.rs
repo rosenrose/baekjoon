@@ -7,9 +7,7 @@ fn main() {
     let mut output = String::new();
     let [n, m] = parse_int_vec(&buf)[..] else { return };
 
-    let nums: Vec<_> = (1..=n).collect();
-
-    combinations(0, 0, &mut vec![0; m], &nums, &mut output);
+    combinations(0, 0, &mut vec![0; m], n, &mut output);
 
     print!("{output}");
 }
@@ -18,7 +16,7 @@ fn combinations(
     depth: usize,
     start: usize,
     selected: &mut Vec<usize>,
-    nums: &Vec<usize>,
+    nums: usize,
     output: &mut String,
 ) {
     if depth == selected.len() {
@@ -30,9 +28,9 @@ fn combinations(
         return;
     }
 
-    let takes = nums.len() - selected.len() + 1;
+    let takes = nums - selected.len() + 1;
 
-    for (i, &num) in nums.iter().enumerate().skip(start).take(takes) {
+    for (i, num) in (1..=nums).enumerate().skip(start).take(takes) {
         selected[depth] = num;
         combinations(depth + 1, i + 1, selected, nums, output);
     }

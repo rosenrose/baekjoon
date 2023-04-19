@@ -36,12 +36,12 @@ fn combinations(
     let takes = nums.len() - selected.len() + 1;
     let mut visited = HashSet::new();
 
-    for (i, &num) in nums.iter().enumerate().skip(start).take(takes) {
-        if visited.contains(&num) {
+    for i in start..depth + takes {
+        if visited.contains(&nums[i]) {
             continue;
         }
 
-        visited.insert(num);
+        visited.insert(nums[i]);
         selected[depth] = i;
 
         combinations(depth + 1, i + 1, selected, nums, output);
