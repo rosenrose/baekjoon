@@ -26,12 +26,12 @@ fn fibo_rem(n: i64, memo: &mut HashMap<i64, i64>) -> i64 {
     let i = n / 2;
     let j = if n % 2 == 0 { i } else { i + 1 };
 
-    let mut get_or_insert = |n: i64| {
-        if let Some(num) = memo.get(&n) {
-            *num
+    let mut get_or_insert = |num: i64| {
+        if let Some(&ret) = memo.get(&num) {
+            ret
         } else {
-            let ret = fibo_rem(n, memo);
-            memo.insert(n, ret);
+            let ret = fibo_rem(num, memo);
+            memo.insert(num, ret);
 
             ret
         }

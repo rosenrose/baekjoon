@@ -50,9 +50,10 @@ fn parse_int_vec(buf: &String) -> Vec<i32> {
 //         return 1;
 //     }
 
-//     let mut get_or_insert = |n: i32, r: i32| match memo.get(&(n, r)) {
-//         Some(i) => *i,
-//         None => {
+//     let mut get_or_insert = |n: i32, r: i32| {
+//         if let Some(&i) = memo.get(&(n, r)) {
+//             i
+//         } else {
 //             let ret = combination_rem(n, r, memo);
 //             memo.insert((n, r), ret);
 
