@@ -9,13 +9,13 @@ fn main() {
 
     let s = input();
     let q = parse_int(input());
-    let mut sum_accum = vec![vec![0; s.len() + 1]; 26];
+    let mut sum_accum = vec![[0; 26]; s.len() + 1];
 
-    for (i, ch) in s.char_indices() {
+    for (row, ch) in s.char_indices() {
         let idx = ch as usize - 'a' as usize;
 
-        for row in 0..sum_accum.len() {
-            sum_accum[row][i + 1] = sum_accum[row][i] + if row == idx { 1 } else { 0 };
+        for col in 0..26 {
+            sum_accum[row + 1][col] = sum_accum[row][col] + if col == idx { 1 } else { 0 };
         }
     }
 
@@ -25,7 +25,7 @@ fn main() {
         writeln!(
             output,
             "{}",
-            sum_accum[idx][right + 1] - sum_accum[idx][left]
+            sum_accum[right + 1][idx] - sum_accum[left][idx]
         )
         .unwrap();
     }

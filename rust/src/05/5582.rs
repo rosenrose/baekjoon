@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.lines();
     let (s, t) = (input.next().unwrap(), input.next().unwrap());
 
-    let mut table = vec![vec![0; s.len() + 1]; t.len() + 1];
+    let mut memo = vec![vec![0; s.len() + 1]; t.len() + 1];
     let mut max_len = 0;
 
     for (i, t_char) in t.char_indices() {
@@ -14,8 +14,8 @@ fn main() {
                 continue;
             }
 
-            table[i + 1][j + 1] = table[i][j] + 1;
-            max_len = table[i + 1][j + 1].max(max_len);
+            memo[i + 1][j + 1] = memo[i][j] + 1;
+            max_len = memo[i + 1][j + 1].max(max_len);
         }
     }
 
