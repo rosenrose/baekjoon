@@ -14,24 +14,31 @@ fn main() {
     let mut results = vec![0; n];
     let mut sums = vec![0; n];
     let mut total_sum = 0;
-    let mut last_infos = (0, vec![0; n]);
+    let mut temp_color_sizes = Vec::new();
 
-    for (i, &(idx, (color, size))) in color_sizes.iter().enumerate() {
-        let prev_size = if i == 0 { 0 } else { color_sizes[i - 1].1 .1 };
+    for (i, &(num, (color, size))) in color_sizes.iter().enumerate() {
+        results[num] = total_sum - sums[color as usize];
 
-        if prev_size < size {
-            results[idx] = total_sum - sums[color as usize];
-
-            last_infos.0 = total_sum;
-            last_infos.1.copy_from_slice(&sums);
+        let next_size = if i == n - 1 {
+            i32::MAX
         } else {
-            results[idx] = last_infos.0 - last_infos.1[color as usize];
-        }
+            color_sizes[i + 1].1 .1
+        };
 
-        sums[color as usize] += size;
-        total_sum += size;
+        if size < next_size {
+            for &(c, s) in temp_color_sizes.iter() {
+                sums[c as usize] += s;
+                total_sum += s;
+            }
+            temp_color_sizes.clear();
+
+            sums[color as usize] += size;
+            total_sum += size;
+        } else {
+            temp_color_sizes.push((color, size));
+        }
     }
-    // println!("{results:?}");
+
     for sum in results {
         writeln!(output, "{sum}").unwrap();
     }
