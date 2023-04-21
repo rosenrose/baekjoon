@@ -5,9 +5,11 @@ fn main() {
     let croatian_letters = ["c=", "c-", "dz=", "d-", "lj", "nj", "s=", "z="];
     let word = buf.trim();
 
-    let len = croatian_letters
-        .iter()
-        .fold(word.len(), |len, letter| len - word.matches(letter).count());
+    let len = word.len()
+        - croatian_letters
+            .iter()
+            .map(|letter| word.matches(letter).count())
+            .sum::<usize>();
 
     println!("{len}");
 }

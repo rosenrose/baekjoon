@@ -5,11 +5,11 @@ fn main() {
     let reversed: String = buf
         .trim()
         .chars()
-        .flat_map(|c| {
-            if c.is_lowercase() {
-                c.to_uppercase().next()
+        .flat_map(|ch| {
+            if ch.is_lowercase() {
+                ch.to_uppercase().next()
             } else {
-                c.to_lowercase().next()
+                ch.to_lowercase().next()
             }
         })
         .collect();

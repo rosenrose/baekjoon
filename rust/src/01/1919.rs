@@ -1,27 +1,34 @@
-use std::collections::HashMap;
 use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace();
-    let char_count = |s: &str| -> HashMap<_, _> {
-        s.chars()
-            .map(|c| (c, s.matches(c).count() as i32))
-            .collect()
+    let mut input = buf.lines();
+
+    let char_count = |s: &str| {
+        let mut count = [0; 26];
+
+        for ch in s.chars() {
+            count[ch as usize - 'a' as usize] += 1;
+        }
+
+        count
     };
 
     let a_counts = char_count(input.next().unwrap());
     let b_counts = char_count(input.next().unwrap());
-    // println!("{a_count_map:?} {b_count_map:?}");
+    // println!("{a_counts:?} {b_counts:?}");
+    let count_diff = |a: [i32; 26], b: [i32; 26]| {
+        let mut diff = [0; 26];
 
-    let map_sub = |a: &HashMap<_, i32>, b: &HashMap<_, i32>| -> HashMap<_, _> {
-        a.iter()
-            .map(|(ch, count)| (*ch, (count - b.get(ch).unwrap_or(&0)).max(0)))
-            .collect()
+        for (i, (a_count, b_count)) in a.iter().zip(b).enumerate() {
+            diff[i] = (a_count - b_count).max(0);
+        }
+
+        diff
     };
 
-    let a_delete_count: i32 = map_sub(&a_counts, &b_counts).values().sum();
-    let b_delete_count: i32 = map_sub(&b_counts, &a_counts).values().sum();
+    let a_delete_count: i32 = count_diff(a_counts, b_counts).iter().sum();
+    let b_delete_count: i32 = count_diff(b_counts, a_counts).iter().sum();
 
     println!("{}", a_delete_count + b_delete_count);
 }

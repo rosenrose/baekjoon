@@ -53,11 +53,11 @@ fn main() {
             .collect(),
         Format::Java => name
             .chars()
-            .map(|c| {
-                if c.is_uppercase() {
-                    format!("_{}", c.to_lowercase())
+            .map(|ch| {
+                if ch.is_uppercase() {
+                    format!("_{}", ch.to_lowercase())
                 } else {
-                    c.to_string()
+                    ch.to_string()
                 }
             })
             .collect(),

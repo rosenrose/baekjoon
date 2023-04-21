@@ -11,7 +11,7 @@ fn main() {
             writeln!(output, "{INVALID}").unwrap();
             continue;
         }
-        if input.chars().any(|c| !c.is_ascii_digit()) {
+        if input.chars().any(|ch| !ch.is_ascii_digit()) {
             writeln!(output, "{INVALID}").unwrap();
             continue;
         }

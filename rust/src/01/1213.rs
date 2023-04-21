@@ -7,7 +7,7 @@ fn main() {
     let input = buf.trim();
     let counts: HashMap<_, _> = input
         .chars()
-        .map(|c| (c, input.matches(c).count()))
+        .map(|ch| (ch, input.matches(ch).count()))
         .collect();
 
     let mut counts = Vec::from_iter(counts);

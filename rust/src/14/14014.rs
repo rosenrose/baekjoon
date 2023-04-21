@@ -42,7 +42,7 @@ fn main() {
     let words: Vec<_> = words
         .iter()
         .filter_map(|word| {
-            let word: String = word.chars().filter(char::is_ascii_alphabetic).collect();
+            let word: String = word.matches(|ch: char| ch.is_ascii_alphabetic()).collect();
             (!word.is_empty()).then_some(word)
         })
         .collect();

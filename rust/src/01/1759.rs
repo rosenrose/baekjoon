@@ -20,7 +20,7 @@ fn combinations(depth: usize, start: usize, selected: &mut Vec<char>, chars: &Ve
         if result.matches(VOWELS).count() < 1 {
             return;
         }
-        if result.matches(|c| !VOWELS.contains(&c)).count() < 2 {
+        if result.matches(|ch| !VOWELS.contains(&ch)).count() < 2 {
             return;
         }
 
