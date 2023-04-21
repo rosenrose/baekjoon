@@ -16,8 +16,8 @@ fn main() {
         .map(|line| {
             line.split(',')
                 .map(|card| {
-                    let (action, param) = card.split_once(' ').unwrap();
-                    (action, param.chars().nth(0).unwrap())
+                    let (action, arg) = card.split_once(' ').unwrap();
+                    (action, arg.chars().nth(0).unwrap())
                 })
                 .collect()
         })
@@ -50,11 +50,11 @@ fn product(
         let mut ret = String::new();
         // println!("{selected:?}");
         for &i in selected.iter() {
-            for &(action, param) in &cards[i - 1] {
+            for &(action, arg) in &cards[i - 1] {
                 match action {
-                    "ADD" => ret.push(param),
+                    "ADD" => ret.push(arg),
                     "DEL" => {
-                        let idx = param as usize - '0' as usize;
+                        let idx = arg as usize - '0' as usize;
 
                         if idx >= ret.len() {
                             result.push("ERROR".to_owned());

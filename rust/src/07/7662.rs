@@ -217,10 +217,10 @@ fn main() {
     let mut heap = MinMaxHeap::new();
 
     for _ in 0..parse_int(input()) {
-        for (op, param) in (0..parse_int(input())).map(|_| (input(), input())) {
+        for (op, arg) in (0..parse_int(input())).map(|_| (input(), input())) {
             match op {
-                "I" => heap.push(parse_int(param)),
-                "D" => match param {
+                "I" => heap.push(parse_int(arg)),
+                "D" => match arg {
                     "-1" => {
                         heap.pop_min();
                     }

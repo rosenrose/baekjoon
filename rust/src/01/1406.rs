@@ -23,8 +23,8 @@ fn main() {
                 left.pop();
             }
             _ => {
-                let (_, param) = op.split_once(' ').unwrap();
-                left.push_str(param);
+                let (_, arg) = op.split_once(' ').unwrap();
+                left.push_str(arg);
             }
         };
     }
