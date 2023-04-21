@@ -14,7 +14,7 @@ fn main() {
                 .filter(|s| !s.is_empty())
                 .enumerate()
                 .map(|(i, s)| {
-                    if max_widths.get(i) == None {
+                    if max_widths.get(i).is_none() {
                         max_widths.push(s.len());
                     } else {
                         max_widths[i] = max_widths[i].max(s.len());
