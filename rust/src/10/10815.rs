@@ -7,12 +7,15 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let card_set: HashSet<_> = (0..input.next().unwrap())
-        .map(|_| input.next().unwrap())
-        .collect();
+    let n = input.next().unwrap() as usize;
+    let mut cards = HashSet::with_capacity(n);
+
+    for num in input.by_ref().take(n) {
+        cards.insert(num);
+    }
 
     for num in input.skip(1) {
-        write!(output, "{} ", if card_set.contains(&num) { 1 } else { 0 }).unwrap();
+        write!(output, "{} ", if cards.contains(&num) { 1 } else { 0 }).unwrap();
     }
 
     print!("{output}");

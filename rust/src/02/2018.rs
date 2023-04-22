@@ -1,29 +1,25 @@
-use std::collections::VecDeque;
-
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: i32 = buf.trim().parse().unwrap();
-    let mut queue = VecDeque::new();
-    let mut sum = 0;
+    let (mut start, mut end) = (1, 1);
+    let mut sum = 1;
     let mut count = 0;
 
-    for num in 1..=n {
-        sum += num;
-        queue.push_back(num);
-        // println!("{queue:?}");
+    while end <= n {
+        if sum < n {
+            end += 1;
+            sum += end;
+            continue;
+        }
+
         if sum == n {
             count += 1;
         }
 
-        while sum > n - (num + 1) {
-            if let Some(min) = queue.pop_front() {
-                sum -= min;
-            } else {
-                break;
-            }
-        }
+        sum -= start;
+        start += 1;
     }
 
     println!("{count}");
