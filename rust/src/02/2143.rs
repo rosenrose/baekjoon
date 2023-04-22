@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::io;
 
 fn main() {
@@ -7,42 +6,36 @@ fn main() {
 
     let t = input.next().unwrap();
     let n = input.next().unwrap() as usize;
-    let mut a_sums = vec![0; n + 1];
+    let mut a_sums = Vec::with_capacity(n * (n + 1) / 2);
 
     for (i, num) in input.by_ref().take(n).enumerate() {
-        a_sums[i + 1] = a_sums[i] + num;
+        for j in a_sums.len() - i..a_sums.len() {
+            a_sums.push(a_sums[j] + num);
+        }
+        a_sums.push(num);
     }
 
     let m = input.next().unwrap() as usize;
-    let mut b_sums = vec![0; m + 1];
+    let mut b_sums = Vec::with_capacity(m * (m + 1) / 2);
 
     for (i, num) in input.enumerate() {
-        b_sums[i + 1] = b_sums[i] + num;
+        for j in b_sums.len() - i..b_sums.len() {
+            b_sums.push(b_sums[j] + num);
+        }
+        b_sums.push(num);
     }
-    // println!("{a_sums:?} {b_sums:?}");
-    let mut a_counts = HashMap::with_capacity(n * n / 2);
-    let mut b_counts = HashMap::with_capacity(m * m / 2);
 
-    for i in 1..=n {
-        for j in 0..i {
-            a_counts
-                .entry(a_sums[i] - a_sums[j])
-                .and_modify(|c| *c += 1)
-                .or_insert(1);
-        }
-    }
-    for i in 1..=m {
-        for j in 0..i {
-            b_counts
-                .entry(b_sums[i] - b_sums[j])
-                .and_modify(|c| *c += 1)
-                .or_insert(1);
-        }
-    }
-    // println!("{a:?} {b:?}");
-    let count: i64 = a_counts
+    a_sums.sort_unstable();
+    b_sums.sort_unstable();
+    // println!("{a_sums:?} {b_sums:?}");
+    let count: usize = a_sums
         .iter()
-        .map(|(a_num, a_count)| a_count * b_counts.get(&(t - a_num)).unwrap_or(&0))
+        .map(|a| {
+            let start = b_sums.partition_point(|b| a + b < t);
+            let len = b_sums[..start].partition_point(|b| a + b == t);
+
+            len
+        })
         .sum();
 
     println!("{count}");
