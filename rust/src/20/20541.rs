@@ -21,6 +21,184 @@ impl<'a> Album<'a> {
     }
 }
 
+#[derive(Debug)]
+struct AlbumManager<'a> {
+    albums: HashMap<i32, Album<'a>>,
+    id: i32,
+    counter: i32,
+}
+
+impl<'a> AlbumManager<'a> {
+    fn new() -> Self {
+        let mut albums = HashMap::with_capacity(50_000);
+        albums.insert(0, Album::from("album", None));
+
+        Self {
+            albums,
+            id: 0,
+            counter: 1,
+        }
+    }
+
+    fn make_album(&mut self, name: &'a str) -> bool {
+        if self.albums[&self.id].child_albums.contains_key(name) {
+            return false;
+        }
+
+        let new_album = Album::from(name, Some(self.id));
+        let new_id = self.counter;
+        self.counter += 1;
+
+        self.albums.insert(new_id, new_album);
+        self.albums
+            .entry(self.id)
+            .and_modify(|Album { child_albums, .. }| {
+                child_albums.insert(name, new_id);
+            });
+
+        true
+    }
+
+    fn remove_album(&mut self, name: &'a str) -> (usize, usize) {
+        let Some(&remove_id) = self.albums[&self.id].child_albums.get(name) else {
+            return (0, 0);
+        };
+
+        self.albums
+            .entry(self.id)
+            .and_modify(|Album { child_albums, .. }| {
+                child_albums.remove(name);
+            });
+
+        self.remove_album_by_id(remove_id)
+    }
+    fn remove_album_by_id(&mut self, remove_id: i32) -> (usize, usize) {
+        let mut album_count = 1;
+        let mut photo_count = self.albums[&remove_id].photos.len();
+
+        let child_ids: Vec<_> = self.albums[&remove_id]
+            .child_albums
+            .values()
+            .copied()
+            .collect();
+
+        for child_id in child_ids {
+            let result = self.remove_album_by_id(child_id);
+            album_count += result.0;
+            photo_count += result.1;
+        }
+
+        self.albums.remove(&remove_id);
+
+        (album_count, photo_count)
+    }
+    fn remove_album_first(&mut self) -> (usize, usize) {
+        if let Some((first, _)) = self.albums[&self.id].child_albums.first_key_value() {
+            self.remove_album(first)
+        } else {
+            (0, 0)
+        }
+    }
+    fn remove_album_last(&mut self) -> (usize, usize) {
+        if let Some((last, _)) = self.albums[&self.id].child_albums.last_key_value() {
+            self.remove_album(last)
+        } else {
+            (0, 0)
+        }
+    }
+    fn remove_album_all(&mut self) -> (usize, usize) {
+        let (mut album_count, mut photo_count) = (0, 0);
+        let child_names: Vec<_> = self.albums[&self.id].child_albums.keys().copied().collect();
+
+        for child_name in child_names {
+            let result = self.remove_album(child_name);
+            album_count += result.0;
+            photo_count += result.1;
+        }
+
+        (album_count, photo_count)
+    }
+
+    fn insert_photo(&mut self, name: &'a str) -> bool {
+        if self.albums[&self.id].photos.contains(name) {
+            return false;
+        }
+
+        self.albums
+            .entry(self.id)
+            .and_modify(|Album { photos, .. }| {
+                photos.insert(name);
+            });
+
+        true
+    }
+
+    fn delete_photo(&mut self, name: &'a str) -> usize {
+        let mut del_count = 0;
+
+        self.albums
+            .entry(self.id)
+            .and_modify(|Album { photos, .. }| {
+                if photos.remove(name) {
+                    del_count = 1;
+                }
+            });
+
+        del_count
+    }
+    fn delete_photo_first(&mut self) -> usize {
+        let Some(&first) = self.albums[&self.id].photos.first() else {
+            return 0;
+        };
+
+        self.albums
+            .entry(self.id)
+            .and_modify(|Album { photos, .. }| {
+                photos.remove(first);
+            });
+
+        1
+    }
+    fn delete_photo_last(&mut self) -> usize {
+        let Some(&last) = self.albums[&self.id].photos.last() else {
+            return 0;
+        };
+
+        self.albums
+            .entry(self.id)
+            .and_modify(|Album { photos, .. }| {
+                photos.remove(last);
+            });
+
+        1
+    }
+    fn delete_photo_all(&mut self) -> usize {
+        let mut del_count = 0;
+
+        self.albums
+            .entry(self.id)
+            .and_modify(|Album { photos, .. }| {
+                del_count = photos.len();
+                photos.clear();
+            });
+
+        del_count
+    }
+
+    fn change_album(&mut self, name: &'a str) -> &str {
+        self.id = match name {
+            ".." => self.albums[&self.id].parent.unwrap_or(self.id),
+            "/" => 0,
+            _ => *self.albums[&self.id]
+                .child_albums
+                .get(name)
+                .unwrap_or(&self.id),
+        };
+
+        self.albums[&self.id].name
+    }
+}
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
@@ -28,152 +206,45 @@ fn main() {
     let mut output = String::new();
 
     let n: i32 = input().parse().unwrap();
-    let mut albums = HashMap::with_capacity(50_000);
-    let mut id = 0;
-    let mut cur_id = id;
-
-    albums.insert(cur_id, Album::from("album", None));
-    id += 1;
+    let mut album_manager = AlbumManager::new();
 
     for (op, arg) in (0..n).map(|_| (input(), input())) {
         match op {
             "mkalb" => {
-                if albums[&cur_id].child_albums.contains_key(arg) {
+                if !album_manager.make_album(arg) {
                     writeln!(output, "duplicated album name").unwrap();
-                    continue;
                 }
-
-                let new_album = Album::from(arg, Some(cur_id));
-                let new_id = id;
-                id += 1;
-
-                albums.insert(new_id, new_album);
-                albums
-                    .entry(cur_id)
-                    .and_modify(|Album { child_albums, .. }| {
-                        child_albums.insert(arg, new_id);
-                    });
             }
             "rmalb" => {
-                let (mut rm_albums, mut rm_photos) = (0, 0);
-
-                match arg {
-                    "-1" => {
-                        if let Some((_, &first)) = albums[&cur_id].child_albums.first_key_value() {
-                            (rm_albums, rm_photos) = remove_album(&mut albums, first)
-                        }
-                    }
-                    "0" => {
-                        let child_ids: Vec<_> =
-                            albums[&cur_id].child_albums.values().copied().collect();
-
-                        for child_id in child_ids {
-                            let result = remove_album(&mut albums, child_id);
-                            rm_albums += result.0;
-                            rm_photos += result.1;
-                        }
-                    }
-                    "1" => {
-                        if let Some((_, &last)) = albums[&cur_id].child_albums.last_key_value() {
-                            (rm_albums, rm_photos) = remove_album(&mut albums, last)
-                        }
-                    }
-                    _ => {
-                        if let Some(&id) = albums[&cur_id].child_albums.get(arg) {
-                            (rm_albums, rm_photos) = remove_album(&mut albums, id);
-                        }
-                    }
+                let (rm_albums, rm_photos) = match arg {
+                    "-1" => album_manager.remove_album_first(),
+                    "0" => album_manager.remove_album_all(),
+                    "1" => album_manager.remove_album_last(),
+                    _ => album_manager.remove_album(arg),
                 };
 
                 writeln!(output, "{rm_albums} {rm_photos}").unwrap();
             }
             "insert" => {
-                if albums[&cur_id].photos.contains(arg) {
+                if !album_manager.insert_photo(arg) {
                     writeln!(output, "duplicated photo name").unwrap();
-                    continue;
                 }
-
-                albums.entry(cur_id).and_modify(|Album { photos, .. }| {
-                    photos.insert(arg);
-                });
             }
             "delete" => {
-                let mut del_count = 0;
-
-                match arg {
-                    "-1" => {
-                        if let Some(&first) = albums[&cur_id].photos.first() {
-                            albums.entry(cur_id).and_modify(|Album { photos, .. }| {
-                                del_count = if photos.remove(first) { 1 } else { 0 };
-                            });
-                        }
-                    }
-                    "0" => del_count = delete_photos(&mut albums, cur_id),
-                    "1" => {
-                        if let Some(&last) = albums[&cur_id].photos.last() {
-                            albums.entry(cur_id).and_modify(|Album { photos, .. }| {
-                                del_count = if photos.remove(last) { 1 } else { 0 };
-                            });
-                        }
-                    }
-                    _ => {
-                        albums.entry(cur_id).and_modify(|Album { photos, .. }| {
-                            del_count = if photos.remove(arg) { 1 } else { 0 };
-                        });
-                    }
+                let del_count = match arg {
+                    "-1" => album_manager.delete_photo_first(),
+                    "0" => album_manager.delete_photo_all(),
+                    "1" => album_manager.delete_photo_last(),
+                    _ => album_manager.delete_photo(arg),
                 };
 
                 writeln!(output, "{del_count}").unwrap();
             }
-            "ca" => {
-                cur_id = match arg {
-                    ".." => albums[&cur_id].parent.unwrap_or(cur_id),
-                    "/" => 0,
-                    _ => *albums[&cur_id].child_albums.get(arg).unwrap_or(&cur_id),
-                };
-
-                writeln!(output, "{}", albums[&cur_id].name).unwrap();
-            }
+            "ca" => writeln!(output, "{}", album_manager.change_album(arg)).unwrap(),
             _ => (),
         }
-        // println!("{op} {arg}\n{}\n{albums:#?}\n", albums[&cur_id].name);
+        // println!("{op} {arg}\n{album_manager:#?}\n");
     }
 
     print!("{output}");
-}
-
-fn remove_album<'a>(albums: &mut HashMap<i32, Album<'a>>, id: i32) -> (usize, usize) {
-    let name = albums[&id].name;
-    let child_ids: Vec<_> = albums[&id].child_albums.values().copied().collect();
-
-    let (mut album_count, mut photo_count) = (1, delete_photos(albums, id));
-
-    for child_id in child_ids {
-        let result = remove_album(albums, child_id);
-        album_count += result.0;
-        photo_count += result.1;
-    }
-
-    if let Some(parent) = albums[&id].parent {
-        albums
-            .entry(parent)
-            .and_modify(|Album { child_albums, .. }| {
-                child_albums.remove(name);
-            });
-    }
-
-    albums.remove(&id);
-
-    (album_count, photo_count)
-}
-
-fn delete_photos<'a>(albums: &mut HashMap<i32, Album>, id: i32) -> usize {
-    let mut photo_count = 0;
-
-    albums.entry(id).and_modify(|Album { photos, .. }| {
-        photo_count = photos.len();
-        photos.clear();
-    });
-
-    photo_count
 }
