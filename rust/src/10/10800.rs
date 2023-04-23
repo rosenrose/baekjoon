@@ -19,11 +19,11 @@ fn main() {
     for (i, &(num, (color, size))) in color_sizes.iter().enumerate() {
         results[num] = total_sum - sums[color as usize];
 
-        let next_size = if i == n - 1 {
-            i32::MAX
-        } else {
-            color_sizes[i + 1].1 .1
-        };
+        if i == n - 1 {
+            continue;
+        }
+
+        let next_size = color_sizes[i + 1].1 .1;
 
         if size < next_size {
             for &(c, s) in temp_color_sizes.iter() {
