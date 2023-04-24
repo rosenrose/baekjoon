@@ -70,9 +70,9 @@ impl<'a> AlbumManager<'a> {
                 child_albums.remove(name);
             });
 
-        self.remove_album_by_id(remove_id)
+        self.remove_album_recursive(remove_id)
     }
-    fn remove_album_by_id(&mut self, remove_id: i32) -> (usize, usize) {
+    fn remove_album_recursive(&mut self, remove_id: i32) -> (usize, usize) {
         let mut album_count = 1;
         let mut photo_count = self.albums[&remove_id].photos.len();
 
@@ -83,7 +83,7 @@ impl<'a> AlbumManager<'a> {
             .collect();
 
         for child_id in child_ids {
-            let result = self.remove_album_by_id(child_id);
+            let result = self.remove_album_recursive(child_id);
             album_count += result.0;
             photo_count += result.1;
         }
