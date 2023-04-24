@@ -59,25 +59,17 @@ fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> Vec<i32> {
     distances
 }
 
-// let mut adjacency_array = (vec![(None, None); v + 1], vec![((0, 0), None); e]);
+// let mut adjacency_array = (vec![None; v + 1], vec![((0, 0), None); e]);
 
 // for (i, (u, v, w)) in (0..e).map(|i| (i, (input(), input(), input() as i32))) {
-//     adjacency_array.1[i] = ((v, w), None);
+//     let prev = adjacency_array.0[u];
 
-//     let (_, Some(last_edge)) = adjacency_array.0[u] else {
-//         adjacency_array.0[u] = (Some(i), Some(i));
-//         continue;
-//     };
-
-//     adjacency_array.0[u].1 = Some(i);
-//     adjacency_array.1[last_edge].1 = Some(i);
+//     adjacency_array.0[u] = Some(i);
+//     adjacency_array.1[i] = ((v, w), prev);
 // }
 
 // fn dijkstra(
-//     (nodes, edges): &(
-//         Vec<(Option<usize>, Option<usize>)>,
-//         Vec<((usize, i32), Option<usize>)>,
-//     ),
+//     (nodes, edges): &(Vec<Option<usize>>, Vec<((usize, i32), Option<usize>)>),
 //     start: usize,
 // ) -> Vec<i32> {
 //     let mut distances = vec![i32::MAX; nodes.len()];
@@ -91,8 +83,7 @@ fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> Vec<i32> {
 //         if dist > min_dist {
 //             continue;
 //         }
-
-//         let (Some(mut edge), _) = nodes[node] else {
+//         let Some(mut edge) = nodes[node] else {
 //             continue;
 //         };
 
