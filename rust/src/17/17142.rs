@@ -3,7 +3,8 @@ enum Cells {
     #[default]
     Empty,
     Wall,
-    Virus,
+    VirusActive,
+    VirusInactive,
 }
 
 use std::collections::VecDeque;
@@ -16,16 +17,20 @@ fn main() {
 
     let (n, m) = (input(), input());
     let mut viruse_places = Vec::new();
+    let mut empty_cells = 0;
 
     let room: Vec<Vec<_>> = (0..n)
         .map(|r| {
             (0..n)
                 .map(|c| match input() {
-                    0 => Cells::Empty,
+                    0 => {
+                        empty_cells += 1;
+                        Cells::Empty
+                    }
                     1 => Cells::Wall,
                     2 => {
                         viruse_places.push((r, c));
-                        Cells::Empty
+                        Cells::VirusInactive
                     }
                     _ => Default::default(),
                 })
@@ -33,7 +38,7 @@ fn main() {
         })
         .collect();
 
-    let min_time = combinations(0, 0, &mut vec![0; m], &viruse_places, &room);
+    let min_time = combinations(0, 0, &mut vec![0; m], &viruse_places, &room, empty_cells);
 
     println!("{min_time}");
 }
@@ -44,9 +49,10 @@ fn combinations(
     selected: &mut Vec<usize>,
     viruse_places: &Vec<(usize, usize)>,
     room: &Vec<Vec<Cells>>,
+    empty_cells: i32,
 ) -> i32 {
     if depth == selected.len() {
-        return simulate(selected, viruse_places, room.clone());
+        return simulate(selected, viruse_places, room.clone(), empty_cells);
     }
 
     let takes = viruse_places.len() - selected.len() + 1;
@@ -54,7 +60,7 @@ fn combinations(
     (start..depth + takes)
         .map(|i| {
             selected[depth] = i;
-            combinations(depth + 1, i + 1, selected, viruse_places, room)
+            combinations(depth + 1, i + 1, selected, viruse_places, room, empty_cells)
         })
         .filter(|&time| time != -1)
         .min()
@@ -65,17 +71,22 @@ fn simulate(
     selected: &Vec<usize>,
     viruse_places: &Vec<(usize, usize)>,
     mut room: Vec<Vec<Cells>>,
+    mut empty_cells: i32,
 ) -> i32 {
     let size = room.len();
     let mut max_time = 0;
     let mut queue = VecDeque::with_capacity(selected.len());
 
     for (virus_r, virus_c) in selected.iter().map(|&i| viruse_places[i]) {
-        room[virus_r][virus_c] = Cells::Virus;
+        room[virus_r][virus_c] = Cells::VirusActive;
         queue.push_back(((virus_r, virus_c), 0));
     }
 
     while let Some(((r, c), time)) = queue.pop_front() {
+        if empty_cells == 0 {
+            break;
+        }
+
         let adjacents = [
             (r.saturating_sub(1), c),
             (r, c.saturating_sub(1)),
@@ -84,19 +95,23 @@ fn simulate(
         ];
 
         for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
-            if room[adj_r][adj_c] != Cells::Empty {
+            if matches!(room[adj_r][adj_c], Cells::Wall | Cells::VirusActive) {
                 continue;
             }
 
-            room[adj_r][adj_c] = Cells::Virus;
+            if room[adj_r][adj_c] == Cells::Empty {
+                empty_cells -= 1;
+            }
+
+            room[adj_r][adj_c] = Cells::VirusActive;
             max_time = max_time.max(time + 1);
             queue.push_back(((adj_r, adj_c), time + 1));
         }
     }
 
-    if room.iter().any(|row| row.contains(&Cells::Empty)) {
-        -1
-    } else {
+    if empty_cells == 0 {
         max_time
+    } else {
+        -1
     }
 }
