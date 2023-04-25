@@ -2,16 +2,15 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.lines();
-    let (s, t) = (input.next().unwrap(), input.next().unwrap());
-    let s: Vec<_> = s.chars().collect();
+    let mut input = buf.lines().map(str::as_bytes);
 
+    let (s, t) = (input.next().unwrap(), input.next().unwrap());
     let mut memo = vec![vec![0; s.len() + 1]; t.len() + 1];
     let mut max_len = 0;
 
-    for (i, t_char) in t.char_indices() {
-        for j in 0..s.len() {
-            memo[i + 1][j + 1] = if t_char == s[j] {
+    for (i, t_char) in t.iter().enumerate() {
+        for (j, s_char) in s.iter().enumerate() {
+            memo[i + 1][j + 1] = if t_char == s_char {
                 memo[i][j] + 1
             } else {
                 memo[i][j + 1].max(memo[i + 1][j])
@@ -21,7 +20,7 @@ fn main() {
         }
     }
 
-    let mut lcs = String::new();
+    let mut lcs = Vec::new();
     let (mut i, mut j) = (t.len(), s.len());
 
     loop {
@@ -43,11 +42,7 @@ fn main() {
         j -= 1;
     }
 
-    println!("{max_len}");
+    lcs.reverse();
 
-    if !lcs.is_empty() {
-        lcs = lcs.chars().rev().collect();
-
-        println!("{lcs}");
-    }
+    println!("{max_len}\n{}", String::from_utf8(lcs).unwrap());
 }

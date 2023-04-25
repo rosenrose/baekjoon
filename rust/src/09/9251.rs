@@ -3,8 +3,8 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
-    let (s, t) = (input.next().unwrap(), input.next().unwrap());
 
+    let (s, t) = (input.next().unwrap(), input.next().unwrap());
     let mut memo = vec![vec![0; s.len() + 1]; t.len() + 1];
     let mut max_len = 0;
 
