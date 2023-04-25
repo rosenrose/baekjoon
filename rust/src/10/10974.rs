@@ -6,16 +6,15 @@ fn main() {
 
     let mut output = String::new();
 
-    let n: i32 = buf.trim().parse().unwrap();
-    let nums: Vec<_> = (1..=n).collect();
+    let n: usize = buf.trim().parse().unwrap();
 
-    permutation(&nums, n, &mut Vec::new(), &mut output);
+    permutations(0, &mut vec![0; n], n, &mut output);
 
     print!("{output}");
 }
 
-fn permutation(nums: &Vec<i32>, m: i32, selected: &mut Vec<i32>, output: &mut String) {
-    if m == 0 {
+fn permutations(depth: usize, selected: &mut Vec<usize>, nums: usize, output: &mut String) {
+    if depth == selected.len() {
         for num in selected {
             write!(output, "{num} ").unwrap();
         }
@@ -24,15 +23,13 @@ fn permutation(nums: &Vec<i32>, m: i32, selected: &mut Vec<i32>, output: &mut St
         return;
     }
 
-    for &num in nums {
-        if selected.contains(&num) {
+    for num in 1..=nums {
+        if selected[..depth].contains(&num) {
             continue;
         }
 
-        selected.push(num);
+        selected[depth] = num;
 
-        permutation(nums, m - 1, selected, output);
-
-        selected.pop();
+        permutations(depth + 1, selected, nums, output);
     }
 }

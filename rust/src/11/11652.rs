@@ -3,12 +3,13 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.lines().flat_map(str::parse::<i64>);
+    let mut input = buf.lines().flat_map(str::parse::<i64>);
 
+    let n = input.next().unwrap() as usize;
+    let mut counts = HashMap::with_capacity(n);
     let mut max_count = 1;
-    let mut counts = HashMap::new();
 
-    for num in input.skip(1) {
+    for num in input {
         counts
             .entry(num)
             .and_modify(|c| {
@@ -18,10 +19,10 @@ fn main() {
             .or_insert(1);
     }
 
-    let (min, _) = counts
+    let min = counts
         .iter()
-        .filter(|(_, &v)| v == max_count)
-        .min_by_key(|(&k, _)| k)
+        .filter_map(|(k, &v)| (v == max_count).then_some(k))
+        .min()
         .unwrap();
 
     println!("{min}");

@@ -24,7 +24,7 @@ fn main() {
         .iter()
         .enumerate()
         .skip(1)
-        .filter(|(_, &d)| d == k)
+        .filter_map(|(node, &d)| (d == k).then_some(node))
         .collect();
 
     if result.is_empty() {
@@ -34,7 +34,7 @@ fn main() {
 
     result.sort_unstable();
 
-    for (node, _) in result {
+    for node in result {
         writeln!(output, "{node}").unwrap();
     }
 

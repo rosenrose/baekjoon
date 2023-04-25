@@ -7,33 +7,25 @@ fn main() {
     let (n, _) = (input.next().unwrap(), input.next());
     let k: Vec<_> = input.collect();
 
-    let num = (1..=n.to_string().len())
-        .flat_map(|i| product(&k, i, &mut Vec::new()))
-        // .inspect(|i| print!("{i} "))
-        .filter(|&num| num <= n)
+    let num = (1..=n.ilog10() + 1)
+        .flat_map(|i| product(0, &mut vec![0; i as usize], &k, n))
         .max()
         .unwrap();
 
     println!("{num}");
 }
 
-fn product(nums: &Vec<i64>, m: usize, selected: &mut Vec<i64>) -> Vec<i64> {
-    if m == 0 {
-        return vec![format!("{selected:?}")
-            .replace(['[', ']', ',', ' '], "")
-            .parse()
-            .unwrap()];
+fn product(depth: usize, selected: &mut Vec<i64>, nums: &Vec<i64>, max_num: i64) -> Option<i64> {
+    if depth == selected.len() {
+        let result = selected.iter().fold(0, |acc, num| acc * 10 + num);
+
+        return (result <= max_num).then_some(result);
     }
 
-    let mut result = Vec::new();
-
-    for &num in nums {
-        selected.push(num);
-
-        result.extend(product(nums, m - 1, selected));
-
-        selected.pop();
-    }
-
-    result
+    nums.iter()
+        .flat_map(|&num| {
+            selected[depth] = num;
+            product(depth + 1, selected, nums, max_num)
+        })
+        .max()
 }

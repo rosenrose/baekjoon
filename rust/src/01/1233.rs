@@ -15,11 +15,11 @@ fn main() {
         }
     }
     // println!("{counts:?}");
-    let (sum, _) = counts
+    let sum = counts
         .iter()
         .enumerate()
-        .filter(|(_, &c)| c == max_count)
-        .min_by_key(|&(s, _)| s)
+        .filter_map(|(sum, &c)| (c == max_count).then_some(sum))
+        .min()
         .unwrap();
 
     println!("{sum}");

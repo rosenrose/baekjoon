@@ -30,12 +30,13 @@ fn main() {
                 max_count = acgt_count[idx].max(max_count);
             }
 
-            let (most_char_idx, _) = acgt_count
+            let most_char_idx = acgt_count
                 .iter()
                 .enumerate()
-                .filter(|(_, &count)| count == max_count)
-                .min_by_key(|&(i, _)| i)
+                .filter_map(|(i, &count)| (count == max_count).then_some(i))
+                .min()
                 .unwrap();
+
             let most_char = match most_char_idx {
                 0 => 'A',
                 1 => 'C',

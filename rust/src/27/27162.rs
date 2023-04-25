@@ -15,10 +15,7 @@ fn main() {
         })
         .collect();
 
-    let get_num_by_count = |count: i32| {
-        let (num, _) = counts.iter().enumerate().find(|(_, &c)| c == count)?;
-        Some(num)
-    };
+    let get_num_by_count = |count: i32| counts.iter().position(|&c| c == count);
 
     let max_score = choices
         .char_indices()
@@ -26,24 +23,24 @@ fn main() {
             (ch == 'Y').then(|| match i + 1 {
                 n @ 1..=6 => (nums.iter().filter(|&&num| num == n).count() + 2) * n,
                 7 => {
-                    if let Some(num) = get_num_by_count(3) {
-                        return num * 4;
+                    if let Some(a) = get_num_by_count(3) {
+                        return a * 4;
                     }
-                    if let Some(num) = get_num_by_count(2) {
-                        return num * 4;
+                    if let Some(a) = get_num_by_count(2) {
+                        return a * 4;
                     }
 
                     0
                 }
                 8 => {
-                    if let Some(num) = get_num_by_count(3) {
-                        return (num * 3) + (if num == 6 { 5 } else { 6 } * 2);
+                    if let Some(a) = get_num_by_count(3) {
+                        return (a * 3) + (if a == 6 { 5 } else { 6 } * 2);
                     }
 
-                    if let Some(num2) = get_num_by_count(2) {
-                        let num1 = get_num_by_count(1).unwrap();
+                    if let Some(a) = get_num_by_count(2) {
+                        let b = get_num_by_count(1).unwrap();
 
-                        return (num1.max(num2) * 3) + (num1.min(num2) * 2);
+                        return (a.max(b) * 3) + (a.min(b) * 2);
                     }
 
                     0
@@ -63,7 +60,7 @@ fn main() {
                     }
                 }
                 11 => {
-                    if get_num_by_count(3).is_some() {
+                    if counts.iter().find(|&&c| c == 3).is_some() {
                         50
                     } else {
                         0

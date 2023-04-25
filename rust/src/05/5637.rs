@@ -14,9 +14,8 @@ fn main() {
 
     let first_longest = words
         .iter()
-        .find(|w| w.len() == longest_len)
-        .unwrap()
-        .to_lowercase();
+        .find_map(|w| (w.len() == longest_len).then(|| w.to_lowercase()))
+        .unwrap();
 
     println!("{first_longest}");
 }
