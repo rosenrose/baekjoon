@@ -8,8 +8,8 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n: i32 = input().parse().unwrap();
-    let mut names = HashSet::new();
+    let n: usize = input().parse().unwrap();
+    let mut names = HashSet::with_capacity(n);
 
     for (name, in_out) in (0..n).map(|_| (input(), input())) {
         match in_out {

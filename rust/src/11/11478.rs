@@ -4,13 +4,13 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let string = buf.trim();
-    let mut substr = HashSet::new();
+    let input = buf.trim();
+    let mut substr = HashSet::with_capacity(input.len());
     let mut count = 0;
 
-    for i in 1..=string.len() {
-        for j in 0..=string.len() - i {
-            substr.insert(&string[j..j + i]);
+    for i in 1..=input.len() {
+        for j in 0..=input.len() - i {
+            substr.insert(&input[j..j + i]);
         }
 
         count += substr.len();
