@@ -6,7 +6,8 @@ using namespace std;
 const double PI = acos(-1);
 typedef complex<double> cpx;
 
-vector<int> multiply(vector<cpx>& f, vector<cpx>& g);
+vector<int> multiply(vector<int>& f, vector<int>& g);
+vector<int> factorial(int64_t start, int64_t end);
 void print(vector<int>& arr);
 
 int main() {
@@ -14,20 +15,10 @@ int main() {
     cout.tie(NULL);
     ios_base::sync_with_stdio(false);
 
-    string str;
-    vector<cpx> f, g;
+    int64_t n;
 
-    cin >> str;
-    for (auto i = str.rbegin(); i != str.rend(); i++) {
-        f.push_back(cpx(*i - '0', 0));
-    }
-
-    cin >> str;
-    for (auto i = str.rbegin(); i != str.rend(); i++) {
-        g.push_back(cpx(*i - '0', 0));
-    }
-
-    vector<int> result = multiply(f, g);
+    cin >> n;
+    vector<int> result = factorial(0, n);
 
     print(result);
 
@@ -38,6 +29,30 @@ void print(vector<int>& arr) {
     for (auto i = arr.rbegin(); i != arr.rend(); i++) {
         cout << *i;
     }
+}
+
+vector<int> factorial(int64_t start, int64_t end) {
+    if (end - start <= 2) {
+        int64_t product = 1;
+        vector<int> result;
+
+        for (auto num = (start == 0) ? 1 : start; num <= end; num++) {
+            product *= num;
+        }
+
+        while (product > 0) {
+            result.push_back(product % 10);
+            product /= 10;
+        }
+
+        return result;
+    }
+
+    int64_t mid = (start + end) / 2;
+    vector<int> lower = factorial(start, mid);
+    vector<int> upper = factorial(mid + 1, end);
+
+    return multiply(lower, upper);
 }
 
 void fast_fourier_transform(vector<cpx>& v, bool is_inverse) {
@@ -110,15 +125,23 @@ vector<int> flatten(vector<cpx>& v) {
     return result;
 }
 
-vector<int> multiply(vector<cpx>& f, vector<cpx>& g) {
+vector<int> multiply(vector<int>& a, vector<int>& b) {
     size_t len = 2;
 
-    while (len < f.size() + g.size()) {
+    while (len < a.size() + b.size()) {
         len *= 2;
     }
 
-    f.resize(len);
-    g.resize(len);
+    vector<cpx> f(len), g(len);
+
+    for (auto i = 0; i < max(a.size(), b.size()); i++) {
+        if (i < a.size()) {
+            f[i] = cpx(a[i], 0);
+        }
+        if (i < b.size()) {
+            g[i] = cpx(b[i], 0);
+        }
+    }
 
     fast_fourier_transform(f, false);
     fast_fourier_transform(g, false);
