@@ -42,17 +42,18 @@ fn get_safe_area(height: i32, area: &Vec<Vec<i32>>) -> i32 {
                 continue;
             }
 
+            visited[y][x] = true;
             let mut stack = vec![(y, x)];
 
             while let Some((r, c)) = stack.pop() {
-                let adjacent = [
+                let adjacents = [
                     (r.saturating_sub(1), c),
                     (r, c.saturating_sub(1)),
                     ((r + 1).min(n - 1), c),
                     (r, (c + 1).min(n - 1)),
                 ];
 
-                for &(adj_r, adj_c) in adjacent.iter().filter(|&&adj| adj != (r, c)) {
+                for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
                     if is_pass(adj_r, adj_c, &visited) {
                         continue;
                     }

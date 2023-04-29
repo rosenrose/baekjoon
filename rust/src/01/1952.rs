@@ -22,14 +22,14 @@ fn main() {
             is_visit[y as usize][x as usize] = true;
         }
 
-        let adjacent = [
+        let adjacents = [
             ((x - 1).max(0), y),
             (x, (y - 1).max(0)),
             ((x + 1).min(c - 1), y),
             (x, (y + 1).min(r - 1)),
         ];
 
-        if adjacent
+        if adjacents
             .iter()
             .all(|&(adj_x, adj_y)| is_visit[adj_y as usize][adj_x as usize])
         {
