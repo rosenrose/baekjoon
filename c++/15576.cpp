@@ -1,13 +1,15 @@
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <complex>
 
 using namespace std;
 const double PI = acos(-1);
+const uint64_t POW = 1000;
 typedef complex<double> cpx;
 
-vector<int> multiply(vector<cpx>& f, vector<cpx>& g);
-void print(vector<int>& arr);
+vector<uint16_t> multiply(vector<cpx>& f, vector<cpx>& g);
+void print(vector<uint16_t>& arr);
 
 int main() {
     cin.tie(NULL);
@@ -18,25 +20,42 @@ int main() {
     vector<cpx> f, g;
 
     cin >> str;
-    for (auto i = str.rbegin(); i != str.rend(); i++) {
-        f.push_back(cpx(*i - '0', 0));
+    for (int i = str.size() - 1; i >= 0; i -= 3) {
+        uint16_t num = 0;
+
+        for (int j = max(i - 2, 0); j <= i; j++) {
+            num = num * 10 + (str[j] - '0');
+        }
+
+        f.push_back(cpx(num, 0));
     }
 
     cin >> str;
-    for (auto i = str.rbegin(); i != str.rend(); i++) {
-        g.push_back(cpx(*i - '0', 0));
+    for (int i = str.size() - 1; i >= 0; i -= 3) {
+        uint16_t num = 0;
+
+        for (int j = max(i - 2, 0); j <= i; j++) {
+            num = num * 10 + (str[j] - '0');
+        }
+
+        g.push_back(cpx(num, 0));
     }
 
-    vector<int> result = multiply(f, g);
+    vector<uint16_t> result = multiply(f, g);
 
     print(result);
 
     return 0;
 }
 
-void print(vector<int>& arr) {
-    for (auto i = arr.rbegin(); i != arr.rend(); i++) {
-        cout << *i;
+void print(vector<uint16_t>& arr) {
+    for (int i = arr.size() - 1; i >= 0; i--) {
+        if (i == arr.size() - 1) {
+            cout << arr[i];
+            cout << setfill('0');
+        } else {
+            cout << setw(3) << arr[i];
+        }
     }
 }
 
@@ -44,11 +63,11 @@ void fast_fourier_transform(vector<cpx>& v, bool is_inverse) {
     size_t len = v.size();
 
     for (size_t i = 1, j = 0; i < len; i++) {
-        auto bit = len / 2;
+        auto bit = len >> 1;
 
         while (j >= bit) {
             j -= bit;
-            bit /= 2;
+            bit >>= 1;
         }
 
         j += bit;
@@ -58,45 +77,44 @@ void fast_fourier_transform(vector<cpx>& v, bool is_inverse) {
         }
     }
 
-    for (auto k = 1; k < len; k *= 2) {
-        double angle = is_inverse ? PI / k : -PI / k;
-        cpx direction(cos(angle), sin(angle));
+    double direction = is_inverse ? -1.0 : 1.0;
 
-        for (auto i = 0; i < len; i += k * 2) {
-            cpx unit(1, 0);
+    for (auto k = 2; k <= len; k <<= 1) {
+        double angle = -2.0 * PI * direction / k;
+        cpx wlen(cos(angle), sin(angle));
 
-            for (auto j = 0; j < k; j++) {
+        for (auto i = 0; i < len; i += k) {
+            cpx w(1, 0);
+            auto half = k >> 1;
+
+            for (auto j = 0; j < half; j++) {
                 cpx even = v[i + j];
-                cpx odd = v[i + j + k] * unit;
+                cpx odd = v[i + j + half];
 
-                v[i + j] = even + odd;
-                v[i + j + k] = even - odd;
+                v[i + j] = even + odd * w;
+                v[i + j + half] = even - odd * w;
 
-                unit *= direction;
+                w *= wlen;
             }
         }
     }
 
     if (is_inverse) {
         for (auto& i : v) {
-            i /= cpx((double)len, 0);
+            i /= cpx(len, 0);
         }
     }
 }
 
-vector<int> flatten(vector<cpx>& v) {
+vector<uint16_t> normalize(vector<cpx>& v) {
     size_t len = v.size();
-    vector<int> result(len);
-    int carry = 0;
+    vector<uint16_t> result(len);
+    uint64_t carry = 0;
 
     for (auto i = 0; i < len; i++) {
-        result[i] = carry + (int)round(v[i].real());
-
-        carry = result[i] / 10;
-
-        if (result[i] >= 10) {
-            result[i] %= 10;
-        }
+        uint64_t num = carry + (uint64_t)round(v[i].real());
+        carry = num / POW;
+        result[i] = num % POW;
     }
 
     if (carry > 0) {
@@ -110,11 +128,11 @@ vector<int> flatten(vector<cpx>& v) {
     return result;
 }
 
-vector<int> multiply(vector<cpx>& f, vector<cpx>& g) {
+vector<uint16_t> multiply(vector<cpx>& f, vector<cpx>& g) {
     size_t len = 2;
 
     while (len < f.size() + g.size()) {
-        len *= 2;
+        len <<= 1;
     }
 
     f.resize(len);
@@ -131,5 +149,5 @@ vector<int> multiply(vector<cpx>& f, vector<cpx>& g) {
 
     fast_fourier_transform(w, true);
 
-    return flatten(w);
+    return normalize(w);
 }

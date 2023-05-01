@@ -31,17 +31,12 @@ impl BigInt {
                 .as_bytes()
                 .rchunks(DIGITS)
                 .map(|chunk| {
-                    let mut pow = 1;
-
-                    chunk.iter().rev().fold(0, |acc, &ch| {
+                    chunk.iter().fold(0, |acc, &ch| {
                         if ch as char == '-' {
-                            return acc;
+                            acc
+                        } else {
+                            acc * 10 + (ch as i64 - '0' as i64)
                         }
-
-                        let num = (ch as i64 - '0' as i64) * pow;
-                        pow *= 10;
-
-                        acc + num
                     })
                 })
                 .collect(),

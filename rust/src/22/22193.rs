@@ -55,14 +55,9 @@ impl BigInt {
                 .as_bytes()
                 .rchunks(DIGITS)
                 .map(|chunk| {
-                    let mut pow = 1;
-
-                    chunk.iter().rev().fold(0, |acc, &ch| {
-                        let num = (ch as u16 - '0' as u16) * pow;
-                        pow *= 10;
-
-                        acc + num
-                    })
+                    chunk
+                        .iter()
+                        .fold(0, |acc, &ch| acc * 10 + (ch as u16 - '0' as u16))
                 })
                 .collect(),
         )
@@ -86,18 +81,19 @@ impl BigInt {
 
             for i in (0..v.len()).step_by(len) {
                 let mut w = Complex(1.0, 0.0);
+                let half = len >> 1;
 
-                for j in 0..len / 2 {
-                    let (even, odd) = (v[i + j], v[i + j + len / 2]);
+                for j in 0..half {
+                    let (even, odd) = (v[i + j], v[i + j + half]);
 
                     v[i + j] = even + odd * w;
-                    v[i + j + len / 2] = even - odd * w;
+                    v[i + j + half] = even - odd * w;
 
                     w *= wlen;
                 }
             }
 
-            len *= 2;
+            len <<= 1;
         }
 
         if is_inverse {
@@ -113,11 +109,11 @@ impl BigInt {
         let mut rev = 0;
 
         for i in 1..v.len() {
-            let mut bit = v.len() / 2;
+            let mut bit = v.len() >> 1;
 
             while rev >= bit {
                 rev -= bit;
-                bit /= 2;
+                bit >>= 1;
             }
 
             rev += bit;

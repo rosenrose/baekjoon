@@ -14,14 +14,9 @@ impl BigInt {
                 .as_bytes()
                 .rchunks(DIGITS)
                 .map(|chunk| {
-                    let mut pow = 1;
-
-                    chunk.iter().rev().fold(0, |acc, &ch| {
-                        let num = (ch as i128 - '0' as i128) * pow;
-                        pow *= 10;
-
-                        acc + num
-                    })
+                    chunk
+                        .iter()
+                        .fold(0, |acc, &ch| acc * 10 + (ch as i128 - '0' as i128))
                 })
                 .collect(),
         )
