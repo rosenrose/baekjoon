@@ -3,7 +3,7 @@ use std::fmt::{self, Write};
 use std::ops::{Add, Mul, MulAssign, Sub};
 
 const DIGITS: usize = 3;
-const POW: i64 = 10_i64.pow(DIGITS as u32);
+const POW: u128 = 10_u128.pow(DIGITS as u32);
 
 #[derive(Clone, Copy)]
 struct Complex(f64, f64);
@@ -45,14 +45,14 @@ impl MulAssign for Complex {
     }
 }
 
-struct BigInt(Vec<i64>);
+struct BigInt(Vec<u16>);
 
 impl BigInt {
-    fn from_int(mut num: i64) -> Self {
+    fn from_int(mut num: u128) -> Self {
         let mut result = Vec::new();
 
         while num > 0 {
-            result.push(num % POW);
+            result.push((num % POW) as u16);
             num /= POW;
         }
 
@@ -124,15 +124,15 @@ impl BigInt {
         let mut result: Vec<_> = v
             .iter()
             .map(|complex| {
-                let temp = carry + complex.0.round() as i64;
-                carry = temp / POW;
+                let temp = carry + complex.0.round() as u64;
+                carry = temp / POW as u64;
 
-                temp % POW
+                (temp % POW as u64) as u16
             })
             .collect();
 
         if carry > 0 {
-            result.push(carry);
+            result.push(carry as u16);
         }
 
         Self(result)
@@ -143,12 +143,7 @@ impl Mul for BigInt {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        let mut len = 2;
-
-        while len < self.0.len() + other.0.len() {
-            len *= 2;
-        }
-
+        let len = (self.0.len() + other.0.len()).next_power_of_two();
         let mut a = vec![Complex(0.0, 0.0); len];
         let mut b = vec![Complex(0.0, 0.0); len];
 
@@ -195,13 +190,13 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let n: i64 = buf.trim().parse().unwrap();
+    let n: u128 = buf.trim().parse().unwrap();
 
     println!("{}", factorial(0, n));
 }
 
-fn factorial(start: i64, end: i64) -> BigInt {
-    if end - start <= 2 {
+fn factorial(start: u128, end: u128) -> BigInt {
+    if end - start <= 5 {
         let start = if start == 0 { 1 } else { start };
 
         return BigInt::from_int((start..=end).product());

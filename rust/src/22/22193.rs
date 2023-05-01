@@ -4,9 +4,9 @@ use std::io;
 use std::ops::{Add, Mul, MulAssign, Sub};
 
 const DIGITS: usize = 4;
-const POW: i64 = 10_i64.pow(DIGITS as u32);
+const POW: u64 = 10_u64.pow(DIGITS as u32);
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy)]
 struct Complex(f64, f64);
 
 impl Complex {
@@ -46,7 +46,7 @@ impl MulAssign for Complex {
     }
 }
 
-struct BigInt(Vec<i64>);
+struct BigInt(Vec<u16>);
 
 impl BigInt {
     fn parse(input: &str) -> Self {
@@ -58,7 +58,7 @@ impl BigInt {
                     let mut pow = 1;
 
                     chunk.iter().rev().fold(0, |acc, &ch| {
-                        let num = (ch as i64 - '0' as i64) * pow;
+                        let num = (ch as u16 - '0' as u16) * pow;
                         pow *= 10;
 
                         acc + num
@@ -133,15 +133,15 @@ impl BigInt {
         let mut result: Vec<_> = v
             .iter()
             .map(|complex| {
-                let temp = carry + complex.0.round() as i64;
+                let temp = carry + complex.0.round() as u64;
                 carry = temp / POW;
 
-                temp % POW
+                (temp % POW) as u16
             })
             .collect();
 
         if carry > 0 {
-            result.push(carry);
+            result.push(carry as u16);
         }
 
         Self(result)
@@ -152,12 +152,7 @@ impl Mul for BigInt {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        let mut len = 2;
-
-        while len < self.0.len() + other.0.len() {
-            len *= 2;
-        }
-
+        let len = (self.0.len() + other.0.len()).next_power_of_two();
         let mut a = vec![Complex(0.0, 0.0); len];
         let mut b = vec![Complex(0.0, 0.0); len];
 
