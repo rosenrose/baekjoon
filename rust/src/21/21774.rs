@@ -18,11 +18,11 @@ fn main() {
         }
     }
 
-    for mut tokens in input.map(|s| s.split('#')) {
+    for mut it in input.map(|s| s.split('#')) {
         let (start, end, level) = (
-            parse_time(tokens.next().unwrap()),
-            parse_time(tokens.next().unwrap()),
-            parse_int(tokens.next().unwrap()) as usize,
+            parse_time(it.next().unwrap()),
+            parse_time(it.next().unwrap()),
+            parse_int(it.next().unwrap()) as usize,
         );
 
         let start_idx = logs[level].partition_point(|&log| log < start);
@@ -35,8 +35,8 @@ fn main() {
 }
 
 fn parse_time(input: &str) -> i32 {
-    let mut tokens = input.split(['-', ' ', ':']).map(parse_int);
-    let mut token = || tokens.next().unwrap();
+    let mut it = input.split(['-', ' ', ':']).map(parse_int);
+    let mut token = || it.next().unwrap();
     let (year, month, date, hour, minlute, second) =
         (token(), token(), token(), token(), token(), token());
 

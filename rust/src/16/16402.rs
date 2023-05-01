@@ -52,11 +52,11 @@ fn main() {
     }
 
     for war in input {
-        let mut tokens = war.split(',');
+        let mut it = war.split(',');
         let (name1, name2, winner) = (
-            get_name(tokens.next().unwrap()),
-            get_name(tokens.next().unwrap()),
-            tokens.next().unwrap(),
+            get_name(it.next().unwrap()),
+            get_name(it.next().unwrap()),
+            it.next().unwrap(),
         );
 
         match winner {

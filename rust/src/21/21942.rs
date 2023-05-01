@@ -60,12 +60,12 @@ fn main() {
 }
 
 fn parse_time(date: &str, time: &str) -> i64 {
-    let mut tokens = date
+    let mut it = date
         .split('-')
         .skip(1)
         .chain(time.split(':'))
         .map(parse_int);
-    let mut token = || tokens.next().unwrap();
+    let mut token = || it.next().unwrap();
     let (month, date, hour, minute) = (token(), token(), token(), token());
 
     ((1..month).map(get_days).sum::<i64>() + date - 1) * 24 * 60 + hour * 60 + minute

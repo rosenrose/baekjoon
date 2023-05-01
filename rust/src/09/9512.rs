@@ -9,10 +9,10 @@ fn main() {
     let n: i32 = input.next().unwrap().parse().unwrap();
     let langs: Vec<(_, Vec<_>)> = (0..n)
         .map(|_| {
-            let mut tokens = input.next().unwrap().split(' ');
-            let lang = tokens.next().unwrap();
+            let mut it = input.next().unwrap().split(' ');
+            let lang = it.next().unwrap();
 
-            (lang, tokens.map(str::to_lowercase).collect())
+            (lang, it.map(str::to_lowercase).collect())
         })
         .collect();
     // println!("{langs:?}");

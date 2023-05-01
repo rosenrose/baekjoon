@@ -41,8 +41,8 @@ fn main() {
 }
 
 fn parse_time(date: &str, time: &str) -> i32 {
-    let mut tokens = date.split('-').chain(time.split(':')).map(parse_int);
-    let mut token = || tokens.next().unwrap();
+    let mut it = date.split('-').chain(time.split(':')).map(parse_int);
+    let mut token = || it.next().unwrap();
     let (year, month, date, hour, minlute) = (token(), token(), token(), token(), token());
 
     let days = (2013..year)

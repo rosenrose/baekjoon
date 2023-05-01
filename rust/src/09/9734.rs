@@ -30,9 +30,9 @@ fn main() {
         let (integer, decimal) = input.split_once('.').unwrap();
         let mut fraction = Fraction(integer.parse().unwrap(), 1);
 
-        let mut tokens = decimal.split(['(', ')']);
-        let non_repeat = tokens.next().unwrap();
-        let repeating = tokens.next().unwrap();
+        let mut it = decimal.split(['(', ')']);
+        let non_repeat = it.next().unwrap();
+        let repeating = it.next().unwrap();
 
         for (i, c) in non_repeat.char_indices() {
             fraction += Fraction(c as i32 - '0' as i32, 10_i32.pow(i as u32 + 1));

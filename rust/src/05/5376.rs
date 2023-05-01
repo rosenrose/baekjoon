@@ -30,14 +30,14 @@ fn main() {
         let mut fraction = Fraction(0, 1);
         let decimal = line.split('.').next_back().unwrap();
 
-        let mut tokens = decimal.split(['(', ')']);
-        let non_repeat = tokens.next().unwrap();
+        let mut it = decimal.split(['(', ')']);
+        let non_repeat = it.next().unwrap();
 
         for (i, c) in non_repeat.char_indices() {
             fraction += Fraction(c as i64 - '0' as i64, 10_i64.pow(i as u32 + 1));
         }
 
-        if let Some(repeating) = tokens.next() {
+        if let Some(repeating) = it.next() {
             fraction += Fraction(
                 repeating.parse().unwrap(),
                 format!(

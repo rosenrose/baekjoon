@@ -29,8 +29,8 @@ fn main() {
 }
 
 fn parse_time(time: &str) -> i32 {
-    let mut tokens = time.split([':', '.']).map(parse_int);
-    let mut token = || tokens.next().unwrap();
+    let mut it = time.split([':', '.']).map(parse_int);
+    let mut token = || it.next().unwrap();
 
     let (hour, minute, second, millisecond) = (token(), token(), token(), token());
     let seconds = hour * (60 * 60) + minute * 60 + second;
