@@ -5,100 +5,59 @@ const M: i64 = 1_000_000_007;
 
 struct SegmentTree {
     tree: Vec<i64>,
-    end: usize,
+    leaf_start: usize,
 }
 
 impl SegmentTree {
-    fn from(n: usize, mut input: impl Iterator<Item = i64>) -> Self {
-        let mut len = 1;
+    fn make(n: usize, mut input: impl Iterator<Item = i64>) -> Self {
+        let pow = n.next_power_of_two();
+        let mut tree = vec![0; pow << 1];
 
-        while len < n {
-            len <<= 1;
+        for i in pow..pow + n {
+            tree[i] = input.next().unwrap();
         }
 
-        len <<= 1;
+        for i in (1..pow).rev() {
+            tree[i] = (tree[i << 1] * tree[(i << 1) + 1]) % M;
+        }
 
-        let mut tree = vec![0; len];
-        Self::make(&mut tree, &mut input, 1, 0, n - 1);
-
-        Self { tree, end: n - 1 }
+        Self {
+            tree,
+            leaf_start: pow,
+        }
     }
 
-    fn make(
-        tree: &mut Vec<i64>,
-        input: &mut impl Iterator<Item = i64>,
-        node: usize,
-        start: usize,
-        end: usize,
-    ) {
-        if start == end {
-            tree[node] = input.next().unwrap();
-            return;
+    fn update(&mut self, mut i: usize, val: i64) {
+        i += self.leaf_start;
+        self.tree[i] = val;
+
+        while i > 1 {
+            i >>= 1;
+            self.tree[i] = (self.tree[i << 1] * self.tree[(i << 1) + 1]) % M;
         }
-
-        let (left, right) = (node << 1, (node << 1) + 1);
-        let mid = (start + end) >> 1;
-
-        Self::make(tree, input, left, start, mid);
-        Self::make(tree, input, right, mid + 1, end);
-
-        tree[node] = (tree[left] * tree[right]) % M;
     }
 
-    fn update(&mut self, idx: usize, val: i64) {
-        Self::update_recursive(&mut self.tree, 1, 0, self.end, idx, val);
-    }
+    fn query(&self, mut left: usize, mut right: usize) -> i64 {
+        left += self.leaf_start;
+        right += self.leaf_start;
+        let mut result = 1;
 
-    fn update_recursive(
-        tree: &mut Vec<i64>,
-        node: usize,
-        start: usize,
-        end: usize,
-        idx: usize,
-        val: i64,
-    ) {
-        if idx < start || end < idx {
-            return;
-        }
-        if start == end {
-            tree[node] = val;
-            return;
-        }
+        while left < right {
+            if left & 1 == 1 {
+                result = (result * self.tree[left]) % M;
+                left += 1;
+            }
 
-        let (left, right) = (node << 1, (node << 1) + 1);
-        let mid = (start + end) >> 1;
+            if right & 1 == 1 {
+                result = (result * self.tree[right - 1]) % M;
+                right -= 1;
+            }
 
-        Self::update_recursive(tree, left, start, mid, idx, val);
-        Self::update_recursive(tree, right, mid + 1, end, idx, val);
-
-        tree[node] = (tree[left] * tree[right]) % M;
-    }
-
-    fn query(&self, lower: usize, upper: usize) -> i64 {
-        Self::query_recursive(&self.tree, 1, 0, self.end, lower, upper)
-    }
-
-    fn query_recursive(
-        tree: &Vec<i64>,
-        node: usize,
-        start: usize,
-        end: usize,
-        lower: usize,
-        upper: usize,
-    ) -> i64 {
-        if end < lower || upper < start {
-            return 1;
-        }
-        if lower <= start && end <= upper {
-            return tree[node];
+            left >>= 1;
+            right >>= 1;
         }
 
-        let (left, right) = (node << 1, (node << 1) + 1);
-        let mid = (start + end) >> 1;
-
-        (Self::query_recursive(tree, left, start, mid, lower, upper)
-            * Self::query_recursive(tree, right, mid + 1, end, lower, upper))
-            % M
+        result
     }
 }
 
@@ -109,17 +68,12 @@ fn main() {
     let mut output = String::new();
 
     let (n, m, k) = (input() as usize, input(), input());
-    let mut segment_tree = SegmentTree::from(n, (0..n).map(|_| input()));
+    let mut segment_tree = SegmentTree::make(n, (0..n).map(|_| input()));
 
     for (a, b, c) in (0..m + k).map(|_| (input(), input(), input())) {
         match a {
             1 => segment_tree.update(b as usize - 1, c),
-            2 => writeln!(
-                output,
-                "{}",
-                segment_tree.query(b as usize - 1, c as usize - 1)
-            )
-            .unwrap(),
+            2 => writeln!(output, "{}", segment_tree.query(b as usize - 1, c as usize)).unwrap(),
             _ => (),
         }
     }
