@@ -17,28 +17,23 @@ enum Dirs {
 use std::io;
 use Dirs::{Down, Left, Right, Up};
 
+const CCTV_TYPES: [&[&[Dirs]]; 5] = [
+    &[&[Up], &[Right], &[Down], &[Left]],
+    &[&[Left, Right], &[Up, Down]],
+    &[&[Up, Right], &[Right, Down], &[Down, Left], &[Left, Up]],
+    &[
+        &[Left, Up, Right],
+        &[Up, Right, Down],
+        &[Right, Down, Left],
+        &[Down, Left, Up],
+    ],
+    &[&[Up, Right, Down, Left]],
+];
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
-
-    let cctv_types = [
-        vec![vec![Up], vec![Right], vec![Down], vec![Left]],
-        vec![vec![Left, Right], vec![Up, Down]],
-        vec![
-            vec![Up, Right],
-            vec![Right, Down],
-            vec![Down, Left],
-            vec![Left, Up],
-        ],
-        vec![
-            vec![Left, Up, Right],
-            vec![Up, Right, Down],
-            vec![Right, Down, Left],
-            vec![Down, Left, Up],
-        ],
-        vec![vec![Up, Right, Down, Left]],
-    ];
 
     let (n, m) = (input(), input());
     let mut cctvs = Vec::new();
@@ -68,7 +63,6 @@ fn main() {
         &mut vec![0; cctvs.len()],
         &room,
         &cctvs,
-        &cctv_types,
         &(n, m),
         &empty_cell_count,
     );
@@ -81,36 +75,20 @@ fn product(
     selected: &mut Vec<usize>,
     room: &Vec<Vec<Cells>>,
     cctvs: &Vec<((usize, usize), usize)>,
-    cctv_types: &[Vec<Vec<Dirs>>; 5],
     size: &(usize, usize),
     empty_cell_count: &i32,
 ) -> i32 {
     if depth == selected.len() {
-        return simulate(
-            selected,
-            room.clone(),
-            cctvs,
-            cctv_types,
-            size,
-            *empty_cell_count,
-        );
+        return simulate(selected, room.clone(), cctvs, size, *empty_cell_count);
     }
 
     let (_, cctv_num) = cctvs[depth];
 
-    (0..cctv_types[cctv_num - 1].len())
+    (0..CCTV_TYPES[cctv_num - 1].len())
         .map(|type_| {
             selected[depth] = type_;
 
-            product(
-                depth + 1,
-                selected,
-                room,
-                cctvs,
-                cctv_types,
-                size,
-                empty_cell_count,
-            )
+            product(depth + 1, selected, room, cctvs, size, empty_cell_count)
         })
         .min()
         .unwrap()
@@ -120,7 +98,6 @@ fn simulate(
     selected: &Vec<usize>,
     mut room: Vec<Vec<Cells>>,
     cctvs: &Vec<((usize, usize), usize)>,
-    cctv_types: &[Vec<Vec<Dirs>>; 5],
     &(row_len, col_len): &(usize, usize),
     mut empty_cell_count: i32,
 ) -> i32 {
@@ -138,7 +115,7 @@ fn simulate(
     };
 
     for (i, &((row, col), num)) in cctvs.iter().enumerate() {
-        for dir in cctv_types[num - 1][selected[i]].iter() {
+        for dir in CCTV_TYPES[num - 1][selected[i]].iter() {
             match dir {
                 Up => {
                     for c in (0..col).rev() {
