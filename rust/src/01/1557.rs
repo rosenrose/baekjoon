@@ -4,7 +4,6 @@ fn main() {
 
     let k: i32 = buf.trim().parse().unwrap();
     let max = k * 2;
-
     let mobius_values = get_mobius_values((max as f64).sqrt() as usize);
 
     println!("{}", binary_search(k, &mobius_values, 0, max));
@@ -37,22 +36,21 @@ fn get_mobius_values(num: usize) -> Vec<i32> {
     mobius_values
 }
 
-fn binary_search(value: i32, mobius_values: &Vec<i32>, left: i32, right: i32) -> i32 {
-    if get_squre_free_nums_count(left, mobius_values) == value {
-        return left;
+fn binary_search(value: i32, mobius_values: &Vec<i32>, mut lo: i32, mut hi: i32) -> i32 {
+    let mut result = 0;
+
+    while lo <= hi {
+        let mid = lo + ((hi - lo) >> 1);
+
+        if get_squre_free_nums_count(mid, mobius_values) < value {
+            lo = mid + 1;
+        } else {
+            result = mid;
+            hi = mid - 1;
+        }
     }
 
-    if right - left == 1 {
-        return right;
-    }
-
-    let mid = ((left as i64 + right as i64) / 2) as i32;
-
-    if get_squre_free_nums_count(mid, mobius_values) >= value {
-        binary_search(value, mobius_values, left, mid)
-    } else {
-        binary_search(value, mobius_values, mid, right)
-    }
+    result
 }
 
 fn get_squre_free_nums_count(num: i32, mobius_values: &Vec<i32>) -> i32 {

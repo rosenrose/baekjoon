@@ -6,27 +6,25 @@ fn main() {
 
     let (_, n) = (input.next(), input.next().unwrap());
     let cables: Vec<_> = input.collect();
-    let max_length = *cables.iter().max().unwrap();
 
-    println!("{}", binary_search(&cables, n, 1, max_length));
+    println!("{}", binary_search(&cables, n));
 }
 
-fn binary_search(cables: &Vec<i64>, n: i64, left: i64, right: i64) -> i64 {
-    // println!("{left} {} {right}", (left + right) / 2);
+fn binary_search(cables: &Vec<i64>, n: i64) -> i64 {
     let is_ok = |num| cables.iter().map(|len| len / num).sum::<i64>() >= n;
+    let (mut lo, mut hi) = (1, *cables.iter().max().unwrap());
+    let mut result = 0;
 
-    if is_ok(right) {
-        return right;
-    }
-    if right - left == 1 {
-        return left;
+    while lo <= hi {
+        let mid = lo + ((hi - lo) >> 1);
+
+        if is_ok(mid) {
+            result = mid;
+            lo = mid + 1;
+        } else {
+            hi = mid - 1;
+        }
     }
 
-    let mid = (left + right) / 2;
-
-    if is_ok(mid) {
-        binary_search(cables, n, mid, right)
-    } else {
-        binary_search(cables, n, left, mid)
-    }
+    result
 }

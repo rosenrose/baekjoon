@@ -2,37 +2,35 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (_, m) = (input.next(), input.next().unwrap());
-    let mut max_height = 0;
+    let (_, m) = (input.next(), input.next().unwrap() as i64);
+    let heights: Vec<_> = input.collect();
 
-    let heights: Vec<_> = input
-        .map(|height| {
-            max_height = height.max(max_height);
-            height
-        })
-        .collect();
-
-    println!("{}", binary_search(&heights, m, 0, max_height - 1));
+    println!("{}", binary_search(&heights, m));
 }
 
-fn binary_search(heights: &Vec<i64>, m: i64, left: i64, right: i64) -> i64 {
-    // println!("{left} {} {right}", (left + right) / 2);
-    let is_ok = |num: i64| heights.iter().map(|h| (h - num).max(0)).sum::<i64>() >= m;
+fn binary_search(heights: &Vec<i32>, m: i64) -> i32 {
+    let is_ok = |num: i32| {
+        heights
+            .iter()
+            .map(|h| ((h - num) as i64).max(0))
+            .sum::<i64>()
+            >= m
+    };
+    let (mut lo, mut hi) = (0, heights.iter().max().unwrap() - 1);
+    let mut result = 0;
 
-    if is_ok(right) {
-        return right;
-    }
-    if right - left == 1 {
-        return left;
+    while lo <= hi {
+        let mid = lo + ((hi - lo) >> 1);
+
+        if is_ok(mid) {
+            result = mid;
+            lo = mid + 1;
+        } else {
+            hi = mid - 1;
+        }
     }
 
-    let mid = (left + right) / 2;
-
-    if is_ok(mid) {
-        binary_search(heights, m, mid, right)
-    } else {
-        binary_search(heights, m, left, mid)
-    }
+    result
 }
