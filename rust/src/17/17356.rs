@@ -8,6 +8,6 @@ fn main() {
     println!("{:.10}", (1.0 + 10.0_f64.powf(m)).recip());
 }
 
-fn parse_float_vec(buf: &String) -> Vec<f64> {
+fn parse_float_vec(buf: &str) -> Vec<f64> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

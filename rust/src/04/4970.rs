@@ -57,7 +57,7 @@ fn infix_to_postfix(input: &str) -> String {
     postfix
 }
 
-fn calculate((p, q, r): (u8, u8, u8), postfix: &String) -> u8 {
+fn calculate((p, q, r): (u8, u8, u8), postfix: &str) -> u8 {
     let mut stack = Vec::new();
 
     for token in postfix.chars() {

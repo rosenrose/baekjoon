@@ -8,6 +8,6 @@ fn main() {
     println!("{}", sequence.skip(a - 1).take(b - a + 1).sum::<usize>());
 }
 
-fn parse_int_vec(buf: &String) -> Vec<usize> {
+fn parse_int_vec(buf: &str) -> Vec<usize> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

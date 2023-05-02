@@ -8,6 +8,6 @@ fn main() {
     println!("{}", max.floor());
 }
 
-fn parse_int_vec(buf: &String) -> Vec<f64> {
+fn parse_int_vec(buf: &str) -> Vec<f64> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

@@ -14,13 +14,13 @@ fn main() {
 }
 
 /*
-fn group_by_o(str: &String) -> Vec<Vec<char>> {
+fn group_by_o(input: &str) -> Vec<Vec<char>> {
     let mut group_of_o = Vec::new();
     let mut arr = Vec::new();
 
-    for char in str.chars() {
-        match char {
-            'O' => arr.push(char),
+    for ch in input.chars() {
+        match ch {
+            'O' => arr.push(ch),
             'X' => {
                 if !arr.is_empty() {
                     group_of_o.push(arr.clone());

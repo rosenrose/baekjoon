@@ -7,6 +7,6 @@ fn main() {
     println!("{:.1}", n / 2.0 - d);
 }
 // https://wiki.mathnt.net/index.php?title=나비정리
-fn parse_float_vec(buf: &String) -> Vec<f64> {
+fn parse_float_vec(buf: &str) -> Vec<f64> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

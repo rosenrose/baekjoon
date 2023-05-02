@@ -28,6 +28,6 @@ fn product(depth: usize, selected: &mut Vec<usize>, nums: usize, output: &mut St
     }
 }
 
-fn parse_int_vec(buf: &String) -> Vec<usize> {
+fn parse_int_vec(buf: &str) -> Vec<usize> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

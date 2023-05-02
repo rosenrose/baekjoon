@@ -22,6 +22,6 @@ fn main() {
     println!("{}", left.min(right) * 2);
 }
 
-fn parse_int_vec(buf: &String) -> Vec<u32> {
+fn parse_int_vec(buf: &str) -> Vec<u32> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

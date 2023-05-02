@@ -24,7 +24,7 @@ fn parse_int(buf: &str) -> i32 {
     buf.parse().unwrap()
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
+fn parse_int_vec(buf: &str) -> Vec<i32> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }
 

@@ -15,6 +15,6 @@ fn main() {
     println!("{}", step_before_arrive + 1);
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
+fn parse_int_vec(buf: &str) -> Vec<i32> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

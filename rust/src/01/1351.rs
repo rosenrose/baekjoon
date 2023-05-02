@@ -29,6 +29,6 @@ fn infinite_array(n: i64, p: i64, q: i64, memo: &mut HashMap<i64, i64>) -> i64 {
     get_or_insert(n / p) + get_or_insert(n / q)
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i64> {
+fn parse_int_vec(buf: &str) -> Vec<i64> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

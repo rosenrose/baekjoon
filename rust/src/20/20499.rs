@@ -14,6 +14,6 @@ fn main() {
     );
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
+fn parse_int_vec(buf: &str) -> Vec<i32> {
     buf.trim().split('/').flat_map(str::parse).collect()
 }

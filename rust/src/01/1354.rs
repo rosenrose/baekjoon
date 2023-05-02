@@ -31,6 +31,6 @@ fn infinite_array(n: i64, p: i64, q: i64, x: i64, y: i64, memo: &mut HashMap<i64
     return if a > 0 { get_or_insert(a) } else { 1 } + if b > 0 { get_or_insert(b) } else { 1 };
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i64> {
+fn parse_int_vec(buf: &str) -> Vec<i64> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

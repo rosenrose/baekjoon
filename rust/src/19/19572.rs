@@ -15,6 +15,6 @@ fn main() {
     println!("{a:.1} {b:.1} {c:.1}");
 }
 
-fn parse_float_vec(buf: &String) -> Vec<f64> {
+fn parse_float_vec(buf: &str) -> Vec<f64> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

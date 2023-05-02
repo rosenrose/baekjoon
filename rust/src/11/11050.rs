@@ -15,6 +15,6 @@ fn combination_num(n: i32, r: i32) -> i32 {
     (n - r + 1..=n).product::<i32>() / (1..=r).product::<i32>()
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
+fn parse_int_vec(buf: &str) -> Vec<i32> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

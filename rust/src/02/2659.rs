@@ -39,6 +39,6 @@ fn get_clock_num(a: i32, b: i32, c: i32, d: i32) -> i32 {
     .unwrap()
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i32> {
+fn parse_int_vec(buf: &str) -> Vec<i32> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

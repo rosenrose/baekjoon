@@ -40,6 +40,6 @@ fn get_ex_gcd(a: i64, b: i64) -> (i64, i64, i64) {
     }
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i64> {
+fn parse_int_vec(buf: &str) -> Vec<i64> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

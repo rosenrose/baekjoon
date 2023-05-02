@@ -22,6 +22,6 @@ fn get_multiple_count(num: i64, divisor: i64) -> i64 {
     count
 }
 
-fn parse_int_vec(buf: &String) -> Vec<i64> {
+fn parse_int_vec(buf: &str) -> Vec<i64> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }

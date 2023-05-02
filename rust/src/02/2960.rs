@@ -54,6 +54,6 @@ fn get_prime_sieve(num: usize, mut k: i32, deleted: &mut usize) -> Vec<bool> {
 //     sieve
 // }
 
-fn parse_int_vec(buf: &String) -> Vec<usize> {
+fn parse_int_vec(buf: &str) -> Vec<usize> {
     buf.split_whitespace().flat_map(str::parse).collect()
 }
