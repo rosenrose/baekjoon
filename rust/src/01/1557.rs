@@ -26,17 +26,15 @@ fn get_mobius_values(num: usize) -> Vec<i32> {
             };
         }
     }
-
     // for i in 2..=num / 2 {
     //     for j in (i * 2..=num).step_by(i) {
     //         mobius_values[j] -= mobius_values[i];
     //     }
     // }
-
     mobius_values
 }
 
-fn binary_search(value: i32, mobius_values: &Vec<i32>, mut lo: i32, mut hi: i32) -> i32 {
+fn binary_search(value: i32, mobius_values: &[i32], mut lo: i32, mut hi: i32) -> i32 {
     let mut result = 0;
 
     while lo <= hi {
@@ -53,7 +51,7 @@ fn binary_search(value: i32, mobius_values: &Vec<i32>, mut lo: i32, mut hi: i32)
     result
 }
 
-fn get_squre_free_nums_count(num: i32, mobius_values: &Vec<i32>) -> i32 {
+fn get_squre_free_nums_count(num: i32, mobius_values: &[i32]) -> i32 {
     num + (2..)
         .take_while(|i| i * i <= num)
         .map(|i| (num / (i * i)) * mobius_values[i as usize])

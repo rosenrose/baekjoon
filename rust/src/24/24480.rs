@@ -28,7 +28,7 @@ fn main() {
     print!("{output}");
 }
 
-fn dfs(graph: &Vec<Vec<usize>>, start: usize) -> Vec<usize> {
+fn dfs(graph: &[Vec<usize>], start: usize) -> Vec<usize> {
     let mut visited = vec![0; graph.len()];
     let mut stack = vec![start];
     let mut count = 1;

@@ -78,7 +78,7 @@ fn floyd_warshall_with_path(distances: &mut Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     path
 }
 
-fn find_path(prevs: &Vec<Vec<i32>>, start: usize, end: usize) -> Option<Vec<usize>> {
+fn find_path(prevs: &[Vec<i32>], start: usize, end: usize) -> Option<Vec<usize>> {
     let prev = prevs[start][end];
 
     if prev == -1 {

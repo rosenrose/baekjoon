@@ -33,7 +33,7 @@ fn main() {
     }
 }
 
-fn dijkstra_with_path(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> (Vec<i32>, Vec<usize>) {
+fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize) -> (Vec<i32>, Vec<usize>) {
     let mut distances = vec![i32::MAX; graph.len()];
     distances[start] = 0;
 

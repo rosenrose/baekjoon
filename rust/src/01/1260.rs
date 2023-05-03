@@ -28,7 +28,7 @@ fn main() {
     search(&adjacency_list, v, Ops::BFS);
 }
 
-fn search(graph: &Vec<Vec<usize>>, start: usize, op: Ops) {
+fn search(graph: &[Vec<usize>], start: usize, op: Ops) {
     let mut queue = VecDeque::from([start]);
     let mut visited = vec![false; graph.len()];
 

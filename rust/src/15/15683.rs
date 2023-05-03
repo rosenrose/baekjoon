@@ -74,7 +74,7 @@ fn product(
     depth: usize,
     selected: &mut Vec<usize>,
     room: &Vec<Vec<Cells>>,
-    cctvs: &Vec<((usize, usize), usize)>,
+    cctvs: &[((usize, usize), usize)],
     size: &(usize, usize),
     empty_cell_count: &i32,
 ) -> i32 {
@@ -95,9 +95,9 @@ fn product(
 }
 
 fn simulate(
-    selected: &Vec<usize>,
+    selected: &[usize],
     mut room: Vec<Vec<Cells>>,
-    cctvs: &Vec<((usize, usize), usize)>,
+    cctvs: &[((usize, usize), usize)],
     &(row_len, col_len): &(usize, usize),
     mut empty_cell_count: i32,
 ) -> i32 {

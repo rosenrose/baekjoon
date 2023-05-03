@@ -29,7 +29,7 @@ fn main() {
     println!("{n}\n{}", compress(&map, 0, 0, n));
 }
 
-fn compress(map: &Vec<Vec<char>>, x: usize, y: usize, n: usize) -> String {
+fn compress(map: &[Vec<char>], x: usize, y: usize, n: usize) -> String {
     if n == 1 {
         return map[y][x].to_string();
     }

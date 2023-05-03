@@ -28,13 +28,12 @@ fn main() {
     println!("{max_safe_area}");
 }
 
-fn get_safe_area(height: i32, area: &Vec<Vec<i32>>) -> i32 {
+fn get_safe_area(height: i32, area: &[Vec<i32>]) -> i32 {
     let n = area.len();
     let mut count = 0;
     let mut visited = vec![vec![false; n]; n];
 
-    let is_pass =
-        |r: usize, c: usize, visited: &Vec<Vec<bool>>| area[r][c] <= height || visited[r][c];
+    let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| area[r][c] <= height || visited[r][c];
 
     for y in 0..n {
         for x in 0..n {

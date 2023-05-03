@@ -29,8 +29,8 @@ fn combinations(
     depth: usize,
     start: usize,
     selected: &mut Vec<(usize, usize)>,
-    chickens: &Vec<(usize, usize)>,
-    houses: &Vec<(usize, usize)>,
+    chickens: &[(usize, usize)],
+    houses: &[(usize, usize)],
 ) -> usize {
     if depth == selected.len() {
         let chicken_dist = houses

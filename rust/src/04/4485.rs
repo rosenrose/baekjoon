@@ -18,7 +18,7 @@ fn main() {
     }
 }
 
-fn dijkstra(graph: &Vec<Vec<i32>>, (start_x, start_y): (usize, usize)) -> Vec<Vec<i32>> {
+fn dijkstra(graph: &[Vec<i32>], (start_x, start_y): (usize, usize)) -> Vec<Vec<i32>> {
     let n = graph.len();
     let mut distances = vec![vec![i32::MAX; n]; n];
     distances[start_y][start_x] = graph[start_y][start_x];

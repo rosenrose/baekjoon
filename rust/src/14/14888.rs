@@ -40,8 +40,8 @@ fn main() {
 fn permutations(
     depth: usize,
     selected: &mut Vec<usize>,
-    operators: &Vec<Ops>,
-    nums: &Vec<i32>,
+    operators: &[Ops],
+    nums: &[i32],
 ) -> (i32, i32) {
     if depth == selected.len() {
         let result = selected.iter().enumerate().fold(nums[0], |acc, (i, &sel)| {

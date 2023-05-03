@@ -15,7 +15,7 @@ fn main() {
     println!("{num}");
 }
 
-fn product(depth: usize, selected: &mut Vec<i64>, nums: &Vec<i64>, max_num: i64) -> Option<i64> {
+fn product(depth: usize, selected: &mut Vec<i64>, nums: &[i64], max_num: i64) -> Option<i64> {
     if depth == selected.len() {
         let result = selected.iter().fold(0, |acc, num| acc * 10 + num);
 

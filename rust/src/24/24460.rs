@@ -10,7 +10,7 @@ fn main() {
     println!("{}", get_2nd_small(&chairs, n, 0, 0));
 }
 
-fn get_2nd_small(chairs: &Vec<Vec<i32>>, n: usize, x: usize, y: usize) -> i32 {
+fn get_2nd_small(chairs: &[Vec<i32>], n: usize, x: usize, y: usize) -> i32 {
     if n == 1 {
         return chairs[y][x];
     }

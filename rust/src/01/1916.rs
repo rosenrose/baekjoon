@@ -20,7 +20,7 @@ fn main() {
     println!("{}", distances[end]);
 }
 
-fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> Vec<i32> {
+fn dijkstra(graph: &[Vec<(usize, i32)>], start: usize) -> Vec<i32> {
     let mut distances = vec![i32::MAX; graph.len()];
     distances[start] = 0;
 

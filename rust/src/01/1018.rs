@@ -19,7 +19,7 @@ fn main() {
     println!("{min_paint}");
 }
 
-fn get_paint_count(board: &Vec<&str>, x: usize, y: usize) -> i32 {
+fn get_paint_count(board: &[&str], x: usize, y: usize) -> i32 {
     let mut paint_start_black = 0;
 
     for (i, row) in board[y..y + 8].iter().enumerate() {

@@ -18,7 +18,7 @@ fn main() {
     );
 }
 
-fn dijkstra(coins: &Vec<i64>, biggest: i64) -> Vec<i64> {
+fn dijkstra(coins: &[i64], biggest: i64) -> Vec<i64> {
     let mut distances = vec![i64::MAX; biggest as usize];
     distances[0] = 0;
 

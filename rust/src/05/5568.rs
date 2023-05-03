@@ -19,12 +19,7 @@ fn main() {
     println!("{}", results.len());
 }
 
-fn permutations(
-    depth: usize,
-    selected: &mut Vec<usize>,
-    nums: &Vec<&str>,
-    results: &mut Vec<String>,
-) {
+fn permutations(depth: usize, selected: &mut Vec<usize>, nums: &[&str], results: &mut Vec<String>) {
     if depth == selected.len() {
         let num: Vec<_> = selected.iter().map(|&i| nums[i]).collect();
         results.push(num.join(""));

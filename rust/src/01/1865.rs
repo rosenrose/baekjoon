@@ -21,7 +21,7 @@ fn main() {
     }
 }
 
-fn bellman_ford(len: usize, edges: &Vec<(usize, usize, i64)>) -> bool {
+fn bellman_ford(len: usize, edges: &[(usize, usize, i64)]) -> bool {
     let mut distances = vec![0; len + 1]; // 모든 정점에서 동시에 시작. https://www.acmicpc.net/board/view/72995
 
     for i in 0..len {

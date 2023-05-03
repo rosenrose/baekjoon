@@ -12,7 +12,7 @@ fn main() {
     println!("{max_sum}");
 }
 
-fn permutations(depth: usize, selected: &mut Vec<usize>, nums: &Vec<i32>) -> u32 {
+fn permutations(depth: usize, selected: &mut Vec<usize>, nums: &[i32]) -> u32 {
     if depth == selected.len() {
         let sum = (1..selected.len())
             .map(|i| nums[selected[i - 1]].abs_diff(nums[selected[i]]))

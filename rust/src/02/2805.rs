@@ -10,7 +10,7 @@ fn main() {
     println!("{}", binary_search(&heights, m));
 }
 
-fn binary_search(heights: &Vec<i32>, m: i64) -> i32 {
+fn binary_search(heights: &[i32], m: i64) -> i32 {
     let is_ok = |num: i32| {
         heights
             .iter()

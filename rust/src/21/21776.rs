@@ -40,8 +40,8 @@ fn main() {
 fn product(
     depths: &mut Vec<usize>,
     selected: &mut Vec<usize>,
-    card_orders: &Vec<Vec<usize>>,
-    cards: &Vec<Vec<(&str, char)>>,
+    card_orders: &[Vec<usize>],
+    cards: &[Vec<(&str, char)>],
     result: &mut Vec<String>,
 ) {
     let total_depth: usize = depths.iter().sum();

@@ -18,7 +18,7 @@ fn combinations(
     depth: usize,
     start: usize,
     selected: &mut Vec<usize>,
-    nums: &Vec<i32>,
+    nums: &[i32],
     sum: i32,
 ) -> i32 {
     if depth == selected.len() {

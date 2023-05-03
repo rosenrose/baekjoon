@@ -20,7 +20,7 @@ fn board_horse(
     depth: i32,
     (r, c): (usize, usize),
     is_passed: &mut [bool; 26],
-    board: &Vec<&[u8]>,
+    board: &[&[u8]],
 ) -> i32 {
     let adjacents = [
         (r.saturating_sub(1), c),

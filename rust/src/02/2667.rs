@@ -4,23 +4,23 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let map: Vec<_> = buf.lines().skip(1).map(str::as_bytes).collect();
 
-    let mut houses = get_houses(&map);
-    houses.sort();
+    let mut house_counts = get_house_counts(&map);
+    house_counts.sort();
 
-    println!("{}", houses.len());
+    println!("{}", house_counts.len());
 
-    for house in houses {
-        println!("{house}");
+    for count in house_counts {
+        println!("{count}");
     }
 }
 
-fn get_houses(map: &Vec<&[u8]>) -> Vec<i32> {
+fn get_house_counts(map: &[&[u8]]) -> Vec<i32> {
     let n = map.len();
-    let mut houses = Vec::new();
+    let mut house_counts = Vec::new();
     let mut visited = vec![vec![false; n]; n];
 
     let is_pass =
-        |r: usize, c: usize, visited: &Vec<Vec<bool>>| map[r][c] as char == '0' || visited[r][c];
+        |r: usize, c: usize, visited: &[Vec<bool>]| map[r][c] as char == '0' || visited[r][c];
 
     for y in 0..n {
         for x in 0..n {
@@ -51,9 +51,9 @@ fn get_houses(map: &Vec<&[u8]>) -> Vec<i32> {
                 }
             }
 
-            houses.push(count);
+            house_counts.push(count);
         }
     }
 
-    houses
+    house_counts
 }

@@ -20,11 +20,7 @@ fn main() {
     print!("{output}");
 }
 
-fn get_goldbach_partition(
-    num: i32,
-    prime_nums: &Vec<i32>,
-    sieve: &Vec<bool>,
-) -> Option<(i32, i32)> {
+fn get_goldbach_partition(num: i32, prime_nums: &[i32], sieve: &[bool]) -> Option<(i32, i32)> {
     if num == 4 {
         return Some((2, 2));
     }

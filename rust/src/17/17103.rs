@@ -17,7 +17,7 @@ fn main() {
     print!("{output}");
 }
 
-fn get_goldbach_partition_count(num: i32, prime_nums: &Vec<i32>, sieve: &Vec<bool>) -> usize {
+fn get_goldbach_partition_count(num: i32, prime_nums: &[i32], sieve: &[bool]) -> usize {
     if num == 4 {
         return 1;
     }

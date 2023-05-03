@@ -8,7 +8,7 @@ fn main() {
     let mut arr: Vec<_> = input.collect();
     let mut num = 0;
 
-    merge_sort(&mut arr[..], n as usize, &mut k, &mut num);
+    merge_sort(&mut arr, n as usize, &mut k, &mut num);
 
     println!("{}", if k > 0 { -1 } else { num });
 }

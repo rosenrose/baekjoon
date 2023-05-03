@@ -12,7 +12,7 @@ fn main() {
     // bubble_sort(&mut arr);
     // selection_sort(&mut arr);
     // insertion_sort(&mut arr);
-    quick_sort(&mut arr[..], n as usize);
+    quick_sort(&mut arr, n as usize);
 
     for num in arr {
         writeln!(output, "{num}").unwrap();

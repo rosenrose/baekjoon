@@ -41,8 +41,8 @@ fn main() {
 fn permutations(
     depth: usize,
     selected: &mut Vec<usize>,
-    operators: &Vec<Tokens>,
-    nums: &Vec<i32>,
+    operators: &[Tokens],
+    nums: &[i32],
 ) -> (i32, i32) {
     if depth == selected.len() {
         let mut infix = vec![Num(nums[0])];

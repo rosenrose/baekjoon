@@ -17,7 +17,7 @@ fn combination_pairs(
     start: usize,
     selected: &mut Vec<usize>,
     numbers: usize,
-    matrix: &Vec<Vec<u32>>,
+    matrix: &[Vec<u32>],
 ) -> u32 {
     if depth == selected.len() {
         let rest: Vec<_> = (0..numbers).filter(|n| !selected.contains(n)).collect();

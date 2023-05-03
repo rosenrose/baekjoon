@@ -17,7 +17,7 @@ fn main() {
     print!("{output}");
 }
 
-fn permutations(depth: usize, selected: &mut Vec<usize>, nums: &Vec<usize>, output: &mut String) {
+fn permutations(depth: usize, selected: &mut Vec<usize>, nums: &[usize], output: &mut String) {
     if depth == selected.len() {
         for &i in selected.iter() {
             write!(output, "{} ", nums[i]).unwrap();

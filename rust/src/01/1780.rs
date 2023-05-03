@@ -15,7 +15,7 @@ fn main() {
 }
 
 fn cut(
-    paper: &Vec<Vec<i32>>,
+    paper: &[Vec<i32>],
     x: usize,
     y: usize,
     n: usize,

@@ -13,7 +13,7 @@ fn main() {
     combinations(0, 0, &mut vec!['\0'; len], &chars);
 }
 
-fn combinations(depth: usize, start: usize, selected: &mut Vec<char>, chars: &Vec<char>) {
+fn combinations(depth: usize, start: usize, selected: &mut Vec<char>, chars: &[char]) {
     if depth == selected.len() {
         let result = String::from_iter(selected.iter());
 

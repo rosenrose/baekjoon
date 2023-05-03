@@ -10,7 +10,7 @@ fn main() {
     println!("{}", binary_search(&cables, n));
 }
 
-fn binary_search(cables: &Vec<i64>, n: i64) -> i64 {
+fn binary_search(cables: &[i64], n: i64) -> i64 {
     let is_ok = |num| cables.iter().map(|len| len / num).sum::<i64>() >= n;
     let (mut lo, mut hi) = (1, *cables.iter().max().unwrap());
     let mut result = 0;

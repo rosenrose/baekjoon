@@ -10,7 +10,7 @@ fn main() {
     println!("{}", compress(&video, 0, 0, n));
 }
 
-fn compress(video: &Vec<&str>, x: usize, y: usize, n: usize) -> String {
+fn compress(video: &[&str], x: usize, y: usize, n: usize) -> String {
     if n == 1 {
         return video[y].chars().nth(x).unwrap().to_string();
     }

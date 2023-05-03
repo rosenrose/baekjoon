@@ -35,7 +35,7 @@ fn main() {
     );
 }
 
-fn dijkstra(graph: &Vec<Vec<(usize, i32)>>, start: usize) -> Vec<i32> {
+fn dijkstra(graph: &[Vec<(usize, i32)>], start: usize) -> Vec<i32> {
     let mut dists = vec![i32::MAX; graph.len()];
     dists[start] = 0;
 

@@ -28,11 +28,7 @@ fn main() {
     }
 }
 
-fn dijkstra_nth(
-    graph: &Vec<Vec<(usize, i32)>>,
-    start: usize,
-    order: usize,
-) -> Vec<BinaryHeap<i32>> {
+fn dijkstra_nth(graph: &[Vec<(usize, i32)>], start: usize, order: usize) -> Vec<BinaryHeap<i32>> {
     let mut distances = vec![BinaryHeap::new(); graph.len()];
     distances[start].push(0);
 

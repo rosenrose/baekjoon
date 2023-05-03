@@ -21,7 +21,7 @@ fn combinations_with_replacement(
     depth: usize,
     start: usize,
     selected: &mut Vec<usize>,
-    nums: &Vec<usize>,
+    nums: &[usize],
     output: &mut String,
 ) {
     if depth == selected.len() {

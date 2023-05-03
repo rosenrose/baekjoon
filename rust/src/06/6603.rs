@@ -21,7 +21,7 @@ fn combinations(
     depth: usize,
     start: usize,
     selected: &mut [usize; 6],
-    nums: &Vec<usize>,
+    nums: &[usize],
     output: &mut String,
 ) {
     if depth == selected.len() {

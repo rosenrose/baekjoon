@@ -16,7 +16,7 @@ fn main() {
     print!("{output}");
 }
 
-fn product(depth: usize, selected: &mut Vec<usize>, nums: &Vec<usize>, output: &mut String) {
+fn product(depth: usize, selected: &mut Vec<usize>, nums: &[usize], output: &mut String) {
     if depth == selected.len() {
         for num in selected {
             write!(output, "{num} ").unwrap();

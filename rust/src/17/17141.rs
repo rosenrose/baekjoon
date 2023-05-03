@@ -42,7 +42,7 @@ fn combinations(
     depth: usize,
     start: usize,
     selected: &mut Vec<usize>,
-    viruse_places: &Vec<(usize, usize)>,
+    viruse_places: &[(usize, usize)],
     room: &Vec<Vec<Cells>>,
 ) -> i32 {
     if depth == selected.len() {
@@ -62,8 +62,8 @@ fn combinations(
 }
 
 fn simulate(
-    selected: &Vec<usize>,
-    viruse_places: &Vec<(usize, usize)>,
+    selected: &[usize],
+    viruse_places: &[(usize, usize)],
     mut room: Vec<Vec<Cells>>,
 ) -> i32 {
     let size = room.len();

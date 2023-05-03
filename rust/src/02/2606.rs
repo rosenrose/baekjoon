@@ -16,7 +16,7 @@ fn main() {
     dfs(&adjacency_list, 1);
 }
 
-fn dfs(graph: &Vec<Vec<usize>>, start: usize) {
+fn dfs(graph: &[Vec<usize>], start: usize) {
     let mut discovered = vec![false; graph.len()];
     discovered[start] = true;
 

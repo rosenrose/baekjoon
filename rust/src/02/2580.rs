@@ -31,7 +31,7 @@ fn main() {
     }
 }
 
-fn sudoku(board: &mut Vec<Vec<i32>>, empty_cells: &Vec<(usize, usize)>, idx: usize) -> bool {
+fn sudoku(board: &mut Vec<Vec<i32>>, empty_cells: &[(usize, usize)], idx: usize) -> bool {
     if idx == empty_cells.len() {
         return true;
     }

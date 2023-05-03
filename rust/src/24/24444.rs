@@ -29,7 +29,7 @@ fn main() {
     print!("{output}");
 }
 
-fn bfs(graph: &Vec<Vec<usize>>, start: usize) -> Vec<usize> {
+fn bfs(graph: &[Vec<usize>], start: usize) -> Vec<usize> {
     let mut visited = vec![0; graph.len()];
     let mut queue = VecDeque::from([start]);
     let mut count = 1;

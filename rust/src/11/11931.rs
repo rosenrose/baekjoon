@@ -9,7 +9,7 @@ fn main() {
     let n = input.next().unwrap() as usize;
     let mut arr: Vec<_> = input.collect();
 
-    merge_sort(&mut arr[..], n);
+    merge_sort(&mut arr, n);
 
     for num in arr {
         writeln!(output, "{num}").unwrap();

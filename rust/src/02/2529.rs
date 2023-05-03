@@ -19,7 +19,7 @@ fn main() {
     println!("{max:0digits$}\n{min:0digits$}", digits = k + 1);
 }
 
-fn permutations(depth: usize, selected: &mut Vec<i64>, operators: &Vec<Ordering>) -> (i64, i64) {
+fn permutations(depth: usize, selected: &mut Vec<i64>, operators: &[Ordering]) -> (i64, i64) {
     if depth == selected.len() {
         let result = selected.iter().fold(0, |acc, num| acc * 10 + num);
 

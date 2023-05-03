@@ -47,7 +47,7 @@ fn combinations(
     depth: usize,
     start: usize,
     selected: &mut Vec<usize>,
-    viruse_places: &Vec<(usize, usize)>,
+    viruse_places: &[(usize, usize)],
     room: &Vec<Vec<Cells>>,
     empty_cells: i32,
 ) -> i32 {
@@ -68,8 +68,8 @@ fn combinations(
 }
 
 fn simulate(
-    selected: &Vec<usize>,
-    viruse_places: &Vec<(usize, usize)>,
+    selected: &[usize],
+    viruse_places: &[(usize, usize)],
     mut room: Vec<Vec<Cells>>,
     mut empty_cells: i32,
 ) -> i32 {

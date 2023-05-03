@@ -24,7 +24,7 @@ fn main() {
     print!("{output}");
 }
 
-fn combination_rem(n: i64, r: i64, factorial_rem: &Vec<i64>) -> i64 {
+fn combination_rem(n: i64, r: i64, factorial_rem: &[i64]) -> i64 {
     if n == r || r == 0 {
         return 1;
     }

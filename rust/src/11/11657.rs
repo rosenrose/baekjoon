@@ -26,7 +26,7 @@ fn main() {
     print!("{output}");
 }
 
-fn bellman_ford(len: usize, edges: &Vec<(usize, usize, i64)>, init: usize) -> (Vec<i64>, bool) {
+fn bellman_ford(len: usize, edges: &[(usize, usize, i64)], init: usize) -> (Vec<i64>, bool) {
     let mut distances = vec![i64::MAX; len + 1];
     distances[init] = 0;
 
