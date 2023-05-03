@@ -10,8 +10,8 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let a_cards: Vec<_> = (0..10).map(|_| input.next().unwrap()).collect();
-    let b_cards: Vec<_> = (0..10).map(|_| input.next().unwrap()).collect();
+    let a_cards: Vec<_> = input.by_ref().take(10).collect();
+    let b_cards: Vec<_> = input.collect();
 
     let mut last_winner = None;
     let (a_score, b_score) = a_cards

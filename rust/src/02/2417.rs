@@ -2,33 +2,35 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let n: i128 = buf.trim().parse().unwrap();
-    let n_sqrt = (n as f64).sqrt() as i128;
+    let n: u64 = buf.trim().parse().unwrap();
+    let sqrt = (n as f64).sqrt() as u64;
 
-    if n_sqrt * n_sqrt >= n {
-        println!("{n_sqrt}");
+    if sqrt * sqrt >= n {
+        println!("{sqrt}");
         return;
     }
 
-    if (n_sqrt + 1) * (n_sqrt + 1) >= n {
-        println!("{}", n_sqrt + 1);
+    if (sqrt + 1) * (sqrt + 1) >= n {
+        println!("{}", sqrt + 1);
     }
+    // println!("{}", binary_search(n));
 }
 
-// fn binary_search(value: i64, left: i64, right: i64) -> i64 {
-//     if left * left >= value {
-//         return left;
-//     }
+fn binary_search(num: u64) -> i64 {
+    let is_ok = |sqrt: u64| sqrt * sqrt >= num;
+    let (mut lo, mut hi) = (0, 1 << 32);
+    let mut result = 0;
 
-//     if right - left == 1 {
-//         return right;
-//     }
+    while lo <= hi {
+        let mid = lo + ((hi - lo) >> 1);
 
-//     let mid = (right + left) / 2;
+        if is_ok(mid as u64) {
+            result = mid;
+            hi = mid - 1;
+        } else {
+            lo = mid + 1;
+        }
+    }
 
-//     if mid * mid >= value {
-//         binary_search(value, left, mid)
-//     } else {
-//         binary_search(value, mid, right)
-//     }
-// }
+    result
+}

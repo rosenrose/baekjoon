@@ -8,9 +8,7 @@ fn main() {
     let mut routers: Vec<_> = input.collect();
     routers.sort_unstable();
 
-    let max_gap = binary_search(&routers, c);
-
-    println!("{max_gap}");
+    println!("{}", binary_search(&routers, c));
 }
 
 fn binary_search(routers: &[i32], router_count: i32) -> i32 {
