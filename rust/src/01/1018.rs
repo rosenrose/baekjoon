@@ -1,5 +1,7 @@
 use std::io;
 
+const SIZE: usize = 8;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
@@ -8,10 +10,10 @@ fn main() {
     let (n, m) = (parse_int(n), parse_int(m));
     let board: Vec<_> = input.collect();
 
-    let mut min_paint = 32;
+    let mut min_paint = SIZE * SIZE / 2;
 
-    for y in 0..=n - 8 {
-        for x in 0..=m - 8 {
+    for y in 0..=n - SIZE {
+        for x in 0..=m - SIZE {
             min_paint = get_paint_count(&board, x, y).min(min_paint);
         }
     }
@@ -19,11 +21,11 @@ fn main() {
     println!("{min_paint}");
 }
 
-fn get_paint_count(board: &[&str], x: usize, y: usize) -> i32 {
+fn get_paint_count(board: &[&str], x: usize, y: usize) -> usize {
     let mut paint_start_black = 0;
 
-    for (i, row) in board[y..y + 8].iter().enumerate() {
-        for (j, ch) in row[x..x + 8].char_indices() {
+    for (i, row) in board[y..y + SIZE].iter().enumerate() {
+        for (j, ch) in row[x..x + SIZE].char_indices() {
             if matches!(
                 (i % 2, j % 2, ch),
                 (0, 0, 'W') | (0, 1, 'B') | (1, 0, 'B') | (1, 1, 'W')
@@ -33,7 +35,8 @@ fn get_paint_count(board: &[&str], x: usize, y: usize) -> i32 {
         }
     }
 
-    let paint_start_white = 64 - paint_start_black;
+    let paint_start_white = SIZE * SIZE - paint_start_black;
+
     paint_start_black.min(paint_start_white)
 }
 
