@@ -23,9 +23,9 @@ fn main() {
     println!("{max_block}");
 }
 
-fn product(depth: usize, selected: &mut [Dirs; 5], board: &Vec<Vec<i32>>, size: &usize) -> i32 {
+fn product(depth: usize, selected: &mut [Dirs; 5], board: &[Vec<i32>], size: &usize) -> i32 {
     if depth == selected.len() {
-        return simulate(selected, board.clone(), size);
+        return simulate(selected, board.to_owned(), size);
     }
 
     [Up, Right, Down, Left]

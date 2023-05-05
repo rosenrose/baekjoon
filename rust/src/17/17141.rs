@@ -43,10 +43,10 @@ fn combinations(
     start: usize,
     selected: &mut Vec<usize>,
     viruse_places: &[(usize, usize)],
-    room: &Vec<Vec<Cells>>,
+    room: &[Vec<Cells>],
 ) -> i32 {
     if depth == selected.len() {
-        return simulate(selected, viruse_places, room.clone());
+        return simulate(selected, viruse_places, room.to_owned());
     }
 
     let takes = viruse_places.len() - selected.len() + 1;

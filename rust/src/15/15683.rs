@@ -73,13 +73,13 @@ fn main() {
 fn product(
     depth: usize,
     selected: &mut Vec<usize>,
-    room: &Vec<Vec<Cells>>,
+    room: &[Vec<Cells>],
     cctvs: &[((usize, usize), usize)],
     size: &(usize, usize),
     empty_cell_count: &i32,
 ) -> i32 {
     if depth == selected.len() {
-        return simulate(selected, room.clone(), cctvs, size, *empty_cell_count);
+        return simulate(selected, room.to_owned(), cctvs, size, *empty_cell_count);
     }
 
     let (_, cctv_num) = cctvs[depth];
