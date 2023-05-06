@@ -13,5 +13,5 @@ fn main() {
         }
     }
 
-    println!("{}", if String::from_iter(t) == s { 1 } else { 0 });
+    println!("{}", u8::from(String::from_iter(t) == s));
 }

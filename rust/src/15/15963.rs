@@ -4,5 +4,5 @@ fn main() {
 
     let (n, m) = buf.trim().split_once(' ').unwrap();
 
-    println!("{}", if n == m { 1 } else { 0 });
+    println!("{}", u8::from(n == m));
 }

@@ -6,7 +6,7 @@ fn main() {
     let [a1, a0, c, n0] = input.collect::<Vec<_>>()[..] else { return };
 
     if c == a1 {
-        println!("{}", if a0 <= 0.0 { 1 } else { 0 });
+        println!("{}", u8::from(a0 <= 0.0));
         return;
     }
     if (c - a1).is_sign_negative() {
@@ -16,5 +16,5 @@ fn main() {
 
     let n = a0 / (c - a1);
 
-    println!("{}", if n0 >= n { 1 } else { 0 });
+    println!("{}", u8::from(n0 >= n));
 }

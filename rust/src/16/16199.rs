@@ -11,7 +11,5 @@ fn main() {
     let age = cmp_year - birth_year;
     let is_early = (cmp_month, cmp_date) < (birth_month, birth_date);
 
-    println!("{}", age - if is_early { 1 } else { 0 });
-    println!("{}", age + 1);
-    println!("{}", age);
+    println!("{}\n{}\n{age}", age - i32::from(is_early), age + 1);
 }

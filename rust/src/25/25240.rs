@@ -59,7 +59,7 @@ fn main() {
             perm[2]
         };
 
-        writeln!(output, "{}", if op & permission == op { 1 } else { 0 }).unwrap();
+        writeln!(output, "{}", u8::from(op & permission == op)).unwrap();
     }
 
     print!("{output}");

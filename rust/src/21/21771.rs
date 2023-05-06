@@ -10,7 +10,7 @@ fn main() {
 
     let p_count: usize = (0..rows).map(|_| input().matches('P').count()).sum();
 
-    println!("{}", if p_count < height * width { 1 } else { 0 });
+    println!("{}", u8::from(p_count < height * width));
 }
 
 fn parse_int(buf: &str) -> usize {

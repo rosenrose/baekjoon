@@ -5,7 +5,7 @@ fn main() {
     let [a, b] = parse_float_vec(&buf)[..] else { return };
     let net = a * ((100.0 - b) / 100.0);
 
-    println!("{}", if net >= 100.0 { 0 } else { 1 });
+    println!("{}", u8::from(net < 100.0));
 }
 
 fn parse_float_vec(buf: &str) -> Vec<f64> {

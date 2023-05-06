@@ -24,13 +24,7 @@ fn main() {
             "pop_front" => deque.pop_front().unwrap_or(-1),
             "pop_back" => deque.pop_back().unwrap_or(-1),
             "size" => deque.len() as i32,
-            "empty" => {
-                if deque.is_empty() {
-                    1
-                } else {
-                    0
-                }
-            }
+            "empty" => i32::from(deque.is_empty()),
             "front" => *deque.front().unwrap_or(&-1),
             "back" => *deque.back().unwrap_or(&-1),
             _ => unreachable!(),

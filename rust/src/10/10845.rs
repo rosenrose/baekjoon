@@ -19,13 +19,7 @@ fn main() {
             }
             "pop" => queue.pop_front().unwrap_or(-1),
             "size" => queue.len() as i32,
-            "empty" => {
-                if queue.is_empty() {
-                    1
-                } else {
-                    0
-                }
-            }
+            "empty" => i32::from(queue.is_empty()),
             "front" => *queue.front().unwrap_or(&-1),
             "back" => *queue.back().unwrap_or(&-1),
             _ => unreachable!(),

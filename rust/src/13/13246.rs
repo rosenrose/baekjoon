@@ -34,7 +34,7 @@ impl Matrix {
 
         Self(
             (0..len)
-                .map(|i| (0..len).map(|j| if i == j { 1 } else { 0 }).collect())
+                .map(|i| (0..len).map(|j| i64::from(i == j)).collect())
                 .collect(),
         )
     }

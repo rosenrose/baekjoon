@@ -56,7 +56,7 @@ fn s(k: i64, n: i64) -> i64 {
 
     let matrix = Matrix(
         (0..=k + 1)
-            .map(|i| (0..=k + 1).map(|j| if j <= i { 1 } else { 0 }).collect())
+            .map(|i| (0..=k + 1).map(|j| i64::from(j <= i)).collect())
             .collect(),
     );
 

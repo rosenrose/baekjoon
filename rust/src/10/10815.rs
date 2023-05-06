@@ -15,7 +15,7 @@ fn main() {
     }
 
     for num in input.skip(1) {
-        write!(output, "{} ", if cards.contains(&num) { 1 } else { 0 }).unwrap();
+        write!(output, "{} ", u8::from(cards.contains(&num))).unwrap();
     }
 
     print!("{output}");

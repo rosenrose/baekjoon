@@ -14,6 +14,7 @@ fn main() {
         stdin.read_line(&mut buf).unwrap();
 
         let mut input = buf.split_ascii_whitespace();
+
         let op = input.next().unwrap();
         let x = if let Some(s) = input.next() {
             parse_int(s)
@@ -26,7 +27,7 @@ fn main() {
             "remove" => s &= !(1 << x),
             "check" => {
                 let check = 1 << x;
-                writeln!(stdout, "{}", if s & check == check { 1 } else { 0 }).unwrap();
+                writeln!(stdout, "{}", u8::from(s & check == check)).unwrap();
             }
             "toggle" => s ^= 1 << x,
             "all" => s |= !0,

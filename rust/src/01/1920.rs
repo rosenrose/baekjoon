@@ -11,7 +11,7 @@ fn main() {
     let nums: HashSet<_> = input.by_ref().take(n).collect();
 
     for num in input.skip(1) {
-        writeln!(output, "{}", if nums.contains(&num) { 1 } else { 0 }).unwrap();
+        writeln!(output, "{}", u8::from(nums.contains(&num))).unwrap();
     }
 
     print!("{output}");

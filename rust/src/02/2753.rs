@@ -18,5 +18,5 @@ fn main() {
         false
     };
 
-    println!("{}", if is_leap { 1 } else { 0 });
+    println!("{}", u8::from(is_leap));
 }

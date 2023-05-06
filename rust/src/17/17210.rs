@@ -11,10 +11,9 @@ fn main() {
         return;
     }
 
-    let mut door = input.next().unwrap();
+    let door = input.next().unwrap();
 
-    for _ in 0..n - 1 {
-        door = if door == 0 { 1 } else { 0 };
-        println!("{door}");
+    for i in 0..n - 1 {
+        println!("{}", u8::from(i & 1 == door));
     }
 }

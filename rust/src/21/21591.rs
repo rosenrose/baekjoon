@@ -4,7 +4,7 @@ fn main() {
 
     let [wc, hc, ws, hs] = parse_int_vec(&buf)[..] else { return };
 
-    println!("{}", if wc - 2 >= ws && hc - 2 >= hs { 1 } else { 0 });
+    println!("{}", u8::from(wc - 2 >= ws && hc - 2 >= hs));
 }
 
 fn parse_int_vec(buf: &str) -> Vec<i32> {

@@ -8,11 +8,7 @@ fn main() {
 
     for word in input.skip(1) {
         let mut count = 0;
-        let result = if is_palindrome(word.as_bytes(), &mut count) {
-            1
-        } else {
-            0
-        };
+        let result = u8::from(is_palindrome(word.as_bytes(), &mut count));
 
         writeln!(output, "{result} {count}").unwrap();
     }
