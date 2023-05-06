@@ -36,20 +36,16 @@ fn main() {
     let mut time = 0;
 
     loop {
-        let mut edibles = eat(&map, shark_coord, shark_size);
+        let (target, cost) = eat(&map, shark_coord, shark_size);
 
-        if edibles.is_empty() {
+        if cost == i32::MAX {
             break;
         }
 
-        let ((r, c), t) = edibles
-            .select_nth_unstable_by_key(0, |&((r, c), time)| (time, r, c))
-            .1;
-
         map[shark_coord.0][shark_coord.1] = Cells::Empty;
-        map[*r][*c] = Cells::Shark;
+        map[target.0][target.1] = Cells::Shark;
 
-        shark_coord = (*r, *c);
+        shark_coord = target;
         shark_eats += 1;
 
         if shark_eats == shark_size {
@@ -57,27 +53,26 @@ fn main() {
             shark_eats = 0;
         }
 
-        time += *t;
+        time += cost;
     }
 
     println!("{time}");
 }
 
-fn eat(
-    map: &[Vec<Cells>],
-    shark_coord: (usize, usize),
-    shark_size: i32,
-) -> Vec<((usize, usize), i32)> {
+fn eat(map: &[Vec<Cells>], shark_coord: (usize, usize), shark_size: i32) -> ((usize, usize), i32) {
     let n = map.len();
     let mut visited = vec![vec![false; n]; n];
     visited[shark_coord.0][shark_coord.1] = true;
 
     let mut queue = VecDeque::from([(shark_coord, 0)]);
-    let mut edibles = Vec::new();
+    let (mut target, mut cost) = ((0, 0), i32::MAX);
 
     while let Some(((r, c), time)) = queue.pop_front() {
         if matches!(map[r][c], Cells::Fish(s) if s < shark_size) {
-            edibles.push(((r, c), time));
+            if (time, (r, c)) < (cost, target) {
+                cost = time;
+                target = (r, c);
+            }
         }
 
         let adjacents = [
@@ -99,5 +94,5 @@ fn eat(
         }
     }
 
-    edibles
+    (target, cost)
 }
