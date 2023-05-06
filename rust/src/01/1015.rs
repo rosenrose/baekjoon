@@ -7,9 +7,7 @@ fn main() {
     let mut a: Vec<_> = input.skip(1).enumerate().collect();
     a.sort_by_key(|&(_, num)| num);
 
-    let p: Vec<_> = (0..a.len())
-        .map(|i| a.iter().position(|&(idx, _)| idx == i).unwrap())
-        .collect();
+    let p = (0..a.len()).flat_map(|i| a.iter().position(|&(idx, _)| idx == i));
 
     for idx in p {
         print!("{idx} ");
