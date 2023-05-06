@@ -18,7 +18,7 @@ fn main() {
                 67..=69 => "D+",
                 60..=66 => "D",
                 0..=59 => "F",
-                _ => Default::default(),
+                _ => unreachable!(),
             }
         );
     }

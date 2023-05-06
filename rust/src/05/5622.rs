@@ -15,7 +15,7 @@ fn main() {
                 'P'..='S' => 6,
                 'T'..='V' => 7,
                 'W'..='Z' => 8,
-                _ => Default::default(),
+                _ => unreachable!(),
             }
         })
         .sum();

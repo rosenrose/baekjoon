@@ -11,7 +11,7 @@ fn main() {
             (-1, b, c) => ("a", c * c - b * b),
             (a, -1, c) => ("b", c * c - a * a),
             (a, b, -1) => ("c", a * a + b * b),
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         println!("Triangle #{i}");

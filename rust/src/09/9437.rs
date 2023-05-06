@@ -10,7 +10,7 @@ fn main() {
             (true, 0) => [p - 1, p, n + 1 - p, n + 2 - p],
             (false, 1) => [n - p, n + 1 - p, p, p + 1],
             (false, 0) => [n + 1 - p, n + 2 - p, p - 1, p],
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         for page in lost_pages.iter().filter(|&&page| page != p) {

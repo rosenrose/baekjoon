@@ -90,7 +90,7 @@ fn main() {
                 }
             }
             9 => biggest + 100,
-            _ => Default::default(),
+            _ => unreachable!(),
         })
         .max()
         .unwrap();

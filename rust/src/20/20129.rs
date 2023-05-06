@@ -22,7 +22,7 @@ fn main() {
             "-" => a - b,
             "*" => a * b,
             "/" => a / b,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         stack.push(result);
@@ -71,7 +71,7 @@ fn infix_to_postfix(infix: Vec<&str>, precedence: Vec<i64>) -> Vec<&str> {
         "-" => precedence[1],
         "*" => precedence[2],
         "/" => precedence[3],
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     for input in infix {

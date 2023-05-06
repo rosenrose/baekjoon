@@ -67,7 +67,7 @@ fn main() {
                     }
                 }
                 12 => nums.iter().sum::<usize>() + (6 * 2),
-                _ => Default::default(),
+                _ => unreachable!(),
             })
         })
         .max()

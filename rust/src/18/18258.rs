@@ -31,7 +31,7 @@ fn main() {
             }
             "front" => queue.front().unwrap_or(&"-1"),
             "back" => queue.back().unwrap_or(&"-1"),
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         writeln!(output, "{result}").unwrap();

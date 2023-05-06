@@ -26,7 +26,7 @@ fn main() {
                 }
             }
             "top" => *stack.last().unwrap_or(&-1),
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         writeln!(output, "{result}").unwrap();

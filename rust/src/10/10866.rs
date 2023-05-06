@@ -33,7 +33,7 @@ fn main() {
             }
             "front" => *deque.front().unwrap_or(&-1),
             "back" => *deque.back().unwrap_or(&-1),
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         writeln!(output, "{result}").unwrap();

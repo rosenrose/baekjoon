@@ -7,7 +7,7 @@ fn main() {
     let mut output = String::new();
     let n: u32 = buf.trim().parse().unwrap();
 
-    writeln!(output, "{}", (1 << n) - 1).unwrap();
+    writeln!(output, "{}", (1_i128 << n) - 1).unwrap();
 
     if n <= 20 {
         hanoi(n, 1, 3, &mut output);
@@ -25,7 +25,7 @@ fn hanoi(n: u32, src: usize, dst: usize, output: &mut String) {
         (1, 2) | (2, 1) => 3,
         (1, 3) | (3, 1) => 2,
         (2, 3) | (3, 2) => 1,
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     hanoi(n - 1, src, child_dst, output);

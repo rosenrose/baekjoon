@@ -15,7 +15,7 @@ fn main() {
         [a, b, c] if a == b => c,
         [a, b, c] if a == c => b,
         [a, b, c] if b == c => a,
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     println!("{} {}", get_unique(x_points), get_unique(y_points));

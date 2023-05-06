@@ -1,6 +1,5 @@
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone)]
 enum Tokens {
-    #[default]
     Add,
     Sub,
     Mul,
@@ -27,7 +26,7 @@ fn main() {
                 1 => Sub,
                 2 => Mul,
                 3 => Div,
-                _ => Default::default(),
+                _ => unreachable!(),
             })
             .take(count as usize)
         })
@@ -64,7 +63,7 @@ fn permutations(
         Sub => 1,
         Mul => 2,
         Div => 3,
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     operators
@@ -90,7 +89,7 @@ fn infix_to_postfix(infix: Vec<Tokens>) -> Vec<Tokens> {
     let precedence = |op: Tokens| match op {
         Add | Sub => 1,
         Mul | Div => 2,
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     for input in infix {
@@ -132,7 +131,7 @@ fn calculate(postfix: Vec<Tokens>) -> i32 {
             Sub => a - b,
             Mul => a * b,
             Div => a / b,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         stack.push(result);

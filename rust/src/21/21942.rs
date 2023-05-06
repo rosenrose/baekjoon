@@ -3,7 +3,7 @@ use std::fmt::Write;
 use std::io;
 
 struct RentInfo<'a> {
-    gears: HashMap<&'a str, i64>,
+    gears: Vec<(&'a str, i64)>,
     fee: i64,
 }
 
@@ -17,17 +17,17 @@ fn main() {
     let rent_term: Vec<_> = rent_term.split(['/', ':']).map(parse_int).collect();
     let max_minutes = rent_term[0] * 24 * 60 + rent_term[1] * 60 + rent_term[2];
 
-    let mut rent_infos = HashMap::new();
+    let mut rent_infos = HashMap::with_capacity(n as usize >> 1);
 
     for (date, time, gear, name) in (0..n).map(|_| (input(), input(), input(), input())) {
         let info = rent_infos.entry(name).or_insert(RentInfo {
-            gears: HashMap::new(),
+            gears: Vec::new(),
             fee: 0,
         });
 
         let time = parse_time(date, time);
-        let Some(&start) = info.gears.get(gear) else {
-            info.gears.insert(gear, time);
+        let Some((_, start)) = info.gears.iter().find(|(g,_)| g == &gear) else {
+            info.gears.push((gear, time));
             continue;
         };
 
@@ -37,7 +37,8 @@ fn main() {
             info.fee += (elapsed_minutes - max_minutes) * penalty;
         }
 
-        info.gears.remove(gear);
+        let idx = info.gears.iter().position(|(g, _)| g == &gear).unwrap();
+        info.gears.remove(idx);
     }
 
     let mut payers: Vec<_> = rent_infos
@@ -76,7 +77,7 @@ fn get_days(month: i64) -> i64 {
         1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
         4 | 6 | 9 | 11 => 30,
         2 => 28,
-        _ => Default::default(),
+        _ => unreachable!(),
     }
 }
 

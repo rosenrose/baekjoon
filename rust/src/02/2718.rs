@@ -40,7 +40,7 @@ fn get_count(n: i32, state: usize, memo: &mut [[i32; 5]; 22]) -> i32 {
         2 => get_count(n - 1, 3, memo),
         3 => get_count(n - 1, 0, memo) + get_count(n - 1, 2, memo),
         4 => get_count(n - 1, 0, memo) + get_count(n - 1, 1, memo),
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     memo[n as usize][state] = count;

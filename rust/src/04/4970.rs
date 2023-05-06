@@ -90,7 +90,7 @@ fn not(x: u8) -> u8 {
         0 => 2,
         1 => 1,
         2 => 0,
-        _ => Default::default(),
+        _ => unreachable!(),
     }
 }
 fn and(x: u8, y: u8) -> u8 {
@@ -98,7 +98,7 @@ fn and(x: u8, y: u8) -> u8 {
         (0, _) | (_, 0) => 0,
         (1, _) | (_, 1) => 1,
         (2, 2) => 2,
-        _ => Default::default(),
+        _ => unreachable!(),
     }
 }
 fn or(x: u8, y: u8) -> u8 {
@@ -106,6 +106,6 @@ fn or(x: u8, y: u8) -> u8 {
         (2, _) | (_, 2) => 2,
         (1, _) | (_, 1) => 1,
         (0, 0) => 0,
-        _ => Default::default(),
+        _ => unreachable!(),
     }
 }

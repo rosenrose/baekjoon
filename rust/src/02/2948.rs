@@ -10,7 +10,7 @@ fn main() {
             1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
             4 | 6 | 9 | 11 => 30,
             2 => 28,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
     }
 
@@ -22,7 +22,7 @@ fn main() {
         4 => "Monday",
         5 => "Tuesday",
         6 => "Wednesday",
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     println!("{day}");

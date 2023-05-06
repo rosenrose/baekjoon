@@ -13,7 +13,7 @@ fn main() {
         0 => "Soongsil",
         1 => "Korea",
         2 => "Hanyang",
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     println!("{least}");

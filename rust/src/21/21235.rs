@@ -35,7 +35,7 @@ fn main() {
                         (from_idx - idx + cycle) % cycle
                     }
             }
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         birth_years.insert(name, (animal, birth_year));

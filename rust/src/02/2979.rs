@@ -20,7 +20,7 @@ fn main() {
             3 => c * 3,
             2 => b * 2,
             1 => a,
-            _ => Default::default(),
+            _ => 0,
         })
         .sum();
 

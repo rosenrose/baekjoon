@@ -18,7 +18,7 @@ fn main() {
                 "H" => 1.008,
                 "O" => 16.00,
                 "N" => 14.01,
-                _ => Default::default(),
+                _ => unreachable!(),
             } * count as f64;
 
             cursor += end;

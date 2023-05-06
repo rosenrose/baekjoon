@@ -8,8 +8,8 @@ fn main() {
             .chars()
             .rev()
             .enumerate()
-            .map(|(i, c)| {
-                (match c {
+            .map(|(i, ch)| {
+                (match ch {
                     '-' => 0,
                     '\\' => 1,
                     '(' => 2,
@@ -19,7 +19,7 @@ fn main() {
                     '&' => 6,
                     '%' => 7,
                     '/' => -1,
-                    _ => Default::default(),
+                    _ => unreachable!(),
                 }) * 8_i32.pow(i as u32)
             })
             .sum();

@@ -22,7 +22,7 @@ fn main() {
             '-' => a - b,
             '*' => a * b,
             '/' => a / b,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         stack.push(result);

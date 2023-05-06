@@ -36,7 +36,7 @@ fn calculate(postfix: String) -> i32 {
             '-' => a - b,
             '*' => a * b,
             '/' => a / b,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         stack.push(result);
@@ -52,7 +52,7 @@ fn infix_to_postfix(infix: &str) -> (String, String) {
     let precedence = |op: char| match op {
         '+' | '-' => 1,
         '*' | '/' => 2,
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     for input in infix.chars() {

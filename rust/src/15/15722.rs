@@ -29,7 +29,7 @@ fn main() {
                 len += 1;
                 (0, 1)
             }
-            _ => Default::default(),
+            _ => unreachable!(),
         };
     }
 }

@@ -12,7 +12,7 @@ fn main() {
             longest if longest == a => a * a == b * b + c * c,
             longest if longest == b => b * b == a * a + c * c,
             longest if longest == c => c * c == a * a + b * b,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         writeln!(output, "Scenario #{i}:").unwrap();

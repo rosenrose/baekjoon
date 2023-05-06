@@ -18,7 +18,7 @@ fn main() {
             'A'..='Z' => ch as usize - 'A' as usize + 1,
             'a'..='z' => ch as usize - 'a' as usize + 27,
             ' ' => 0,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         decrypted_count[idx] += 1;

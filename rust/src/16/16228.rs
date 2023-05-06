@@ -19,7 +19,7 @@ fn main() {
             "-" => a - b,
             "<?" => a.min(b),
             ">?" => a.max(b),
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         stack.push(result);
@@ -49,7 +49,7 @@ fn infix_to_postfix(infix: Vec<&str>) -> Vec<&str> {
     let precedence = |op: &str| match op {
         "+" | "-" => 1,
         "<?" | ">?" => 2,
-        _ => Default::default(),
+        _ => 0,
     };
 
     for input in infix {

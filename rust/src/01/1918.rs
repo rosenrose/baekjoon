@@ -7,7 +7,7 @@ fn main() {
     let precedence = |op: char| match op {
         '+' | '-' => 1,
         '*' | '/' => 2,
-        _ => Default::default(),
+        _ => 0,
     };
 
     for ch in buf.trim().chars() {

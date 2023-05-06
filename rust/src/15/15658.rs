@@ -1,6 +1,5 @@
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone)]
 enum Ops {
-    #[default]
     Add,
     Sub,
     Mul,
@@ -26,7 +25,7 @@ fn main() {
                 1 => Sub,
                 2 => Mul,
                 3 => Div,
-                _ => Default::default(),
+                _ => unreachable!(),
             })
             .take(count as usize)
         })

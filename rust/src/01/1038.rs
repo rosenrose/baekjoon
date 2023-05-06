@@ -28,7 +28,7 @@ fn permutations(depth: usize, selected: &mut Vec<u8>, count: &mut i32, n: i32) -
 
             (num, true)
         } else {
-            (Default::default(), false)
+            (0, false)
         };
     }
 
@@ -45,5 +45,5 @@ fn permutations(depth: usize, selected: &mut Vec<u8>, count: &mut i32, n: i32) -
         }
     }
 
-    (Default::default(), false)
+    (0, false)
 }

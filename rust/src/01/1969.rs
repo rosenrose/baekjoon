@@ -23,7 +23,7 @@ fn main() {
                     'C' => 1,
                     'G' => 2,
                     'T' => 3,
-                    _ => Default::default(),
+                    _ => unreachable!(),
                 };
 
                 acgt_count[idx] += 1;
@@ -42,7 +42,7 @@ fn main() {
                 1 => 'C',
                 2 => 'G',
                 3 => 'T',
-                _ => Default::default(),
+                _ => unreachable!(),
             };
 
             dist_sum += dna_strings

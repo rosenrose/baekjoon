@@ -1,6 +1,5 @@
-#[derive(Default, Clone, PartialEq)]
+#[derive(Clone, PartialEq)]
 enum Cells {
-    #[default]
     Empty,
     Wall,
     Virus,
@@ -27,7 +26,7 @@ fn main() {
                         viruse_places.push((r, c));
                         Cells::Empty
                     }
-                    _ => Default::default(),
+                    _ => unreachable!(),
                 })
                 .collect()
         })

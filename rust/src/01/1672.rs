@@ -1,6 +1,5 @@
-#[derive(Default, Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug)]
 enum DNA {
-    #[default]
     A,
     G,
     C,
@@ -22,7 +21,7 @@ fn main() {
             'G' => G,
             'C' => C,
             'T' => T,
-            _ => Default::default(),
+            _ => unreachable!(),
         })
         .collect();
 

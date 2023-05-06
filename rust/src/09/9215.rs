@@ -2,7 +2,6 @@ use std::fmt;
 use std::io;
 use std::ops::Add;
 
-#[derive(Default)]
 struct MixedFraction {
     integer: i32,
     numerator: i32,
@@ -23,7 +22,7 @@ impl MixedFraction {
             [a, b, c] => Self::from(a, b, c),
             [b, c] => Self::from(0, b, c),
             [a] => Self::from(a, 0, 1),
-            _ => Default::default(),
+            _ => unreachable!(),
         }
     }
 }

@@ -24,7 +24,7 @@ fn main() {
                         "D+" => 1.5,
                         "D0" => 1.0,
                         "F" => 0.0,
-                        _ => Default::default(),
+                        _ => unreachable!(),
                     }
             })
         })

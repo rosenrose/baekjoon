@@ -9,7 +9,7 @@ fn main() {
             "BHA" => "Branksome Hall Asia",
             "KIS" => "Korea International School",
             "SJA" => "St. Johnsbury Academy",
-            _ => Default::default(),
+            _ => unreachable!(),
         }
     );
 }

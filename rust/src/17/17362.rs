@@ -10,7 +10,7 @@ fn main() {
         0 | 2 => if q % 2 == 0 { 2 } else { 4 },
         1     => if q % 2 == 0 { 1 } else { 5 },
         3 => 3,
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     println!("{index}");

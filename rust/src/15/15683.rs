@@ -1,6 +1,5 @@
-#[derive(Default, Clone)]
+#[derive(Clone)]
 enum Cells {
-    #[default]
     Empty,
     CCTV,
     Wall,
@@ -52,7 +51,7 @@ fn main() {
                         Cells::CCTV
                     }
                     6 => Cells::Wall,
-                    _ => Default::default(),
+                    _ => unreachable!(),
                 })
                 .collect()
         })

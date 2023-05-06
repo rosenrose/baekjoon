@@ -37,7 +37,7 @@ fn draw_bingo(board: &mut [[(i32, bool); 5]; 5], num: i32) -> i32 {
                 }
             }
         }
-        Default::default()
+        unreachable!()
     };
 
     if (0..5).all(|k| board[i][k].1) {

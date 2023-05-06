@@ -13,13 +13,14 @@ fn main() {
             println!("0.0");
             return;
         }
-        _ => Default::default(),
+        _ => unreachable!(),
     };
 
     score += match record[1] as char {
         '+' => 0.3,
         '-' => -0.3,
-        _ => Default::default(),
+        '0' => 0.0,
+        _ => unreachable!(),
     };
 
     println!("{score:.1}");

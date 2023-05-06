@@ -18,7 +18,7 @@ fn main() {
             "violet" => if i < 2 { 7 } else { 10_000_000 },
             "grey"   => if i < 2 { 8 } else { 100_000_000 },
             "white"  => if i < 2 { 9 } else { 1_000_000_000 },
-            _ => Default::default(),
+            _ => unreachable!(),
         })
         .collect();
 

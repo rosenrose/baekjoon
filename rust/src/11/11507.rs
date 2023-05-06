@@ -10,7 +10,7 @@ fn main() {
             'K' => 1,
             'H' => 2,
             'T' => 3,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
         let number = ((card[1] - '0' as u8) * 10 + card[2] - '0' as u8) as usize - 1;
 

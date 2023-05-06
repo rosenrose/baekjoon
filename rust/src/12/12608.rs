@@ -36,7 +36,7 @@ fn main() {
                             'p'..='s' => 'p' as usize,
                             't'..='v' => 't' as usize,
                             'w'..='z' => 'w' as usize,
-                            _ => Default::default(),
+                            _ => unreachable!(),
                         }
                         + 1
                 })

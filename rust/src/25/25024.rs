@@ -6,6 +6,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
     let mut output = String::new();
+
     const YES: &str = "Yes";
     const NO: &str = "No";
 
@@ -16,7 +17,7 @@ fn main() {
                 1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
                 4 | 6 | 9 | 11 => 30,
                 2 => 29,
-                _ => Default::default(),
+                _ => unreachable!(),
             }))
                 .contains(&y);
 

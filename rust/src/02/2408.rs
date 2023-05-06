@@ -4,7 +4,7 @@ use std::fmt;
 use std::io;
 use std::ops::{Add, Div, Mul, Sub};
 
-#[derive(Default, PartialEq)]
+#[derive(PartialEq)]
 struct BigInt {
     nums: VecDeque<i8>,
     sign: i8,
@@ -279,7 +279,7 @@ fn main() {
             "-" => &a - &b,
             "*" => &a * &b,
             "/" => &a / &b,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         stack.push(result);
@@ -294,7 +294,7 @@ fn infix_to_postfix(infix: Vec<&str>) -> Vec<&str> {
     let precedence = |op: &str| match op {
         "+" | "-" => 1,
         "*" | "/" => 2,
-        _ => Default::default(),
+        _ => 0,
     };
 
     for input in infix {

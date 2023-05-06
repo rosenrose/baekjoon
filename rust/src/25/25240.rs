@@ -9,7 +9,7 @@ fn main() {
 
     let (u, f) = input.next().unwrap().split_once(' ').unwrap();
     let (u, f) = (parse_int(u), parse_int(f));
-    let mut group_infos = HashMap::new();
+    let mut group_infos = HashMap::with_capacity(u);
 
     for _ in 0..u {
         let user_info = input.next().unwrap();
@@ -32,7 +32,7 @@ fn main() {
 
     let mut input = input.flat_map(|s| s.split(' '));
     let mut input = || input.next().unwrap();
-    let mut file_infos = HashMap::new();
+    let mut file_infos = HashMap::with_capacity(f);
 
     for _ in 0..f {
         let (file, perm, owner, group) = (input(), input(), input(), input());
@@ -47,7 +47,7 @@ fn main() {
             "R" => 4,
             "W" => 2,
             "X" => 1,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         let (perm, owner, group) = &file_infos[file];
@@ -65,6 +65,6 @@ fn main() {
     print!("{output}");
 }
 
-fn parse_int(buf: &str) -> i32 {
+fn parse_int(buf: &str) -> usize {
     buf.parse().unwrap()
 }

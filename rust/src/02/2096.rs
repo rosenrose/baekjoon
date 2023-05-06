@@ -23,7 +23,7 @@ fn main() {
                     (1..=2).map(|j| min_maxes[j].0 + num).min().unwrap(),
                     (1..=2).map(|j| min_maxes[j].1 + num).max().unwrap(),
                 ),
-                _ => Default::default(),
+                _ => unreachable!(),
             }
         }
 

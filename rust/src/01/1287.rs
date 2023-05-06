@@ -3,7 +3,7 @@ use std::collections::VecDeque;
 use std::fmt;
 use std::ops::{Add, Mul, Sub};
 
-#[derive(Default, PartialEq)]
+#[derive(PartialEq)]
 struct BigInt {
     nums: VecDeque<i8>,
     sign: i8,
@@ -342,7 +342,7 @@ fn infix_to_postfix(infix: Vec<&str>) -> Option<Vec<&str>> {
     let precedence = |op: &str| match op {
         "+" | "-" => 1,
         "*" | "/" => 2,
-        _ => Default::default(),
+        _ => 0,
     };
 
     for input in infix {

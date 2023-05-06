@@ -15,7 +15,7 @@ fn main() {
                 "char" => 1,
                 "int" => 4,
                 "long_long" => 8,
-                _ => Default::default(),
+                _ => unreachable!(),
             })
             .flatten()
             .copied()

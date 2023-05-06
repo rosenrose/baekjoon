@@ -16,7 +16,7 @@ fn main() {
             "==" => a == b,
             "!=" => a != b,
             "E" => break,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         writeln!(output, "Case {i}: {cmp}").unwrap();

@@ -60,7 +60,7 @@ fn get_days(month: i32, year: i32) -> i32 {
         4 | 6 | 9 | 11 => 30,
         #[rustfmt::skip]
         2 => if is_leap(year) { 29 } else { 28 },
-        _ => Default::default(),
+        _ => unreachable!(),
     }
 }
 

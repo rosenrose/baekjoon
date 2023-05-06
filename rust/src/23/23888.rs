@@ -23,7 +23,7 @@ fn main() {
                     gcd
                 }
             }
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         writeln!(output, "{result}").unwrap();

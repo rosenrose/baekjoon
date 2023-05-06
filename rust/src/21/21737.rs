@@ -1,6 +1,5 @@
-#[derive(PartialEq, Default)]
+#[derive(PartialEq)]
 enum Tokens {
-    #[default]
     Print,
     Add,
     Sub,
@@ -41,7 +40,7 @@ fn main() {
             Sub => a - b,
             Mul => a * b,
             Div => a / b,
-            _ => Default::default(),
+            _ => unreachable!(),
         };
 
         stack.push(result);
@@ -76,7 +75,7 @@ fn parse_to_infix(input: &str) -> Vec<Tokens> {
                     'U' => Div,
                     'P' => Add,
                     'C' => Print,
-                    _ => Default::default(),
+                    _ => unreachable!(),
                 });
             }
             '0'..='9' => {

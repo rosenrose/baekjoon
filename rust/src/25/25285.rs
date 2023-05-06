@@ -29,7 +29,7 @@ fn main() {
                 (161..=203, b) if is_3(b) => 3,
                 (161..=203, b) if is_4(b) => 4,
                 (204.., _) => 4,
-                _ => Default::default(),
+                _ => unreachable!(),
             }
         )
         .unwrap();
