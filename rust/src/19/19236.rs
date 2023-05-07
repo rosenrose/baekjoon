@@ -25,14 +25,14 @@ fn main() {
             let (num, dir_idx) = (input.next().unwrap(), input.next().unwrap() - 1);
 
             map[r][c] = Some((num, dir_idx));
-            fishes[num] = Some((dir_idx, (r, c)));
+            fishes[num] = Some((r, c));
         }
     }
 
     let (num, dir_idx) = map[0][0].unwrap();
 
     map[0][0] = Some((SHARK, dir_idx));
-    fishes[SHARK] = Some((dir_idx, (0, 0)));
+    fishes[SHARK] = Some((0, 0));
     fishes[num] = None;
     // println!("{map:?}\n{fishes:?}");
     let max_sum = simulate(map, fishes, num);
@@ -42,12 +42,13 @@ fn main() {
 
 fn simulate(
     mut map: [[Option<(usize, usize)>; 4]; 4],
-    mut fishes: [Option<(usize, (usize, usize))>; 17],
+    mut fishes: [Option<(usize, usize)>; 17],
     sum: usize,
 ) -> usize {
     move_fishes(&mut map, &mut fishes);
 
-    let (shark_dir_idx, (shark_r, shark_c)) = fishes[SHARK].unwrap();
+    let (shark_r, shark_c) = fishes[SHARK].unwrap();
+    let (_, shark_dir_idx) = map[shark_r][shark_c].unwrap();
     let shark_path = (1..)
         .map_while(|len| get_moved_coord((shark_r, shark_c), shark_dir_idx, len))
         .filter(|&(r, c)| map[r][c].is_some());
@@ -59,7 +60,7 @@ fn simulate(
 
             map[next_r][next_c] = Some((SHARK, fish_dir_idx));
             map[shark_r][shark_c] = None;
-            fishes[SHARK] = Some((fish_dir_idx, (next_r, next_c)));
+            fishes[SHARK] = Some((next_r, next_c));
             fishes[fish_num] = None;
 
             simulate(map, fishes, sum + fish_num)
@@ -70,13 +71,14 @@ fn simulate(
 
 fn move_fishes(
     map: &mut [[Option<(usize, usize)>; 4]; 4],
-    fishes: &mut [Option<(usize, (usize, usize))>; 17],
+    fishes: &mut [Option<(usize, usize)>; 17],
 ) {
     for num in 1..fishes.len() {
-        let Some((mut dir_idx, (r, c))) = fishes[num] else {
+        let Some((r, c)) = fishes[num] else {
             continue;
         };
 
+        let (_, mut dir_idx) = map[r][c].unwrap();
         let (moved_r, moved_c);
 
         loop {
@@ -90,11 +92,11 @@ fn move_fishes(
             dir_idx = (dir_idx + 1) % DIRS.len();
         }
 
-        fishes[num] = Some((dir_idx, (moved_r, moved_c)));
+        fishes[num] = Some((moved_r, moved_c));
         map[r][c] = Some((num, dir_idx));
 
-        if let Some((other_num, other_dir_idx)) = map[moved_r][moved_c] {
-            fishes[other_num] = Some((other_dir_idx, (r, c)));
+        if let Some((other_num, _)) = map[moved_r][moved_c] {
+            fishes[other_num] = Some((r, c));
         }
         (map[r][c], map[moved_r][moved_c]) = (map[moved_r][moved_c], map[r][c]);
         // for r in map.iter() {
