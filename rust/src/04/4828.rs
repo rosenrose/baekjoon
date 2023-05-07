@@ -5,7 +5,7 @@ enum Tag {
 }
 
 use std::io;
-use Tag::{Close, Open, SelfClose};
+use Tag::*;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();

@@ -7,7 +7,7 @@ enum DNA {
 }
 
 use std::io;
-use DNA::{A, C, G, T};
+use DNA::*;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();

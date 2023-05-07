@@ -14,7 +14,7 @@ enum Dirs {
 }
 
 use std::io;
-use Dirs::{Down, Left, Right, Up};
+use Dirs::*;
 
 const CCTV_TYPES: [&[&[Dirs]]; 5] = [
     &[&[Up], &[Right], &[Down], &[Left]],

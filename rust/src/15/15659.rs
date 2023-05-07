@@ -8,7 +8,7 @@ enum Tokens {
 }
 
 use std::io;
-use Tokens::{Add, Div, Mul, Num, Sub};
+use Tokens::*;
 
 const MAX: i32 = 1_000_000_000;
 

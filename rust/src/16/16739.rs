@@ -7,7 +7,7 @@ enum Items {
 use std::cmp::Ordering;
 use std::fmt::Write;
 use std::io;
-use Items::{Letter, Number};
+use Items::*;
 
 impl Ord for Items {
     fn cmp(&self, other: &Self) -> Ordering {

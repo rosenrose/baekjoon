@@ -9,7 +9,7 @@ enum Dirs {
 
 use std::collections::HashSet;
 use std::io;
-use Dirs::{Down, Left, Right, Up};
+use Dirs::*;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();

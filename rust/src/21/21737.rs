@@ -10,7 +10,7 @@ enum Tokens {
 
 use std::fmt::Write;
 use std::io;
-use Tokens::{Add, Div, Mul, Num, Print, Sub};
+use Tokens::*;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();

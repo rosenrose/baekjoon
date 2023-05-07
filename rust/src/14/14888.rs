@@ -7,7 +7,7 @@ enum Ops {
 }
 
 use std::io;
-use Ops::{Add, Div, Mul, Sub};
+use Ops::*;
 
 const MAX: i32 = 1_000_000_000;
 
