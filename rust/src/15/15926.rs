@@ -22,7 +22,7 @@ fn main() {
 
                 max_len = max_len.max(i - stack.last().unwrap());
             }
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

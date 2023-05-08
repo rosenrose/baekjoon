@@ -20,7 +20,7 @@ fn main() {
                     println!("{num} {num}")
                 }
             }
-            _ => (),
+            _ => unreachable!(),
         }
 
         return;

@@ -8,10 +8,10 @@ fn main() {
     let (mut houses, mut chickens) = (Vec::new(), Vec::new());
 
     for r in 0..n {
-        for c in 0..n {
-            match input.next() {
-                Some(1) => houses.push((r, c)),
-                Some(2) => chickens.push((r, c)),
+        for (c, num) in input.by_ref().take(n).enumerate() {
+            match num {
+                1 => houses.push((r, c)),
+                2 => chickens.push((r, c)),
                 _ => (),
             }
         }

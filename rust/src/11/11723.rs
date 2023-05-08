@@ -34,7 +34,7 @@ fn main() {
             "toggle" => s ^= bits[x],
             "all" => s |= !0,
             "empty" => s = 0,
-            _ => (),
+            _ => unreachable!(),
         };
     }
 }

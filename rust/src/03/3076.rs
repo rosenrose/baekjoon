@@ -13,7 +13,7 @@ fn main() {
                 match (row % 2, col % 2) {
                     (0, 0) | (1, 1) => print!("{}", "X".repeat(b)),
                     (0, 1) | (1, 0) => print!("{}", ".".repeat(b)),
-                    _ => (),
+                    _ => unreachable!(),
                 }
             }
 

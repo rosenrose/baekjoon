@@ -8,7 +8,7 @@ fn main() {
         match winner {
             "D" => x += 1,
             "P" => y += 1,
-            _ => (),
+            _ => unreachable!(),
         }
 
         if x.abs_diff(y) == 2 {

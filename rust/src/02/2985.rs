@@ -11,7 +11,7 @@ fn main() {
         [a, b, c] if a == b - c => println!("{a}={b}-{c}"),
         [a, b, c] if a == b * c => println!("{a}={b}*{c}"),
         [a, b, c] if a == b / c && b % c == 0 => println!("{a}={b}/{c}"),
-        _ => (),
+        _ => unreachable!(),
     }
 }
 

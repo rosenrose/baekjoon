@@ -227,9 +227,9 @@ fn main() {
                     "1" => {
                         heap.pop_max();
                     }
-                    _ => (),
+                    _ => unreachable!(),
                 },
-                _ => (),
+                _ => unreachable!(),
             }
         }
 

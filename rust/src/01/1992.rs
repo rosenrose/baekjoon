@@ -7,10 +7,10 @@ fn main() {
     let n: usize = input.next().unwrap().parse().unwrap();
     let video: Vec<_> = input.collect();
 
-    println!("{}", compress(&video, 0, 0, n));
+    println!("{}", compress(&video, n, 0, 0));
 }
 
-fn compress(video: &[&str], x: usize, y: usize, n: usize) -> String {
+fn compress(video: &[&str], n: usize, x: usize, y: usize) -> String {
     if n == 1 {
         return video[y].chars().nth(x).unwrap().to_string();
     }
@@ -22,7 +22,7 @@ fn compress(video: &[&str], x: usize, y: usize, n: usize) -> String {
             match cell {
                 '0' => count_0 += 1,
                 '1' => count_1 += 1,
-                _ => (),
+                _ => unreachable!(),
             }
         }
     }
@@ -38,9 +38,9 @@ fn compress(video: &[&str], x: usize, y: usize, n: usize) -> String {
 
     format!(
         "({}{}{}{})",
-        compress(video, x, y, half),
-        compress(video, x + half, y, half),
-        compress(video, x, y + half, half),
-        compress(video, x + half, y + half, half)
+        compress(video, half, x, y),
+        compress(video, half, x + half, y),
+        compress(video, half, x, y + half),
+        compress(video, half, x + half, y + half)
     )
 }

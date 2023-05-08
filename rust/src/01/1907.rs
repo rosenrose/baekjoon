@@ -42,7 +42,7 @@ fn get_coef_counts(input: &str) -> [i32; 3] {
             "C" => counts[0] += count,
             "H" => counts[1] += count,
             "O" => counts[2] += count,
-            _ => (),
+            _ => unreachable!(),
         }
 
         cursor += end;

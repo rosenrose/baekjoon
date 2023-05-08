@@ -19,7 +19,7 @@ fn main() {
             "leave" => {
                 names.remove(name);
             }
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

@@ -38,7 +38,7 @@ fn main() {
 
                 writeln!(output, "{h} {m} {s}").unwrap();
             }
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

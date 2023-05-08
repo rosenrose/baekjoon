@@ -5,7 +5,13 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
-    let paper: Vec<_> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
+    let mut paper = vec![vec![0; n]; n];
+
+    for r in 0..n {
+        for c in 0..n {
+            paper[r][c] = input.next().unwrap();
+        }
+    }
 
     let (mut minus, mut zero, mut plus) = (0, 0, 0);
 
@@ -23,20 +29,22 @@ fn cut(
     zero: &mut i32,
     plus: &mut i32,
 ) {
-    let (mut count_m, mut count_0, mut count_p) = (0, 0, 0);
+    let (mut count_m, mut count_z, mut count_p) = (0, 0, 0);
 
     'outer: for i in y..y + n {
         for j in x..x + n {
             match paper[i][j] {
                 -1 => count_m += 1,
-                0 => count_0 += 1,
+                0 => count_z += 1,
                 1 => count_p += 1,
-                _ => (),
+                _ => unreachable!(),
             }
 
-            match (count_m > 0, count_0 > 0, count_p > 0) {
-                (true, true, _) | (true, _, true) | (_, true, true) => break 'outer,
-                _ => (),
+            if matches!(
+                (count_m > 0, count_z > 0, count_p > 0),
+                (true, true, _) | (true, _, true) | (_, true, true)
+            ) {
+                break 'outer;
             }
         }
     }
@@ -45,7 +53,7 @@ fn cut(
         *minus += 1;
         return;
     }
-    if count_0 == n * n {
+    if count_z == n * n {
         *zero += 1;
         return;
     }
@@ -54,15 +62,22 @@ fn cut(
         return;
     }
 
-    let unit = n / 3;
+    let one_third = n / 3;
+    let two_third = one_third << 1;
 
-    cut(paper, x, y, unit, minus, zero, plus);
-    cut(paper, x + unit, y, unit, minus, zero, plus);
-    cut(paper, x + unit * 2, y, unit, minus, zero, plus);
-    cut(paper, x, y + unit, unit, minus, zero, plus);
-    cut(paper, x + unit, y + unit, unit, minus, zero, plus);
-    cut(paper, x + unit * 2, y + unit, unit, minus, zero, plus);
-    cut(paper, x, y + unit * 2, unit, minus, zero, plus);
-    cut(paper, x + unit, y + unit * 2, unit, minus, zero, plus);
-    cut(paper, x + unit * 2, y + unit * 2, unit, minus, zero, plus);
+    cut(paper, x, y, one_third, minus, zero, plus);
+    cut(paper, x + one_third, y, one_third, minus, zero, plus);
+    cut(paper, x + two_third, y, one_third, minus, zero, plus);
+
+    cut(paper, x, y + one_third, one_third, minus, zero, plus);
+    #[rustfmt::skip]
+    cut(paper, x + one_third, y + one_third, one_third, minus, zero, plus);
+    #[rustfmt::skip]
+    cut(paper, x + two_third, y + one_third, one_third, minus, zero, plus);
+
+    cut(paper, x, y + two_third, one_third, minus, zero, plus);
+    #[rustfmt::skip]
+    cut( paper, x + one_third, y + two_third, one_third, minus, zero, plus);
+    #[rustfmt::skip]
+    cut(paper, x + two_third, y + two_third, one_third, minus, zero, plus);
 }

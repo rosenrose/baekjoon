@@ -27,7 +27,7 @@ fn group_by_o(input: &str) -> Vec<Vec<char>> {
                     arr.clear();
                 }
             },
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

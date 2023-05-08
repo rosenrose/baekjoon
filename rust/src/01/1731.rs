@@ -5,15 +5,13 @@ fn main() {
     let input = buf.lines().flat_map(str::parse::<i32>);
 
     let nums: Vec<_> = input.skip(1).collect();
+    let (diff, ratio) = (nums[1] - nums[0], nums[1] / nums[0]);
+    let last = nums.last().unwrap();
 
-    match (
-        nums[1] - nums[0],
-        nums[2] - nums[1],
-        nums[1] / nums[0],
-        nums[2] / nums[1],
-    ) {
-        (d1, d2, ..) if d1 == d2 => println!("{}", nums.last().unwrap() + d1),
-        (.., r1, r2) if r1 == r2 => println!("{}", nums.last().unwrap() * r1),
-        _ => (),
+    if diff == nums[2] - nums[1] {
+        println!("{}", last + diff);
+        return;
     }
+
+    println!("{}", last * ratio);
 }

@@ -12,7 +12,7 @@ fn main() {
         match dir {
             0 => horizontals.push(num),
             1 => verticals.push(num),
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

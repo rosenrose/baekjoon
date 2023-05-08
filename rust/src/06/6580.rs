@@ -26,10 +26,10 @@ fn main() {
         })
         .collect();
     // println!("{map:?}");
-    println!("{n}\n{}", compress(&map, 0, 0, n));
+    println!("{n}\n{}", compress(&map, n, 0, 0));
 }
 
-fn compress(map: &[Vec<char>], x: usize, y: usize, n: usize) -> String {
+fn compress(map: &[Vec<char>], n: usize, x: usize, y: usize) -> String {
     if n == 1 {
         return map[y][x].to_string();
     }
@@ -41,7 +41,7 @@ fn compress(map: &[Vec<char>], x: usize, y: usize, n: usize) -> String {
             match cell {
                 'W' => count_w += 1,
                 'B' => count_b += 1,
-                _ => (),
+                _ => unreachable!(),
             }
         }
     }
@@ -53,13 +53,13 @@ fn compress(map: &[Vec<char>], x: usize, y: usize, n: usize) -> String {
         return 'B'.to_string();
     }
 
-    let half = n / 2;
+    let half = n >> 1;
 
     format!(
         "Q{}{}{}{}",
-        compress(map, x, y, half),
-        compress(map, x + half, y, half),
-        compress(map, x, y + half, half),
-        compress(map, x + half, y + half, half)
+        compress(map, half, x, y),
+        compress(map, half, x + half, y),
+        compress(map, half, x, y + half),
+        compress(map, half, x + half, y + half)
     )
 }

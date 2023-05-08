@@ -15,11 +15,12 @@ fn main() {
     let (mut top, mut bottom, mut east, mut west, mut south, mut north) = (0, 0, 0, 0, 0, 0);
 
     for command in (0..k).map(|_| input()) {
-        match (command, x, y) {
-            (1, i, _) if i == m - 1 => continue,
-            (2, 0, _) | (3, _, 0) => continue,
-            (4, _, i) if i == n - 1 => continue,
-            _ => (),
+        if (command, x) == (1, m - 1)
+            || (command, x) == (2, 0)
+            || (command, y) == (3, 0)
+            || (command, y) == (4, n - 1)
+        {
+            continue;
         }
 
         match command {
@@ -39,7 +40,7 @@ fn main() {
                 y += 1;
                 (top, bottom, north, south) = (north, south, bottom, top);
             }
-            _ => (),
+            _ => unreachable!(),
         }
 
         if map[y][x] == 0 {
@@ -73,6 +74,6 @@ match (command, &mut x, &mut y) {
         *y += 1;
         (top, bottom, north, south) = (north, south, bottom, top);
     }
-    _ => (),
+    _ => unreachable!(),
 }
 */

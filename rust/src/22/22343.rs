@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::io;
 
 #[derive(Eq, PartialEq, Debug)]
-struct BigInt(Vec<i32>);
+struct BigInt(Vec<u8>);
 
 impl Ord for BigInt {
     fn cmp(&self, other: &Self) -> Ordering {
@@ -54,7 +54,7 @@ fn get_paren_value(s: &str) -> BigInt {
                     paren_value[depth] += 1;
                 }
             }
-            _ => (),
+            _ => unreachable!(),
         }
 
         last = ch;
@@ -69,15 +69,15 @@ fn get_paren_value(s: &str) -> BigInt {
         .iter()
         .map(|&num| {
             let temp = carry + num;
-            carry = temp / 2;
+            carry = temp >> 1;
 
-            temp % 2
+            temp & 1
         })
         .collect();
 
     while carry > 0 {
-        result.push(carry % 2);
-        carry /= 2;
+        result.push(carry & 1);
+        carry >>= 1;
     }
 
     BigInt(result)

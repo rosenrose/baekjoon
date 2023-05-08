@@ -18,7 +18,7 @@ fn main() {
 
                     count -= 1;
                 }
-                _ => (),
+                _ => unreachable!(),
             };
         }
 

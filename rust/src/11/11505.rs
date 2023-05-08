@@ -74,7 +74,7 @@ fn main() {
         match a {
             1 => segment_tree.update(b as usize - 1, c),
             2 => writeln!(output, "{}", segment_tree.query(b as usize - 1, c as usize)).unwrap(),
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

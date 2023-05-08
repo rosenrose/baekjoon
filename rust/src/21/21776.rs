@@ -24,6 +24,7 @@ fn main() {
         .collect();
     // println!("{card_orders:?}\n{cards:?}");
     let mut result = Vec::new();
+
     product(
         &mut vec![0; n],
         &mut vec![0; c],
@@ -63,7 +64,7 @@ fn product(
 
                         ret.remove(idx);
                     }
-                    _ => (),
+                    _ => unreachable!(),
                 }
             }
         }

@@ -20,7 +20,7 @@ fn main() {
             s if s.starts_with(|ch: char| ch.is_ascii_alphabetic()) => {
                 sizes[depth] += token.len() + 12
             }
-            _ => (),
+            _ => unreachable!(),
         }
     }
     // println!("{:?}", &sizes[1..=max_depth]);

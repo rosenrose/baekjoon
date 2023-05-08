@@ -62,7 +62,7 @@ fn main() {
         match winner {
             "1" => disjoint_set.union(name1, name2),
             "2" => disjoint_set.union(name2, name1),
-            _ => (),
+            _ => unreachable!(),
         }
         // println!("{:?}", disjoint_set.0);
     }
@@ -72,8 +72,8 @@ fn main() {
         .iter()
         .filter_map(|(slave, master)| (slave == master).then_some(master))
         .collect();
-    masters.sort();
 
+    masters.sort();
     writeln!(output, "{}", masters.len()).unwrap();
 
     for master in masters {

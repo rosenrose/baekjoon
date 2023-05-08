@@ -1,7 +1,9 @@
+use std::fmt::Write;
 use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut output = String::new();
 
     for input in buf.lines().take_while(|&input| input != ".") {
         let postfix = infix_to_postfix(input);
@@ -17,8 +19,10 @@ fn main() {
             }
         }
 
-        println!("{count}");
+        writeln!(output, "{count}").unwrap();
     }
+
+    print!("{output}");
 }
 
 fn infix_to_postfix(input: &str) -> String {
@@ -78,7 +82,7 @@ fn calculate((p, q, r): (u8, u8, u8), postfix: &str) -> u8 {
                 let (b, a) = (stack.pop().unwrap(), stack.pop().unwrap());
                 stack.push(or(a, b));
             }
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

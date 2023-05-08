@@ -240,8 +240,11 @@ fn main() {
 
                 writeln!(output, "{del_count}").unwrap();
             }
-            "ca" => writeln!(output, "{}", album_manager.change_album(arg)).unwrap(),
-            _ => (),
+            "ca" => {
+                let changed = album_manager.change_album(arg);
+                writeln!(output, "{changed}").unwrap();
+            }
+            _ => unreachable!(),
         }
         // println!("{op} {arg}\n{album_manager:#?}\n");
     }

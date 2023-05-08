@@ -33,7 +33,7 @@ fn get_paren_value(s: &str) -> Option<i64> {
                     stack.clear();
                 }
             }
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

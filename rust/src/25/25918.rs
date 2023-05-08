@@ -10,7 +10,7 @@ fn main() {
         match c {
             '(' => depth += 1,
             ')' => depth -= 1,
-            _ => (),
+            _ => unreachable!(),
         }
 
         max_depth = depth.abs().max(max_depth);

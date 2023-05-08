@@ -10,7 +10,7 @@ fn main() {
 
         match input() {
             "C" => {
-                for ch in (0..n).map(|_| input().chars().nth(0).unwrap()) {
+                for ch in (0..n).flat_map(|_| input().chars().nth(0)) {
                     print!("{} ", ch as u8 - 'A' as u8 + 1);
                 }
             }
@@ -19,7 +19,7 @@ fn main() {
                     print!("{} ", (num as u8 + 'A' as u8 - 1) as char);
                 }
             }
-            _ => (),
+            _ => unreachable!(),
         }
 
         println!("");

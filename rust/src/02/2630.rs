@@ -8,12 +8,12 @@ fn main() {
     let paper: Vec<String> = input.map(|row| row.replace(' ', "")).collect();
     let (mut white, mut blue) = (0, 0);
 
-    cut(&paper, 0, 0, n, &mut white, &mut blue);
+    cut(&paper, n, 0, 0, &mut white, &mut blue);
 
     println!("{white}\n{blue}");
 }
 
-fn cut(paper: &[String], x: usize, y: usize, n: usize, white: &mut i32, blue: &mut i32) {
+fn cut(paper: &[String], n: usize, x: usize, y: usize, white: &mut i32, blue: &mut i32) {
     let (mut count_0, mut count_1) = (0, 0);
 
     for row in paper[y..y + n].iter() {
@@ -21,7 +21,7 @@ fn cut(paper: &[String], x: usize, y: usize, n: usize, white: &mut i32, blue: &m
             match cell {
                 '0' => count_0 += 1,
                 '1' => count_1 += 1,
-                _ => (),
+                _ => unreachable!(),
             }
         }
     }
@@ -38,8 +38,8 @@ fn cut(paper: &[String], x: usize, y: usize, n: usize, white: &mut i32, blue: &m
 
     let half = n / 2;
 
-    cut(paper, x, y, half, white, blue);
-    cut(paper, x + half, y, half, white, blue);
-    cut(paper, x, y + half, half, white, blue);
-    cut(paper, x + half, y + half, half, white, blue);
+    cut(paper, half, x, y, white, blue);
+    cut(paper, half, x + half, y, white, blue);
+    cut(paper, half, x, y + half, white, blue);
+    cut(paper, half, x + half, y + half, white, blue);
 }

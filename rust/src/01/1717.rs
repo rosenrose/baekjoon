@@ -53,7 +53,7 @@ fn main() {
                 }
             )
             .unwrap(),
-            _ => (),
+            _ => unreachable!(),
         }
     }
     // println!("{:?}", disjoint_set.0);

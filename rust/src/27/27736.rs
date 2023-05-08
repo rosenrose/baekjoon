@@ -12,7 +12,7 @@ fn main() {
             "1" => pros += 1,
             "-1" => cons += 1,
             "0" => giveup += 1,
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

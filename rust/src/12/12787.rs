@@ -28,7 +28,7 @@ fn main() {
                             .iter()
                             .rev()
                             .enumerate()
-                            .map(|(i, &c)| if c as char == '1' { 1 << i } else { 0 })
+                            .map(|(i, &ch)| if ch as char == '1' { 1 << i } else { 0 })
                             .sum::<u8>()
                             .to_string()
                     })
@@ -36,7 +36,7 @@ fn main() {
 
                 println!("{}", ipv8.join("."));
             }
-            _ => (),
+            _ => unreachable!(),
         }
     }
 }

@@ -14,7 +14,7 @@ fn main() {
                 "-" => lhs -= rhs,
                 "*" => lhs *= rhs,
                 "/" => lhs /= rhs,
-                _ => (),
+                _ => unreachable!(),
             }
         } else {
             op = line;

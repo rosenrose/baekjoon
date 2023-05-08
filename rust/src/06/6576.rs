@@ -1,8 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
-fn main() {
-    let buf = io::read_to_string(io::stdin()).unwrap();
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let buf = io::read_to_string(io::stdin())?;
     let mut input = buf.lines();
     let mut output = String::new();
 
@@ -10,11 +10,11 @@ fn main() {
     let quad_tree = input.next().unwrap();
     let mut map = vec![vec!['\0'; n]; n];
 
-    fill_map(&mut map, quad_tree, 0, 0, n);
+    fill_map(&mut map, quad_tree, n, 0, 0);
 
-    writeln!(output, "#define quadtree_width {n}").unwrap();
-    writeln!(output, "#define quadtree_height {n}").unwrap();
-    writeln!(output, "static char quadtree_bits[] = {{").unwrap();
+    writeln!(output, "#define quadtree_width {n}")?;
+    writeln!(output, "#define quadtree_height {n}")?;
+    writeln!(output, "static char quadtree_bits[] = {{")?;
 
     for row in map {
         for chunk in row.chunks(8) {
@@ -24,16 +24,17 @@ fn main() {
                 .map(|(i, &ch)| if ch == 'B' { 1 << i } else { 0 })
                 .sum();
 
-            write!(output, "0x{hex:02x},").unwrap();
+            write!(output, "0x{hex:02x},")?;
         }
-        writeln!(output, "").unwrap();
+        writeln!(output, "")?;
     }
-    writeln!(output, "}};").unwrap();
+    writeln!(output, "}};")?;
 
     print!("{output}");
+    Ok(())
 }
 
-fn fill_map(map: &mut Vec<Vec<char>>, quad_tree: &str, x: usize, y: usize, n: usize) {
+fn fill_map(map: &mut Vec<Vec<char>>, quad_tree: &str, n: usize, x: usize, y: usize) {
     if quad_tree.len() == 1 {
         let ch = quad_tree.chars().nth(0).unwrap();
 
@@ -65,7 +66,7 @@ fn fill_map(map: &mut Vec<Vec<char>>, quad_tree: &str, x: usize, y: usize, n: us
                     depth -= 1;
                 }
             }
-            _ => (),
+            _ => unreachable!(),
         }
     }
     // println!("{indices:?}");
@@ -73,10 +74,10 @@ fn fill_map(map: &mut Vec<Vec<char>>, quad_tree: &str, x: usize, y: usize, n: us
     let right_top = &quad_tree[indices[1]..indices[2]];
     let left_bottom = &quad_tree[indices[2]..indices[3]];
     let right_bottom = &quad_tree[indices[3]..];
-    let half = n / 2;
+    let half = n >> 1;
 
-    fill_map(map, left_top, x, y, half);
-    fill_map(map, right_top, x + half, y, half);
-    fill_map(map, left_bottom, x, y + half, half);
-    fill_map(map, right_bottom, x + half, y + half, half);
+    fill_map(map, left_top, half, x, y);
+    fill_map(map, right_top, half, x + half, y);
+    fill_map(map, left_bottom, half, x, y + half);
+    fill_map(map, right_bottom, half, x + half, y + half);
 }

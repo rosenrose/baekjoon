@@ -84,7 +84,7 @@ fn parse_to_infix(input: &str) -> Vec<Tokens> {
                     is_number = true;
                 }
             }
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

@@ -22,7 +22,7 @@ fn main() {
             }
             "swap" => pointers.swap(parse_int(input()), parse_int(input())),
             "reset" => pointers[parse_int(input())] = 0,
-            _ => (),
+            _ => unreachable!(),
         }
     }
     // println!("{pointers:?}");
