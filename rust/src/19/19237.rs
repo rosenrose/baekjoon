@@ -20,21 +20,21 @@ fn main() {
                     let is_shark = num > 0;
 
                     if is_shark {
-                        sharks[num] = Some(((r, c), 0));
+                        sharks[num] = Some((r, c));
                         scents.push((r, c));
                     }
 
-                    (num, if is_shark { k } else { 0 })
+                    (num, if is_shark { k } else { 0 }, None)
                 })
                 .collect()
         })
         .collect();
 
     for i in 1..=m {
-        let dir_idx = input();
-        let ((r, c), _) = sharks[i].unwrap();
+        let dir = input();
+        let (r, c) = sharks[i].unwrap();
 
-        sharks[i] = Some(((r, c), dir_idx));
+        map[r][c].2 = Some(dir);
     }
     for i in 1..=m {
         for r in 0..4 {
@@ -50,8 +50,8 @@ fn main() {
 }
 
 fn simulate(
-    map: &mut Vec<Vec<(usize, i32)>>,
-    sharks: &mut Vec<Option<((usize, usize), usize)>>,
+    map: &mut Vec<Vec<(usize, i32, Option<usize>)>>,
+    sharks: &mut Vec<Option<(usize, usize)>>,
     scents: &mut Vec<(usize, usize)>,
     precedences: &[[[usize; 4]; 4]],
     duration: i32,
@@ -76,52 +76,55 @@ fn simulate(
 }
 
 fn move_sharks(
-    map: &mut Vec<Vec<(usize, i32)>>,
-    sharks: &mut Vec<Option<((usize, usize), usize)>>,
+    map: &mut Vec<Vec<(usize, i32, Option<usize>)>>,
+    sharks: &mut Vec<Option<(usize, usize)>>,
     precedences: &[[[usize; 4]; 4]],
     shark_count: &mut usize,
 ) {
     let n = map.len();
+    let mut new_dirs = vec![0; sharks.len()];
 
     for num in 1..sharks.len() {
-        let Some(((r, c), dir_idx)) = sharks[num] else {
+        let Some((r, c)) = sharks[num] else {
             continue;
         };
 
-        let adjacents: Vec<_> = precedences[num][dir_idx - 1]
+        let dir = map[r][c].2.unwrap();
+        let adjacents: Vec<_> = precedences[num][dir - 1]
             .iter()
-            .filter_map(|&prefer_dir_idx| {
-                let dir = DIRS[prefer_dir_idx];
+            .filter_map(|&prefer_dir| {
                 let adj = (
-                    (r as i8 + dir.0).clamp(0, n as i8 - 1) as usize,
-                    (c as i8 + dir.1).clamp(0, n as i8 - 1) as usize,
+                    (r as i8 + DIRS[prefer_dir].0).clamp(0, n as i8 - 1) as usize,
+                    (c as i8 + DIRS[prefer_dir].1).clamp(0, n as i8 - 1) as usize,
                 );
 
-                (adj != (r, c)).then_some((adj, prefer_dir_idx))
+                (adj != (r, c)).then_some((adj, prefer_dir))
             })
             .collect();
 
-        let ((moved_r, moved_c), new_dir_idx) = 'next: {
-            for &((adj_r, adj_c), prefer_dir_idx) in adjacents.iter() {
+        let ((moved_r, moved_c), new_dir) = 'next: {
+            for &((adj_r, adj_c), prefer_dir) in adjacents.iter() {
                 if map[adj_r][adj_c].0 == 0 {
-                    break 'next ((adj_r, adj_c), prefer_dir_idx);
+                    break 'next ((adj_r, adj_c), prefer_dir);
                 }
             }
 
-            for ((adj_r, adj_c), prefer_dir_idx) in adjacents {
+            for ((adj_r, adj_c), prefer_dir) in adjacents {
                 if map[adj_r][adj_c].0 == num {
-                    break 'next ((adj_r, adj_c), prefer_dir_idx);
+                    break 'next ((adj_r, adj_c), prefer_dir);
                 }
             }
 
-            ((r, c), dir_idx)
+            ((r, c), dir)
         };
 
-        sharks[num] = Some(((moved_r, moved_c), new_dir_idx));
+        sharks[num] = Some((moved_r, moved_c));
+        new_dirs[num] = new_dir;
+        map[r][c].2 = None;
     }
 
     for num in 1..sharks.len() {
-        let Some(((moved_r, moved_c), _)) = sharks[num] else {
+        let Some((moved_r, moved_c)) = sharks[num] else {
             continue;
         };
 
@@ -129,6 +132,7 @@ fn move_sharks(
 
         if other_num == 0 || other_num == num {
             map[moved_r][moved_c].0 = num;
+            map[moved_r][moved_c].2 = Some(new_dirs[num]);
         } else {
             sharks[num] = None;
             *shark_count -= 1;
@@ -137,8 +141,8 @@ fn move_sharks(
 }
 
 fn modify_scents(
-    map: &mut Vec<Vec<(usize, i32)>>,
-    sharks: &[Option<((usize, usize), usize)>],
+    map: &mut Vec<Vec<(usize, i32, Option<usize>)>>,
+    sharks: &[Option<(usize, usize)>],
     scents: &mut Vec<(usize, usize)>,
     duration: i32,
 ) {
@@ -153,7 +157,7 @@ fn modify_scents(
     });
 
     for (num, &coord) in sharks.iter().enumerate().skip(1) {
-        let Some(((r, c), _)) = coord else {
+        let Some((r, c)) = coord else {
             continue;
         };
 
@@ -161,6 +165,7 @@ fn modify_scents(
             scents.push((r, c));
         }
 
-        map[r][c] = (num, duration);
+        map[r][c].0 = num;
+        map[r][c].1 = duration;
     }
 }
