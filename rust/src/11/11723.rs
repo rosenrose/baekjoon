@@ -8,6 +8,11 @@ fn main() {
     stdin.read_line(&mut buf).unwrap();
 
     let mut s = 0;
+    let mut bits = [0; 21];
+
+    for i in 1..=20 {
+        bits[i] = 1 << i;
+    }
 
     for _ in 0..parse_int(buf.trim_end()) {
         buf.clear();
@@ -23,13 +28,10 @@ fn main() {
         };
 
         match op {
-            "add" => s |= 1 << x,
-            "remove" => s &= !(1 << x),
-            "check" => {
-                let check = 1 << x;
-                writeln!(stdout, "{}", u8::from(s & check == check)).unwrap();
-            }
-            "toggle" => s ^= 1 << x,
+            "add" => s |= bits[x],
+            "remove" => s &= !bits[x],
+            "check" => writeln!(stdout, "{}", u8::from(s & bits[x] == bits[x])).unwrap(),
+            "toggle" => s ^= bits[x],
             "all" => s |= !0,
             "empty" => s = 0,
             _ => (),
@@ -37,6 +39,6 @@ fn main() {
     }
 }
 
-fn parse_int(buf: &str) -> i32 {
+fn parse_int(buf: &str) -> usize {
     buf.parse().unwrap()
 }
