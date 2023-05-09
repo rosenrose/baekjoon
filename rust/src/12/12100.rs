@@ -140,9 +140,5 @@ fn simulate(selected: &mut [Dirs; 5], mut board: Vec<Vec<i32>>, &size: &usize) -
         merged.clear();
     }
 
-    *board
-        .iter()
-        .map(|row| row.iter().max().unwrap())
-        .max()
-        .unwrap()
+    *board.iter().flatten().max().unwrap()
 }

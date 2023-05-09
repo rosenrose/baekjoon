@@ -21,19 +21,19 @@ fn combination_pairs(
 ) -> u32 {
     if depth == selected.len() {
         let rest: Vec<_> = (0..numbers).filter(|n| !selected.contains(n)).collect();
-        let (mut start, mut link) = (0, 0);
+        let (mut start_score, mut link_score) = (0, 0);
         // println!("{selected:?} {rest:?}");
         for i in 0..selected.len() - 1 {
             for j in i + 1..selected.len() {
                 let (a, b) = (selected[i], selected[j]);
-                start += matrix[a][b] + matrix[b][a];
+                start_score += matrix[a][b] + matrix[b][a];
 
                 let (a, b) = (rest[i], rest[j]);
-                link += matrix[a][b] + matrix[b][a];
+                link_score += matrix[a][b] + matrix[b][a];
             }
         }
 
-        return start.abs_diff(link);
+        return start_score.abs_diff(link_score);
     }
 
     if depth == 0 {

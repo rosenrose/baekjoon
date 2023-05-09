@@ -12,12 +12,12 @@ fn main() {
         .map(|_| (input(), [input(), input(), input(), input()]))
         .collect();
 
-    let sum = simulate(&mut room, students);
-    // println!("{room:?}");
+    let sum = simulate(room, students);
+
     println!("{sum}");
 }
 
-fn simulate(room: &mut Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -> i32 {
+fn simulate(mut room: Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -> i32 {
     let n = room.len();
     let get_adjacents = |r: usize, c: usize| -> Vec<(usize, usize)> {
         [
@@ -60,7 +60,7 @@ fn simulate(room: &mut Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) 
         let (_, _, (r, c)) = empty_cells.select_nth_unstable(0).1;
         room[*r][*c] = num;
     }
-
+    // println!("{room:?}");
     students.sort();
     let mut satisfaction = 0;
 

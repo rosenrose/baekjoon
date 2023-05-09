@@ -1,8 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
-fn main() {
-    let buf = io::read_to_string(io::stdin()).unwrap();
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let buf = io::read_to_string(io::stdin())?;
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
     let mut output = String::new();
@@ -20,34 +20,35 @@ fn main() {
 
     for row in adjacency_matrix {
         for dist in row {
-            write!(output, "{} ", if dist == i32::MAX { 0 } else { dist }).unwrap();
+            write!(output, "{} ", if dist == i32::MAX { 0 } else { dist })?;
         }
-        writeln!(output, "").unwrap();
+        writeln!(output, "")?;
     }
 
     for i in 0..n {
         for j in 0..n {
             if i == j {
-                writeln!(output, "0").unwrap();
+                writeln!(output, "0")?;
                 continue;
             }
 
             let Some(path) = find_path(&prevs, i, j) else {
-                writeln!(output, "0").unwrap();
+                writeln!(output, "0")?;
                 continue;
             };
 
-            write!(output, "{} ", path.len() + 1).unwrap();
+            write!(output, "{} ", path.len() + 1)?;
 
             for p in path {
-                write!(output, "{} ", p + 1).unwrap();
+                write!(output, "{} ", p + 1)?;
             }
 
-            writeln!(output, "{}", j + 1).unwrap();
+            writeln!(output, "{}", j + 1)?;
         }
     }
 
     print!("{output}");
+    Ok(())
 }
 
 fn floyd_warshall_with_path(distances: &mut Vec<Vec<i32>>) -> Vec<Vec<i32>> {

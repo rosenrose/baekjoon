@@ -44,28 +44,28 @@ fn main() {
         }
     }
     // println!("{map:?}\n{sharks:?}\n{scents:?}\n{precedences:?}");
-    let elapsed = simulate(&mut map, &mut sharks, &mut scents, &precedences, k);
+    let elapsed = simulate(map, sharks, scents, precedences, k);
 
     println!("{elapsed}");
 }
 
 fn simulate(
-    map: &mut Vec<Vec<(usize, i32, Option<usize>)>>,
-    sharks: &mut Vec<Option<(usize, usize)>>,
-    scents: &mut Vec<(usize, usize)>,
-    precedences: &[[[usize; 4]; 4]],
+    mut map: Vec<Vec<(usize, i32, Option<usize>)>>,
+    mut sharks: Vec<Option<(usize, usize)>>,
+    mut scents: Vec<(usize, usize)>,
+    precedences: Vec<[[usize; 4]; 4]>,
     duration: i32,
 ) -> i32 {
     let mut shark_count = sharks.len() - 1;
 
     for time in 1..=1000 {
-        move_sharks(map, sharks, precedences, &mut shark_count);
+        move_sharks(&mut map, &mut sharks, &precedences, &mut shark_count);
 
         if shark_count == 1 {
             return time;
         }
 
-        modify_scents(map, sharks, scents, duration);
+        modify_scents(&mut map, &sharks, &mut scents, duration);
         // for r in map.iter() {
         //     println!("{r:?}");
         // }

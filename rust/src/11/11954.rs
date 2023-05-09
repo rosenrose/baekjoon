@@ -1,8 +1,8 @@
 use std::fmt::Write;
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    std::io::stdin().read_line(&mut buf)?;
 
     let mut output = String::new();
     let mut depth = 0;
@@ -13,25 +13,25 @@ fn main() {
 
         match ch {
             '{' => {
-                writeln!(output, "{indent}{ch}").unwrap();
+                writeln!(output, "{indent}{ch}")?;
                 depth += 1;
             }
             '}' => {
                 if last_ch != '{' {
-                    writeln!(output, "").unwrap();
+                    writeln!(output, "")?;
                 }
 
                 depth -= 1;
                 let indent = " ".repeat(depth * 2);
 
-                write!(output, "{indent}{ch}").unwrap();
+                write!(output, "{indent}{ch}")?;
             }
-            ',' => writeln!(output, "{ch}").unwrap(),
+            ',' => writeln!(output, "{ch}")?,
             _ => {
                 if matches!(last_ch, '{' | ',') {
-                    write!(output, "{indent}").unwrap();
+                    write!(output, "{indent}")?;
                 }
-                write!(output, "{ch}").unwrap();
+                write!(output, "{ch}")?;
             }
         }
 
@@ -39,6 +39,7 @@ fn main() {
     }
 
     print!("{output}");
+    Ok(())
 }
 
 // print!("{}", prettify_json(buf.trim(), 2, 0));

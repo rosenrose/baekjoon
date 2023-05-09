@@ -1,8 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let buf = io::read_to_string(io::stdin())?;
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
     let mut output = String::new();
@@ -37,31 +37,32 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let num = x.abs().max(y.abs());
                 let diff = num as u32 * 2;
                 // println!("{y} {x} {num}");
-                let left_top = if i as i32 - num == -1 {
-                    1
-                } else {
-                    memo[i][i - num as usize] + 1
+                let result = 'a: {
+                    let left_top = if i as i32 - num == -1 {
+                        1
+                    } else {
+                        memo[i][i - num as usize] + 1
+                    };
+                    if y == -num {
+                        break 'a left_top + x.abs_diff(-num);
+                    }
+
+                    let right_top = left_top + diff;
+                    if x == num {
+                        break 'a right_top + y.abs_diff(-num);
+                    }
+
+                    let right_bottom = right_top + diff;
+                    if y == num {
+                        break 'a right_bottom + x.abs_diff(num);
+                    }
+
+                    let left_bottom = right_bottom + diff;
+                    // println!("{left_top} {right_top} {right_bottom} {left_bottom}");
+                    left_bottom + y.abs_diff(num)
                 };
-                if y == -num {
-                    writeln!(output, "{}", left_top + x.abs_diff(-num))?;
-                    continue;
-                }
 
-                let right_top = left_top + diff;
-                if x == num {
-                    writeln!(output, "{}", right_top + y.abs_diff(-num))?;
-                    continue;
-                }
-
-                let right_bottom = right_top + diff;
-                if y == num {
-                    writeln!(output, "{}", right_bottom + x.abs_diff(num))?;
-                    continue;
-                }
-
-                let left_bottom = right_bottom + diff;
-                writeln!(output, "{}", left_bottom + y.abs_diff(num))?;
-                // println!("{left_top} {right_top} {right_bottom} {left_bottom}");
+                writeln!(output, "{result}").unwrap();
             }
             2 => {
                 let z = input() as u32;
@@ -69,36 +70,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let num = (half - idx) as i32;
                 let diff = num as u32 * 2;
                 // println!("idx: {idx}, num: {num}");
-                let (x, y);
-                let left_top = if idx == 0 { 1 } else { memo[i][idx - 1] + 1 };
-                let right_top = left_top + diff;
-                if z <= right_top {
-                    (y, x) = (-num, -num + z.abs_diff(left_top) as i32);
-                    writeln!(output, "{} {}", y + offset, x + offset)?;
-                    continue;
-                }
+                let (y, x) = 'a: {
+                    let left_top = if idx == 0 { 1 } else { memo[i][idx - 1] + 1 };
+                    let right_top = left_top + diff;
+                    if z <= right_top {
+                        break 'a (-num, -num + z.abs_diff(left_top) as i32);
+                    }
 
-                let right_bottom = right_top + diff;
-                if z <= right_bottom {
-                    (y, x) = (-num + z.abs_diff(right_top) as i32, num);
-                    writeln!(output, "{} {}", y + offset, x + offset)?;
-                    continue;
-                }
+                    let right_bottom = right_top + diff;
+                    if z <= right_bottom {
+                        break 'a (-num + z.abs_diff(right_top) as i32, num);
+                    }
 
-                let left_bottom = right_bottom + diff;
-                if z <= left_bottom {
-                    (y, x) = (num, num - z.abs_diff(right_bottom) as i32);
-                    writeln!(output, "{} {}", y + offset, x + offset)?;
-                    continue;
-                }
+                    let left_bottom = right_bottom + diff;
+                    if z <= left_bottom {
+                        break 'a (num, num - z.abs_diff(right_bottom) as i32);
+                    }
 
-                (y, x) = (num - z.abs_diff(left_bottom) as i32, -num);
-                writeln!(output, "{} {}", y + offset, x + offset)?;
+                    (num - z.abs_diff(left_bottom) as i32, -num)
+                };
+
+                writeln!(output, "{} {}", y + offset, x + offset).unwrap();
             }
             _ => unreachable!(),
         }
     }
 
     print!("{output}");
-    Ok(())
 }

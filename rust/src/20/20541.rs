@@ -199,20 +199,20 @@ impl<'a> AlbumManager<'a> {
     }
 }
 
-fn main() {
-    let buf = io::read_to_string(io::stdin()).unwrap();
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let buf = io::read_to_string(io::stdin())?;
     let mut input = buf.split_ascii_whitespace();
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n: i32 = input().parse().unwrap();
+    let n: i32 = input().parse()?;
     let mut album_manager = AlbumManager::new();
 
     for (op, arg) in (0..n).map(|_| (input(), input())) {
         match op {
             "mkalb" => {
                 if !album_manager.make_album(arg) {
-                    writeln!(output, "duplicated album name").unwrap();
+                    writeln!(output, "duplicated album name")?;
                 }
             }
             "rmalb" => {
@@ -223,11 +223,11 @@ fn main() {
                     _ => album_manager.remove_album(arg),
                 };
 
-                writeln!(output, "{rm_albums} {rm_photos}").unwrap();
+                writeln!(output, "{rm_albums} {rm_photos}")?;
             }
             "insert" => {
                 if !album_manager.insert_photo(arg) {
-                    writeln!(output, "duplicated photo name").unwrap();
+                    writeln!(output, "duplicated photo name")?;
                 }
             }
             "delete" => {
@@ -238,11 +238,11 @@ fn main() {
                     _ => album_manager.delete_photo(arg),
                 };
 
-                writeln!(output, "{del_count}").unwrap();
+                writeln!(output, "{del_count}")?;
             }
             "ca" => {
                 let changed = album_manager.change_album(arg);
-                writeln!(output, "{changed}").unwrap();
+                writeln!(output, "{changed}")?;
             }
             _ => unreachable!(),
         }
@@ -250,4 +250,5 @@ fn main() {
     }
 
     print!("{output}");
+    Ok(())
 }
