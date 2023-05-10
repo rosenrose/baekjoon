@@ -8,25 +8,25 @@ enum Cells {
 
 enum Dirs {
     Up,
-    Right,
     Down,
     Left,
+    Right,
 }
 
 use std::io;
 use Dirs::*;
 
 const CCTV_TYPES: [&[&[Dirs]]; 5] = [
-    &[&[Up], &[Right], &[Down], &[Left]],
-    &[&[Left, Right], &[Up, Down]],
+    &[&[Up], &[Down], &[Left], &[Right]],
+    &[&[Up, Down], &[Left, Right]],
     &[&[Up, Right], &[Right, Down], &[Down, Left], &[Left, Up]],
     &[
-        &[Left, Up, Right],
         &[Up, Right, Down],
         &[Right, Down, Left],
         &[Down, Left, Up],
+        &[Left, Up, Right],
     ],
-    &[&[Up, Right, Down, Left]],
+    &[&[Up, Down, Left, Right]],
 ];
 
 fn main() {

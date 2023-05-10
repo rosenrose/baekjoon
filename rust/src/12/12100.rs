@@ -1,10 +1,10 @@
 #[derive(Default, Copy, Clone, Debug)]
 enum Dirs {
     #[default]
-    Up,
-    Right,
+    Up = 0,
     Down,
     Left,
+    Right,
 }
 
 use std::io;
@@ -16,119 +16,90 @@ fn main() {
 
     let n = input.next().unwrap() as usize;
     let board: Vec<Vec<_>> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
+    let rows_cols = [
+        ((1..n).collect(), (0..n).collect()),
+        ((0..n - 1).rev().collect(), (0..n).collect()),
+        ((0..n).collect(), (1..n).collect()),
+        ((0..n).collect(), (0..n - 1).rev().collect()),
+    ];
 
-    let max_block = product(0, &mut [Default::default(); 5], &board);
+    let max_block = product(0, &mut [Default::default(); 5], &board, &rows_cols);
 
     println!("{max_block}");
 }
 
-fn product(depth: usize, selected: &mut [Dirs; 5], board: &[Vec<i32>]) -> i32 {
+fn product(
+    depth: usize,
+    selected: &mut [Dirs; 5],
+    board: &[Vec<i32>],
+    rows_cols: &[(Vec<usize>, Vec<usize>)],
+) -> i32 {
     if depth == selected.len() {
-        return simulate(selected, board.to_owned());
+        return simulate(selected, board.to_owned(), rows_cols);
     }
 
     [Up, Right, Down, Left]
         .iter()
         .map(|&dir| {
             selected[depth] = dir;
-            product(depth + 1, selected, board)
+            product(depth + 1, selected, board, rows_cols)
         })
         .max()
         .unwrap()
 }
 
-fn simulate(selected: &mut [Dirs; 5], mut board: Vec<Vec<i32>>) -> i32 {
+fn simulate(
+    selected: &mut [Dirs; 5],
+    mut board: Vec<Vec<i32>>,
+    rows_cols: &[(Vec<usize>, Vec<usize>)],
+) -> i32 {
     let n = board.len();
     let mut merged = vec![vec![false; n]; n];
 
-    for dir in selected {
-        match dir {
-            Up => {
-                for r in 1..n {
-                    for c in 0..n {
-                        if board[r][c] == 0 {
-                            continue;
-                        }
+    for &dir in selected.iter() {
+        let (rows, cols) = &rows_cols[dir as usize];
 
-                        let Some(up) = (0..r).rfind(|&r| board[r][c] != 0) else {
-                            (board[0][c], board[r][c]) = (board[r][c], board[0][c]);
-                            continue;
-                        };
-
-                        if board[up][c] == board[r][c] && !merged[up][c] {
-                            board[up][c] <<= 1;
-                            board[r][c] = 0;
-                            merged[up][c] = true;
-                        } else {
-                            (board[up + 1][c], board[r][c]) = (board[r][c], board[up + 1][c]);
-                        }
-                    }
+        for &r in rows.iter() {
+            for &c in cols.iter() {
+                if board[r][c] == 0 {
+                    continue;
                 }
-            }
-            Down => {
-                for r in (0..n - 1).rev() {
-                    for c in 0..n {
-                        if board[r][c] == 0 {
-                            continue;
-                        }
 
-                        let Some(down) = (r + 1..n).find(|&r| board[r][c] != 0) else {
-                            (board[n - 1][c], board[r][c]) = (board[r][c], board[n - 1][c]);
-                            continue;
-                        };
-
-                        if board[down][c] == board[r][c] && !merged[down][c] {
-                            board[down][c] <<= 1;
-                            board[r][c] = 0;
-                            merged[down][c] = true;
-                        } else {
-                            (board[down - 1][c], board[r][c]) = (board[r][c], board[down - 1][c]);
-                        }
+                let Some(target) = (match dir {
+                    Up => (0..r).rfind(|&target_r| board[target_r][c] != 0),
+                    Down => (r + 1..n).find(|&target_r| board[target_r][c] != 0),
+                    Left => (0..c).rfind(|&target_c| board[r][target_c] != 0),
+                    Right => (c + 1..n).find(|&target_c| board[r][target_c] != 0),
+                }) else {
+                    match dir {
+                        Up => (board[0][c], board[r][c]) = (board[r][c], board[0][c]),
+                        Down => (board[n - 1][c], board[r][c]) = (board[r][c], board[n - 1][c]),
+                        Left => board[r].swap(0, c),
+                        Right => board[r].swap(n - 1, c),
                     }
+
+                    continue;
+                };
+
+                let (target_r, target_c) = match dir {
+                    Up | Down => (target, c),
+                    Left | Right => (r, target),
+                };
+
+                if board[target_r][target_c] == board[r][c] && !merged[target_r][target_c] {
+                    board[target_r][target_c] <<= 1;
+                    board[r][c] = 0;
+                    merged[target_r][target_c] = true;
+
+                    continue;
                 }
-            }
-            Right => {
-                for r in 0..n {
-                    for c in (0..n - 1).rev() {
-                        if board[r][c] == 0 {
-                            continue;
-                        }
 
-                        let Some(right) = (c + 1..n).find(|&c| board[r][c] != 0) else {
-                            board[r].swap(n - 1, c);
-                            continue;
-                        };
-
-                        if board[r][right] == board[r][c] && !merged[r][right] {
-                            board[r][right] <<= 1;
-                            board[r][c] = 0;
-                            merged[r][right] = true;
-                        } else {
-                            board[r].swap(right - 1, c);
-                        }
-                    }
-                }
-            }
-            Left => {
-                for r in 0..n {
-                    for c in 1..n {
-                        if board[r][c] == 0 {
-                            continue;
-                        }
-
-                        let Some(left) = (0..c).rfind(|&c| board[r][c] != 0) else {
-                            board[r].swap(0, c);
-                            continue;
-                        };
-
-                        if board[r][left] == board[r][c] && !merged[r][left] {
-                            board[r][left] <<= 1;
-                            board[r][c] = 0;
-                            merged[r][left] = true;
-                        } else {
-                            board[r].swap(left + 1, c);
-                        }
-                    }
+                match dir {
+                    Up => (board[target + 1][c], board[r][c]) = (board[r][c], board[target + 1][c]),
+                    #[rustfmt::skip]
+                    Down => (board[target - 1][c], board[r][c]) = (board[r][c], board[target - 1][c]),
+                    Left => board[r].swap(target + 1, c),
+                    Right => board[r].swap(target - 1, c),
                 }
             }
         }
