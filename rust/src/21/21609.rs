@@ -166,9 +166,5 @@ fn rotate(map: &mut Vec<Vec<Cells>>) {
         .map(|c| (0..map.len()).map(|r| map[r][c]).collect())
         .collect();
 
-    for (r, row) in rotated.iter().enumerate() {
-        for (c, &cell) in row.iter().enumerate() {
-            map[r][c] = cell;
-        }
-    }
+    *map = rotated;
 }

@@ -18,37 +18,39 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let mut map = [[None; SIZE]; SIZE];
-    let mut fishes = [None; (SIZE * SIZE) + 1];
 
     for r in 0..SIZE {
         for c in 0..SIZE {
             let (num, dir) = (input.next().unwrap(), input.next().unwrap() - 1);
-
             map[r][c] = Some((num, dir));
-            fishes[num] = Some((r, c));
         }
     }
 
     let (num, dir) = map[0][0].unwrap();
-
     map[0][0] = Some((SHARK, dir));
-    fishes[SHARK] = Some((0, 0));
-    fishes[num] = None;
-    // println!("{map:?}\n{fishes:?}");
-    let max_sum = simulate(map, fishes, num);
+    // println!("{map:?}\");
+    let max_sum = simulate(map, num);
 
     println!("{max_sum}");
 }
 
-fn simulate(
-    mut map: [[Option<(usize, usize)>; 4]; 4],
-    mut fishes: [Option<(usize, usize)>; 17],
-    sum: usize,
-) -> usize {
-    move_fishes(&mut map, &mut fishes);
+fn simulate(mut map: [[Option<(usize, usize)>; 4]; 4], sum: usize) -> usize {
+    move_fishes(&mut map);
 
-    let (shark_r, shark_c) = fishes[SHARK].unwrap();
-    let (_, shark_dir) = map[shark_r][shark_c].unwrap();
+    let (shark_r, shark_c, shark_dir) = 'a: {
+        for (r, row) in map.iter().enumerate() {
+            for (c, &cell) in row.iter().enumerate() {
+                let Some((num, dir)) = cell else {
+                    continue;
+                };
+
+                if num == SHARK {
+                    break 'a (r, c, dir);
+                }
+            }
+        }
+        unreachable!()
+    };
     let shark_path = (1..)
         .map_while(|len| get_moved_coord((shark_r, shark_c), shark_dir, len))
         .filter(|&(r, c)| map[r][c].is_some());
@@ -56,48 +58,46 @@ fn simulate(
     shark_path
         .map(|(next_r, next_c)| {
             let (fish_num, fish_dir) = map[next_r][next_c].unwrap();
-            let (mut map, mut fishes) = (map.clone(), fishes.clone());
+            let mut map = map.clone();
 
             map[next_r][next_c] = Some((SHARK, fish_dir));
             map[shark_r][shark_c] = None;
-            fishes[SHARK] = Some((next_r, next_c));
-            fishes[fish_num] = None;
 
-            simulate(map, fishes, sum + fish_num)
+            simulate(map, sum + fish_num)
         })
         .max()
         .unwrap_or(sum)
 }
 
-fn move_fishes(
-    map: &mut [[Option<(usize, usize)>; 4]; 4],
-    fishes: &mut [Option<(usize, usize)>; 17],
-) {
-    for num in 1..fishes.len() {
-        let Some((r, c)) = fishes[num] else {
-            continue;
+fn move_fishes(map: &mut [[Option<(usize, usize)>; 4]; 4]) {
+    'outer: for fish_num in 1..=SIZE * SIZE {
+        let (r, c, mut dir) = 'a: {
+            for (r, row) in map.iter().enumerate() {
+                for (c, &cell) in row.iter().enumerate() {
+                    let Some((num, dir)) = cell else {
+                        continue;
+                    };
+
+                    if num == fish_num {
+                        break 'a (r, c, dir);
+                    }
+                }
+            }
+
+            continue 'outer;
         };
 
-        let (_, mut dir) = map[r][c].unwrap();
-        let (moved_r, moved_c);
-
-        loop {
+        let (moved_r, moved_c) = loop {
             if let Some(moved) = get_moved_coord((r, c), dir, 1) {
                 if !matches!(map[moved.0][moved.1], Some((SHARK, _))) {
-                    (moved_r, moved_c) = moved;
-                    break;
+                    break moved;
                 }
             }
 
             dir = (dir + 1) % DIRS.len();
-        }
+        };
 
-        fishes[num] = Some((moved_r, moved_c));
-        map[r][c] = Some((num, dir));
-
-        if let Some((other_num, _)) = map[moved_r][moved_c] {
-            fishes[other_num] = Some((r, c));
-        }
+        map[r][c] = Some((fish_num, dir));
         (map[r][c], map[moved_r][moved_c]) = (map[moved_r][moved_c], map[r][c]);
         // for r in map.iter() {
         //     println!("{r:?}");

@@ -18,105 +18,91 @@ fn main() {
 
     let (n, m, k) = (input() as usize, input() as usize, input());
     let mut map = vec![vec![Vec::new(); n]; n];
-    let mut fireballs = Vec::with_capacity(m);
 
     for (r, c, m, s, d) in (0..m).map(|_| (input(), input(), input(), input(), input())) {
         let coord = (r as usize - 1, c as usize - 1);
-        let info = (m, s, d as usize);
+        let fireball = (m, s, d as usize);
 
-        map[coord.0][coord.1].push(info);
-        fireballs.push(coord);
+        map[coord.0][coord.1].push(fireball);
     }
 
-    let sum = simulate(map, fireballs, k);
+    let sum = simulate(map, k);
 
     println!("{sum}");
 }
 
-fn simulate(
-    mut map: Vec<Vec<Vec<(i32, i32, usize)>>>,
-    mut fireballs: Vec<(usize, usize)>,
-    k: i32,
-) -> i32 {
+fn simulate(mut map: Vec<Vec<Vec<(i32, i32, usize)>>>, k: i32) -> i32 {
     for _ in 0..k {
-        let merged_coords = move_fireballs(&mut map, &mut fireballs);
+        let moved = move_fireballs(&mut map);
 
-        for (r, c) in merged_coords {
-            let (mut mass, mut speed) = (0, 0);
-            let (mut is_all_even, mut is_all_odd) = (true, true);
-            let len = map[r][c].len() as i32;
-
-            while let Some((m, s, d)) = map[r][c].pop() {
-                mass += m;
-                speed += s;
-
-                if d & 1 == 0 {
-                    is_all_odd = false;
-                } else {
-                    is_all_even = false;
+        for (r, row) in moved.iter().enumerate() {
+            for (c, fireballs) in row.iter().enumerate() {
+                if fireballs.len() == 1 {
+                    map[r][c].push(fireballs[0]);
+                    continue;
                 }
-            }
 
-            fireballs.retain(|&fireball_coord| fireball_coord != (r, c));
-            mass /= 5;
+                let (mut mass, mut speed) = (0, 0);
+                let (mut is_all_even, mut is_all_odd) = (true, true);
+                let len = moved[r][c].len() as i32;
 
-            if mass == 0 {
-                continue;
-            }
+                for (m, s, d) in fireballs {
+                    mass += m;
+                    speed += s;
 
-            speed /= len;
+                    if d & 1 == 0 {
+                        is_all_odd = false;
+                    } else {
+                        is_all_even = false;
+                    }
+                }
 
-            for i in 0..4 {
-                map[r][c].push((
-                    mass,
-                    speed,
-                    (i * 2) + usize::from(!(is_all_even || is_all_odd)),
-                ));
-                fireballs.push((r, c));
+                mass /= 5;
+
+                if mass == 0 {
+                    continue;
+                }
+
+                speed /= len;
+
+                for i in 0..4 {
+                    map[r][c].push((
+                        mass,
+                        speed,
+                        (i * 2) + usize::from(!(is_all_even || is_all_odd)),
+                    ));
+                }
             }
         }
         // for r in &map {
         //     println!("{r:?}");
         // }
-        // println!("{fireballs:?}\n");
     }
 
-    let mut total_mass = 0;
-
-    for (r, c) in fireballs {
-        total_mass += map[r][c].pop().unwrap().0;
-    }
-
-    total_mass
+    map.iter()
+        .flatten()
+        .flatten()
+        .map(|(m, _, _)| m)
+        .sum::<i32>()
 }
 
-fn move_fireballs(
-    map: &mut Vec<Vec<Vec<(i32, i32, usize)>>>,
-    fireballs: &mut Vec<(usize, usize)>,
-) -> Vec<(usize, usize)> {
-    let n = map.len() as i32;
-    let mut fireball_infos = Vec::with_capacity(fireballs.len());
-    let mut merged = Vec::new();
+fn move_fireballs(map: &mut Vec<Vec<Vec<(i32, i32, usize)>>>) -> Vec<Vec<Vec<(i32, i32, usize)>>> {
+    let n = map.len();
+    let mut moved = vec![vec![Vec::new(); n]; n];
 
-    for (r, c) in fireballs.iter_mut() {
-        let (m, s, d) = map[*r][*c].pop().unwrap();
-        fireball_infos.push((m, s, d));
+    for (r, row) in map.iter_mut().enumerate() {
+        for (c, fireballs) in row.iter_mut().enumerate() {
+            while let Some((m, s, d)) = fireballs.pop() {
+                let dir = DIRS[d];
+                let (moved_r, moved_c) = (
+                    (r as i32 + dir.0 * s).rem_euclid(n as i32) as usize,
+                    (c as i32 + dir.1 * s).rem_euclid(n as i32) as usize,
+                );
 
-        let dir = DIRS[d];
-
-        (*r, *c) = (
-            (*r as i32 + dir.0 * s).rem_euclid(n) as usize,
-            (*c as i32 + dir.1 * s).rem_euclid(n) as usize,
-        );
-    }
-
-    for (&(r, c), info) in fireballs.iter().zip(fireball_infos) {
-        if map[r][c].len() == 1 {
-            merged.push((r, c));
+                moved[moved_r][moved_c].push((m, s, d));
+            }
         }
-
-        map[r][c].push(info);
     }
 
-    merged
+    moved
 }
