@@ -24,7 +24,7 @@ fn main() {
     }
 }
 
-fn draw_bingo(board: &mut [[(i32, bool); 5]; 5], num: i32) -> i32 {
+fn draw_bingo(board: &mut [[(i32, bool); 5]], num: i32) -> i32 {
     let mut count = 0;
 
     let (i, j) = 'outer: {

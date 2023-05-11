@@ -69,7 +69,7 @@ fn simulate(mut map: [[Option<(usize, usize)>; 4]; 4], sum: usize) -> usize {
         .unwrap_or(sum)
 }
 
-fn move_fishes(map: &mut [[Option<(usize, usize)>; 4]; 4]) {
+fn move_fishes(map: &mut [[Option<(usize, usize)>; 4]]) {
     'outer: for fish_num in 1..=SIZE * SIZE {
         let (r, c, mut dir) = 'a: {
             for (r, row) in map.iter().enumerate() {

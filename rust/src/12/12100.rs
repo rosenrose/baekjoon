@@ -30,7 +30,7 @@ fn main() {
 
 fn product(
     depth: usize,
-    selected: &mut [Dirs; 5],
+    selected: &mut [Dirs],
     board: &[Vec<i32>],
     rows_cols: &[(Vec<usize>, Vec<usize>)],
 ) -> i32 {
@@ -49,7 +49,7 @@ fn product(
 }
 
 fn simulate(
-    selected: &mut [Dirs; 5],
+    selected: &mut [Dirs],
     mut board: Vec<Vec<i32>>,
     rows_cols: &[(Vec<usize>, Vec<usize>)],
 ) -> i32 {

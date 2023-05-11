@@ -20,7 +20,7 @@ fn main() {
 fn combinations(
     depth: usize,
     start: usize,
-    selected: &mut [usize; 6],
+    selected: &mut [usize],
     nums: &[usize],
     output: &mut String,
 ) {

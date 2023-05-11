@@ -16,12 +16,7 @@ fn main() {
     println!("{max_depth}");
 }
 
-fn board_horse(
-    depth: i32,
-    (r, c): (usize, usize),
-    is_passed: &mut [bool; 26],
-    board: &[&[u8]],
-) -> i32 {
+fn board_horse(depth: i32, (r, c): (usize, usize), is_passed: &mut [bool], board: &[&[u8]]) -> i32 {
     let adjacents = [
         (r.saturating_sub(1), c),
         (r, c.saturating_sub(1)),

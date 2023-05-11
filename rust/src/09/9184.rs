@@ -19,7 +19,7 @@ fn main() {
     print!("{output}");
 }
 
-fn w(a: i32, b: i32, c: i32, memo: &mut [[[i32; 21]; 21]; 21]) -> i32 {
+fn w(a: i32, b: i32, c: i32, memo: &mut [[[i32; 21]; 21]]) -> i32 {
     if a <= 0 || b <= 0 || c <= 0 {
         return 1;
     }

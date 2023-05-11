@@ -14,7 +14,7 @@ fn main() {
     }
 }
 
-fn get_count(n: i32, state: usize, memo: &mut [[i32; 5]; 22]) -> i32 {
+fn get_count(n: i32, state: usize, memo: &mut [[i32; 5]]) -> i32 {
     if n < 0 {
         return 0;
     }
@@ -46,3 +46,29 @@ fn get_count(n: i32, state: usize, memo: &mut [[i32; 5]; 22]) -> i32 {
     memo[n as usize][state] = count;
     count
 }
+
+// let mut memo = vec![0; 22];
+// (memo[0], memo[1], memo[2]) = (1, 1, 5);
+
+// for i in 3..=21 {
+//     memo[i] = memo[i - 1]
+//         + memo[i - 2] * 4
+//         + (0..=i - 3)
+//             .rev()
+//             .map(|j| {
+//                 memo[j]
+//                     * if i & 1 == 0 {
+//                         if j & 1 == 0 {
+//                             3
+//                         } else {
+//                             2
+//                         }
+//                     } else {
+//                         if j & 1 == 0 {
+//                             2
+//                         } else {
+//                             3
+//                         }
+//                     }
+//             })
+//             .sum::<i32>();
