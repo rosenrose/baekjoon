@@ -7,12 +7,12 @@ struct SegmentTree {
 }
 
 impl SegmentTree {
-    fn make(n: usize, mut input: impl Iterator<Item = i64>) -> Self {
+    fn make(n: usize, input: impl Iterator<Item = i64>) -> Self {
         let pow = n.next_power_of_two();
         let mut tree = vec![0; pow << 1];
 
-        for i in pow..pow + n {
-            tree[i] = input.next().unwrap();
+        for (i, num) in input.enumerate() {
+            tree[i + pow] = num;
         }
 
         for i in (1..pow).rev() {
