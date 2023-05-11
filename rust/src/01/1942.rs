@@ -1,15 +1,8 @@
-enum Time {
-    H,
-    M,
-    S,
-}
-
 use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().map(parse_time);
-    let (h, m, s) = (Time::H as usize, Time::M as usize, Time::S as usize);
 
     for (mut start, end) in (0..3).map(|_| (input.next().unwrap(), input.next().unwrap())) {
         let mut count = 0;
@@ -23,15 +16,15 @@ fn main() {
                 break;
             }
             // println!("{start:?}");
-            start[s] += 1;
+            start[2] += 1;
 
-            start[m] += start[s] / 60;
-            start[s] %= 60;
+            start[1] += start[2] / 60;
+            start[2] %= 60;
 
-            start[h] += start[m] / 60;
-            start[m] %= 60;
+            start[0] += start[1] / 60;
+            start[1] %= 60;
 
-            start[h] %= 24;
+            start[0] %= 24;
         }
 
         println!("{count}");

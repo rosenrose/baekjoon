@@ -7,7 +7,7 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let n = input();
-    let mut room = vec![vec![0; n]; n];
+    let room = vec![vec![0; n]; n];
     let students: Vec<_> = (0..n * n)
         .map(|_| (input(), [input(), input(), input(), input()]))
         .collect();

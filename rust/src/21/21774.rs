@@ -49,6 +49,16 @@ fn parse_time(input: &str) -> i32 {
     days * (24 * 60 * 60) + hour * 60 * 60 + minlute * 60 + second
 }
 
+fn get_days(month: i32, year: i32) -> i32 {
+    match month {
+        1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+        4 | 6 | 9 | 11 => 30,
+        #[rustfmt::skip]
+        2 => if is_leap(year) { 29 } else { 28 },
+        _ => unreachable!(),
+    }
+}
+
 fn is_leap(year: i32) -> bool {
     if year % 4 == 0 {
         if year % 100 == 0 {
@@ -62,16 +72,6 @@ fn is_leap(year: i32) -> bool {
         }
     } else {
         false
-    }
-}
-
-fn get_days(month: i32, year: i32) -> i32 {
-    match month {
-        1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
-        4 | 6 | 9 | 11 => 30,
-        #[rustfmt::skip]
-        2 => if is_leap(year) { 29 } else { 28 },
-        _ => unreachable!(),
     }
 }
 

@@ -20,10 +20,7 @@ fn main() {
     let mut map = vec![vec![Vec::new(); n]; n];
 
     for (r, c, m, s, d) in (0..m).map(|_| (input(), input(), input(), input(), input())) {
-        let coord = (r as usize - 1, c as usize - 1);
-        let fireball = (m, s, d as usize);
-
-        map[coord.0][coord.1].push(fireball);
+        map[r as usize - 1][c as usize - 1].push((m, s, d as usize));
     }
 
     let sum = simulate(map, k);
@@ -34,46 +31,7 @@ fn main() {
 fn simulate(mut map: Vec<Vec<Vec<(i32, i32, usize)>>>, k: i32) -> i32 {
     for _ in 0..k {
         let moved = move_fireballs(&mut map);
-
-        for (r, row) in moved.iter().enumerate() {
-            for (c, fireballs) in row.iter().enumerate() {
-                if fireballs.len() == 1 {
-                    map[r][c].push(fireballs[0]);
-                    continue;
-                }
-
-                let (mut mass, mut speed) = (0, 0);
-                let (mut is_all_even, mut is_all_odd) = (true, true);
-                let len = moved[r][c].len() as i32;
-
-                for (m, s, d) in fireballs {
-                    mass += m;
-                    speed += s;
-
-                    if d & 1 == 0 {
-                        is_all_odd = false;
-                    } else {
-                        is_all_even = false;
-                    }
-                }
-
-                mass /= 5;
-
-                if mass == 0 {
-                    continue;
-                }
-
-                speed /= len;
-
-                for i in 0..4 {
-                    map[r][c].push((
-                        mass,
-                        speed,
-                        (i * 2) + usize::from(!(is_all_even || is_all_odd)),
-                    ));
-                }
-            }
-        }
+        split_fireballs(&mut map, moved);
         // for r in &map {
         //     println!("{r:?}");
         // }
@@ -101,4 +59,49 @@ fn move_fireballs(map: &mut Vec<Vec<Vec<(i32, i32, usize)>>>) -> Vec<Vec<Vec<(i3
     }
 
     moved
+}
+
+fn split_fireballs(
+    map: &mut Vec<Vec<Vec<(i32, i32, usize)>>>,
+    moved: Vec<Vec<Vec<(i32, i32, usize)>>>,
+) {
+    for (r, row) in moved.iter().enumerate() {
+        for (c, fireballs) in row.iter().enumerate() {
+            if fireballs.len() == 1 {
+                map[r][c].push(fireballs[0]);
+                continue;
+            }
+
+            let (mut mass, mut speed) = (0, 0);
+            let (mut is_all_even, mut is_all_odd) = (true, true);
+            let len = moved[r][c].len() as i32;
+
+            for (m, s, d) in fireballs {
+                mass += m;
+                speed += s;
+
+                if d & 1 == 0 {
+                    is_all_odd = false;
+                } else {
+                    is_all_even = false;
+                }
+            }
+
+            mass /= 5;
+
+            if mass == 0 {
+                continue;
+            }
+
+            speed /= len;
+
+            for i in 0..4 {
+                map[r][c].push((
+                    mass,
+                    speed,
+                    (i * 2) + usize::from(!(is_all_even || is_all_odd)),
+                ));
+            }
+        }
+    }
 }
