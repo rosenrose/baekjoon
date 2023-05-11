@@ -30,7 +30,7 @@ fn parse_int_vec(buf: &str) -> Vec<i32> {
 
 use std::string::ToString;
 
-fn vec_join<T>(vec: &Vec<T>, seperator: &str) -> String
+fn vec_join<T>(vec: &[T], seperator: &str) -> String
 where
     T: ToString,
 {
