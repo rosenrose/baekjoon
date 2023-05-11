@@ -9,14 +9,13 @@ fn main() {
     let map: Vec<Vec<_>> = (0..size)
         .map(|_| input.by_ref().take(size).collect())
         .collect();
-    let steps: Vec<_> = input.collect();
 
-    let (sum, max_count) = simulate(map, steps);
+    let (sum, max_count) = simulate(map, input);
 
     println!("{sum}\n{max_count}");
 }
 
-fn simulate(mut map: Vec<Vec<i32>>, steps: Vec<i32>) -> (i32, i32) {
+fn simulate(mut map: Vec<Vec<i32>>, steps: impl Iterator<Item = i32>) -> (i32, i32) {
     let size = map.len();
     let (mut sum, mut max_count) = (0, 0);
 
