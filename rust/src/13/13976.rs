@@ -7,7 +7,7 @@ impl Matrix {
         Self(
             self.0
                 .iter()
-                .map(|row| row.iter().map(|num| (num + m) % m).collect())
+                .map(|row| row.iter().map(|num| num.rem_euclid(m)).collect())
                 .collect(),
         )
     }

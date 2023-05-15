@@ -1,6 +1,6 @@
 use std::io;
 
-const DIRS: [(i8, i8); 5] = [(0, 0), (-1, 0), (1, 0), (0, -1), (0, 1)];
+const DIRS: [(i8, i8); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -28,13 +28,13 @@ fn main() {
         })
         .collect();
 
-    for ((r, c), dir) in (1..=m).map(|i| (sharks[i], input())) {
+    for ((r, c), dir) in (1..=m).map(|i| (sharks[i], input() - 1)) {
         map[r][c].0 = Some(dir);
     }
     for i in 1..=m {
         for r in 0..4 {
             for c in 0..4 {
-                precedences[i][r][c] = input();
+                precedences[i][r][c] = input() - 1;
             }
         }
     }
@@ -82,7 +82,7 @@ fn move_sharks(
                 continue;
             };
 
-            let adjacents: Vec<_> = precedences[num][dir - 1]
+            let adjacents: Vec<_> = precedences[num][dir]
                 .iter()
                 .filter_map(|&prefer_dir| {
                     let adj = (

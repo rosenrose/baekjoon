@@ -11,7 +11,7 @@ fn main() {
 
     println!(
         "{}",
-        (fibo_rem(b + 2, &mut memo) - fibo_rem(a + 1, &mut memo) + M) % M
+        (fibo_rem(b + 2, &mut memo) - fibo_rem(a + 1, &mut memo)).rem_euclid(M)
     );
 }
 

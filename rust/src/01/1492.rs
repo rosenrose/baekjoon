@@ -1,4 +1,4 @@
-const M: usize = 1_000_000_007;
+const M: i64 = 1_000_000_007;
 
 fn main() {
     let mut buf = String::new();
@@ -19,13 +19,13 @@ fn main() {
     }
 
     let mut power_sums = [0; MAX + 1];
-    power_sums[0] = n;
+    power_sums[0] = n as i64;
 
     for i in 1..=k {
-        let mut power_sum = (pow_rem(n + 1, i + 1) - 1 + M) % M;
+        let mut power_sum = (pow_rem(n as i64 + 1, i as i64 + 1) - 1).rem_euclid(M);
 
         for j in 0..=i - 1 {
-            power_sum = (power_sum - (combination_rem[i + 1][j] * power_sums[j]) % M + M) % M;
+            power_sum = (power_sum - (combination_rem[i + 1][j] * power_sums[j]) % M).rem_euclid(M);
         }
 
         power_sum = (power_sum * mod_inverse_rem(combination_rem[i + 1][i], M)) % M;
@@ -35,7 +35,7 @@ fn main() {
     println!("{}", power_sums[k]);
 }
 
-fn pow_rem(base: usize, exp: usize) -> usize {
+fn pow_rem(base: i64, exp: i64) -> i64 {
     if exp == 1 {
         return base % M;
     }
@@ -50,7 +50,7 @@ fn pow_rem(base: usize, exp: usize) -> usize {
     }
 }
 
-fn mod_inverse_rem(n: usize, modular: usize) -> usize {
+fn mod_inverse_rem(n: i64, modular: i64) -> i64 {
     pow_rem(n, modular - 2)
 }
 

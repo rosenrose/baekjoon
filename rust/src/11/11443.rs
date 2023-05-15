@@ -9,7 +9,10 @@ fn main() {
     let n: i64 = buf.trim().parse().unwrap();
     let mut memo = HashMap::new();
 
-    println!("{}", (fibo_rem(2 * (n / 2) + 1, &mut memo) - 1 + M) % M);
+    println!(
+        "{}",
+        (fibo_rem(2 * (n / 2) + 1, &mut memo) - 1).rem_euclid(M)
+    );
 }
 
 fn fibo_rem(n: i64, memo: &mut HashMap<i64, i64>) -> i64 {
