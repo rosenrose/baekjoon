@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use std::io;
 
 fn main() {
@@ -8,37 +7,45 @@ fn main() {
 
     for _ in 0..input() {
         let (m, n, k) = (input(), input(), input());
-        let plant_coords: HashSet<_> = (0..k).map(|_| (input(), input())).collect();
+        let mut map = vec![vec![0; m]; n];
 
-        let mut visited = HashSet::new();
+        for (x, y) in (0..k).map(|_| (input(), input())) {
+            map[y][x] = 1;
+        }
+
+        let mut visited = vec![vec![false; m]; n];
         let mut count = 0;
+        let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| map[r][c] == 0 || visited[r][c];
 
-        for &coord in plant_coords.iter() {
-            if visited.contains(&coord) {
-                continue;
-            }
-
-            let mut stack = vec![coord];
-
-            while let Some((x, y)) = stack.pop() {
-                let adjacents = [
-                    (x.saturating_sub(1), y),
-                    (x, y.saturating_sub(1)),
-                    ((x + 1).min(m - 1), y),
-                    (x, (y + 1).min(n - 1)),
-                ];
-
-                for &adj in adjacents.iter().filter(|adj| plant_coords.contains(adj)) {
-                    if visited.contains(&adj) {
-                        continue;
-                    }
-
-                    stack.push(adj);
-                    visited.insert(adj);
+        for y in 0..n {
+            for x in 0..m {
+                if is_pass(y, x, &visited) {
+                    continue;
                 }
-            }
 
-            count += 1;
+                visited[y][x] = true;
+                let mut stack = vec![(y, x)];
+
+                while let Some((r, c)) = stack.pop() {
+                    let adjacents = [
+                        (r.saturating_sub(1), c),
+                        (r, c.saturating_sub(1)),
+                        ((r + 1).min(n - 1), c),
+                        (r, (c + 1).min(m - 1)),
+                    ];
+
+                    for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+                        if is_pass(adj_r, adj_c, &visited) {
+                            continue;
+                        }
+
+                        visited[adj_r][adj_c] = true;
+                        stack.push((adj_r, adj_c));
+                    }
+                }
+
+                count += 1;
+            }
         }
 
         println!("{count}");

@@ -13,27 +13,30 @@ fn main() {
         adjacency_list[v].push(u);
     }
 
-    dfs(&adjacency_list, 1);
+    println!("{}", dfs(&adjacency_list, 1));
 }
 
-fn dfs(graph: &[Vec<usize>], start: usize) {
-    let mut discovered = vec![false; graph.len()];
-    discovered[start] = true;
-
+fn dfs(graph: &[Vec<usize>], start: usize) -> i32 {
+    let mut visited = vec![false; graph.len()];
     let mut stack = vec![start];
     let mut count = 0;
 
     while let Some(node) = stack.pop() {
+        if visited[node] {
+            continue;
+        }
+
+        visited[node] = true;
+        count += 1;
+
         for &neighbor in graph[node].iter() {
-            if discovered[neighbor] {
+            if visited[neighbor] {
                 continue;
             }
 
-            discovered[neighbor] = true;
             stack.push(neighbor);
-            count += 1;
         }
     }
 
-    println!("{count}");
+    count - 1
 }
