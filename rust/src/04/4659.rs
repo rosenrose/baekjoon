@@ -30,7 +30,7 @@ fn is_acceptable(pwd: &str) -> bool {
     }
 
     if ('a'..='z')
-        .filter_map(|c| (c != 'e' && c != 'o').then(|| c.to_string().repeat(2)))
+        .filter_map(|ch| (ch != 'e' && ch != 'o').then(|| ch.to_string().repeat(2)))
         .any(|s| pwd.contains(&s))
     {
         return false;

@@ -11,8 +11,8 @@ fn main() {
     let q = parse_int(input());
     let mut sum_accum = vec![[0; 26]; s.len() + 1];
 
-    for (row, ch) in s.char_indices() {
-        let idx = ch as usize - 'a' as usize;
+    for (row, ch) in s.as_bytes().iter().enumerate() {
+        let idx = (ch - b'a') as usize;
 
         for col in 0..26 {
             sum_accum[row + 1][col] = sum_accum[row][col] + i32::from(col == idx);
@@ -20,7 +20,7 @@ fn main() {
     }
 
     for (ch, left, right) in (0..q).map(|_| (input(), parse_int(input()), parse_int(input()))) {
-        let idx = ch.as_bytes()[0] as usize - 'a' as usize;
+        let idx = (ch.as_bytes()[0] - b'a') as usize;
 
         writeln!(
             output,

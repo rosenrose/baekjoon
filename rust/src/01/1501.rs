@@ -32,22 +32,26 @@ fn main() {
     print!("{output}");
 }
 
-fn get_side_chars_and_count(word: &str) -> ((char, char), [i32; 52]) {
+fn get_side_chars_and_count(word: &str) -> ((u8, u8), [i32; 52]) {
     let mut counts = [0; 52];
-    let mut chars = word.chars();
+    let chars = word.as_bytes();
+    let len = chars.len();
 
-    let first = chars.next().unwrap();
-    let Some(last) = chars.next_back() else {
-        return ((first, '\0'), counts);
-    };
+    let first = chars[0];
 
-    for ch in chars {
-        let idx = ch as usize
-            - if matches!(ch, 'a'..='z') {
-                'a' as usize
+    if len == 1 {
+        return ((first, 0), counts);
+    }
+
+    let last = chars[len - 1];
+
+    for ch in &chars[1..len - 1] {
+        let idx = (ch
+            - if matches!(ch, b'a'..=b'z') {
+                b'a'
             } else {
-                'A' as usize + 26
-            };
+                b'A' + 26
+            }) as usize;
 
         counts[idx] += 1;
     }

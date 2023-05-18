@@ -13,13 +13,13 @@ fn main() {
 
     let mut decrypted_count = [0; 53];
 
-    for ch in input.next().unwrap().chars() {
-        let idx = match ch {
-            'A'..='Z' => ch as usize - 'A' as usize + 1,
-            'a'..='z' => ch as usize - 'a' as usize + 27,
+    for &ch in input.next().unwrap().as_bytes() {
+        let idx = match ch as char {
+            'A'..='Z' => ch - b'A' + 1,
+            'a'..='z' => ch - b'a' + 27,
             ' ' => 0,
             _ => unreachable!(),
-        };
+        } as usize;
 
         decrypted_count[idx] += 1;
     }

@@ -8,7 +8,7 @@ fn main() {
 
         for ch in input.to_lowercase().chars() {
             if ch.is_alphabetic() {
-                counts[ch as usize - 'a' as usize] += 1;
+                counts[(ch as u8 - b'a') as usize] += 1;
             }
         }
 

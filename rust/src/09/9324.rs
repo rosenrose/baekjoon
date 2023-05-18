@@ -8,17 +8,17 @@ fn main() {
         let chars = input.as_bytes();
         let mut counts = [0; 26];
 
-        for i in 0..chars.len() {
-            let idx = chars[i] as usize - 'A' as usize;
+        for (i, ch) in chars.iter().enumerate() {
+            let idx = (ch - b'A') as usize;
             counts[idx] += 1;
 
             if counts[idx] == 3 {
-                let Some(&next) = chars.get(i + 1) else {
+                let Some(next) = chars.get(i + 1) else {
                     println!("{FAKE}");
                     continue 'outer;
                 };
 
-                if chars[i] != next {
+                if ch != next {
                     println!("{FAKE}");
                     continue 'outer;
                 }

@@ -7,19 +7,20 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let get_count = |s: &str| {
-        let mut count = [0_i32; 26];
+    let n: i32 = input().parse().unwrap();
+    let get_counts = |s: &str| {
+        let mut counts = [0_i32; 26];
 
-        for ch in s.chars() {
-            count[ch as usize - 'a' as usize] += 1;
+        for ch in s.as_bytes() {
+            counts[(ch - b'a') as usize] += 1;
         }
 
-        count
+        counts
     };
 
-    for (i, (a, b)) in (1..=parse_int(input())).map(|i| (i, (input(), input()))) {
-        let a_counts = get_count(a);
-        let b_counts = get_count(b);
+    for (i, (a, b)) in (1..=n).map(|i| (i, (input(), input()))) {
+        let a_counts = get_counts(a);
+        let b_counts = get_counts(b);
         let dist: u32 = a_counts
             .iter()
             .zip(b_counts)
@@ -30,8 +31,4 @@ fn main() {
     }
 
     print!("{output}");
-}
-
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
 }

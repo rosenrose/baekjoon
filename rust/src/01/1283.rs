@@ -8,8 +8,8 @@ fn main() {
         let lower = input.to_lowercase();
         let mut i = 0;
 
-        for word in lower.split(' ') {
-            let idx = word.chars().nth(0).unwrap() as usize - 'a' as usize;
+        for word in lower.split(' ').map(str::as_bytes) {
+            let idx = (word[0] - b'a') as usize;
 
             if !shortcuts[idx] {
                 shortcuts[idx] = true;
@@ -22,12 +22,12 @@ fn main() {
             i += word.len() + 1;
         }
 
-        for (i, ch) in lower.char_indices() {
-            if ch == ' ' {
+        for (i, &ch) in lower.as_bytes().iter().enumerate() {
+            if ch == b' ' {
                 continue;
             }
 
-            let idx = ch as usize - 'a' as usize;
+            let idx = (ch - b'a') as usize;
 
             if !shortcuts[idx] {
                 shortcuts[idx] = true;

@@ -15,7 +15,7 @@ fn main() {
 
     let mut current_counts = [0_usize; 4];
     let mut pw_count = 0;
-    let get_index = |ch: u8| match ch as char {
+    let get_idx = |ch: u8| match ch as char {
         'A' => 0,
         'C' => 1,
         'G' => 2,
@@ -26,10 +26,10 @@ fn main() {
     for (i, window) in dna.windows(p).enumerate() {
         if i == 0 {
             for &ch in window {
-                current_counts[get_index(ch)] += 1;
+                current_counts[get_idx(ch)] += 1;
             }
         } else {
-            current_counts[get_index(window[p - 1])] += 1;
+            current_counts[get_idx(window[p - 1])] += 1;
         }
 
         if current_counts
@@ -40,7 +40,7 @@ fn main() {
             pw_count += 1;
         }
 
-        current_counts[get_index(window[0])] -= 1;
+        current_counts[get_idx(window[0])] -= 1;
     }
 
     println!("{pw_count}");

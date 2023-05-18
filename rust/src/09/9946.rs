@@ -6,14 +6,14 @@ fn main() {
     let mut input = buf.lines();
     let mut output = String::new();
 
-    let char_count = |s: &str| {
-        let mut count = [0; 26];
+    let get_counts = |s: &str| {
+        let mut counts = [0; 26];
 
-        for ch in s.chars() {
-            count[ch as usize - 'a' as usize] += 1;
+        for ch in s.as_bytes() {
+            counts[(ch - b'a') as usize] += 1;
         }
 
-        count
+        counts
     };
 
     for (i, (a, b)) in (1..).map(|i| (i, (input.next().unwrap(), input.next().unwrap()))) {
@@ -24,7 +24,7 @@ fn main() {
         writeln!(
             output,
             "Case {i}: {}",
-            if char_count(a) == char_count(b) {
+            if get_counts(a) == get_counts(b) {
                 "same"
             } else {
                 "different"

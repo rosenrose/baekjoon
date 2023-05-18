@@ -6,20 +6,20 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let n: i32 = input().parse().unwrap();
-    let get_count = |s: &str| {
-        let mut count = [0; 26];
+    let get_counts = |s: &str| {
+        let mut counts = [0; 26];
 
-        for ch in s.chars() {
-            count[ch as usize - 'a' as usize] += 1;
+        for ch in s.as_bytes() {
+            counts[(ch - b'a') as usize] += 1;
         }
 
-        count
+        counts
     };
 
     for (a, b) in (0..n).map(|_| (input(), input())) {
         println!(
             "{a} & {b} are {}",
-            if get_count(a) == get_count(b) {
+            if get_counts(a) == get_counts(b) {
                 "anagrams."
             } else {
                 "NOT anagrams."

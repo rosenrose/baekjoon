@@ -6,20 +6,16 @@ fn main() {
     let mut output = String::new();
 
     for input in buf.lines().take_while(|&input| input != "*") {
-        let mut letters = [false; 26];
+        let mut chars = [false; 26];
 
-        for ch in input.chars() {
-            if ch == ' ' {
-                continue;
-            }
-
-            letters[ch as usize - 'a' as usize] = true;
+        for ch in input.as_bytes().iter().filter(|&&ch| ch != b' ') {
+            chars[(ch - b'a') as usize] = true;
         }
 
         writeln!(
             output,
             "{}",
-            if letters.iter().all(|&b| b) { 'Y' } else { 'N' }
+            if chars.iter().all(|&b| b) { 'Y' } else { 'N' }
         )
         .unwrap();
     }

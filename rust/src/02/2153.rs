@@ -2,15 +2,15 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let sum: i32 = buf
-        .trim()
-        .chars()
+    let input = buf.trim().as_bytes();
+    let sum: i32 = input
+        .iter()
         .map(|ch| {
-            if matches!(ch, 'a'..='z') {
-                ch as i32 - 'a' as i32 + 1
+            (if matches!(ch, b'a'..=b'z') {
+                ch - b'a' + 1
             } else {
-                ch as i32 - 'A' as i32 + 27
-            }
+                ch - b'A' + 27
+            }) as i32
         })
         .sum();
 
