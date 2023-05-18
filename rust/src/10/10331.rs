@@ -26,7 +26,7 @@ fn calculate(postfix: String) -> i32 {
 
     for token in postfix.chars() {
         if !matches!(token, '+' | '-' | '*' | '/') {
-            stack.push(token as i32 - '0' as i32);
+            stack.push((token as u8 - b'0') as i32);
             continue;
         }
 

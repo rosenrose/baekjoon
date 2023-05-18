@@ -36,9 +36,13 @@ fn main() {
 
     for _ in 0..f {
         let (file, perm, owner, group) = (input(), input(), input(), input());
-        let perm: Vec<_> = perm.chars().map(|ch| ch as u8 - '0' as u8).collect();
+        let mut perms = [0; 3];
 
-        file_infos.insert(file, (perm, owner, group));
+        for (i, ch) in perm.as_bytes().iter().enumerate() {
+            perms[i] = ch - b'0';
+        }
+
+        file_infos.insert(file, (perms, owner, group));
     }
     // println!("{group_infos:?}\n{file_infos:?}");
     for _ in 0..parse_int(input()) {
@@ -50,13 +54,13 @@ fn main() {
             _ => unreachable!(),
         };
 
-        let (perm, owner, group) = &file_infos[file];
+        let (perms, owner, group) = &file_infos[file];
         let permission = if owner == &user {
-            perm[0]
+            perms[0]
         } else if group_infos[group].contains(&user) {
-            perm[1]
+            perms[1]
         } else {
-            perm[2]
+            perms[2]
         };
 
         writeln!(output, "{}", u8::from(op & permission == op)).unwrap();

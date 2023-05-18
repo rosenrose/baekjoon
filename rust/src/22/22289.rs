@@ -53,7 +53,7 @@ impl BigInt {
             input
                 .as_bytes()
                 .rchunks(DIGITS)
-                .map(|chunk| chunk.iter().fold(0, |acc, &ch| acc * 10 + (ch - '0' as u8)))
+                .map(|chunk| chunk.iter().fold(0, |acc, ch| acc * 10 + (ch - b'0')))
                 .collect(),
         )
     }

@@ -34,8 +34,8 @@ fn main() {
         let non_repeat = it.next().unwrap();
         let repeating = it.next().unwrap();
 
-        for (i, c) in non_repeat.char_indices() {
-            fraction += Fraction(c as i32 - '0' as i32, 10_i32.pow(i as u32 + 1));
+        for (i, ch) in non_repeat.as_bytes().iter().enumerate() {
+            fraction += Fraction((ch - b'0') as i32, 10_i32.pow(i as u32 + 1));
         }
 
         fraction += Fraction(

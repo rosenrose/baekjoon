@@ -4,8 +4,9 @@ fn main() {
 
     let sum: i32 = buf
         .trim()
-        .chars()
-        .map(|c| (c as i32 - '0' as i32).pow(5))
+        .as_bytes()
+        .iter()
+        .map(|ch| ((ch - b'0') as i32).pow(5))
         .sum();
 
     println!("{sum}");

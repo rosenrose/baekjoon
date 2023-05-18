@@ -23,10 +23,13 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let (integer, decimal) = buf.trim().split_once('.').unwrap();
+    let integer = integer.parse().unwrap();
     let fraction = decimal
-        .char_indices()
-        .map(|(i, c)| Fraction(c as i64 - '0' as i64, 10_i64.pow(i as u32 + 1)))
-        .fold(Fraction(integer.parse().unwrap(), 1), |acc, a| acc + a);
+        .as_bytes()
+        .iter()
+        .enumerate()
+        .map(|(i, ch)| Fraction((ch - b'0') as i64, 10_i64.pow(i as u32 + 1)))
+        .fold(Fraction(integer, 1), |acc, a| acc + a);
 
     let papers = fraction.1;
     let mut sum = fraction.0;

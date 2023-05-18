@@ -19,8 +19,7 @@ fn get_house_counts(map: &[&[u8]]) -> Vec<i32> {
     let mut house_counts = Vec::new();
     let mut visited = vec![vec![false; n]; n];
 
-    let is_pass =
-        |r: usize, c: usize, visited: &[Vec<bool>]| map[r][c] as char == '0' || visited[r][c];
+    let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| map[r][c] == b'0' || visited[r][c];
 
     for y in 0..n {
         for x in 0..n {

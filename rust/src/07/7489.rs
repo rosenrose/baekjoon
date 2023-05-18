@@ -46,7 +46,7 @@ fn main() {
             .to_string()
             .chars()
             .rev()
-            .find(|&c| c != '0')
+            .find(|&ch| ch != '0')
             .unwrap();
 
         println!("{non_zero}");

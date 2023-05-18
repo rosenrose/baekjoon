@@ -1,49 +1,68 @@
-use std::collections::VecDeque;
+use std::fmt;
+use std::ops::Add;
+
+const DIGITS: usize = 37;
+const POW: i128 = 10_i128.pow(DIGITS as u32);
+
+struct BigInt(Vec<i128>);
+
+impl BigInt {
+    fn parse(input: &str) -> Self {
+        Self(
+            input
+                .as_bytes()
+                .rchunks(DIGITS)
+                .map(|chunk| {
+                    chunk
+                        .iter()
+                        .fold(0, |acc, ch| acc * 10 + (ch - b'0') as i128)
+                })
+                .collect(),
+        )
+    }
+}
+
+impl Add for BigInt {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self::Output {
+        let mut carry = 0;
+        let mut sum: Vec<_> = (0..self.0.len().max(other.0.len()))
+            .map(|i| {
+                let temp = carry + self.0.get(i).unwrap_or(&0) + other.0.get(i).unwrap_or(&0);
+                carry = temp / POW;
+
+                temp % POW
+            })
+            .collect();
+
+        if carry > 0 {
+            sum.push(carry);
+        }
+
+        Self(sum)
+    }
+}
+
+impl fmt::Display for BigInt {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.0.iter().rev().enumerate().for_each(|(i, num)| {
+            if i == 0 {
+                write!(f, "{num}").unwrap();
+            } else {
+                write!(f, "{num:0DIGITS$}").unwrap();
+            }
+        });
+
+        Ok(())
+    }
+}
 
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let mut nums = buf.split_whitespace().map(|s| {
-        s.chars()
-            .map(|c| c as i32 - '0' as i32)
-            .collect::<VecDeque<_>>()
-    });
+    let (a, b) = buf.trim().split_once(' ').unwrap();
 
-    let a = nums.next().unwrap();
-    let b = nums.next().unwrap();
-    let sum = add_by_array(a, b);
-
-    for i in sum {
-        print!("{i}");
-    }
-}
-
-fn add_by_array(mut a: VecDeque<i32>, mut b: VecDeque<i32>) -> VecDeque<i32> {
-    let longer = a.len().max(b.len());
-
-    while a.len() < longer {
-        a.push_front(0);
-    }
-    while b.len() < longer {
-        b.push_front(0);
-    }
-
-    let mut sum: VecDeque<_> = a.iter().zip(b).map(|(a, b)| a + b).collect();
-
-    for i in (1..longer).rev() {
-        if sum[i] < 10 {
-            continue;
-        }
-
-        sum[i - 1] += sum[i] / 10;
-        sum[i] %= 10;
-    }
-
-    while sum[0] >= 10 {
-        sum.push_front(sum[0] / 10);
-        sum[1] %= 10;
-    }
-
-    sum
+    println!("{}", BigInt::parse(a) + BigInt::parse(b));
 }

@@ -66,7 +66,7 @@ fn calculate((p, q, r): (u8, u8, u8), postfix: &str) -> u8 {
 
     for token in postfix.chars() {
         match token {
-            '0' | '1' | '2' => stack.push(token as u8 - '0' as u8),
+            '0' | '1' | '2' => stack.push(token as u8 - b'0'),
             'P' => stack.push(p),
             'Q' => stack.push(q),
             'R' => stack.push(r),

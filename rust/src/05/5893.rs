@@ -7,9 +7,10 @@ fn main() {
     let n_padded = format!("0000{n}");
 
     let mut n_multiple_17: Vec<_> = n_multiple_16
-        .chars()
-        .zip(n_padded.chars())
-        .map(|(a, b)| a as u8 + b as u8 - '0' as u8 * 2)
+        .as_bytes()
+        .iter()
+        .zip(n_padded.as_bytes())
+        .map(|(a, b)| a + b - (b'0' * 2))
         .collect();
 
     for i in (1..n_multiple_17.len()).rev() {
@@ -24,7 +25,7 @@ fn main() {
         n_multiple_17[1] %= 2;
     }
 
-    for c in n_multiple_17 {
-        print!("{c}");
+    for bin in n_multiple_17 {
+        print!("{bin}");
     }
 }

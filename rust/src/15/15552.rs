@@ -1,9 +1,11 @@
 use std::fmt::Write;
-use std::io;
+use std::io::{self, Read};
 
 fn main() {
-    let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut buf = Vec::new();
+    io::stdin().read_to_end(&mut buf).unwrap();
+
+    let mut input = buf.split(|&ch| matches!(ch, b' ' | b'\n')).map(parse_int);
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
@@ -12,4 +14,10 @@ fn main() {
     }
 
     print!("{output}");
+}
+
+fn parse_int(input: &[u8]) -> i32 {
+    input
+        .iter()
+        .fold(0, |acc, &ch| acc * 10 + (ch - b'0') as i32)
 }

@@ -10,8 +10,9 @@ fn main() {
 
             s = s
                 .to_string()
-                .chars()
-                .map(|c| c as i32 - '0' as i32)
+                .as_bytes()
+                .iter()
+                .map(|ch| (ch - b'0') as i32)
                 .product();
         }
 

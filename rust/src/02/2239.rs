@@ -8,9 +8,11 @@ fn main() {
     let mut board: Vec<Vec<_>> = input
         .enumerate()
         .map(|(i, row)| {
-            row.char_indices()
-                .map(|(j, c)| {
-                    let num = c as u8 - '0' as u8;
+            row.as_bytes()
+                .iter()
+                .enumerate()
+                .map(|(j, ch)| {
+                    let num = ch - b'0';
 
                     if num == 0 {
                         empty_cells.push((i, j));

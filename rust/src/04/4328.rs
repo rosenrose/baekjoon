@@ -6,8 +6,8 @@ impl BigInt {
     fn rem(input: &str, m: u32, radix: u32) -> u32 {
         let mut pow_rem = 1;
 
-        input.chars().rev().fold(0, |acc, ch| {
-            let num = ch as u32 - '0' as u32;
+        input.as_bytes().iter().rev().fold(0, |acc, ch| {
+            let num = (ch - b'0') as u32;
             let rem = (num * pow_rem) % m;
             pow_rem = (pow_rem * radix) % m;
 

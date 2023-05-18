@@ -16,7 +16,7 @@ fn main() {
         if matches!(b_num, 0..=9) {
             print!("{b_num}")
         } else {
-            print!("{}", ('A' as u8 + (b_num - 10)) as char)
+            print!("{}", (b'A' + (b_num - 10)) as char)
         }
     });
 }

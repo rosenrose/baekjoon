@@ -3,7 +3,12 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n = buf.trim();
-    let digit_product = |s: &str| s.chars().map(|c| c as i32 - '0' as i32).product::<i32>();
+    let digit_product = |s: &str| {
+        s.as_bytes()
+            .iter()
+            .map(|ch| (ch - b'0') as i32)
+            .product::<i32>()
+    };
 
     println!(
         "{}",

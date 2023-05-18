@@ -23,11 +23,10 @@ impl BigInt {
                 .rchunks(DIGITS)
                 .map(|chunk| {
                     chunk.iter().fold(0, |acc, &ch| {
-                        if ch as char == '-' {
-                            acc
-                        } else {
-                            acc * 10 + (ch as i128 - '0' as i128)
+                        if ch == b'-' {
+                            return acc;
                         }
+                        acc * 10 + (ch - b'0') as i128
                     })
                 })
                 .collect(),

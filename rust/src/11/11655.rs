@@ -4,13 +4,13 @@ fn main() {
 
     let encrypted: String = buf
         .chars()
-        .map(|c| {
-            if matches!(c, 'a'..='z' | 'A'..='Z') {
-                let offset = if matches!(c, 'a'..='z') { 'a' } else { 'A' } as u8;
+        .map(|ch| {
+            if matches!(ch, 'a'..='z' | 'A'..='Z') {
+                let offset = if matches!(ch, 'a'..='z') { b'a' } else { b'A' };
 
-                ((c as u8 - offset + 13) % 26 + offset) as char
+                ((ch as u8 - offset + 13) % 26 + offset) as char
             } else {
-                c
+                ch
             }
         })
         .collect();

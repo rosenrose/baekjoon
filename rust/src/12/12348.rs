@@ -19,6 +19,11 @@ fn main() {
 }
 
 fn d(n: i64) -> i64 {
-    let digit_sum: i64 = n.to_string().chars().map(|c| c as i64 - '0' as i64).sum();
+    let digit_sum: i64 = n
+        .to_string()
+        .as_bytes()
+        .iter()
+        .map(|ch| (ch - b'0') as i64)
+        .sum();
     n + digit_sum
 }

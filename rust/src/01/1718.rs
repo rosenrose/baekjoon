@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.lines().map(str::as_bytes);
 
     let (plain, key) = (input.next().unwrap(), input.next().unwrap());
-    let offset = 'a' as u8;
+    let offset = b'a';
 
     let encrypted: String = plain
         .chunks(key.len())

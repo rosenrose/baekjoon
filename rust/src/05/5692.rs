@@ -7,10 +7,11 @@ fn main() {
 
     for input in buf.lines().take_while(|&input| input != "0") {
         let num: i32 = input
-            .chars()
+            .as_bytes()
+            .iter()
             .rev()
             .enumerate()
-            .map(|(i, c)| (c as u8 - '0' as u8) as i32 * (1..=i as i32 + 1).product::<i32>())
+            .map(|(i, ch)| (ch - b'0') as i32 * (1..=i as i32 + 1).product::<i32>())
             .sum();
 
         writeln!(output, "{num}").unwrap();

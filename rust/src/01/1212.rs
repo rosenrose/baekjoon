@@ -6,8 +6,8 @@ fn main() {
 
     let mut output = String::new();
 
-    buf.trim().char_indices().for_each(|(i, c)| {
-        let digit = c as u8 - '0' as u8;
+    for (i, ch) in buf.trim().as_bytes().iter().enumerate() {
+        let digit = ch - b'0';
 
         (if i == 0 {
             write!(output, "{digit:b}")
@@ -15,7 +15,7 @@ fn main() {
             write!(output, "{digit:03b}")
         })
         .unwrap();
-    });
+    }
 
     print!("{output}");
 }

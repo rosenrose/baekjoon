@@ -19,10 +19,11 @@ impl BigFloat {
 
     fn parse(input: &str) -> Self {
         let nums: VecDeque<_> = input
-            .chars()
+            .as_bytes()
+            .iter()
             .rev()
-            .skip_while(|&ch| ch == '0')
-            .filter_map(|ch| (ch != '.').then_some(ch as i8 - '0' as i8))
+            .skip_while(|&&ch| ch == b'0')
+            .filter_map(|&ch| (ch != b'.').then_some((ch - b'0') as i8))
             .collect();
 
         let exp = if input.starts_with("0.") {

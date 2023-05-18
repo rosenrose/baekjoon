@@ -25,9 +25,10 @@ impl BigFloat {
         let input = input.trim_start_matches('-');
 
         let nums: VecDeque<_> = input
-            .chars()
+            .as_bytes()
+            .iter()
             .rev()
-            .filter_map(|ch| (ch != '.').then_some(ch as i8 - '0' as i8))
+            .filter_map(|&ch| (ch != b'.').then_some((ch - b'0') as i8))
             .collect();
 
         let point = if input.starts_with("0.") {
@@ -240,7 +241,8 @@ fn main() {
         let sum = input
             .by_ref()
             .take_while(|&input| input != "0")
-            .fold(BigFloat::new(), |acc, num| &acc + &BigFloat::parse(num));
+            .map(BigFloat::parse)
+            .fold(BigFloat::new(), |acc, num| &acc + &num);
 
         println!("{sum}");
     }

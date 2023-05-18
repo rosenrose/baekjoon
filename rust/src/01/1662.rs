@@ -35,7 +35,7 @@ fn unzipped_len(input: &str) -> i32 {
             _ => {
                 if count == 0 {
                     len += 1;
-                    repeat_times = ch as i32 - '0' as i32;
+                    repeat_times = (ch as u8 - b'0') as i32;
                 }
             }
         }

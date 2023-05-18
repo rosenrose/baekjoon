@@ -55,7 +55,7 @@ fn product(
                 match action {
                     "ADD" => ret.push(arg),
                     "DEL" => {
-                        let idx = arg as usize - '0' as usize;
+                        let idx = (arg as u8 - b'0') as usize;
 
                         if idx >= ret.len() {
                             result.push("ERROR".to_owned());

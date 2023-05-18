@@ -12,7 +12,14 @@ impl BigInt {
     }
 
     fn parse(input: &str) -> Self {
-        Self(input.chars().rev().map(|c| c as i8 - '0' as i8).collect())
+        Self(
+            input
+                .as_bytes()
+                .iter()
+                .rev()
+                .map(|ch| (ch - b'0') as i8)
+                .collect(),
+        )
     }
 
     fn zero_justify(&mut self) {

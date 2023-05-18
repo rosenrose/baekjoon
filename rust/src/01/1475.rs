@@ -4,8 +4,8 @@ fn main() {
 
     let mut counts = [0; 10];
 
-    for ch in buf.trim().chars() {
-        counts[ch as usize - '0' as usize] += 1;
+    for ch in buf.trim().as_bytes() {
+        counts[(ch - b'0') as usize] += 1;
     }
 
     let count_69 = counts[6] + counts[9];

@@ -2,13 +2,12 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.lines();
+    let offset = b'A';
 
-    for (i, name) in input.enumerate().skip(1) {
-        let offset = 'A' as u8;
+    for (i, name) in buf.lines().map(str::as_bytes).enumerate().skip(1) {
         let new_name: String = name
-            .chars()
-            .map(|c| ((c as u8 - offset + 1) % 26 + offset) as char)
+            .iter()
+            .map(|ch| ((ch - offset + 1) % 26 + offset) as char)
             .collect();
 
         println!("String #{i}");

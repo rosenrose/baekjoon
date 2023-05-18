@@ -24,9 +24,10 @@ impl BigInt {
     fn parse(input: &str) -> Self {
         let mut result = Self {
             nums: input
-                .chars()
+                .as_bytes()
+                .iter()
                 .rev()
-                .filter_map(|c| (c != '-').then_some(c as i8 - '0' as i8))
+                .filter_map(|&ch| (ch != b'-').then_some((ch - b'0') as i8))
                 .collect(),
             sign: if input.starts_with('-') { -1 } else { 1 },
         };

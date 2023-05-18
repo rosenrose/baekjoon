@@ -10,7 +10,7 @@ fn main() {
             .chars()
             .rev()
             .enumerate()
-            .map(|(i, c)| (c as u8 - 'A' as u8) as i32 * 26_i32.pow(i as u32))
+            .map(|(i, ch)| (ch as u8 - b'A') as i32 * 26_i32.pow(i as u32))
             .sum();
 
         let second_value: i32 = second[1..].parse().unwrap();

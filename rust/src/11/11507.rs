@@ -12,7 +12,7 @@ fn main() {
             'T' => 3,
             _ => unreachable!(),
         };
-        let number = ((card[1] - '0' as u8) * 10 + card[2] - '0' as u8) as usize - 1;
+        let number = ((card[1] - b'0') * 10 + card[2] - b'0') as usize - 1;
 
         if cards[shape][number] {
             println!("GRESKA");

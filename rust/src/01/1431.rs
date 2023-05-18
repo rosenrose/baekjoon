@@ -5,8 +5,9 @@ fn main() {
     let mut numbers: Vec<_> = buf.lines().skip(1).collect();
 
     let digit_sum = |s: &str| {
-        s.chars()
-            .filter_map(|ch| ch.is_numeric().then_some(c as i32 - '0' as i32))
+        s.as_bytes()
+            .iter()
+            .filter_map(|ch| matches!(ch, b'0'..=b'9').then_some((ch - b'0') as i32))
             .sum::<i32>()
     };
 

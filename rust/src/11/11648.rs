@@ -7,8 +7,9 @@ fn main() {
 
     while num.len() > 1 {
         num = num
-            .chars()
-            .map(|c| c as i32 - '0' as i32)
+            .as_bytes()
+            .iter()
+            .map(|ch| (ch - b'0') as i32)
             .product::<i32>()
             .to_string();
 

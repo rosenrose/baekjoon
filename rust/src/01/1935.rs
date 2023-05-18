@@ -5,14 +5,13 @@ fn main() {
     let mut input = buf.lines();
 
     let (_, formula) = (input.next(), input.next().unwrap());
-    let nums: Vec<f64> = input.flat_map(str::parse).collect();
+    let nums: Vec<_> = input.flat_map(str::parse::<f64>).collect();
 
-    let offset = 'A' as u8;
     let mut stack = Vec::new();
 
     for ch in formula.chars() {
         if matches!(ch, 'A'..='Z') {
-            stack.push(nums[(ch as u8 - offset) as usize]);
+            stack.push(nums[(ch as u8 - b'A') as usize]);
             continue;
         }
 

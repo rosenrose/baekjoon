@@ -16,6 +16,11 @@ fn main() {
 }
 
 fn func(n: i32) -> i32 {
-    let digit_sum: i32 = n.to_string().chars().map(|c| c as i32 - '0' as i32).sum();
+    let digit_sum: i32 = n
+        .to_string()
+        .as_bytes()
+        .iter()
+        .map(|ch| (ch - b'0') as i32)
+        .sum();
     n + digit_sum
 }

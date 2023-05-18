@@ -56,7 +56,7 @@ impl BigInt {
                 .map(|chunk| {
                     chunk
                         .iter()
-                        .fold(0, |acc, &ch| acc * 10 + (ch as u16 - '0' as u16))
+                        .fold(0, |acc, ch| acc * 10 + (ch - b'0') as u16)
                 })
                 .collect(),
         )

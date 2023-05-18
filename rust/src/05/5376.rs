@@ -33,8 +33,8 @@ fn main() {
         let mut it = decimal.split(['(', ')']);
         let non_repeat = it.next().unwrap();
 
-        for (i, c) in non_repeat.char_indices() {
-            fraction += Fraction(c as i64 - '0' as i64, 10_i64.pow(i as u32 + 1));
+        for (i, ch) in non_repeat.as_bytes().iter().enumerate() {
+            fraction += Fraction((ch - b'0') as i64, 10_i64.pow(i as u32 + 1));
         }
 
         if let Some(repeating) = it.next() {

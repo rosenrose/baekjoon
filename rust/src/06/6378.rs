@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
 
     for num in buf.lines().take_while(|&num| num != "0") {
-        let mut sum: i32 = num.chars().map(|c| c as i32 - '0' as i32).sum();
+        let mut sum: i32 = num.as_bytes().iter().map(|ch| (ch - b'0') as i32).sum();
 
         if sum < 10 {
             println!("{sum}");

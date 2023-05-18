@@ -17,7 +17,7 @@ fn main() {
 fn convert(num: &str, count: &mut i32) -> i32 {
     *count += 1;
 
-    let sum: i32 = num.chars().map(|c| c as i32 - '0' as i32).sum();
+    let sum: i32 = num.as_bytes().iter().map(|ch| (ch - b'0') as i32).sum();
 
     if sum < 10 {
         sum

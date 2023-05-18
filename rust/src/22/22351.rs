@@ -11,7 +11,7 @@ fn main() {
         match s_len {
             1 => println!("{num} {num}"),
             2 => {
-                let mut digits = s.chars().map(|c| c as u8 - '0' as u8);
+                let mut digits = s.as_bytes().iter().map(|ch| ch - b'0');
                 let (a, b) = (digits.next().unwrap(), digits.next().unwrap());
 
                 if b - a == 1 {

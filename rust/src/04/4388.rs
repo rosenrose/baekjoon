@@ -2,15 +2,15 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace();
+    let mut input = buf.split_ascii_whitespace().map(str::as_bytes);
 
     while let (Some(a), Some(b)) = (input.next(), input.next()) {
-        if (a, b) == ("0", "0") {
+        if (a, b) == (b"0", b"0") {
             return;
         }
 
-        let a: Vec<_> = a.chars().rev().map(|ch| ch as u8 - '0' as u8).collect();
-        let b: Vec<_> = b.chars().rev().map(|ch| ch as u8 - '0' as u8).collect();
+        let a: Vec<_> = a.iter().rev().map(|ch| ch - b'0').collect();
+        let b: Vec<_> = b.iter().rev().map(|ch| ch - b'0').collect();
         let mut count = 0;
         let mut carry = 0;
 

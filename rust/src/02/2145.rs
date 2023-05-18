@@ -6,7 +6,12 @@ fn main() {
 
     for mut num in input.take_while(|&n| n != 0) {
         while num >= 10 {
-            num = num.to_string().chars().map(|c| c as i32 - '0' as i32).sum();
+            num = num
+                .to_string()
+                .as_bytes()
+                .iter()
+                .map(|ch| (ch - b'0') as i32)
+                .sum();
         }
 
         println!("{num}");

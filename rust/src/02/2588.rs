@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.lines();
 
     let (a, b) = (parse_int(input.next().unwrap()), input.next().unwrap());
-    let result = b.chars().rev().map(|ch| (ch as i32 - '0' as i32) * a);
+    let result = b.as_bytes().iter().rev().map(|ch| (ch - b'0') as i32 * a);
 
     for r in result {
         println!("{r}");

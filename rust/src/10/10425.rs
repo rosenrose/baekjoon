@@ -7,8 +7,8 @@ impl BigInt {
     fn rem(input: &str, m: i64) -> i64 {
         let mut pow_rem = 1;
 
-        input.chars().rev().fold(0, |acc, ch| {
-            let num = ch as i64 - '0' as i64;
+        input.as_bytes().iter().rev().fold(0, |acc, ch| {
+            let num = (ch - b'0') as i64;
             let rem = (num * pow_rem) % m;
             pow_rem = (pow_rem * 10) % m;
 

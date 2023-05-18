@@ -94,7 +94,7 @@ fn main() {
     let n: i128 = buf.trim().parse().unwrap();
     // let bin = (0..n - 1).fold(1.to_string(), |acc, _| {
     //     acc.chars()
-    //         .map(|c| if c == '0' { "10" } else { "01" })
+    //         .map(|ch| if ch == '0' { "10" } else { "01" })
     //         .collect()
     // });
     // println!("{bin}");

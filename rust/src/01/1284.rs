@@ -7,8 +7,8 @@ fn main() {
     for num in input.take_while(|&num| num != "0") {
         let width = num
             .chars()
-            .map(|c| {
-                (match c {
+            .map(|ch| {
+                (match ch {
                     '1' => 2,
                     '0' => 4,
                     _ => 3,

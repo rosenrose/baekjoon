@@ -5,10 +5,12 @@ fn main() {
 
     for input in buf.lines().take_while(|&input| input != "#") {
         let checksum: usize = input
-            .char_indices()
-            .map(|(i, c)| {
-                if matches!(c, 'A'..='Z') {
-                    (i + 1) * (c as u8 - 'A' as u8 + 1) as usize
+            .as_bytes()
+            .iter()
+            .enumerate()
+            .map(|(i, ch)| {
+                if matches!(ch, b'A'..=b'Z') {
+                    (i + 1) * (ch - b'A' + 1) as usize
                 } else {
                     0
                 }
