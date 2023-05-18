@@ -177,10 +177,11 @@ impl fmt::Display for BigInt {
 
         for (i, num) in self.0.iter().rev().enumerate() {
             if i == 0 {
-                write!(output, "{num}").unwrap();
+                write!(output, "{num}")
             } else {
-                write!(output, "{num:0DIGITS$}").unwrap();
+                write!(output, "{num:0DIGITS$}")
             }
+            .unwrap();
         }
 
         write!(f, "{output}")

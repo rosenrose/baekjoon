@@ -150,9 +150,9 @@ impl fmt::Display for BigInt {
             write!(f, "-").unwrap();
         }
 
-        self.nums.iter().rev().for_each(|num| {
+        for num in self.nums.iter().rev() {
             write!(f, "{num}").unwrap();
-        });
+        }
 
         Ok(())
     }

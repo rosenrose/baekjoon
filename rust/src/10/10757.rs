@@ -46,13 +46,14 @@ impl Add for BigInt {
 
 impl fmt::Display for BigInt {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.0.iter().rev().enumerate().for_each(|(i, num)| {
+        for (i, num) in self.0.iter().rev().enumerate() {
             if i == 0 {
-                write!(f, "{num}").unwrap();
+                write!(f, "{num}")
             } else {
-                write!(f, "{num:0DIGITS$}").unwrap();
+                write!(f, "{num:0DIGITS$}")
             }
-        });
+            .unwrap()
+        }
 
         Ok(())
     }

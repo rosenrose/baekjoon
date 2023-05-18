@@ -84,9 +84,9 @@ impl PartialOrd for BigInt {
 
 impl fmt::Display for BigInt {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.0.iter().rev().for_each(|num| {
+        for num in self.0.iter().rev() {
             write!(f, "{num}").unwrap();
-        });
+        }
 
         Ok(())
     }

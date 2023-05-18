@@ -150,13 +150,14 @@ impl fmt::Display for BigInt {
             write!(f, "-").unwrap();
         }
 
-        self.nums.iter().rev().enumerate().for_each(|(i, num)| {
+        for (i, num) in self.nums.iter().rev().enumerate() {
             if i == 0 {
-                write!(f, "{num}").unwrap();
+                write!(f, "{num}")
             } else {
-                write!(f, "{num:0DIGITS$}").unwrap();
+                write!(f, "{num:0DIGITS$}")
             }
-        });
+            .unwrap();
+        }
 
         Ok(())
     }
