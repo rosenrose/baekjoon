@@ -29,14 +29,14 @@ fn get_max_area(heights: &[i32]) -> usize {
 
     while 0 < left || right < len - 1 {
         // println!("{heights:?} {left} {right}");
-        let left_height = if left > 0 { heights[left - 1] } else { -1 };
-        let right_height = *heights.get(right + 1).unwrap_or(&-1);
+        let left_height = (left > 0).then(|| heights[left - 1]);
+        let right_height = heights.get(right + 1).copied();
 
         if left_height > right_height {
-            mid_height = mid_height.min(left_height);
+            mid_height = mid_height.min(left_height.unwrap());
             left = left.saturating_sub(1);
         } else {
-            mid_height = mid_height.min(right_height);
+            mid_height = mid_height.min(right_height.unwrap());
             right = (right + 1).min(len - 1);
         }
 
