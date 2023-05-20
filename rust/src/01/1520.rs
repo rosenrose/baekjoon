@@ -9,8 +9,8 @@ fn main() {
         input.next().unwrap() as usize,
     );
     let map: Vec<Vec<_>> = (0..m).map(|_| input.by_ref().take(n).collect()).collect();
-    let mut memo = vec![vec![-1; n]; m];
-    memo[m - 1][n - 1] = 1;
+    let mut memo = vec![vec![None; n]; m];
+    memo[m - 1][n - 1] = Some(1);
 
     println!("{}", get_count(0, 0, &map, &mut memo));
     // for r in &memo {
@@ -18,9 +18,9 @@ fn main() {
     // }
 }
 
-fn get_count(r: usize, c: usize, map: &[Vec<i32>], memo: &mut Vec<Vec<i32>>) -> i32 {
-    if memo[r][c] != -1 {
-        return memo[r][c];
+fn get_count(r: usize, c: usize, map: &[Vec<i32>], memo: &mut Vec<Vec<Option<i32>>>) -> i32 {
+    if let Some(count) = memo[r][c] {
+        return count;
     }
 
     let adjacents = [
@@ -37,6 +37,6 @@ fn get_count(r: usize, c: usize, map: &[Vec<i32>], memo: &mut Vec<Vec<i32>>) -> 
         })
         .sum();
 
-    memo[r][c] = count;
+    memo[r][c] = Some(count);
     count
 }
