@@ -8,8 +8,8 @@ fn main() {
     let bomb_len = bomb.len();
     let mut stack = String::new();
 
-    for c in s.chars() {
-        stack.push(c);
+    for ch in s.chars() {
+        stack.push(ch);
 
         if &stack[stack.len().saturating_sub(bomb_len)..] == bomb {
             stack.truncate(stack.len() - bomb_len);

@@ -1,5 +1,4 @@
-use std::cmp::Reverse;
-use std::collections::BinaryHeap;
+use std::collections::VecDeque;
 use std::fmt::Write;
 use std::io;
 
@@ -19,13 +18,7 @@ fn main() {
         adjacency_array.1[i] = (v as i32, prev);
     }
 
-    let distances = dijkstra(&adjacency_array, x, k);
-    let mut result: Vec<_> = distances
-        .iter()
-        .enumerate()
-        .skip(1)
-        .filter_map(|(node, &d)| (d == k).then_some(node))
-        .collect();
+    let mut result = bfs(&adjacency_array, x, k);
 
     if result.is_empty() {
         println!("-1");
@@ -41,35 +34,34 @@ fn main() {
     print!("{output}");
 }
 
-fn dijkstra(
-    (nodes, edges): &(Vec<i32>, Vec<(i32, i32)>),
-    start: usize,
-    target_dist: i32,
-) -> Vec<i32> {
-    let mut distances = vec![i32::MAX; nodes.len()];
-    distances[start] = 0;
+fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: usize, target_dist: i32) -> Vec<i32> {
+    let mut result = Vec::new();
+    let mut visited = vec![false; nodes.len()];
+    let mut queue = VecDeque::from([(start as i32, 0)]);
 
-    let mut queue = BinaryHeap::from([Reverse((0, start as i32))]);
+    while let Some((node, dist)) = queue.pop_front() {
+        let node_idx = node as usize;
+        let mut edge = nodes[node_idx];
 
-    while let Some(Reverse((dist, node))) = queue.pop() {
-        let min_dist = distances[node as usize];
-        let mut edge = nodes[node as usize];
-
-        if dist > min_dist || dist > target_dist {
+        if visited[node_idx] {
             continue;
         }
+        visited[node_idx] = true;
+
+        if dist == target_dist {
+            result.push(node);
+            continue;
+        }
+
         if edge == i32::MAX {
             continue;
         }
 
         loop {
             let (neighbor, next_edge) = edges[edge as usize];
-            let neighbor_min_dist = distances[neighbor as usize];
-            let new_dist = min_dist + 1;
 
-            if new_dist < neighbor_min_dist && new_dist <= target_dist {
-                distances[neighbor as usize] = new_dist;
-                queue.push(Reverse((new_dist, neighbor)));
+            if dist < target_dist {
+                queue.push_back((neighbor, dist + 1));
             }
 
             if next_edge == i32::MAX {
@@ -80,5 +72,5 @@ fn dijkstra(
         }
     }
 
-    distances
+    result
 }

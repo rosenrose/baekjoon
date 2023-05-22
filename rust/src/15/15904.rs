@@ -7,9 +7,9 @@ fn main() {
 
     let mut stack = String::new();
 
-    for c in buf.trim().chars() {
-        if c == comapre_chars[stack.len()] {
-            stack.push(c);
+    for ch in buf.trim().chars() {
+        if ch == comapre_chars[stack.len()] {
+            stack.push(ch);
         }
 
         if stack == COMPARE {
