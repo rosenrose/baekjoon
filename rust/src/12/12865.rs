@@ -8,12 +8,10 @@ fn main() {
     let (n, k) = (input(), input() as usize);
     let mut memo = vec![0; k + 1];
 
-    for i in 0..n {
-        let (w, v) = (input() as usize, input());
-
+    for (i, (weight, value)) in (0..n).map(|i| (i, (input() as usize, input()))) {
         if i == 0 {
-            for j in w..=k {
-                memo[j] = v;
+            for j in weight..=k {
+                memo[j] = value;
             }
 
             continue;
@@ -23,10 +21,10 @@ fn main() {
             .iter()
             .enumerate()
             .map(|(j, &max_val)| {
-                if j < w {
+                if j < weight {
                     max_val
                 } else {
-                    max_val.max(v + memo[j - w])
+                    max_val.max(value + memo[j - weight])
                 }
             })
             .collect();
