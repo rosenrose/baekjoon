@@ -48,16 +48,16 @@ fn dijkstra(graph: &[Vec<(i32, i32)>], start: usize) -> Vec<i32> {
             continue;
         }
 
-        for &(neighbor, weight) in graph[node as usize].iter() {
-            let neighbor_min_dist = dists[neighbor as usize];
+        for &(adj, weight) in graph[node as usize].iter() {
+            let adj_min_dist = dists[adj as usize];
             let new_dist = min_dist + weight;
 
-            if new_dist >= neighbor_min_dist {
+            if new_dist >= adj_min_dist {
                 continue;
             }
 
-            dists[neighbor as usize] = new_dist;
-            queue.push(Reverse((new_dist, neighbor)));
+            dists[adj as usize] = new_dist;
+            queue.push(Reverse((new_dist, adj)));
         }
     }
 

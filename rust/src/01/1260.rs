@@ -23,14 +23,21 @@ fn main() {
         (*list).sort();
     }
     // println!("{adjacency_list:?}");
-    search(&adjacency_list, v, Ops::DFS);
+    for node in search(&adjacency_list, v, Ops::DFS) {
+        print!("{node} ");
+    }
+
     println!("");
-    search(&adjacency_list, v, Ops::BFS);
+
+    for node in search(&adjacency_list, v, Ops::BFS) {
+        print!("{node} ");
+    }
 }
 
-fn search(graph: &[Vec<usize>], start: usize, op: Ops) {
-    let mut queue = VecDeque::from([start]);
+fn search(graph: &[Vec<usize>], start: usize, op: Ops) -> Vec<usize> {
+    let mut path = Vec::with_capacity(graph.len());
     let mut visited = vec![false; graph.len()];
+    let mut queue = VecDeque::from([start]);
 
     while let Some(node) = match op {
         Ops::DFS => queue.pop_back(),
@@ -40,20 +47,22 @@ fn search(graph: &[Vec<usize>], start: usize, op: Ops) {
             continue;
         }
 
-        print!("{node} ");
         visited[node] = true;
+        path.push(node);
 
         match op {
             Ops::DFS => {
-                for &neighbor in graph[node].iter().rev() {
-                    queue.push_back(neighbor);
+                for &adj in graph[node].iter().rev() {
+                    queue.push_back(adj);
                 }
             }
             Ops::BFS => {
-                for &neighbor in graph[node].iter() {
-                    queue.push_back(neighbor);
+                for &adj in graph[node].iter() {
+                    queue.push_back(adj);
                 }
             }
         }
     }
+
+    path
 }

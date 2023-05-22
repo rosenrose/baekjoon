@@ -35,21 +35,21 @@ fn dijkstra_nth(graph: &[Vec<(i32, i32)>], start: usize, order: usize) -> Vec<Bi
     let mut queue = BinaryHeap::from([Reverse((0, start as i32))]);
 
     while let Some(Reverse((dist, node))) = queue.pop() {
-        for &(neighbor, weight) in graph[node as usize].iter() {
+        for &(adj, weight) in graph[node as usize].iter() {
             let new_dist = dist + weight;
-            let neighbor_idx = neighbor as usize;
+            let adj_idx = adj as usize;
 
-            if distances[neighbor_idx].len() < order {
-                distances[neighbor_idx].push(new_dist);
-                queue.push(Reverse((new_dist, neighbor)));
+            if distances[adj_idx].len() < order {
+                distances[adj_idx].push(new_dist);
+                queue.push(Reverse((new_dist, adj)));
 
                 continue;
             }
 
-            if new_dist < *distances[neighbor_idx].peek().unwrap() {
-                distances[neighbor_idx].pop();
-                distances[neighbor_idx].push(new_dist);
-                queue.push(Reverse((new_dist, neighbor)));
+            if new_dist < *distances[adj_idx].peek().unwrap() {
+                distances[adj_idx].pop();
+                distances[adj_idx].push(new_dist);
+                queue.push(Reverse((new_dist, adj)));
             }
         }
     }

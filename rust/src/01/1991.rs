@@ -28,40 +28,46 @@ fn main() {
         })
         .collect();
     // println!("{tree:?}");
-    tree_traverse(&tree, Some("A"), Orders::Pre);
-    println!("");
-    tree_traverse(&tree, Some("A"), Orders::In);
-    println!("");
-    tree_traverse(&tree, Some("A"), Orders::Post);
+    let mut result = String::new();
+    tree_traverse(&tree, Some("A"), Orders::Pre, &mut result);
+    println!("{result}");
+
+    result.clear();
+    tree_traverse(&tree, Some("A"), Orders::In, &mut result);
+    println!("{result}");
+
+    result.clear();
+    tree_traverse(&tree, Some("A"), Orders::Post, &mut result);
+    println!("{result}");
 }
 
 fn tree_traverse(
     tree: &HashMap<&str, (Option<&str>, Option<&str>)>,
     root: Option<&str>,
     order: Orders,
+    result: &mut String,
 ) {
     let Some(node) = root else {
         return;
     };
 
-    let visit = |child: Option<&str>| tree_traverse(tree, child, order);
     let (left, right) = tree[node];
 
     match order {
         Orders::Pre => {
-            print!("{node}");
-            visit(left);
-            visit(right);
+            result.push_str(node);
+            tree_traverse(tree, left, order, result);
+            tree_traverse(tree, right, order, result);
         }
         Orders::In => {
-            visit(left);
-            print!("{node}");
-            visit(right);
+            tree_traverse(tree, left, order, result);
+            result.push_str(node);
+            tree_traverse(tree, right, order, result);
         }
         Orders::Post => {
-            visit(left);
-            visit(right);
-            print!("{node}");
+            tree_traverse(tree, left, order, result);
+            tree_traverse(tree, right, order, result);
+            result.push_str(node);
         }
     }
 }

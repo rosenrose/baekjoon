@@ -38,15 +38,11 @@ fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: usize, target_dist: 
     let mut result = Vec::new();
     let mut visited = vec![false; nodes.len()];
     let mut queue = VecDeque::from([(start as i32, 0)]);
+    visited[start] = true;
 
     while let Some((node, dist)) = queue.pop_front() {
         let node_idx = node as usize;
         let mut edge = nodes[node_idx];
-
-        if visited[node_idx] {
-            continue;
-        }
-        visited[node_idx] = true;
 
         if dist == target_dist {
             result.push(node);
@@ -58,10 +54,11 @@ fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: usize, target_dist: 
         }
 
         loop {
-            let (neighbor, next_edge) = edges[edge as usize];
+            let (adj, next_edge) = edges[edge as usize];
 
-            if dist < target_dist {
-                queue.push_back((neighbor, dist + 1));
+            if !visited[adj as usize] && dist < target_dist {
+                visited[adj as usize] = true;
+                queue.push_back((adj, dist + 1));
             }
 
             if next_edge == i32::MAX {

@@ -42,8 +42,8 @@ fn bfs(graph: &[Vec<i32>], start: usize) -> Vec<i32> {
         visited[node as usize] = count;
         count += 1;
 
-        for &neighbor in graph[node as usize].iter() {
-            queue.push_back(neighbor);
+        for &adj in graph[node as usize].iter() {
+            queue.push_back(adj);
         }
     }
 

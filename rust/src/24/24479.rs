@@ -41,8 +41,8 @@ fn dfs(graph: &[Vec<i32>], start: usize) -> Vec<i32> {
         visited[node as usize] = count;
         count += 1;
 
-        for &neighbor in graph[node as usize].iter().rev() {
-            stack.push(neighbor);
+        for &adj in graph[node as usize].iter().rev() {
+            stack.push(adj);
         }
     }
 

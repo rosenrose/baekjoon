@@ -48,13 +48,13 @@ fn dijkstra((nodes, edges): &(Vec<i32>, Vec<((i32, i32), i32)>), start: usize) -
         }
 
         loop {
-            let ((neighbor, weight), next_edge) = edges[edge as usize];
-            let neighbor_min_dist = distances[neighbor as usize];
+            let ((adj, weight), next_edge) = edges[edge as usize];
+            let adj_min_dist = distances[adj as usize];
             let new_dist = min_dist + weight;
 
-            if new_dist < neighbor_min_dist {
-                distances[neighbor as usize] = new_dist;
-                queue.push(Reverse((new_dist, neighbor)));
+            if new_dist < adj_min_dist {
+                distances[adj as usize] = new_dist;
+                queue.push(Reverse((new_dist, adj)));
             }
 
             if next_edge == i32::MAX {
@@ -97,13 +97,13 @@ fn dijkstra((nodes, edges): &(Vec<i32>, Vec<((i32, i32), i32)>), start: usize) -
 //         };
 
 //         loop {
-//             let (neighbor, weight) = edges[edge].0;
-//             let neighbor_min_dist = distances[neighbor];
+//             let (adj, weight) = edges[edge].0;
+//             let adj_min_dist = distances[adj];
 //             let new_dist = min_dist + weight;
 
-//             if new_dist < neighbor_min_dist {
-//                 distances[neighbor] = new_dist;
-//                 queue.push(Reverse((new_dist, neighbor)));
+//             if new_dist < adj_min_dist {
+//                 distances[adj] = new_dist;
+//                 queue.push(Reverse((new_dist, adj)));
 //             }
 
 //             let Some(next_edge) = edges[edge].1 else {

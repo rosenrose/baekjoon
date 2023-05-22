@@ -18,23 +18,20 @@ fn main() {
 
 fn dfs(graph: &[Vec<usize>], start: usize) -> i32 {
     let mut visited = vec![false; graph.len()];
-    let mut stack = vec![start];
     let mut count = 0;
+    let mut stack = vec![start];
+    visited[start] = true;
 
     while let Some(node) = stack.pop() {
-        if visited[node] {
-            continue;
-        }
-
-        visited[node] = true;
         count += 1;
 
-        for &neighbor in graph[node].iter() {
-            if visited[neighbor] {
+        for &adj in graph[node].iter() {
+            if visited[adj] {
                 continue;
             }
 
-            stack.push(neighbor);
+            visited[adj] = true;
+            stack.push(adj);
         }
     }
 
