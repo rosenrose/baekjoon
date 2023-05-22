@@ -10,13 +10,13 @@ fn main() {
     let mut output = String::new();
 
     let (n, m, k, x) = (input(), input(), input() as i32, input());
-    let mut adjacency_array = (vec![usize::MAX; n + 1], vec![(0, 0); m]);
+    let mut adjacency_array = (vec![i32::MAX; n + 1], vec![(0, 0); m]);
 
     for (i, (u, v)) in (0..m).map(|i| (i, (input(), input()))) {
         let prev = adjacency_array.0[u];
 
-        adjacency_array.0[u] = i;
-        adjacency_array.1[i] = (v, prev);
+        adjacency_array.0[u] = i as i32;
+        adjacency_array.1[i] = (v as i32, prev);
     }
 
     let distances = dijkstra(&adjacency_array, x, k);
@@ -42,37 +42,37 @@ fn main() {
 }
 
 fn dijkstra(
-    (nodes, edges): &(Vec<usize>, Vec<(usize, usize)>),
+    (nodes, edges): &(Vec<i32>, Vec<(i32, i32)>),
     start: usize,
     target_dist: i32,
 ) -> Vec<i32> {
     let mut distances = vec![i32::MAX; nodes.len()];
     distances[start] = 0;
 
-    let mut queue = BinaryHeap::from([Reverse((0, start))]);
+    let mut queue = BinaryHeap::from([Reverse((0, start as i32))]);
 
     while let Some(Reverse((dist, node))) = queue.pop() {
-        let min_dist = distances[node];
-        let mut edge = nodes[node];
+        let min_dist = distances[node as usize];
+        let mut edge = nodes[node as usize];
 
         if dist > min_dist || dist > target_dist {
             continue;
         }
-        if edge == usize::MAX {
+        if edge == i32::MAX {
             continue;
         }
 
         loop {
-            let (neighbor, next_edge) = edges[edge];
-            let neighbor_min_dist = distances[neighbor];
+            let (neighbor, next_edge) = edges[edge as usize];
+            let neighbor_min_dist = distances[neighbor as usize];
             let new_dist = min_dist + 1;
 
             if new_dist < neighbor_min_dist && new_dist <= target_dist {
-                distances[neighbor] = new_dist;
+                distances[neighbor as usize] = new_dist;
                 queue.push(Reverse((new_dist, neighbor)));
             }
 
-            if next_edge == usize::MAX {
+            if next_edge == i32::MAX {
                 break;
             }
 

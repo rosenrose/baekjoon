@@ -9,11 +9,11 @@ fn main() {
     let (prime_nums, sieve) = get_prime_nums(1_000_000);
 
     for n in input.take_while(|&n| n != 0) {
-        (if let Some((a, b)) = get_goldbach_partition(n, &prime_nums, &sieve) {
+        if let Some((a, b)) = get_goldbach_partition(n, &prime_nums, &sieve) {
             writeln!(output, "{n} = {a} + {b}")
         } else {
             writeln!(output, "Goldbach's conjecture is wrong.")
-        })
+        }
         .unwrap();
     }
 

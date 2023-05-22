@@ -12,8 +12,8 @@ fn main() {
     let mut adjacency_list = vec![Vec::new(); n + 1];
 
     for (u, v) in (0..m).map(|_| (input(), input())) {
-        adjacency_list[u].push(v);
-        adjacency_list[v].push(u);
+        adjacency_list[u].push(v as i32);
+        adjacency_list[v].push(u as i32);
     }
 
     for list in adjacency_list.iter_mut() {
@@ -29,20 +29,20 @@ fn main() {
     print!("{output}");
 }
 
-fn bfs(graph: &[Vec<usize>], start: usize) -> Vec<usize> {
+fn bfs(graph: &[Vec<i32>], start: usize) -> Vec<i32> {
     let mut visited = vec![0; graph.len()];
-    let mut queue = VecDeque::from([start]);
+    let mut queue = VecDeque::from([start as i32]);
     let mut count = 1;
 
     while let Some(node) = queue.pop_front() {
-        if visited[node] != 0 {
+        if visited[node as usize] != 0 {
             continue;
         }
 
-        visited[node] = count;
+        visited[node as usize] = count;
         count += 1;
 
-        for &neighbor in graph[node].iter().rev() {
+        for &neighbor in graph[node as usize].iter().rev() {
             queue.push_back(neighbor);
         }
     }

@@ -9,11 +9,11 @@ fn main() {
     for (i, ch) in buf.trim().as_bytes().iter().enumerate() {
         let digit = ch - b'0';
 
-        (if i == 0 {
+        if i == 0 {
             write!(output, "{digit:b}")
         } else {
             write!(output, "{digit:03b}")
-        })
+        }
         .unwrap();
     }
 

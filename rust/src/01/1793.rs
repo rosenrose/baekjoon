@@ -72,7 +72,7 @@ fn main() {
     let mut output = String::new();
 
     for n in input {
-        (match n {
+        match n {
             0 | 1 => writeln!(output, "1"),
             2 => writeln!(output, "3"),
             _ => {
@@ -85,7 +85,7 @@ fn main() {
 
                 writeln!(output, "{b}")
             }
-        })
+        }
         .unwrap();
     }
 

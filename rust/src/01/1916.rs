@@ -11,7 +11,7 @@ fn main() {
     let mut adjacency_list = vec![Vec::new(); n + 1];
 
     for (u, v, w) in (0..m).map(|_| (input(), input(), input() as i32)) {
-        adjacency_list[u].push((v, w));
+        adjacency_list[u].push((v as i32, w));
     }
 
     let (start, end) = (input(), input());
@@ -20,28 +20,28 @@ fn main() {
     println!("{}", distances[end]);
 }
 
-fn dijkstra(graph: &[Vec<(usize, i32)>], start: usize) -> Vec<i32> {
+fn dijkstra(graph: &[Vec<(i32, i32)>], start: usize) -> Vec<i32> {
     let mut distances = vec![i32::MAX; graph.len()];
     distances[start] = 0;
 
-    let mut queue = BinaryHeap::from([Reverse((0, start))]);
+    let mut queue = BinaryHeap::from([Reverse((0, start as i32))]);
 
     while let Some(Reverse((dist, node))) = queue.pop() {
-        let min_dist = distances[node];
+        let min_dist = distances[node as usize];
 
         if dist > min_dist {
             continue;
         }
 
-        for &(neighbor, weight) in graph[node].iter() {
-            let neighbor_min_dist = distances[neighbor];
+        for &(neighbor, weight) in graph[node as usize].iter() {
+            let neighbor_min_dist = distances[neighbor as usize];
             let new_dist = min_dist + weight;
 
             if new_dist >= neighbor_min_dist {
                 continue;
             }
 
-            distances[neighbor] = new_dist;
+            distances[neighbor as usize] = new_dist;
             queue.push(Reverse((new_dist, neighbor)));
         }
     }

@@ -17,11 +17,11 @@ fn main() {
     }
 
     for query in input {
-        (if query.starts_with(|ch: char| ch.is_ascii_digit()) {
+        if query.starts_with(|ch: char| ch.is_ascii_digit()) {
             writeln!(output, "{}", pokemon_index[parse_int(query) - 1])
         } else {
             writeln!(output, "{}", pokemon_name[query])
-        })
+        }
         .unwrap();
     }
 

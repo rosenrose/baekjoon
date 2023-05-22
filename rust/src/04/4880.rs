@@ -11,11 +11,11 @@ fn main() {
             break;
         }
 
-        (if c - b == b - a {
+        if c - b == b - a {
             writeln!(output, "AP {}", c + (c - b))
         } else {
             writeln!(output, "GP {}", c * (c / b))
-        })
+        }
         .unwrap()
     }
 

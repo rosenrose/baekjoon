@@ -10,49 +10,58 @@ fn main() {
     let mut output = String::new();
 
     let (v, e, k) = (input(), input(), input());
-    let mut adjacency_list = vec![Vec::new(); v + 1];
+    let mut adjacency_array = (vec![i32::MAX; v + 1], vec![((0, 0), 0); e]);
 
-    for (u, v, w) in (0..e).map(|_| (input(), input(), input() as i32)) {
-        adjacency_list[u].push((v, w));
+    for (i, (u, v, w)) in (0..e).map(|i| (i, (input(), input(), input() as i32))) {
+        let prev = adjacency_array.0[u];
+
+        adjacency_array.0[u] = i as i32;
+        adjacency_array.1[i] = ((v as i32, w), prev);
     }
 
-    let distances = dijkstra(&adjacency_list, k);
+    let distances = dijkstra(&adjacency_array, k);
     // println!("{distances:?}");
     for &dist in &distances[1..] {
-        (if dist == i32::MAX {
+        if dist == i32::MAX {
             writeln!(output, "INF")
         } else {
             writeln!(output, "{dist}")
-        })
+        }
         .unwrap();
     }
 
     print!("{output}");
 }
 
-fn dijkstra(graph: &[Vec<(usize, i32)>], start: usize) -> Vec<i32> {
-    let mut distances = vec![i32::MAX; graph.len()];
+fn dijkstra((nodes, edges): &(Vec<i32>, Vec<((i32, i32), i32)>), start: usize) -> Vec<i32> {
+    let mut distances = vec![i32::MAX; nodes.len()];
     distances[start] = 0;
 
-    let mut queue = BinaryHeap::from([Reverse((0, start))]);
+    let mut queue = BinaryHeap::from([Reverse((0, start as i32))]);
 
     while let Some(Reverse((dist, node))) = queue.pop() {
-        let min_dist = distances[node];
+        let min_dist = distances[node as usize];
+        let mut edge = nodes[node as usize];
 
-        if dist > min_dist {
+        if dist > min_dist || edge == i32::MAX {
             continue;
         }
 
-        for &(neighbor, weight) in graph[node].iter() {
-            let neighbor_min_dist = distances[neighbor];
+        loop {
+            let ((neighbor, weight), next_edge) = edges[edge as usize];
+            let neighbor_min_dist = distances[neighbor as usize];
             let new_dist = min_dist + weight;
 
-            if new_dist >= neighbor_min_dist {
-                continue;
+            if new_dist < neighbor_min_dist {
+                distances[neighbor as usize] = new_dist;
+                queue.push(Reverse((new_dist, neighbor)));
             }
 
-            distances[neighbor] = new_dist;
-            queue.push(Reverse((new_dist, neighbor)));
+            if next_edge == i32::MAX {
+                break;
+            }
+
+            edge = next_edge;
         }
     }
 
