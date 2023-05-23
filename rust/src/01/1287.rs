@@ -300,14 +300,17 @@ fn calculate(input: &str) -> Option<BigInt> {
 
 fn parse_to_infix(input: &str) -> Option<Vec<&str>> {
     let mut infix = Vec::new();
-    let mut last = '\0';
+    let mut prev_ch = '\0';
     let mut num_idx = 0;
     let mut is_number = false;
 
     for (i, ch) in input.char_indices() {
         match ch {
             '+' | '-' | '*' | '/' | '(' | ')' => {
-                if matches!((last, ch), ('0'..='9', '(') | ('(', ')') | (')', '0'..='9')) {
+                if matches!(
+                    (prev_ch, ch),
+                    ('0'..='9', '(') | ('(', ')') | (')', '0'..='9')
+                ) {
                     return None;
                 }
 
@@ -327,7 +330,7 @@ fn parse_to_infix(input: &str) -> Option<Vec<&str>> {
             _ => return None,
         }
 
-        last = ch;
+        prev_ch = ch;
     }
 
     if is_number {

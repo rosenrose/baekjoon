@@ -5,13 +5,13 @@ fn main() {
     let mut laser_counts = [0; 50_001];
     let mut bar_count = 0;
     let mut depth = 0;
-    let mut last = '\0';
+    let mut prev_ch = '\0';
 
     for ch in buf.trim().chars() {
         match ch {
             '(' => depth += 1,
             ')' => {
-                if last == '(' {
+                if prev_ch == '(' {
                     laser_counts[depth] += 1;
                 } else {
                     bar_count += laser_counts[depth] + 1;
@@ -24,7 +24,7 @@ fn main() {
             _ => unreachable!(),
         }
 
-        last = ch;
+        prev_ch = ch;
     }
 
     println!("{bar_count}");

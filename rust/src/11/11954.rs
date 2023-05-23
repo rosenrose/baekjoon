@@ -6,7 +6,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut output = String::new();
     let mut depth = 0;
-    let mut last_ch = '\0';
+    let mut prev_ch = '\0';
 
     for ch in buf.trim().chars() {
         let indent = " ".repeat(depth * 2);
@@ -17,7 +17,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 depth += 1;
             }
             '}' => {
-                if last_ch != '{' {
+                if prev_ch != '{' {
                     writeln!(output, "")?;
                 }
 
@@ -28,14 +28,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             ',' => writeln!(output, "{ch}")?,
             _ => {
-                if matches!(last_ch, '{' | ',') {
+                if matches!(prev_ch, '{' | ',') {
                     write!(output, "{indent}")?;
                 }
                 write!(output, "{ch}")?;
             }
         }
 
-        last_ch = ch;
+        prev_ch = ch;
     }
 
     print!("{output}");

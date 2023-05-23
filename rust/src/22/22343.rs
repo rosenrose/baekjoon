@@ -42,7 +42,7 @@ fn main() {
 fn get_paren_value(s: &str) -> BigInt {
     let mut paren_value = vec![0; s.len() / 2];
     let mut depth = 0;
-    let mut last = '\0';
+    let mut prev_ch = '\0';
 
     for ch in s.chars() {
         match ch {
@@ -50,14 +50,14 @@ fn get_paren_value(s: &str) -> BigInt {
             ')' => {
                 depth -= 1;
 
-                if last == '(' {
+                if prev_ch == '(' {
                     paren_value[depth] += 1;
                 }
             }
             _ => unreachable!(),
         }
 
-        last = ch;
+        prev_ch = ch;
     }
     // println!("{paren_value:?}");
     while paren_value.len() > 0 && paren_value.last() == Some(&0) {
