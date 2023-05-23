@@ -4,23 +4,18 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, m) = (input(), input());
+    let n = input.next().unwrap();
     let mut adjacency_matrix: Vec<Vec<_>> = (0..n)
-        .map(|i| (0..n).map(|j| if i == j { 0 } else { i32::MAX }).collect())
+        .map(|_| input.by_ref().take(n).map(|num| num == 1).collect())
         .collect();
-
-    for (a, b, c) in (0..m).map(|_| (input() - 1, input() - 1, input() as i32)) {
-        adjacency_matrix[a][b] = adjacency_matrix[a][b].min(c);
-    }
 
     floyd_warshall(&mut adjacency_matrix);
 
     for row in adjacency_matrix {
-        for dist in row {
-            write!(output, "{} ", if dist == i32::MAX { 0 } else { dist }).unwrap();
+        for is_connected in row {
+            write!(output, "{} ", u8::from(is_connected)).unwrap();
         }
         writeln!(output, "").unwrap();
     }
@@ -28,13 +23,13 @@ fn main() {
     print!("{output}");
 }
 
-fn floyd_warshall(graph: &mut Vec<Vec<i32>>) {
+fn floyd_warshall(graph: &mut Vec<Vec<bool>>) {
     let len = graph.len();
 
     for k in 0..len {
         for i in 0..len {
             for j in 0..len {
-                graph[i][j] = graph[i][j].min(graph[i][k].saturating_add(graph[k][j]));
+                graph[i][j] = graph[i][j] || (graph[i][k] && graph[k][j]);
             }
         }
     }

@@ -51,9 +51,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn floyd_warshall_with_path(distances: &mut Vec<Vec<i32>>) -> Vec<Vec<i32>> {
-    let len = distances.len();
-    let mut path: Vec<Vec<_>> = distances
+fn floyd_warshall_with_path(graph: &mut Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+    let len = graph.len();
+    let mut path: Vec<Vec<_>> = graph
         .iter()
         .enumerate()
         .map(|(from, row)| {
@@ -66,10 +66,10 @@ fn floyd_warshall_with_path(distances: &mut Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     for k in 0..len {
         for i in 0..len {
             for j in 0..len {
-                let new_dist = distances[i][k].saturating_add(distances[k][j]);
+                let new_dist = graph[i][k].saturating_add(graph[k][j]);
 
-                if new_dist < distances[i][j] {
-                    distances[i][j] = new_dist;
+                if new_dist < graph[i][j] {
+                    graph[i][j] = new_dist;
                     path[i][j] = k as i32;
                 }
             }
