@@ -1,12 +1,6 @@
 use std::collections::VecDeque;
 use std::io;
 
-#[derive(PartialEq)]
-enum Cells {
-    Land,
-    Sea,
-}
-
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
@@ -15,22 +9,12 @@ fn main() {
         parse_int(input.next().unwrap()),
         parse_int(input.next().unwrap()),
     );
-    let map: Vec<Vec<_>> = input
-        .map(|row| {
-            row.chars()
-                .map(|ch| match ch {
-                    'L' => Cells::Land,
-                    'W' => Cells::Sea,
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+    let map: Vec<_> = input.map(str::as_bytes).collect();
     let mut max_time = 0;
 
     for y in 0..height {
         for x in 0..width {
-            if map[y][x] == Cells::Sea {
+            if map[y][x] == b'W' {
                 continue;
             }
 
@@ -51,7 +35,7 @@ fn main() {
                 ];
 
                 for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
-                    if visited[adj_r][adj_c] || map[adj_r][adj_c] == Cells::Sea {
+                    if visited[adj_r][adj_c] || map[adj_r][adj_c] == b'W' {
                         continue;
                     }
 

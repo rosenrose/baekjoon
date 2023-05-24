@@ -4,15 +4,17 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    while let (Some(w @ 1..), Some(h @ 1..)) = (input.next(), input.next()) {
-        let map: Vec<Vec<_>> = (0..h).map(|_| input.by_ref().take(w).collect()).collect();
-        let mut visited = vec![vec![false; w]; h];
+    while let (Some(width @ 1..), Some(height @ 1..)) = (input.next(), input.next()) {
+        let map: Vec<Vec<_>> = (0..height)
+            .map(|_| input.by_ref().take(width).map(|num| num == 1).collect())
+            .collect();
+        let mut visited = vec![vec![false; width]; height];
         let mut count = 0;
 
-        let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| visited[r][c] || map[r][c] == 0;
+        let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| visited[r][c] || !map[r][c];
 
-        for y in 0..h {
-            for x in 0..w {
+        for y in 0..height {
+            for x in 0..width {
                 if is_pass(y, x, &visited) {
                     continue;
                 }
@@ -23,9 +25,9 @@ fn main() {
                 while let Some((row, col)) = stack.pop() {
                     let (up, down, left, right) = (
                         row.saturating_sub(1),
-                        (row + 1).min(h - 1),
+                        (row + 1).min(height - 1),
                         col.saturating_sub(1),
-                        (col + 1).min(w - 1),
+                        (col + 1).min(width - 1),
                     );
                     let adjacents = [
                         (up, left),

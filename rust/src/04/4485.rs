@@ -18,38 +18,38 @@ fn main() {
     }
 }
 
-fn dijkstra(graph: &[Vec<i32>], (start_x, start_y): (usize, usize)) -> Vec<Vec<i32>> {
+fn dijkstra(graph: &[Vec<i32>], start: (usize, usize)) -> Vec<Vec<i32>> {
     let n = graph.len();
     let mut distances = vec![vec![i32::MAX; n]; n];
-    distances[start_y][start_x] = graph[start_y][start_x];
+    distances[start.0][start.1] = graph[start.0][start.1];
 
-    let mut queue = BinaryHeap::from([Reverse((0, (start_x, start_y)))]);
+    let mut queue = BinaryHeap::from([Reverse((0, (start)))]);
 
-    while let Some(Reverse((dist, (x, y)))) = queue.pop() {
-        let min_dist = distances[y][x];
+    while let Some(Reverse((dist, (r, c)))) = queue.pop() {
+        let min_dist = distances[r][c];
 
         if dist > min_dist {
             continue;
         }
 
         let adjacents = [
-            (x.saturating_sub(1), y),
-            (x, y.saturating_sub(1)),
-            ((x + 1).min(n - 1), y),
-            (x, (y + 1).min(n - 1)),
+            (r.saturating_sub(1), c),
+            (r, c.saturating_sub(1)),
+            ((r + 1).min(n - 1), c),
+            (r, (c + 1).min(n - 1)),
         ];
 
-        for &(adj_x, adj_y) in adjacents.iter().filter(|&&adj| adj != (x, y)) {
-            let weight = graph[adj_y][adj_x];
+        for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+            let weight = graph[adj_r][adj_c];
             let new_dist = min_dist + weight;
-            let adj_min_dist = distances[adj_y][adj_x];
+            let adj_min_dist = distances[adj_r][adj_c];
 
             if new_dist >= adj_min_dist {
                 continue;
             }
 
-            distances[adj_y][adj_x] = new_dist;
-            queue.push(Reverse((new_dist, (adj_x, adj_y))));
+            distances[adj_r][adj_c] = new_dist;
+            queue.push(Reverse((new_dist, (adj_r, adj_c))));
         }
     }
 

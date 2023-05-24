@@ -4,9 +4,9 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let (n, m) = (input.next().unwrap(), input.next().unwrap());
-    let map: Vec<Vec<_>> = (0..n)
-        .map(|_| input.by_ref().take(m).map(|num| num as u8).collect())
+    let (height, width) = (input.next().unwrap(), input.next().unwrap());
+    let map: Vec<Vec<_>> = (0..height)
+        .map(|_| input.by_ref().take(width).map(|num| num as u8).collect())
         .collect();
 
     let time = simulate(map);

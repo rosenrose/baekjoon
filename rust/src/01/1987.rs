@@ -13,6 +13,7 @@ fn main() {
     is_passed[(board[0][0] - OFFSET) as usize] = true;
 
     let max_depth = board_horse(1, (0, 0), &mut is_passed, &board);
+
     println!("{max_depth}");
 }
 

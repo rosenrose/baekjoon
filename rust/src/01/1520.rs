@@ -4,13 +4,16 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (m, n) = (
+    let (height, width) = (
         input.next().unwrap() as usize,
         input.next().unwrap() as usize,
     );
-    let map: Vec<Vec<_>> = (0..m).map(|_| input.by_ref().take(n).collect()).collect();
-    let mut memo = vec![vec![None; n]; m];
-    memo[m - 1][n - 1] = Some(1);
+    let map: Vec<Vec<_>> = (0..height)
+        .map(|_| input.by_ref().take(width).collect())
+        .collect();
+
+    let mut memo = vec![vec![None; width]; height];
+    memo[height - 1][width - 1] = Some(1);
 
     println!("{}", get_count(0, 0, &map, &mut memo));
     // for r in &memo {
@@ -29,6 +32,7 @@ fn get_count(r: usize, c: usize, map: &[Vec<i32>], memo: &mut Vec<Vec<Option<i32
         ((r + 1).min(map.len() - 1), c),
         (r, (c + 1).min(map[0].len() - 1)),
     ];
+
     let count: i32 = adjacents
         .iter()
         .filter_map(|&(adj_r, adj_c)| {

@@ -13,15 +13,15 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
-    let (m, n, k) = (input() as usize, input() as usize, input() as usize);
+    let (cols, rows, height) = (input(), input(), input());
     let mut queue = VecDeque::new();
     let mut raw_count = 0;
 
-    let mut tomatoes: Vec<Vec<Vec<_>>> = (0..k)
+    let mut tomatoes: Vec<Vec<Vec<_>>> = (0..height)
         .map(|h| {
-            (0..n)
+            (0..rows)
                 .map(|r| {
-                    (0..m)
+                    (0..cols)
                         .map(|c| match input() {
                             1 => {
                                 queue.push_back(((h, r, c), 0));
@@ -44,20 +44,20 @@ fn main() {
 
     while let Some(((h, r, c), t)) = queue.pop_front() {
         let adjacents = [
-            (h.saturating_sub(1), r, c),
-            (h, r.saturating_sub(1), c),
-            (h, r, c.saturating_sub(1)),
-            ((h + 1).min(k - 1), r, c),
-            (h, (r + 1).min(n - 1), c),
-            (h, r, (c + 1).min(m - 1)),
+            ((h - 1).max(0), r, c),
+            (h, (r - 1).max(0), c),
+            (h, r, (c - 1).max(0)),
+            ((h + 1).min(height - 1), r, c),
+            (h, (r + 1).min(rows - 1), c),
+            (h, r, (c + 1).min(cols - 1)),
         ];
 
         for &(adj_h, adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (h, r, c)) {
-            if tomatoes[adj_h][adj_r][adj_c] != Cells::Raw {
+            if tomatoes[adj_h as usize][adj_r as usize][adj_c as usize] != Cells::Raw {
                 continue;
             }
 
-            tomatoes[adj_h][adj_r][adj_c] = Cells::Ripen;
+            tomatoes[adj_h as usize][adj_r as usize][adj_c as usize] = Cells::Ripen;
             raw_count -= 1;
             time = time.max(t + 1);
             queue.push_back(((adj_h, adj_r, adj_c), t + 1));

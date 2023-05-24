@@ -12,13 +12,13 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
+    let (height, width) = (input(), input());
     let mut empty_cells = Vec::new();
     let mut viruses = Vec::new();
 
-    let room: Vec<Vec<_>> = (0..n)
+    let room: Vec<Vec<_>> = (0..height)
         .map(|r| {
-            (0..m)
+            (0..width)
                 .map(|c| match input() {
                     0 => {
                         empty_cells.push((r, c));
@@ -35,18 +35,17 @@ fn main() {
         })
         .collect();
 
-    let empty_cells_len = empty_cells.len();
+    let empty_cells_count = empty_cells.len();
     let mut max_safe_area = 0;
 
-    for a in 0..empty_cells_len - 2 {
-        for b in a + 1..empty_cells_len - 1 {
-            for c in b + 1..empty_cells_len {
+    for a in 0..empty_cells_count - 2 {
+        for b in a + 1..empty_cells_count - 1 {
+            for c in b + 1..empty_cells_count {
                 let safe_area = simulate(
                     (empty_cells[a], empty_cells[b], empty_cells[c]),
                     room.clone(),
                     viruses.clone(),
-                    (n, m),
-                    empty_cells_len,
+                    empty_cells_count,
                 );
 
                 max_safe_area = safe_area.max(max_safe_area);
@@ -61,7 +60,6 @@ fn simulate(
     (new_wall1, new_wall2, new_wall3): ((usize, usize), (usize, usize), (usize, usize)),
     mut room: Vec<Vec<Cells>>,
     mut stack: Vec<(usize, usize)>,
-    (row_len, col_len): (usize, usize),
     mut safe_area: usize,
 ) -> usize {
     room[new_wall1.0][new_wall1.1] = Cells::Wall;
@@ -73,8 +71,8 @@ fn simulate(
         let adjacents = [
             (r.saturating_sub(1), c),
             (r, c.saturating_sub(1)),
-            ((r + 1).min(row_len - 1), c),
-            (r, (c + 1).min(col_len - 1)),
+            ((r + 1).min(room.len() - 1), c),
+            (r, (c + 1).min(room[0].len() - 1)),
         ];
 
         for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {

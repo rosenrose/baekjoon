@@ -5,12 +5,12 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let (n, m) = (input.next().unwrap(), input.next().unwrap());
-    let mut queue = VecDeque::with_capacity(n * m);
-    let mut safe_dists = vec![vec![0; m]; n];
+    let (height, width) = (input.next().unwrap(), input.next().unwrap());
+    let mut queue = VecDeque::with_capacity(height * width);
+    let mut safe_dists = vec![vec![0; width]; height];
 
-    for r in 0..n {
-        for (c, num) in input.by_ref().take(m).enumerate() {
+    for r in 0..height {
+        for (c, num) in input.by_ref().take(width).enumerate() {
             if num == 1 {
                 queue.push_back(((r, c), 0));
                 safe_dists[r][c] = 1;
@@ -21,9 +21,9 @@ fn main() {
     while let Some(((row, col), dist)) = queue.pop_front() {
         let (up, down, left, right) = (
             row.saturating_sub(1),
-            (row + 1).min(n - 1),
+            (row + 1).min(height - 1),
             col.saturating_sub(1),
-            (col + 1).min(m - 1),
+            (col + 1).min(width - 1),
         );
         let adjacents = [
             (up, left),

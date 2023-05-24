@@ -6,19 +6,19 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     for _ in 0..input() {
-        let (m, n, k) = (input(), input(), input());
-        let mut map = vec![vec![0; m]; n];
+        let (width, height, k) = (input(), input(), input());
+        let mut map = vec![vec![false; width]; height];
 
         for (x, y) in (0..k).map(|_| (input(), input())) {
-            map[y][x] = 1;
+            map[y][x] = true;
         }
 
-        let mut visited = vec![vec![false; m]; n];
+        let mut visited = vec![vec![false; width]; height];
         let mut count = 0;
-        let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| map[r][c] == 0 || visited[r][c];
+        let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| visited[r][c] || !map[r][c];
 
-        for y in 0..n {
-            for x in 0..m {
+        for y in 0..height {
+            for x in 0..width {
                 if is_pass(y, x, &visited) {
                     continue;
                 }
@@ -30,8 +30,8 @@ fn main() {
                     let adjacents = [
                         (r.saturating_sub(1), c),
                         (r, c.saturating_sub(1)),
-                        ((r + 1).min(n - 1), c),
-                        (r, (c + 1).min(m - 1)),
+                        ((r + 1).min(height - 1), c),
+                        (r, (c + 1).min(width - 1)),
                     ];
 
                     for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
