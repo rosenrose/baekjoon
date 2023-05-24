@@ -39,7 +39,7 @@ fn main() {
 
     let min_time = combinations(0, 0, &mut vec![0; m], &viruse_places, &room, empty_cells);
 
-    println!("{min_time}");
+    println!("{}", min_time.unwrap_or(-1));
 }
 
 fn combinations(
@@ -49,7 +49,7 @@ fn combinations(
     viruse_places: &[(usize, usize)],
     room: &[Vec<Cells>],
     empty_cells: i32,
-) -> i32 {
+) -> Option<i32> {
     if depth == selected.len() {
         return simulate(selected, viruse_places, room.to_owned(), empty_cells);
     }
@@ -57,13 +57,11 @@ fn combinations(
     let takes = viruse_places.len() - selected.len() + 1;
 
     (start..depth + takes)
-        .map(|i| {
+        .filter_map(|i| {
             selected[depth] = i;
             combinations(depth + 1, i + 1, selected, viruse_places, room, empty_cells)
         })
-        .filter(|&time| time != -1)
         .min()
-        .unwrap_or(-1)
 }
 
 fn simulate(
@@ -71,7 +69,7 @@ fn simulate(
     viruse_places: &[(usize, usize)],
     mut room: Vec<Vec<Cells>>,
     mut empty_cells: i32,
-) -> i32 {
+) -> Option<i32> {
     let size = room.len();
     let mut max_time = 0;
     let mut queue = VecDeque::with_capacity(selected.len());
@@ -108,9 +106,5 @@ fn simulate(
         }
     }
 
-    if empty_cells == 0 {
-        max_time
-    } else {
-        -1
-    }
+    (empty_cells == 0).then_some(max_time)
 }
