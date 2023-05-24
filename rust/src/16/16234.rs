@@ -39,7 +39,7 @@ fn simulate(mut map: Vec<Vec<u32>>, min: u32, max: u32) -> u32 {
                         (r, (c + 1).min(n - 1)),
                     ];
 
-                    for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+                    for (adj_r, adj_c) in adjacents {
                         if visited[adj_r][adj_c] {
                             continue;
                         }

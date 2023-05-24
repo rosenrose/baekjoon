@@ -40,7 +40,7 @@ fn main() {
                         (down, right),
                     ];
 
-                    for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (row, col)) {
+                    for (adj_r, adj_c) in adjacents {
                         if is_pass(adj_r, adj_c, &visited) {
                             continue;
                         }

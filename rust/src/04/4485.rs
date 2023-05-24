@@ -39,7 +39,7 @@ fn dijkstra(graph: &[Vec<i32>], start: (usize, usize)) -> Vec<Vec<i32>> {
             (r, (c + 1).min(n - 1)),
         ];
 
-        for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+        for (adj_r, adj_c) in adjacents {
             let weight = graph[adj_r][adj_c];
             let new_dist = min_dist + weight;
             let adj_min_dist = distances[adj_r][adj_c];

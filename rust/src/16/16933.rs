@@ -29,7 +29,7 @@ fn main() {
             (r, (c + 1).min(width - 1)),
         ];
 
-        for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+        for (adj_r, adj_c) in adjacents {
             let adj = (adj_r as usize, adj_c as usize);
 
             if visited[adj.0][adj.1][broken_count as usize][day_idx] {

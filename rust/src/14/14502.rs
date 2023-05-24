@@ -75,7 +75,7 @@ fn simulate(
             (r, (c + 1).min(room[0].len() - 1)),
         ];
 
-        for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+        for (adj_r, adj_c) in adjacents {
             if room[adj_r][adj_c] != Cells::Empty {
                 continue;
             }

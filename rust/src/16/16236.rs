@@ -82,7 +82,7 @@ fn eat(map: &[Vec<Cells>], shark_coord: (usize, usize), shark_size: i32) -> ((us
             (r, (c + 1).min(n - 1)),
         ];
 
-        for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+        for (adj_r, adj_c) in adjacents {
             if visited[adj_r][adj_c]
                 || matches!(map[adj_r][adj_c], Cells::Fish(s) if s > shark_size)
             {

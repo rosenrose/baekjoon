@@ -52,7 +52,7 @@ fn main() {
             (h, r, (c + 1).min(cols - 1)),
         ];
 
-        for &(adj_h, adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (h, r, c)) {
+        for (adj_h, adj_r, adj_c) in adjacents {
             if tomatoes[adj_h as usize][adj_r as usize][adj_c as usize] != Cells::Raw {
                 continue;
             }

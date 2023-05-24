@@ -19,16 +19,13 @@ fn main() {
 
 fn simulate(mut room: Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -> i32 {
     let n = room.len();
-    let get_adjacents = |r: usize, c: usize| -> Vec<(usize, usize)> {
+    let get_adjacents = |r: usize, c: usize| {
         [
             (r.saturating_sub(1), c),
             (r, c.saturating_sub(1)),
             ((r + 1).min(n - 1), c),
             (r, (c + 1).min(n - 1)),
         ]
-        .into_iter()
-        .filter(|&adj| adj != (r, c))
-        .collect()
     };
 
     for &(num, prefers) in students.iter() {
@@ -48,7 +45,7 @@ fn simulate(mut room: Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -
                     if prefers.contains(&adj_cell) {
                         prefer_count += 1;
                     }
-                    if adj_cell == 0 {
+                    if (adj_r, adj_c) != (r, c) && adj_cell == 0 {
                         empty_count += 1;
                     }
                 }

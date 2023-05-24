@@ -44,14 +44,7 @@ fn simulate(mut map: Vec<Vec<i32>>, steps: impl Iterator<Item = i32>) -> (i32, i
                 sum += map[r][c];
                 count += 1;
 
-                let adjacents = [
-                    (r.saturating_sub(1), c),
-                    (r, c.saturating_sub(1)),
-                    ((r + 1).min(size - 1), c),
-                    (r, (c + 1).min(size - 1)),
-                ];
-
-                for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+                for (adj_r, adj_c) in get_adjacents(r, c, size) {
                     if is_pass(adj_r, adj_c, &visited) {
                         continue;
                     }
@@ -66,6 +59,15 @@ fn simulate(mut map: Vec<Vec<i32>>, steps: impl Iterator<Item = i32>) -> (i32, i
     }
 
     (sum, max_count)
+}
+
+fn get_adjacents(r: usize, c: usize, size: usize) -> [(usize, usize); 4] {
+    [
+        (r.saturating_sub(1), c),
+        (r, c.saturating_sub(1)),
+        ((r + 1).min(size - 1), c),
+        (r, (c + 1).min(size - 1)),
+    ]
 }
 
 fn rotate(map: &mut Vec<Vec<i32>>, inner_size: usize) {
@@ -99,14 +101,7 @@ fn melt_ice(map: &mut Vec<Vec<i32>>) {
                 continue;
             }
 
-            let adjacents = [
-                (r.saturating_sub(1), c),
-                (r, c.saturating_sub(1)),
-                ((r + 1).min(size - 1), c),
-                (r, (c + 1).min(size - 1)),
-            ];
-
-            let ice_count = adjacents
+            let ice_count = get_adjacents(r, c, size)
                 .iter()
                 .filter(|&&(adj_r, adj_c)| (adj_r, adj_c) != (r, c) && map[adj_r][adj_c] > 0)
                 .count();

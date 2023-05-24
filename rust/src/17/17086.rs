@@ -36,7 +36,7 @@ fn main() {
             (down, right),
         ];
 
-        for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (row, col)) {
+        for (adj_r, adj_c) in adjacents {
             if safe_dists[adj_r][adj_c] > 0 {
                 continue;
             }

@@ -52,7 +52,7 @@ fn get_safe_area(height: i32, area: &[Vec<i32>]) -> i32 {
                     (r, (c + 1).min(n - 1)),
                 ];
 
-                for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+                for (adj_r, adj_c) in adjacents {
                     if is_pass(adj_r, adj_c, &visited) {
                         continue;
                     }

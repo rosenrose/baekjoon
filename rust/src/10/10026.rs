@@ -33,7 +33,7 @@ fn get_count(picture: &[&[u8]], is_blind: bool) -> i32 {
                     (r, (c + 1).min(n - 1)),
                 ];
 
-                for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+                for (adj_r, adj_c) in adjacents {
                     if visited[adj_r][adj_c] {
                         continue;
                     }

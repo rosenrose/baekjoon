@@ -31,7 +31,7 @@ fn main() {
                 (r, (c + 1).min(width - 1)),
             ];
 
-            for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+            for (adj_r, adj_c) in adjacents {
                 if map[adj_r][adj_c] == b'1' {
                     continue;
                 }

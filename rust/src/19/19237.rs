@@ -82,17 +82,14 @@ fn move_sharks(
                 continue;
             };
 
-            let adjacents: Vec<_> = precedences[num][dir]
-                .iter()
-                .filter_map(|&prefer_dir| {
-                    let adj = (
-                        (r as i8 + DIRS[prefer_dir].0).clamp(0, n as i8 - 1) as usize,
-                        (c as i8 + DIRS[prefer_dir].1).clamp(0, n as i8 - 1) as usize,
-                    );
+            let adjacents = precedences[num][dir].map(|prefer_dir| {
+                let adj = (
+                    (r as i8 + DIRS[prefer_dir].0).clamp(0, n as i8 - 1) as usize,
+                    (c as i8 + DIRS[prefer_dir].1).clamp(0, n as i8 - 1) as usize,
+                );
 
-                    (adj != (r, c)).then_some((adj, prefer_dir))
-                })
-                .collect();
+                (adj, prefer_dir)
+            });
 
             let ((moved_r, moved_c), new_dir) = 'a: {
                 for &((adj_r, adj_c), prefer_dir) in adjacents.iter() {
@@ -102,7 +99,7 @@ fn move_sharks(
                 }
 
                 for ((adj_r, adj_c), prefer_dir) in adjacents {
-                    if map[adj_r][adj_c].1 == num {
+                    if (adj_r, adj_c) != (r, c) && map[adj_r][adj_c].1 == num {
                         break 'a ((adj_r, adj_c), prefer_dir);
                     }
                 }

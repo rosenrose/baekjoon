@@ -88,7 +88,7 @@ fn move_fishes(
         for c in start_c..start_c + width {
             let adjacents = [(r + 1, c), (r, (c + 1).min(start_c + width - 1))];
 
-            for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+            for (adj_r, adj_c) in adjacents {
                 let diff = (map[r][c] - map[adj_r][adj_c]) / 5;
 
                 if diff.abs() < 1 {

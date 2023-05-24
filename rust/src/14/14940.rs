@@ -38,7 +38,7 @@ fn main() {
             (r, (c + 1).min(width - 1)),
         ];
 
-        for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+        for (adj_r, adj_c) in adjacents {
             if map[adj_r as usize][adj_c as usize] != -1 {
                 continue;
             }

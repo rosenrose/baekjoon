@@ -36,8 +36,7 @@ fn get_count(r: usize, c: usize, map: &[Vec<i32>], memo: &mut Vec<Vec<Option<i32
     let count: i32 = adjacents
         .iter()
         .filter_map(|&(adj_r, adj_c)| {
-            ((adj_r, adj_c) != (r, c) && map[adj_r][adj_c] < map[r][c])
-                .then(|| get_count(adj_r, adj_c, map, memo))
+            (map[adj_r][adj_c] < map[r][c]).then(|| get_count(adj_r, adj_c, map, memo))
         })
         .sum();
 

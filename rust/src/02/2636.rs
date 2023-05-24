@@ -98,7 +98,7 @@ fn melt_cheese(map: &mut Vec<Vec<bool>>) {
                     (r, (c + 1).min(width - 1)),
                 ];
 
-                for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+                for (adj_r, adj_c) in adjacents {
                     if visited[adj_r][adj_c] {
                         continue;
                     }

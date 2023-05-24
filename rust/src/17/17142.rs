@@ -91,7 +91,7 @@ fn simulate(
             (r, (c + 1).min(size - 1)),
         ];
 
-        for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+        for (adj_r, adj_c) in adjacents {
             if matches!(room[adj_r][adj_c], Cells::Wall | Cells::VirusActive) {
                 continue;
             }

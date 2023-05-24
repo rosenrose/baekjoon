@@ -103,7 +103,7 @@ fn get_block_groups(map: &[Vec<Cells>]) -> Vec<(i32, i32, Vec<(usize, usize)>)> 
                     (r, (c + 1).min(n - 1)),
                 ];
 
-                for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+                for (adj_r, adj_c) in adjacents {
                     if visited[adj_r][adj_c] {
                         continue;
                     }

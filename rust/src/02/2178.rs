@@ -12,8 +12,9 @@ fn main() {
     let map: Vec<_> = input.map(str::as_bytes).collect();
 
     let mut visited = vec![vec![false; width]; height];
-    let mut queue = VecDeque::from([((0_usize, 0_usize), 1)]);
     visited[0][0] = true;
+
+    let mut queue = VecDeque::from([((0, 0), 1)]);
 
     while let Some(((r, c), step)) = queue.pop_front() {
         if (r, c) == (height - 1, width - 1) {
@@ -28,7 +29,7 @@ fn main() {
             (r, (c + 1).min(width - 1)),
         ];
 
-        for &(adj_r, adj_c) in adjacents.iter().filter(|&&adj| adj != (r, c)) {
+        for (adj_r, adj_c) in adjacents {
             if visited[adj_r][adj_c] || map[adj_r][adj_c] == b'0' {
                 continue;
             }
