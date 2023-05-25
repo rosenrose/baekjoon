@@ -2,16 +2,21 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
     'outer: for _ in 0..input() {
-        let (v, e) = (input() as usize, input());
-        let mut adjacency_list = vec![Vec::new(); v + 1];
+        let (v, e) = (input(), input());
+        let mut adjacency_array = (vec![i32::MAX; v + 1], vec![(0, 0); e << 1]);
 
-        for (a, b) in (0..e).map(|_| (input() as i16, input() as i16)) {
-            adjacency_list[a as usize].push(b);
-            adjacency_list[b as usize].push(a);
+        for (i, (a, b)) in (0..e).map(|i| (i << 1, (input(), input()))) {
+            let prev = adjacency_array.0[a];
+            adjacency_array.0[a] = i as i32;
+            adjacency_array.1[i] = (b as i16, prev);
+
+            let prev = adjacency_array.0[b];
+            adjacency_array.0[b] = (i + 1) as i32;
+            adjacency_array.1[i + 1] = (a as i16, prev);
         }
 
         let mut visited = vec![None; v + 1];
@@ -26,19 +31,20 @@ fn main() {
 
             while let Some(node) = stack.pop() {
                 let color = visited[node as usize].unwrap();
+                let mut edge = adjacency_array.0[node as usize];
 
-                for &adj in adjacency_list[node as usize].iter() {
+                while let Some(&(adj, next_edge)) = adjacency_array.1.get(edge as usize) {
                     if let Some(adj_color) = visited[adj as usize] {
                         if adj_color == color {
                             println!("NO");
                             continue 'outer;
                         }
-
-                        continue;
+                    } else {
+                        visited[adj as usize] = Some(!color);
+                        stack.push(adj);
                     }
 
-                    visited[adj as usize] = Some(!color);
-                    stack.push(adj);
+                    edge = next_edge;
                 }
             }
         }

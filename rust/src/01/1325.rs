@@ -34,9 +34,10 @@ fn dfs(graph: &[Vec<i16>]) -> (Vec<i16>, i16) {
 
     for start in 1..graph.len() {
         let mut visited = vec![false; graph.len()];
+        visited[start] = true;
+
         let mut count = 0;
         let mut stack = vec![start as i16];
-        visited[start] = true;
 
         while let Some(node) = stack.pop() {
             count += 1;

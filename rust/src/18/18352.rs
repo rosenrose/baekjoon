@@ -4,14 +4,14 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, m, k, x) = (input() as usize, input() as usize, input(), input());
+    let (n, m, k, x) = (input(), input(), input() as i32, input());
     let mut adjacency_array = (vec![i32::MAX; n + 1], vec![(0, 0); m]);
 
-    for (i, (u, v)) in (0..m).map(|i| (i, (input() as usize, input()))) {
+    for (i, (u, v)) in (0..m).map(|i| (i, (input(), input() as i32))) {
         let prev = adjacency_array.0[u];
 
         adjacency_array.0[u] = i as i32;
@@ -34,11 +34,11 @@ fn main() {
     print!("{output}");
 }
 
-fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: i32, target_dist: i32) -> Vec<i32> {
+fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: usize, target_dist: i32) -> Vec<i32> {
     let mut result = Vec::new();
     let mut visited = vec![false; nodes.len()];
-    let mut queue = VecDeque::from([(start, 0)]);
-    visited[start as usize] = true;
+    let mut queue = VecDeque::from([(start as i32, 0)]);
+    visited[start] = true;
 
     while let Some((node, dist)) = queue.pop_front() {
         if dist == target_dist {
@@ -48,23 +48,13 @@ fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: i32, target_dist: i3
 
         let mut edge = nodes[node as usize];
 
-        if edge == i32::MAX {
-            continue;
-        }
-
-        loop {
-            let (adj, next_edge) = edges[edge as usize];
-
+        while let Some(&(adj, next_edge)) = edges.get(edge as usize) {
             if !visited[adj as usize] {
                 visited[adj as usize] = true;
 
                 if dist < target_dist {
                     queue.push_back((adj, dist + 1));
                 }
-            }
-
-            if next_edge == i32::MAX {
-                break;
             }
 
             edge = next_edge;

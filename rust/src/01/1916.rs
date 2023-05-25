@@ -4,45 +4,49 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, m) = (input() as usize, input());
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let (n, m) = (input(), input());
+    let mut adjacency_array = (vec![i32::MAX; n + 1], vec![((0, 0), 0); m]);
 
-    for (u, v, w) in (0..m).map(|_| (input(), input(), input())) {
-        adjacency_list[u as usize].push((v, w));
+    for (i, (u, v, w)) in (0..m).map(|i| (i, (input(), input() as i32, input() as i32))) {
+        let prev = adjacency_array.0[u];
+
+        adjacency_array.0[u] = i as i32;
+        adjacency_array.1[i] = ((v, w), prev);
     }
 
-    let (start, end) = (input() as usize, input() as usize);
-    let distances = dijkstra(&adjacency_list, start);
+    let (start, end) = (input(), input());
+    let distances = dijkstra(&adjacency_array, start);
 
     println!("{}", distances[end]);
 }
 
-fn dijkstra(graph: &[Vec<(i32, i32)>], start: usize) -> Vec<i32> {
-    let mut distances = vec![i32::MAX; graph.len()];
+fn dijkstra((nodes, edges): &(Vec<i32>, Vec<((i32, i32), i32)>), start: usize) -> Vec<i32> {
+    let mut distances = vec![i32::MAX; nodes.len()];
     distances[start] = 0;
 
     let mut queue = BinaryHeap::from([Reverse((0, start as i32))]);
 
     while let Some(Reverse((dist, node))) = queue.pop() {
         let min_dist = distances[node as usize];
+        let mut edge = nodes[node as usize];
 
         if dist > min_dist {
             continue;
         }
 
-        for &(adj, weight) in graph[node as usize].iter() {
+        while let Some(&((adj, weight), next_edge)) = edges.get(edge as usize) {
             let adj_min_dist = distances[adj as usize];
             let new_dist = min_dist + weight;
 
-            if new_dist >= adj_min_dist {
-                continue;
+            if new_dist < adj_min_dist {
+                distances[adj as usize] = new_dist;
+                queue.push(Reverse((new_dist, adj)));
             }
 
-            distances[adj as usize] = new_dist;
-            queue.push(Reverse((new_dist, adj)));
+            edge = next_edge;
         }
     }
 
