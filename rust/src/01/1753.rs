@@ -5,18 +5,18 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (v, e, k) = (input(), input(), input());
+    let (v, e, k) = (input() as usize, input() as usize, input() as usize);
     let mut adjacency_array = (vec![i32::MAX; v + 1], vec![((0, 0), 0); e]);
 
-    for (i, (u, v, w)) in (0..e).map(|i| (i, (input(), input(), input() as i32))) {
+    for (i, (u, v, w)) in (0..e).map(|i| (i, (input() as usize, input(), input()))) {
         let prev = adjacency_array.0[u];
 
         adjacency_array.0[u] = i as i32;
-        adjacency_array.1[i] = ((v as i32, w), prev);
+        adjacency_array.1[i] = ((v, w), prev);
     }
 
     let distances = dijkstra(&adjacency_array, k);

@@ -8,7 +8,7 @@ fn main() {
     let (n, m) = (input() as usize, input());
     let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    for (u, v) in (0..m).map(|_| (input(), input())) {
+    for (u, v) in (0..m).map(|_| (input() as i16, input() as i16)) {
         adjacency_list[u as usize].push(v);
         adjacency_list[v as usize].push(u);
     }
@@ -16,7 +16,7 @@ fn main() {
     println!("{}", dfs(&adjacency_list));
 }
 
-fn dfs(graph: &[Vec<i32>]) -> i32 {
+fn dfs(graph: &[Vec<i16>]) -> i16 {
     let mut count = 0;
     let mut visited = vec![false; graph.len()];
 
@@ -26,7 +26,7 @@ fn dfs(graph: &[Vec<i32>]) -> i32 {
         }
 
         visited[start] = true;
-        let mut stack = vec![start as i32];
+        let mut stack = vec![start as i16];
 
         while let Some(node) = stack.pop() {
             for &adj in graph[node as usize].iter() {

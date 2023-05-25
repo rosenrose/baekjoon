@@ -16,11 +16,11 @@ fn main() {
                 .take(width as usize)
                 .enumerate()
                 .map(|(c, num)| match num {
-                    0 => 0_i16,
-                    1 => -1,
+                    0 => Some(0),
+                    1 => None,
                     2 => {
                         start = (r, c as i16);
-                        0
+                        Some(0)
                     }
                     _ => unreachable!(),
                 })
@@ -39,19 +39,19 @@ fn main() {
         ];
 
         for (adj_r, adj_c) in adjacents {
-            if map[adj_r as usize][adj_c as usize] != -1 {
+            if map[adj_r as usize][adj_c as usize].is_some() {
                 continue;
             }
 
             let new_dist = dist + 1;
-            map[adj_r as usize][adj_c as usize] = new_dist;
+            map[adj_r as usize][adj_c as usize] = Some(new_dist);
             queue.push_back(((adj_r, adj_c), new_dist));
         }
     }
 
     for row in map {
         for dist in row {
-            write!(output, "{dist} ").unwrap();
+            write!(output, "{} ", dist.unwrap_or(-1)).unwrap();
         }
         writeln!(output, "").unwrap();
     }

@@ -4,17 +4,17 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
+    let (n, m) = (input() as usize, input());
     let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    for (u, v, w) in (0..m).map(|_| (input(), input(), input() as i32)) {
-        adjacency_list[u].push((v as i32, w));
+    for (u, v, w) in (0..m).map(|_| (input(), input(), input())) {
+        adjacency_list[u as usize].push((v, w));
     }
 
-    let (start, end) = (input(), input());
+    let (start, end) = (input() as usize, input() as usize);
     let distances = dijkstra(&adjacency_list, start);
 
     println!("{}", distances[end]);
