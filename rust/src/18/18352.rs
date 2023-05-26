@@ -37,8 +37,9 @@ fn main() {
 fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: usize, target_dist: i32) -> Vec<i32> {
     let mut result = Vec::new();
     let mut visited = vec![false; nodes.len()];
-    let mut queue = VecDeque::from([(start as i32, 0)]);
     visited[start] = true;
+
+    let mut queue = VecDeque::from([(start as i32, 0)]);
 
     while let Some((node, dist)) = queue.pop_front() {
         if dist == target_dist {
