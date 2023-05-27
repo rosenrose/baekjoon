@@ -1,5 +1,7 @@
 use std::io;
 
+const DIRS: [(i32, i32); 4] = [(0, -1), (1, 0), (0, 1), (-1, 0)];
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
@@ -67,14 +69,14 @@ fn simulate(mut map: Vec<Vec<i32>>, blizzards: impl Iterator<Item = (i32, usize)
 fn get_snail(n: usize) -> Vec<(usize, usize)> {
     let half = n as i32 >> 1;
     let (mut r, mut c) = (half, half);
-    let mut dir = (0, -1);
+    let mut dir = 0;
     let (mut len, mut count) = (1, 1);
 
     let mut snail = Vec::with_capacity(n * n);
     snail.push((r as usize, c as usize));
 
     loop {
-        (r, c) = (r + dir.0, c + dir.1);
+        (r, c) = (r + DIRS[dir].0, c + DIRS[dir].1);
         count -= 1;
 
         if (r, c) == (0, -1) {
@@ -82,19 +84,11 @@ fn get_snail(n: usize) -> Vec<(usize, usize)> {
         }
 
         if count == 0 {
-            dir = match dir {
-                (0, -1) => (1, 0),
-                (1, 0) => {
-                    len += 1;
-                    (0, 1)
-                }
-                (0, 1) => (-1, 0),
-                (-1, 0) => {
-                    len += 1;
-                    (0, -1)
-                }
-                _ => unreachable!(),
-            };
+            if dir & 1 == 1 {
+                len += 1;
+            }
+
+            dir = (dir + 1) % DIRS.len();
             count = len;
         }
 
@@ -178,8 +172,8 @@ fn explode_balls(
         for remove in &snail[start..end] {
             map[remove.0][remove.1] = 0;
         }
-        counts[ball as usize] += count as i32;
 
+        counts[ball as usize] += count as i32;
         is_exploded = true;
     }
 

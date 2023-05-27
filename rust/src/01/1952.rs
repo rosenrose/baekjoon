@@ -1,3 +1,5 @@
+const DIRS: [(i32, i32); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
+
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
@@ -6,12 +8,12 @@ fn main() {
     let mut is_visit = vec![vec![false; width as usize]; height as usize];
 
     let (mut r, mut c) = (0, -1);
-    let mut dir = (0, 1);
+    let mut dir = 0;
     let mut count = 0;
 
     loop {
         loop {
-            let (next_r, next_c) = (r + dir.0, c + dir.1);
+            let (next_r, next_c) = (r + DIRS[dir].0, c + DIRS[dir].1);
 
             if (next_r == -1 || next_r == height || next_c == -1 || next_c == width)
                 || is_visit[next_r as usize][next_c as usize]
@@ -37,13 +39,7 @@ fn main() {
             break;
         }
 
-        dir = match dir {
-            (0, 1) => (1, 0),
-            (1, 0) => (0, -1),
-            (0, -1) => (-1, 0),
-            (-1, 0) => (0, 1),
-            _ => unreachable!(),
-        };
+        dir = (dir + 1) % DIRS.len();
         count += 1;
     }
 
