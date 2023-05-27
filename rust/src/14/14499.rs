@@ -7,47 +7,39 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, m, x, y, k) = (input(), input(), input(), input(), input());
+    let (height, width, mut r, mut c, k) = (input(), input(), input(), input(), input());
+    let mut map: Vec<Vec<_>> = (0..height)
+        .map(|_| (0..width).map(|_| input()).collect())
+        .collect();
 
-    let (mut x, mut y) = (y, x);
-    let mut map: Vec<Vec<_>> = (0..n).map(|_| (0..m).map(|_| input()).collect()).collect();
-
-    let (mut top, mut bottom, mut east, mut west, mut south, mut north) = (0, 0, 0, 0, 0, 0);
+    let [mut top, mut bottom, mut east, mut west, mut south, mut north] = [0; 6];
 
     for command in (0..k).map(|_| input()) {
-        if (command, x) == (1, m - 1)
-            || (command, x) == (2, 0)
-            || (command, y) == (3, 0)
-            || (command, y) == (4, n - 1)
-        {
-            continue;
-        }
-
-        match command {
-            1 => {
-                x += 1;
+        match (command, r, c) {
+            (1, _, x) if x < width - 1 => {
+                c += 1;
                 (top, bottom, east, west) = (west, east, top, bottom);
             }
-            2 => {
-                x -= 1;
+            (2, _, x) if x > 0 => {
+                c -= 1;
                 (top, bottom, east, west) = (east, west, bottom, top);
             }
-            3 => {
-                y -= 1;
+            (3, y, _) if y > 0 => {
+                r -= 1;
                 (top, bottom, north, south) = (south, north, top, bottom);
             }
-            4 => {
-                y += 1;
+            (4, y, _) if y < height - 1 => {
+                r += 1;
                 (top, bottom, north, south) = (north, south, bottom, top);
             }
-            _ => unreachable!(),
+            _ => continue,
         }
 
-        if map[y][x] == 0 {
-            map[y][x] = bottom;
+        if map[r][c] == 0 {
+            map[r][c] = bottom;
         } else {
-            bottom = map[y][x];
-            map[y][x] = 0;
+            bottom = map[r][c];
+            map[r][c] = 0;
         }
 
         writeln!(output, "{top}").unwrap();
@@ -55,25 +47,3 @@ fn main() {
 
     print!("{output}");
 }
-
-/*
-match (command, &mut x, &mut y) {
-    (1, x, _) if *x < m - 1 => {
-        *x += 1;
-        (top, bottom, east, west) = (west, east, top, bottom);
-    }
-    (2, x, _) if *x > 0 => {
-        *x -= 1;
-        (top, bottom, east, west) = (east, west, bottom, top);
-    }
-    (3, _, y) if *y > 0 => {
-        *y -= 1;
-        (top, bottom, north, south) = (south, north, top, bottom);
-    }
-    (4, _, y) if *y < n - 1 => {
-        *y += 1;
-        (top, bottom, north, south) = (north, south, bottom, top);
-    }
-    _ => unreachable!(),
-}
-*/
