@@ -31,7 +31,7 @@ fn main() {
     let mut queue = VecDeque::from([(start, 0)]);
 
     while let Some(((r, c), time)) = queue.pop_front() {
-        let new_time = time + 1;
+        let next_time = time + 1;
 
         for (adj_r, adj_c) in get_adjacents(r, c) {
             let Some(adj_time) = map[adj_r][adj_c] else {
@@ -52,16 +52,16 @@ fn main() {
                 queue.push_front(((adj_r, adj_c), time));
             } else {
                 if (adj_r, adj_c) == end {
-                    println!("{new_time}");
+                    println!("{next_time}");
                     return;
                 }
 
-                if adj_time <= new_time {
+                if adj_time <= next_time {
                     continue;
                 }
 
-                map[adj_r][adj_c] = Some(new_time);
-                queue.push_back(((adj_r, adj_c), new_time));
+                map[adj_r][adj_c] = Some(next_time);
+                queue.push_back(((adj_r, adj_c), next_time));
             }
         }
     }

@@ -28,15 +28,15 @@ fn main() {
             continue;
         }
 
-        for adj in [num.saturating_sub(1), num + 1, num * 2] {
-            let new_time = time + 1;
+        let next_time = time + 1;
 
-            if adj >= k + diff || new_time > visited[adj as usize] {
+        for adj in [num.saturating_sub(1), num + 1, num * 2] {
+            if adj >= k + diff || next_time > visited[adj as usize] {
                 continue;
             }
 
-            visited[adj as usize] = new_time;
-            queue.push_back((adj, new_time));
+            visited[adj as usize] = next_time;
+            queue.push_back((adj, next_time));
         }
     }
 

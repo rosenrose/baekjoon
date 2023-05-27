@@ -41,13 +41,13 @@ fn main() {
 
         while let Some(((r, c), time)) = queue.pop_front() {
             let cell = map[r as usize][c as usize];
-            let new_time = time + 1;
+            let next_time = time + 1;
             let adjacents = [(r - 1, c), (r, c - 1), (r + 1, c), (r, c + 1)];
 
             for (adj_r, adj_c) in adjacents {
                 if !(0 <= adj_r && adj_r < height && 0 <= adj_c && adj_c < width) {
                     if cell == Cells::Human {
-                        println!("{new_time}");
+                        println!("{next_time}");
                         continue 'outer;
                     }
 
@@ -59,7 +59,7 @@ fn main() {
                 }
 
                 map[adj_r as usize][adj_c as usize] = cell;
-                queue.push_back(((adj_r, adj_c), new_time));
+                queue.push_back(((adj_r, adj_c), next_time));
             }
         }
 

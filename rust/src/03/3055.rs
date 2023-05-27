@@ -44,7 +44,7 @@ fn main() {
 
     while let Some(((r, c), time)) = queue.pop_front() {
         let cell = map[r][c];
-        let new_time = time + 1;
+        let next_time = time + 1;
 
         let adjacents = [
             (r.saturating_sub(1), c),
@@ -57,7 +57,7 @@ fn main() {
             let adj_cell = map[adj_r][adj_c];
 
             if (cell, adj_cell) == (Cells::Animal, Cells::Home) {
-                println!("{new_time}");
+                println!("{next_time}");
                 return;
             }
 
@@ -66,7 +66,7 @@ fn main() {
             }
 
             map[adj_r][adj_c] = cell;
-            queue.push_back(((adj_r, adj_c), new_time));
+            queue.push_back(((adj_r, adj_c), next_time));
         }
     }
 

@@ -59,7 +59,7 @@ fn simulate(mut map: Vec<Vec<Cells>>, red: (usize, usize), blue: (usize, usize))
             return None;
         }
 
-        let new_time = time + 1;
+        let next_time = time + 1;
         map[red.0][red.1] = Red;
         map[blue.0][blue.1] = Blue;
 
@@ -103,10 +103,10 @@ fn simulate(mut map: Vec<Vec<Cells>>, red: (usize, usize), blue: (usize, usize))
             }
 
             if map[moved_red.0][moved_red.1] == Hole {
-                return Some(new_time);
+                return Some(next_time);
             }
 
-            queue.push_back(((moved_red, moved_blue), new_time));
+            queue.push_back(((moved_red, moved_blue), next_time));
         }
 
         map[red.0][red.1] = Empty;
