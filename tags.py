@@ -1,66 +1,98 @@
-import time
 import json
 import subprocess
+import sys
+import time
 from pathlib import Path
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 base = Path(__file__).parent
+(temp := base / "temp").mkdir(exist_ok=True)
+save_path = base / "tags.json"
+boj_url = "https://www.acmicpc.net"
+
 
 def get_tag():
+    export = json.load(open(save_path, encoding="utf-8"))
+    num = sys.argv[1]
     port = 9222
-    subprocess.run(["chrome", f"--remote-debugging-port={port}", '--user-data-dir="/temp"'])
-    input()
+
+    subprocess.run(
+        [
+            "pwsh",
+            "-c",
+            f"chrome --remote-debugging-port={port} --user-data-dir={temp}",
+        ],
+        cwd=base,
+    )
 
     options = webdriver.ChromeOptions()
     options.add_experimental_option("debuggerAddress", f"127.0.0.1:{port}")
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(
+        service=Service(ChromeDriverManager().install()), options=options
+    )
 
-    save_path = base / "tags.json"
-    export = json.load(open(save_path, encoding="utf-8"))
-    max_num = max(map(int, export.keys()))
-    print(max_num)
-    
     try:
-        for nums in [
-            i
-            for i in (base / "rust/src").iterdir()
-            if i.is_dir()
-        ]:
-            for problem in nums.iterdir():
-                num = int(problem.stem)
+        login(driver)
 
-                if num <= max_num:
-                    continue
+        driver.get(f"{boj_url}/problem/{num}")
+        tags = []
 
-                url = f"https://www.acmicpc.net/problem/{num}"
-                driver.get(url)
-                tags = []
+        try:
+            tag_list = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".spoiler-list"))
+            )
 
-                try:
-                    tag_list = WebDriverWait(driver, 10).until(
-                        EC.presence_of_element_located((By.CSS_SELECTOR, ".spoiler-list"))
-                    )
+            tags = [
+                tag.text.strip() for tag in tag_list.find_elements(By.CSS_SELECTOR, "a")
+            ]
+        except:
+            ...
 
-                    for tag in tag_list.find_elements(By.CSS_SELECTOR, "a"):
-                        tags.append(tag.text.strip())
-                except:
-                    ...
+        print(num, tags)
 
-                print(num, tags)
-                export[num] = tags
-                time.sleep(1.5)
-    finally:
+        export[num] = tags
+        export = {
+            key: val
+            for key, val in sorted(
+                [item for item in export.items()], key=lambda x: int(x[0])
+            )
+        }
+
         json.dump(
             export,
             open(save_path, "w", encoding="utf-8"),
             ensure_ascii=False,
-            indent=4,
         )
+
+        subprocess.run(["pwsh", "-c", f"prettier -w --print-width 1000 {save_path}"])
+    finally:
+        driver.quit()
+        input("Done")
+        subprocess.run(["pwsh", "-c", f"rm -r -force {temp}"])
+
+
+def login(driver):
+    ID, PASSWORD = (base / "boj_account.txt").read_text().splitlines()
+
+    driver.get(f"{boj_url}/login")
+    form = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "#login_form"))
+    )
+
+    id_input, pass_input = form.find_elements(By.CSS_SELECTOR, "input[placeholder]")
+    id_input.send_keys(ID)
+    time.sleep(0.3)
+    pass_input.send_keys(PASSWORD)
+    time.sleep(0.5)
+    pass_input.send_keys(Keys.RETURN)
+
+    WebDriverWait(driver, 30).until(EC.url_to_be(boj_url + "/"))
 
 
 get_tag()
