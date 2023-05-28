@@ -54,7 +54,7 @@ fn combinations(
         return simulate(selected, viruse_places, room.to_owned(), empty_cells);
     }
 
-    let takes = viruse_places.len() - selected.len() + 1;
+    let takes = viruse_places.len() - (selected.len() - 1);
 
     (start..depth + takes)
         .filter_map(|i| {

@@ -25,7 +25,7 @@ fn combinations(
         return i32::from(selected.iter().map(|&i| nums[i]).sum::<i32>() == sum);
     }
 
-    let takes = nums.len() - selected.len() + 1;
+    let takes = nums.len() - (selected.len() - 1);
 
     (start..depth + takes)
         .map(|i| {

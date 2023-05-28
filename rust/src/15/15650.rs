@@ -28,7 +28,7 @@ fn combinations(
         return;
     }
 
-    let takes = nums - selected.len() + 1;
+    let takes = nums - (selected.len() - 1);
 
     for (i, num) in (1..=nums).enumerate().skip(start).take(takes) {
         selected[depth] = num;

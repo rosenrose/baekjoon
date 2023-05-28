@@ -29,7 +29,7 @@ fn combinations(depth: usize, start: usize, selected: &mut Vec<char>, chars: &[c
         return;
     }
 
-    let takes = chars.len() - selected.len() + 1;
+    let takes = chars.len() - (selected.len() - 1);
 
     for i in start..depth + takes {
         selected[depth] = chars[i];

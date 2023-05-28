@@ -41,7 +41,7 @@ fn combination_pairs(
         return combination_pairs(depth + 1, 1, selected, numbers, matrix);
     }
 
-    let takes = numbers - selected.len() + 1;
+    let takes = numbers - (selected.len() - 1);
 
     (start..depth + takes)
         .map(|num| {

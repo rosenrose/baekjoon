@@ -31,6 +31,7 @@ fn main() {
     let mut queue = VecDeque::from([(start, 0)]);
 
     while let Some(((r, c), dist)) = queue.pop_front() {
+        let new_dist = dist + 1;
         let adjacents = [
             ((r - 1).max(0), c),
             (r, (c - 1).max(0)),
@@ -43,7 +44,6 @@ fn main() {
                 continue;
             }
 
-            let new_dist = dist + 1;
             map[adj_r as usize][adj_c as usize] = Some(new_dist);
             queue.push_back(((adj_r, adj_c), new_dist));
         }

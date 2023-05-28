@@ -62,6 +62,7 @@ fn simulate(mut map: Vec<Vec<i32>>) -> i32 {
         if dir & 1 == 1 {
             len += 1;
         }
+
         dir = (dir + 1) % DIRS.len();
     }
 }

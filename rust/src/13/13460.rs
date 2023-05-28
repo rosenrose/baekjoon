@@ -60,6 +60,7 @@ fn simulate(mut map: Vec<Vec<Cells>>, red: (usize, usize), blue: (usize, usize))
         }
 
         let next_time = time + 1;
+
         map[red.0][red.1] = Red;
         map[blue.0][blue.1] = Blue;
 
@@ -67,30 +68,30 @@ fn simulate(mut map: Vec<Vec<Cells>>, red: (usize, usize), blue: (usize, usize))
             let (moved_red, moved_blue) = match dir {
                 Up => {
                     if red.0 < blue.0 {
-                        move_red_then_blue(red, blue, dir, &mut map)
+                        move_balls(red, blue, dir, &mut map)
                     } else {
-                        move_blue_then_red(red, blue, dir, &mut map)
+                        move_balls(blue, red, dir, &mut map)
                     }
                 }
                 Down => {
                     if red.0 < blue.0 {
-                        move_blue_then_red(red, blue, dir, &mut map)
+                        move_balls(blue, red, dir, &mut map)
                     } else {
-                        move_red_then_blue(red, blue, dir, &mut map)
+                        move_balls(red, blue, dir, &mut map)
                     }
                 }
                 Left => {
                     if red.1 < blue.1 {
-                        move_red_then_blue(red, blue, dir, &mut map)
+                        move_balls(red, blue, dir, &mut map)
                     } else {
-                        move_blue_then_red(red, blue, dir, &mut map)
+                        move_balls(blue, red, dir, &mut map)
                     }
                 }
                 Right => {
                     if red.1 < blue.1 {
-                        move_blue_then_red(red, blue, dir, &mut map)
+                        move_balls(blue, red, dir, &mut map)
                     } else {
-                        move_red_then_blue(red, blue, dir, &mut map)
+                        move_balls(red, blue, dir, &mut map)
                     }
                 }
             };
@@ -116,50 +117,32 @@ fn simulate(mut map: Vec<Vec<Cells>>, red: (usize, usize), blue: (usize, usize))
     None
 }
 
-fn move_red_then_blue(
-    red: (usize, usize),
-    blue: (usize, usize),
+fn move_balls(
+    first: (usize, usize),
+    second: (usize, usize),
     dir: Dirs,
     map: &mut Vec<Vec<Cells>>,
 ) -> ((usize, usize), (usize, usize)) {
-    let moved_red = get_moved_coord(red, dir, map);
-    map[red.0][red.1] = Empty;
+    let first_moved = get_moved_coord(first, dir, map);
+    let first_ball = map[first.0][first.1];
+    let temp = map[first_moved.0][first_moved.1];
 
-    let temp = map[moved_red.0][moved_red.1];
-
-    if temp != Hole {
-        map[moved_red.0][moved_red.1] = Red;
-    }
-
-    let moved_blue = get_moved_coord(blue, dir, map);
-
-    map[red.0][red.1] = Red;
-    map[moved_red.0][moved_red.1] = temp;
-
-    (moved_red, moved_blue)
-}
-
-fn move_blue_then_red(
-    red: (usize, usize),
-    blue: (usize, usize),
-    dir: Dirs,
-    map: &mut Vec<Vec<Cells>>,
-) -> ((usize, usize), (usize, usize)) {
-    let moved_blue = get_moved_coord(blue, dir, map);
-    map[blue.0][blue.1] = Empty;
-
-    let temp = map[moved_blue.0][moved_blue.1];
+    map[first.0][first.1] = Empty;
 
     if temp != Hole {
-        map[moved_blue.0][moved_blue.1] = Blue;
+        map[first_moved.0][first_moved.1] = first_ball;
     }
 
-    let moved_red = get_moved_coord(red, dir, map);
+    let second_moved = get_moved_coord(second, dir, map);
 
-    map[blue.0][blue.1] = Blue;
-    map[moved_blue.0][moved_blue.1] = temp;
+    map[first.0][first.1] = first_ball;
+    map[first_moved.0][first_moved.1] = temp;
 
-    (moved_red, moved_blue)
+    if first_ball == Red {
+        (first_moved, second_moved)
+    } else {
+        (second_moved, first_moved)
+    }
 }
 
 fn get_moved_coord((r, c): (usize, usize), dir: Dirs, map: &[Vec<Cells>]) -> (usize, usize) {

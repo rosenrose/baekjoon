@@ -26,7 +26,7 @@ fn combinations(
     }
 
     let (width, height) = (map[0].len(), map.len());
-    let takes = (width * height) - selected.len() + 1;
+    let takes = (width * height) - (selected.len() - 1);
 
     (start..depth + takes)
         .map(|i| {

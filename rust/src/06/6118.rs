@@ -39,12 +39,12 @@ fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>)) -> (Vec<u16>, u16) {
 
     while let Some((node, dist)) = queue.pop_front() {
         max_dist = dist.max(max_dist);
+
+        let new_dist = dist + 1;
         let mut edge = nodes[node as usize];
 
         while let Some(&(adj, next_edge)) = edges.get(edge as usize) {
             if distances[adj as usize] == u16::MAX {
-                let new_dist = dist + 1;
-
                 distances[adj as usize] = new_dist;
                 queue.push_back((adj, new_dist));
             }

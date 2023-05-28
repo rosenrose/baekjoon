@@ -49,7 +49,7 @@ fn combinations(
         return chicken_dist;
     }
 
-    let takes = chickens.len() - selected.len() + 1;
+    let takes = chickens.len() - (selected.len() - 1);
 
     (start..depth + takes)
         .map(|i| {

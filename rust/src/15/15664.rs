@@ -33,7 +33,7 @@ fn combinations(
         return;
     }
 
-    let takes = nums.len() - selected.len() + 1;
+    let takes = nums.len() - (selected.len() - 1);
     let mut visited = HashSet::new();
 
     for i in start..depth + takes {
