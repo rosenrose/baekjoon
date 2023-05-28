@@ -44,59 +44,43 @@ fn main() {
 
     let mut min_count = i32::MAX;
     let mut queue = if map[0][0] == BackSlash {
-        VecDeque::from([((0, 0), Vec::<(i16, i16)>::new(), 0)])
+        VecDeque::from([((0, 0), 0)])
     } else {
         map[0][0] = BackSlash;
-        VecDeque::from([((0, 0), Vec::new(), 1)])
+        VecDeque::from([((0, 0), 1)])
     };
 
-    while let Some(((r, c), changes, rotate_count)) = queue.pop_front() {
-        for change in changes.iter() {
-            map[change.0 as usize][change.1 as usize] =
-                if map[change.0 as usize][change.1 as usize] == Slash {
-                    BackSlash
-                } else {
-                    Slash
-                };
-        }
+    while let Some(((r, c), rotate_count)) = queue.pop_front() {
+        let cur_ch = map[r as usize][c as usize];
 
-        if (r, c, map[r as usize][c as usize]) == (height - 1, width - 1, BackSlash) {
+        if (r, c, cur_ch) == (height - 1, width - 1, BackSlash) {
             min_count = rotate_count.min(min_count);
+            continue;
         }
 
-        let adjacents = DIRS.map(|dir| (r + dir.0, c + dir.1));
+        let adjacents = DIRS.map(|dir| ((r + dir.0, c + dir.1), dir));
 
-        for &(adj_r, adj_c) in adjacents
-            .iter()
-            .filter(|&&(adj_r, adj_c)| 0 <= adj_r && adj_r < height && 0 <= adj_c && adj_c < width)
-        {
+        for &((adj_r, adj_c), adj_dir) in adjacents.iter().filter(|&&((adj_r, adj_c), _)| {
+            0 <= adj_r && adj_r < height && 0 <= adj_c && adj_c < width
+        }) {
             let adj = (adj_r as usize, adj_c as usize);
+            let adj_ch = map[adj.0][adj.1];
 
             if visited[adj.0][adj.1] {
                 continue;
             }
 
-            if can_move((r, c), (adj_r, adj_c), &map) {
+            if can_move(cur_ch, adj_ch, adj_dir) {
                 visited[adj.0][adj.1] = true;
-                queue.push_front(((adj_r, adj_c), changes.clone(), rotate_count));
+                queue.push_front(((adj_r, adj_c), rotate_count));
             }
 
-            if can_move_after_rotate((r, c), (adj_r, adj_c), &map) {
-                let mut new_changes = changes.clone();
-                new_changes.push((adj_r, adj_c));
+            if can_move_after_rotate(cur_ch, adj_ch, adj_dir) {
+                map[adj.0][adj.1] = if adj_ch == Slash { BackSlash } else { Slash };
 
                 visited[adj.0][adj.1] = true;
-                queue.push_back(((adj_r, adj_c), new_changes, rotate_count + 1));
+                queue.push_back(((adj_r, adj_c), rotate_count + 1));
             }
-        }
-
-        for change in changes {
-            map[change.0 as usize][change.1 as usize] =
-                if map[change.0 as usize][change.1 as usize] == Slash {
-                    BackSlash
-                } else {
-                    Slash
-                };
         }
     }
 
@@ -108,52 +92,21 @@ fn main() {
     println!("{min_count}");
 }
 
-fn can_move(start: (i16, i16), end: (i16, i16), map: &[Vec<Cells>]) -> bool {
-    let start_ch = map[start.0 as usize][start.1 as usize];
-    let end_ch = map[end.0 as usize][end.1 as usize];
-    let dir = (end.0 - start.0, end.1 - start.1);
-
-    matches!(
-        (start_ch, end_ch, dir),
-        (BackSlash, BackSlash, (-1, -1))
-            | (BackSlash, Slash, (-1, 0))
-            | (BackSlash, Slash, (0, -1))
-            | (BackSlash, Slash, (0, 1))
-            | (BackSlash, Slash, (1, 0))
-            | (BackSlash, BackSlash, (1, 1))
-    ) || matches!(
-        (start_ch, end_ch, dir),
-        (Slash, BackSlash, (-1, 0))
-            | (Slash, Slash, (-1, 1))
-            | (Slash, BackSlash, (0, -1))
-            | (Slash, BackSlash, (0, 1))
-            | (Slash, Slash, (1, -1))
-            | (Slash, BackSlash, (1, 0))
-    )
+fn can_move(start_ch: Cells, end_ch: Cells, dir: (i16, i16)) -> bool {
+    (is_diagonal(start_ch, dir) && start_ch == end_ch) || (is_cross(dir) && start_ch != end_ch)
 }
 
-fn can_move_after_rotate(start: (i16, i16), end: (i16, i16), map: &[Vec<Cells>]) -> bool {
-    let start_ch = map[start.0 as usize][start.1 as usize];
-    let end_ch = map[end.0 as usize][end.1 as usize];
-    let dir = (end.0 - start.0, end.1 - start.1);
+fn can_move_after_rotate(start_ch: Cells, end_ch: Cells, dir: (i16, i16)) -> bool {
+    (is_diagonal(start_ch, dir) && start_ch != end_ch) || (is_cross(dir) && start_ch == end_ch)
+}
 
-    matches!(
-        (start_ch, end_ch, dir),
-        (BackSlash, Slash, (-1, -1))
-            | (BackSlash, BackSlash, (-1, 0))
-            | (BackSlash, BackSlash, (0, -1))
-            | (BackSlash, BackSlash, (0, 1))
-            | (BackSlash, BackSlash, (1, 0))
-            | (BackSlash, Slash, (1, 1))
-    ) || matches!(
-        (start_ch, end_ch, dir),
-        (Slash, Slash, (-1, 0))
-            | (Slash, BackSlash, (-1, 1))
-            | (Slash, Slash, (0, -1))
-            | (Slash, Slash, (0, 1))
-            | (Slash, BackSlash, (1, -1))
-            | (Slash, Slash, (1, 0))
-    )
+fn is_diagonal(ch: Cells, dir: (i16, i16)) -> bool {
+    (ch == BackSlash && matches!(dir, (-1, -1) | (1, 1)))
+        || (ch == Slash && matches!(dir, (-1, 1) | (1, -1)))
+}
+
+fn is_cross(dir: (i16, i16)) -> bool {
+    matches!(dir, (-1, 0) | (0, -1) | (0, 1) | (1, 0))
 }
 
 fn parse_int(buf: &str) -> i16 {

@@ -96,10 +96,7 @@ fn simulate(mut map: Vec<Vec<Cells>>, red: (usize, usize), blue: (usize, usize))
                 }
             };
 
-            if (moved_red, moved_blue) == (red, blue) {
-                continue;
-            }
-            if map[moved_blue.0][moved_blue.1] == Hole {
+            if (moved_red, moved_blue) == (red, blue) || map[moved_blue.0][moved_blue.1] == Hole {
                 continue;
             }
 
