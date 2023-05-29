@@ -2,6 +2,7 @@ import json
 import subprocess
 import sys
 import time
+import pyperclip
 from pathlib import Path
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -14,12 +15,12 @@ from selenium.webdriver.support.wait import WebDriverWait
 base = Path(__file__).parent
 (temp := base / "temp").mkdir(exist_ok=True)
 save_path = base / "tags.json"
+
 boj_url = "https://www.acmicpc.net"
+num = sys.argv[1]
 
 
-def get_tag():
-    export = json.load(open(save_path, encoding="utf-8"))
-    num = sys.argv[1]
+def get_tag_from_web():
     port = 9222
 
     subprocess.run(
@@ -55,22 +56,8 @@ def get_tag():
             ...
 
         print(num, tags)
+        save_tags(tags)
 
-        export[num] = tags
-        export = {
-            key: val
-            for key, val in sorted(
-                [item for item in export.items()], key=lambda x: int(x[0])
-            )
-        }
-
-        json.dump(
-            export,
-            open(save_path, "w", encoding="utf-8"),
-            ensure_ascii=False,
-        )
-
-        subprocess.run(["pwsh", "-c", f"prettier -w --print-width 1000 {save_path}"])
     finally:
         driver.quit()
         input("Done")
@@ -95,4 +82,29 @@ def login(driver):
     WebDriverWait(driver, 30).until(EC.url_to_be(boj_url + "/"))
 
 
-get_tag()
+def get_tag_from_clipboard():
+    tags = [tag.strip() for tag in pyperclip.paste().splitlines()]
+    save_tags(tags)
+
+
+def save_tags(tags):
+    export = json.load(open(save_path, encoding="utf-8"))
+    export[num] = tags
+    export = {
+        key: val
+        for key, val in sorted(
+            [item for item in export.items()], key=lambda x: int(x[0])
+        )
+    }
+
+    json.dump(
+        export,
+        open(save_path, "w", encoding="utf-8"),
+        ensure_ascii=False,
+    )
+
+    subprocess.run(["pwsh", "-c", f"prettier -w --print-width 1000 {save_path}"])
+
+
+# get_tag_from_web()
+get_tag_from_clipboard()
