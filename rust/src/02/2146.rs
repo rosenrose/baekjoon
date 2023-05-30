@@ -10,33 +10,34 @@ fn main() {
         .map(|_| input.by_ref().take(n).map(|num| num == 1).collect())
         .collect();
 
-    let mut visited = vec![vec![false; n]; n];
+    let mut visited = vec![vec![i32::MAX; n]; n];
     let mut min_dist = i32::MAX;
 
     for y in 0..n {
         for x in 0..n {
-            if visited[y][x] || !map[y][x] {
+            if visited[y][x] != i32::MAX || !map[y][x] {
                 continue;
             }
 
-            visited[y][x] = true;
+            visited[y][x] = 0;
             let mut borders = get_borders((y, x), &map, &mut visited);
-            let mut bridge_visited = visited.clone();
 
             'outer: while let Some(((r, c), dist)) = borders.pop_front() {
+                let new_dist = dist + 1;
+
                 for (adj_r, adj_c) in get_adjacents(r, c, n) {
-                    if bridge_visited[adj_r][adj_c] {
+                    if visited[adj_r][adj_c] <= new_dist {
                         continue;
                     }
 
-                    bridge_visited[adj_r][adj_c] = true;
+                    visited[adj_r][adj_c] = new_dist;
 
                     if map[adj_r][adj_c] {
                         min_dist = dist.min(min_dist);
                         break 'outer;
                     }
 
-                    borders.push_back(((adj_r, adj_c), dist + 1));
+                    borders.push_back(((adj_r, adj_c), new_dist));
                 }
             }
         }
@@ -48,7 +49,7 @@ fn main() {
 fn get_borders(
     start: (usize, usize),
     map: &[Vec<bool>],
-    visited: &mut Vec<Vec<bool>>,
+    visited: &mut Vec<Vec<i32>>,
 ) -> VecDeque<((usize, usize), i32)> {
     let n = map.len();
     let mut borders = VecDeque::new();
@@ -56,18 +57,17 @@ fn get_borders(
 
     while let Some((r, c)) = stack.pop() {
         for (adj_r, adj_c) in get_adjacents(r, c, n) {
-            if visited[adj_r][adj_c] {
+            if visited[adj_r][adj_c] <= 1 {
                 continue;
             }
 
-            visited[adj_r][adj_c] = true;
-
-            if !map[adj_r][adj_c] {
+            if map[adj_r][adj_c] {
+                visited[adj_r][adj_c] = 0;
+                stack.push((adj_r, adj_c));
+            } else {
+                visited[adj_r][adj_c] = 1;
                 borders.push_back(((adj_r, adj_c), 1));
-                continue;
             }
-
-            stack.push((adj_r, adj_c));
         }
     }
 
