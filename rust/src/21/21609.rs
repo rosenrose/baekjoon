@@ -150,10 +150,7 @@ fn move_down(map: &mut Vec<Vec<Cells>>) {
                 continue;
             }
 
-            let Some(down) = (r + 1..n).find(|&r| map[r][c] != Cells::Empty) else {
-                (map[n - 1][c], map[r][c]) = (map[r][c], map[n - 1][c]);
-                continue;
-            };
+            let down = (r + 1..n).find(|&r| map[r][c] != Cells::Empty).unwrap_or(n);
 
             (map[down - 1][c], map[r][c]) = (map[r][c], map[down - 1][c]);
         }
