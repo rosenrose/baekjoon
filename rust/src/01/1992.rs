@@ -17,7 +17,7 @@ fn compress(video: &[&str], n: usize, x: usize, y: usize) -> String {
 
     let (mut count_0, mut count_1) = (0, 0);
 
-    for row in video[y..y + n].iter() {
+    for row in &video[y..y + n] {
         for cell in row[x..x + n].chars() {
             match cell {
                 '0' => count_0 += 1,

@@ -16,7 +16,7 @@ fn main() {
 
                 if m1
                     .iter()
-                    .zip(m2.iter())
+                    .zip(&m2)
                     .map(|(m1, m2)| m1 + m2)
                     .eq(m3.into_iter())
                 {

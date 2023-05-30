@@ -25,7 +25,7 @@ fn main() {
                 continue 'outer;
             }
 
-            for &conv in convenients.iter() {
+            for &conv in &convenients {
                 if visited.contains(&conv) || get_distance((x, y), conv) > MAX_DIST {
                     continue;
                 }

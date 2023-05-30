@@ -16,7 +16,7 @@ fn main() {
 fn cut(paper: &[String], n: usize, x: usize, y: usize, white: &mut i32, blue: &mut i32) {
     let (mut count_0, mut count_1) = (0, 0);
 
-    for row in paper[y..y + n].iter() {
+    for row in &paper[y..y + n] {
         for cell in row[x..x + n].chars() {
             match cell {
                 '0' => count_0 += 1,

@@ -19,7 +19,7 @@ fn main() {
         adjacency_list[v2].push(v1);
     }
 
-    for list in adjacency_list.iter_mut() {
+    for list in &mut adjacency_list {
         (*list).sort();
     }
     // println!("{adjacency_list:?}");
@@ -57,7 +57,7 @@ fn search(graph: &[Vec<usize>], start: usize, op: Ops) -> Vec<usize> {
                 }
             }
             Ops::BFS => {
-                for &adj in graph[node].iter() {
+                for &adj in &graph[node] {
                     queue.push_back(adj);
                 }
             }

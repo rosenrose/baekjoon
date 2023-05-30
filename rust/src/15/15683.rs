@@ -114,7 +114,7 @@ fn simulate(
     };
 
     for (i, &((row, col), num)) in cctvs.iter().enumerate() {
-        for dir in CCTV_TYPES[num - 1][selected[i]].iter() {
+        for dir in CCTV_TYPES[num - 1][selected[i]] {
             match dir {
                 Up => {
                     for c in (0..col).rev() {

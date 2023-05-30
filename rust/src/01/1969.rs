@@ -17,7 +17,7 @@ fn main() {
             let mut max_count = 1;
             let mut acgt_count = [0; 4];
 
-            for dna in dna_strings.iter() {
+            for dna in &dna_strings {
                 let idx = match dna[i] as char {
                     'A' => 0,
                     'C' => 1,

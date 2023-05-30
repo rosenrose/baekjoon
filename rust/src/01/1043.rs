@@ -55,7 +55,7 @@ fn main() {
         .collect();
 
     for _ in 0..m - 1 {
-        for party in parties.iter() {
+        for party in &parties {
             if party
                 .iter()
                 .any(|&p| disjoint_set.is_same(p, know_truth_group))

@@ -50,8 +50,8 @@ fn product(
     if total_depth == selected.len() {
         let mut ret = String::new();
         // println!("{selected:?}");
-        for &i in selected.iter() {
-            for &(action, arg) in &cards[i - 1] {
+        for i in selected {
+            for &(action, arg) in &cards[*i - 1] {
                 match action {
                     "ADD" => ret.push(arg),
                     "DEL" => {

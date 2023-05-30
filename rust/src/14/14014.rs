@@ -11,7 +11,7 @@ fn main() {
         .map(str::to_lowercase)
         .collect();
 
-    for word in words.iter_mut() {
+    for word in &mut words {
         if matches!(
             word.as_str(),
             "of" | "to" | "into" | "onto" | "above" | "below" | "from" | "by" | "is" | "at"
@@ -22,7 +22,7 @@ fn main() {
 
     const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
 
-    for word in words.iter_mut() {
+    for word in &mut words {
         let vowel_indices: Vec<_> = word.match_indices(VOWELS).map(|(i, _)| i).collect();
 
         *word = word

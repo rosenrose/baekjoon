@@ -58,7 +58,7 @@ fn simulate(
         }
 
         modify_scents(&mut map, duration);
-        // for r in map.iter() {
+        // for r in &map {
         //     println!("{r:?}");
         // }
         // println!("");
@@ -92,7 +92,7 @@ fn move_sharks(
             });
 
             let ((moved_r, moved_c), new_dir) = 'a: {
-                for &((adj_r, adj_c), prefer_dir) in adjacents.iter() {
+                for ((adj_r, adj_c), prefer_dir) in adjacents {
                     if map[adj_r][adj_c].1 == 0 {
                         break 'a ((adj_r, adj_c), prefer_dir);
                     }
@@ -126,8 +126,8 @@ fn move_sharks(
 }
 
 fn modify_scents(map: &mut Vec<Vec<(Option<usize>, usize, i32)>>, duration: i32) {
-    for row in map.iter_mut() {
-        for (dir, num, scents) in row.iter_mut() {
+    for row in map {
+        for (dir, num, scents) in row {
             if *num == 0 {
                 continue;
             }

@@ -94,7 +94,7 @@ impl BigInt {
         if is_inverse {
             len = v.len();
 
-            for num in v.iter_mut() {
+            for num in v {
                 (*num).div(len as f64);
             }
         }
@@ -159,7 +159,7 @@ impl Mul for BigInt {
         Self::fast_fourier_transform(&mut a, false);
         Self::fast_fourier_transform(&mut b, false);
 
-        let mut mul: Vec<_> = a.iter().zip(b.iter()).map(|(&a, &b)| a * b).collect();
+        let mut mul: Vec<_> = a.iter().zip(&b).map(|(&a, &b)| a * b).collect();
 
         Self::fast_fourier_transform(&mut mul, true);
 

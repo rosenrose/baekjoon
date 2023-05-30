@@ -47,7 +47,7 @@ impl Add for &Matrix {
         Matrix(
             self.0
                 .iter()
-                .zip(other.0.iter())
+                .zip(&other.0)
                 .map(|(row1, row2)| {
                     row1.iter()
                         .zip(row2)
@@ -83,7 +83,7 @@ impl Mul for &Matrix {
 
 impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        for row in self.0.iter() {
+        for row in &self.0 {
             for cell in row {
                 write!(f, "{cell} ").unwrap();
             }

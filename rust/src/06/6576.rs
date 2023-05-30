@@ -38,8 +38,8 @@ fn fill_map(map: &mut Vec<Vec<char>>, quad_tree: &str, n: usize, x: usize, y: us
     if quad_tree.len() == 1 {
         let ch = quad_tree.chars().nth(0).unwrap();
 
-        for row in map[y..y + n].iter_mut() {
-            for cell in row[x..x + n].iter_mut() {
+        for row in &mut map[y..y + n] {
+            for cell in &mut row[x..x + n] {
                 *cell = ch;
             }
         }

@@ -49,7 +49,7 @@ impl BigInt {
         let mut result = self.nums.clone();
         result[0] += other;
 
-        for num in result.iter_mut() {
+        for num in &mut result {
             let temp = carry + *num;
 
             carry = temp / 10;

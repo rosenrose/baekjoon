@@ -25,7 +25,7 @@ fn dfs(graph: &[Vec<usize>], start: usize) -> i32 {
     while let Some(node) = stack.pop() {
         count += 1;
 
-        for &adj in graph[node].iter() {
+        for &adj in &graph[node] {
             if visited[adj] {
                 continue;
             }

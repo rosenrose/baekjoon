@@ -38,7 +38,7 @@ fn simulate(mut map: Vec<Vec<(Vec<u8>, i8)>>, s: usize, mut shark: (usize, usize
 
         for r in 0..SIZE {
             for c in 0..SIZE {
-                for &dir in map[r][c].0.iter() {
+                for &dir in &map[r][c].0 {
                     copied[r][c].push(dir);
                 }
             }

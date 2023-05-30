@@ -35,7 +35,7 @@ fn dijkstra_nth(graph: &[Vec<(i32, i32)>], start: usize, order: usize) -> Vec<Bi
     let mut queue = BinaryHeap::from([Reverse((0, start as i32))]);
 
     while let Some(Reverse((dist, node))) = queue.pop() {
-        for &(adj, weight) in graph[node as usize].iter() {
+        for &(adj, weight) in &graph[node as usize] {
             let new_dist = dist + weight;
             let adj_idx = adj as usize;
 

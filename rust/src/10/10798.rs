@@ -6,7 +6,7 @@ fn main() {
     let longest = words.iter().map(|word| word.len()).max().unwrap();
 
     for i in 0..longest {
-        for word in words.iter() {
+        for word in &words {
             if let Some(c) = word.chars().nth(i) {
                 print!("{c}");
             }

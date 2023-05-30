@@ -23,7 +23,7 @@ fn main() {
         .collect();
 
     for col in 0..k {
-        for row in table.iter() {
+        for row in &table {
             print!("{}", row[col] as char);
         }
     }

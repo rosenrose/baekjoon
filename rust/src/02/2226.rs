@@ -11,7 +11,7 @@ impl BigInt {
         let mut result = self.0.clone();
         result[0] += other;
 
-        for num in result.iter_mut() {
+        for num in &mut result {
             let temp = carry + *num;
 
             carry = temp / POW;
@@ -34,7 +34,7 @@ impl BigInt {
         let mut result = self.0.clone();
         result[0] -= other;
 
-        for num in result.iter_mut() {
+        for num in &mut result {
             *num += carry;
 
             if *num >= 0 {

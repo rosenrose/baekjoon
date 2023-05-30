@@ -34,7 +34,7 @@ fn main() {
 
         if current_counts
             .iter()
-            .zip(min_counts.iter())
+            .zip(&min_counts)
             .all(|(cur, min)| cur >= min)
         {
             pw_count += 1;

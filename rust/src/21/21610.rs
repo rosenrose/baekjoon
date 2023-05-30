@@ -31,7 +31,7 @@ fn simulate(mut map: Vec<Vec<i32>>, moves: impl Iterator<Item = (usize, i32)>) -
     let mut is_cloud = vec![vec![false; n]; n];
 
     for (dir, speed) in moves {
-        for (r, c) in clouds.iter_mut() {
+        for (r, c) in &mut clouds {
             (*r, *c) = (
                 (*r as i32 + DIRS[dir].0 * speed).rem_euclid(n as i32) as usize,
                 (*c as i32 + DIRS[dir].1 * speed).rem_euclid(n as i32) as usize,

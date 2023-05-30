@@ -9,7 +9,7 @@ impl BigInt {
     fn mul_assign(&mut self, other: i128) {
         let mut carry = 0;
 
-        for num in self.0.iter_mut() {
+        for num in &mut self.0 {
             let temp = carry + *num * other;
 
             carry = temp / POW;

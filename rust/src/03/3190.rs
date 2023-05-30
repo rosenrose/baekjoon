@@ -92,7 +92,7 @@ fn move_snake(board: &mut Vec<Vec<Cells>>, snake: &mut VecDeque<(i8, i8)>, dir: 
             }
         }
     }
-    // for r in board.iter() {
+    // for r in board {
     //     println!("{r:?}");
     // }
     // println!("");

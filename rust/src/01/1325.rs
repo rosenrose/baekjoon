@@ -42,7 +42,7 @@ fn dfs(graph: &[Vec<i16>]) -> (Vec<i16>, i16) {
         while let Some(node) = stack.pop() {
             count += 1;
 
-            for &adj in graph[node as usize].iter() {
+            for &adj in &graph[node as usize] {
                 if visited[adj as usize] {
                     continue;
                 }

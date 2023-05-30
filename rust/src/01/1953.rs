@@ -27,7 +27,7 @@ fn main() {
         while let Some(node) = stack.pop() {
             let color = visited[node].unwrap();
 
-            for &adj in adjacency_list[node].iter() {
+            for &adj in &adjacency_list[node] {
                 if visited[adj].is_some() {
                     continue;
                 }

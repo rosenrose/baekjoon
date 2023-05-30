@@ -15,7 +15,7 @@ fn main() {
         adjacency_list[v as usize].push(u);
     }
 
-    for list in adjacency_list.iter_mut() {
+    for list in &mut adjacency_list {
         (*list).sort_unstable();
     }
 

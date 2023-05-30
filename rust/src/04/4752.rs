@@ -15,7 +15,7 @@ fn main() {
         let outer_tags = get_tags(&text[..begin]);
         let inner_tags = get_tags(selected);
         // println!("{outer_tags:?} {inner_tags:?}");
-        for out_tag in outer_tags.iter() {
+        for out_tag in &outer_tags {
             print!("<{out_tag}>");
         }
 

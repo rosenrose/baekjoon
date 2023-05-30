@@ -30,7 +30,7 @@ fn bfs(graph: &[Vec<usize>], start: usize, end: usize) -> i32 {
             return dist;
         }
 
-        for &adj in graph[node].iter() {
+        for &adj in &graph[node] {
             if visited[adj] {
                 continue;
             }

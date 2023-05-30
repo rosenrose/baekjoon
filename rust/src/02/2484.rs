@@ -9,7 +9,7 @@ fn main() {
             let nums: Vec<_> = input.by_ref().take(4).collect();
             let mut counts = [0; 7];
 
-            for &num in nums.iter() {
+            for &num in &nums {
                 counts[num] += 1;
             }
 

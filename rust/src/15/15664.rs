@@ -25,8 +25,8 @@ fn combinations(
     output: &mut String,
 ) {
     if depth == selected.len() {
-        for &i in selected.iter() {
-            write!(output, "{} ", nums[i]).unwrap();
+        for i in selected {
+            write!(output, "{} ", nums[*i]).unwrap();
         }
         writeln!(output, "").unwrap();
 

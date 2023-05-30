@@ -56,11 +56,11 @@ fn simulate(
     let n = board.len();
     let mut merged = vec![vec![false; n]; n];
 
-    for &dir in selected.iter() {
-        let (rows, cols) = &rows_cols[dir as usize];
+    for dir in selected {
+        let (rows, cols) = &rows_cols[*dir as usize];
 
-        for &r in rows.iter() {
-            for &c in cols.iter() {
+        for &r in rows {
+            for &c in cols {
                 if board[r][c] == 0 {
                     continue;
                 }

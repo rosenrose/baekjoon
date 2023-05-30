@@ -9,7 +9,7 @@ fn main() {
     let mut max_sum = 0;
 
     for c2 in class2 {
-        for c1 in class1.iter() {
+        for c1 in &class1 {
             let sum = (class1.iter().sum::<usize>() - c1) + c2;
             max_sum = sum.max(max_sum);
         }

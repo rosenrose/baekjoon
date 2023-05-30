@@ -16,7 +16,7 @@ fn main() {
         adjacency_list[v as usize].push(u);
     }
 
-    for list in adjacency_list.iter_mut() {
+    for list in &mut adjacency_list {
         (*list).sort_unstable();
     }
 
@@ -42,7 +42,7 @@ fn bfs(graph: &[Vec<i32>], start: i32) -> Vec<i32> {
         visited[node as usize] = count;
         count += 1;
 
-        for &adj in graph[node as usize].iter() {
+        for &adj in &graph[node as usize] {
             queue.push_back(adj);
         }
     }

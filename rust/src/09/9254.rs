@@ -133,7 +133,7 @@ impl Matrix {
 
 impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        for row in self.0.iter() {
+        for row in &self.0 {
             for cell in row {
                 write!(f, "{cell:.6} ").unwrap();
             }

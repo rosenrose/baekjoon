@@ -10,7 +10,7 @@ fn main() {
         let table: Vec<_> = input.as_bytes().chunks(n).collect();
 
         for col in (0..n).rev() {
-            for row in table.iter() {
+            for row in &table {
                 write!(output, "{}", row[col] as char).unwrap();
             }
         }

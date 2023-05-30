@@ -28,7 +28,7 @@ fn simulate(mut room: Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -
         ]
     };
 
-    for &(num, prefers) in students.iter() {
+    for &(num, prefers) in &students {
         let mut empty_cells = Vec::new();
 
         for (r, row) in room.iter().enumerate() {

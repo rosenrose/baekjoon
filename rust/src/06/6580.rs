@@ -36,8 +36,8 @@ fn compress(map: &[Vec<char>], n: usize, x: usize, y: usize) -> String {
 
     let (mut count_w, mut count_b) = (0, 0);
 
-    for row in map[y..y + n].iter() {
-        for cell in row[x..x + n].iter() {
+    for row in &map[y..y + n] {
+        for cell in &row[x..x + n] {
             match cell {
                 'W' => count_w += 1,
                 'B' => count_b += 1,

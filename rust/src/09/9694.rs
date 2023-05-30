@@ -58,7 +58,7 @@ fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize) -> (Vec<i32>, V
             continue;
         }
 
-        for &(adj, weight) in graph[node].iter() {
+        for &(adj, weight) in &graph[node] {
             let adj_min_dist = distances[adj];
             let new_dist = min_dist + weight;
 

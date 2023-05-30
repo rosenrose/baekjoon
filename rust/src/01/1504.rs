@@ -48,7 +48,7 @@ fn dijkstra(graph: &[Vec<(i32, i32)>], start: usize) -> Vec<i32> {
             continue;
         }
 
-        for &(adj, weight) in graph[node as usize].iter() {
+        for &(adj, weight) in &graph[node as usize] {
             let adj_min_dist = dists[adj as usize];
             let new_dist = min_dist + weight;
 
