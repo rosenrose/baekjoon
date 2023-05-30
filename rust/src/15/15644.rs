@@ -7,9 +7,8 @@ enum Cells {
     Hole,
 }
 
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone)]
 enum Dirs {
-    #[default]
     Up,
     Down,
     Left,
@@ -65,21 +64,22 @@ fn main() {
         })
         .collect();
 
-    let Some((time, mut end_coord, visited)) = simulate(map, red, blue) else {
+    let Some((time, end_coord, visited)) = simulate(map, red, blue) else {
         println!("-1");
         return;
     };
 
     let mut path = Vec::with_capacity(time as usize);
+    let mut node = end_coord;
 
-    while let Some(&(coord, dir)) = visited.get(&end_coord) {
+    while let Some((parent, dir)) = visited[&node] {
         path.push(dir);
-        end_coord = coord;
+        node = parent;
     }
 
     println!("{time}");
 
-    for p in path.iter().rev().skip(1) {
+    for p in path.iter().rev() {
         print!("{p}");
     }
 }
@@ -91,9 +91,9 @@ fn simulate(
 ) -> Option<(
     i32,
     ((usize, usize), (usize, usize)),
-    HashMap<((usize, usize), (usize, usize)), (((usize, usize), (usize, usize)), Dirs)>,
+    HashMap<((usize, usize), (usize, usize)), Option<(((usize, usize), (usize, usize)), Dirs)>>,
 )> {
-    let mut visited = HashMap::from([((red, blue), Default::default())]);
+    let mut visited = HashMap::from([((red, blue), None)]);
     let mut queue = VecDeque::from([((red, blue), 0)]);
 
     while let Some(((red, blue), time)) = queue.pop_front() {
@@ -145,7 +145,7 @@ fn simulate(
                 continue;
             }
 
-            visited.insert((moved_red, moved_blue), ((red, blue), dir));
+            visited.insert((moved_red, moved_blue), Some(((red, blue), dir)));
 
             if map[moved_red.0][moved_red.1] == Hole {
                 return Some((next_time, (moved_red, moved_blue), visited));

@@ -49,6 +49,7 @@ fn simulate(mut map: [[Option<(usize, usize)>; 4]; 4], sum: usize) -> usize {
                 }
             }
         }
+
         unreachable!()
     };
     let shark_path = (1..)

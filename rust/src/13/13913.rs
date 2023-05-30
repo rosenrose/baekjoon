@@ -31,11 +31,11 @@ fn main() {
             }
         }
 
-        0
+        unreachable!()
     };
 
-    let mut node = k;
     let mut path = Vec::with_capacity(min_time as usize);
+    let mut node = k;
 
     while let Some(parent) = visited[node as usize] {
         path.push(parent);
