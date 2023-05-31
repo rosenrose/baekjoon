@@ -240,8 +240,7 @@ fn main() {
     for _ in 0..n {
         let sum = input
             .by_ref()
-            .take_while(|&input| input != "0")
-            .map(BigFloat::parse)
+            .map_while(|input| (input != "0").then(|| BigFloat::parse(input)))
             .fold(BigFloat::new(), |acc, num| &acc + &num);
 
         println!("{sum}");

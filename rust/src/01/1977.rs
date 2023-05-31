@@ -7,8 +7,10 @@ fn main() {
     let (m, n) = (input.next().unwrap(), input.next().unwrap());
     let square_nums: Vec<_> = (1..)
         .skip_while(|i| i * i < m)
-        .take_while(|i| i * i <= n)
-        .map(|i| i * i)
+        .map_while(|i| {
+            let square = i * i;
+            (square <= n).then_some(square)
+        })
         .collect();
 
     if square_nums.is_empty() {

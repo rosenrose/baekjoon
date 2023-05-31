@@ -10,8 +10,9 @@ fn main() {
         let sounds = input.next().unwrap();
         let animals: Vec<_> = input
             .by_ref()
-            .take_while(|&line| line != "what does the fox say?")
-            .map(|line| line.split(' ').next_back().unwrap())
+            .map_while(|line| {
+                (line != "what does the fox say?").then(|| line.split(' ').next_back().unwrap())
+            })
             .collect();
 
         let fox: Vec<_> = sounds.split(' ').filter(|s| !animals.contains(s)).collect();

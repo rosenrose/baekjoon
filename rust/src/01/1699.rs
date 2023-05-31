@@ -3,7 +3,7 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: usize = buf.trim().parse().unwrap();
-    let mut memo = [4; 100_000 + 1];
+    let mut memo = [0; 100_000 + 1];
 
     for i in (1..).take_while(|i| i * i <= n) {
         memo[i * i] = 1;
@@ -14,9 +14,17 @@ fn main() {
 
 fn square_count(num: usize, memo: &mut [u8]) -> u8 {
     for i in 2..=num {
-        for j in (1..).take_while(|j| j * j <= i) {
-            memo[i] = memo[i].min(1 + memo[i - j * j]);
+        if memo[i] != 0 {
+            continue;
         }
+
+        memo[i] = (1..)
+            .map_while(|j| {
+                let square = j * j;
+                (square < i).then(|| 1 + memo[i - square])
+            })
+            .min()
+            .unwrap();
     }
 
     memo[num]
