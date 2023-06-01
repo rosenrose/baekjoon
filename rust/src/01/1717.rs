@@ -1,39 +1,41 @@
 use std::fmt::Write;
 use std::io;
 
-struct DisjointSet(Vec<usize>);
+struct DisjointSet(Vec<i32>);
 
 impl DisjointSet {
-    fn make(n: usize) -> Self {
+    fn make(n: i32) -> Self {
         Self((0..=n).collect())
     }
 
-    fn find(&mut self, a: usize) -> usize {
-        if self.0[a] != a {
-            self.0[a] = self.find(self.0[a]);
+    fn find(&mut self, a: i32) -> i32 {
+        let a_idx = a as usize;
+
+        if self.0[a_idx] != a {
+            self.0[a_idx] = self.find(self.0[a_idx]);
         }
 
-        self.0[a]
+        self.0[a_idx]
     }
 
-    fn union(&mut self, a: usize, b: usize) {
+    fn union(&mut self, a: i32, b: i32) {
         let (a, b) = (self.find(a), self.find(b));
 
         if a == b {
             return;
         }
 
-        self.0[b] = a;
+        self.0[b as usize] = a;
     }
 
-    fn is_same(&mut self, a: usize, b: usize) -> bool {
+    fn is_same(&mut self, a: i32, b: i32) -> bool {
         self.find(a) == self.find(b)
     }
 }
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
