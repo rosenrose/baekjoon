@@ -37,7 +37,7 @@ fn main() {
             if visited[adj_r as usize][adj_c as usize]
                 || kill_zones
                     .iter()
-                    .any(|&kill| is_point_inside_rectangle((adj_r, adj_c), kill))
+                    .any(|&kill| is_point_inside_rect((adj_r, adj_c), kill))
             {
                 continue;
             }
@@ -46,7 +46,7 @@ fn main() {
 
             if danger_zones
                 .iter()
-                .any(|&danger| is_point_inside_rectangle((adj_r, adj_c), danger))
+                .any(|&danger| is_point_inside_rect((adj_r, adj_c), danger))
             {
                 queue.push_back(((adj_r, adj_c), loss_count + 1));
             } else {
@@ -62,6 +62,6 @@ fn get_sorted_coords(x1: i32, y1: i32, x2: i32, y2: i32) -> (i32, i32, i32, i32)
     (x1.min(x2), y1.min(y2), x1.max(x2), y1.max(y2))
 }
 
-fn is_point_inside_rectangle((r, c): (i32, i32), (x1, y1, x2, y2): (i32, i32, i32, i32)) -> bool {
+fn is_point_inside_rect((r, c): (i32, i32), (x1, y1, x2, y2): (i32, i32, i32, i32)) -> bool {
     y1 <= r && r <= y2 && x1 <= c && c <= x2
 }

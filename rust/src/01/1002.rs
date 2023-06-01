@@ -13,7 +13,7 @@ fn main() {
             continue;
         }
 
-        let dist = distance_of_points((x1, y1), (x2, y2));
+        let dist = get_distance((x1, y1), (x2, y2));
         let (bigger, smaller) = (r1.max(r2) as f64, r1.min(r2) as f64);
 
         let is_inscribed = dist < bigger;
@@ -46,6 +46,6 @@ fn main() {
     }
 }
 
-fn distance_of_points((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> f64 {
+fn get_distance((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> f64 {
     ((x1 - x2) as f64).hypot((y1 - y2) as f64)
 }

@@ -61,8 +61,7 @@ fn simulate(mut map: Vec<Vec<bool>>) -> i32 {
 
 fn melt_cheese(map: &mut Vec<Vec<bool>>) {
     let (width, height) = (map[0].len(), map.len());
-    let mut visited = vec![vec![false; width]; height];
-    let mut counts = vec![vec![0_u8; width]; height];
+    let mut visited = vec![vec![None; width]; height];
     let mut melted = map.clone();
 
     let x_full_range: Vec<_> = (0..width).collect();
@@ -76,11 +75,11 @@ fn melt_cheese(map: &mut Vec<Vec<bool>>) {
         };
 
         for &x in x_range {
-            if visited[y][x] {
+            if visited[y][x].is_some() {
                 continue;
             }
 
-            visited[y][x] = true;
+            visited[y][x] = Some(0_u8);
             let mut stack = vec![(y, x)];
 
             while let Some((r, c)) = stack.pop() {
@@ -92,21 +91,22 @@ fn melt_cheese(map: &mut Vec<Vec<bool>>) {
                 ];
 
                 for (adj_r, adj_c) in adjacents {
-                    if visited[adj_r][adj_c] {
-                        continue;
-                    }
-
                     if map[adj_r][adj_c] {
-                        counts[adj_r][adj_c] += 1;
+                        let count = visited[adj_r][adj_c].get_or_insert(0);
+                        *count += 1;
 
-                        if counts[adj_r][adj_c] >= 2 {
+                        if *count >= 2 {
                             melted[adj_r][adj_c] = false;
                         }
 
                         continue;
                     }
 
-                    visited[adj_r][adj_c] = true;
+                    if visited[adj_r][adj_c].is_some() {
+                        continue;
+                    }
+
+                    visited[adj_r][adj_c] = Some(0);
                     stack.push((adj_r, adj_c));
                 }
             }

@@ -43,7 +43,7 @@ fn main() {
 
     for i in 0..points.len() - 1 {
         for j in i + 1..points.len() {
-            let dist = distance_of_points(points[i], points[j]);
+            let dist = get_distance(points[i], points[j]);
             edges.push(((i, j), dist));
         }
     }
@@ -63,6 +63,6 @@ fn main() {
     println!("{min_weight:.2}");
 }
 
-fn distance_of_points((x1, y1): (f64, f64), (x2, y2): (f64, f64)) -> f64 {
+fn get_distance((x1, y1): (f64, f64), (x2, y2): (f64, f64)) -> f64 {
     (x1 - x2).hypot(y1 - y2)
 }
