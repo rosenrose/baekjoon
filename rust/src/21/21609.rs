@@ -1,7 +1,7 @@
 use std::cmp::Reverse;
 use std::io;
 
-#[derive(Copy, Clone, PartialEq, Debug)]
+#[derive(Copy, Clone, Debug)]
 enum Cells {
     Black,
     Rainbow,
@@ -130,7 +130,7 @@ fn get_block_groups(map: &[Vec<Cells>]) -> Vec<(i32, i32, Vec<(usize, usize)>)> 
 
             for r in 0..n {
                 for c in 0..n {
-                    if map[r][c] == Cells::Rainbow {
+                    if let Cells::Rainbow = map[r][c] {
                         visited[r][c] = false;
                     }
                 }
@@ -150,7 +150,9 @@ fn move_down(map: &mut Vec<Vec<Cells>>) {
                 continue;
             }
 
-            let down = (r + 1..n).find(|&r| map[r][c] != Cells::Empty).unwrap_or(n);
+            let down = (r + 1..n)
+                .find(|&r| !matches!(map[r][c], Cells::Empty))
+                .unwrap_or(n);
 
             (map[down - 1][c], map[r][c]) = (map[r][c], map[down - 1][c]);
         }

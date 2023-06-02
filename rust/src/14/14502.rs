@@ -1,4 +1,4 @@
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 enum Cells {
     Empty,
     Wall,
@@ -76,7 +76,7 @@ fn simulate(
         ];
 
         for (adj_r, adj_c) in adjacents {
-            if room[adj_r][adj_c] != Cells::Empty {
+            if !matches!(room[adj_r][adj_c], Cells::Empty) {
                 continue;
             }
 

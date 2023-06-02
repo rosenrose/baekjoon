@@ -1,4 +1,3 @@
-#[derive(PartialEq)]
 enum Tokens {
     Print,
     Add,
@@ -23,7 +22,7 @@ fn main() {
     let mut stack = Vec::new();
 
     for token in postfix {
-        if token == Print {
+        if let Print = token {
             write!(output, "{} ", stack.last().unwrap()).unwrap();
             continue;
         }
@@ -90,7 +89,6 @@ fn parse_to_infix(input: &str) -> Vec<Tokens> {
 
     if is_number {
         infix.push(Num(input[num_idx..].parse().unwrap()));
-        is_number = false;
     }
 
     infix

@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::io;
 
-#[derive(Copy, Clone, PartialEq, Debug)]
+#[derive(Copy, Clone, Debug)]
 enum Cells {
     Empty,
     Water,
@@ -56,12 +56,12 @@ fn main() {
         for (adj_r, adj_c) in adjacents {
             let adj_cell = map[adj_r][adj_c];
 
-            if (cell, adj_cell) == (Cells::Animal, Cells::Home) {
+            if let (Cells::Animal, Cells::Home) = (cell, adj_cell) {
                 println!("{next_time}");
                 return;
             }
 
-            if adj_cell != Cells::Empty {
+            if !matches!(adj_cell, Cells::Empty) {
                 continue;
             }
 

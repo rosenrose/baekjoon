@@ -1,4 +1,4 @@
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone)]
 enum Cells {
     Red,
     Blue,
@@ -140,14 +140,14 @@ fn simulate(
 
             if visited.contains_key(&(moved_red, moved_blue))
                 || (moved_red, moved_blue) == (red, blue)
-                || map[moved_blue.0][moved_blue.1] == Hole
+                || matches!(map[moved_blue.0][moved_blue.1], Hole)
             {
                 continue;
             }
 
             visited.insert((moved_red, moved_blue), Some(((red, blue), dir)));
 
-            if map[moved_red.0][moved_red.1] == Hole {
+            if let Hole = map[moved_red.0][moved_red.1] {
                 return Some((next_time, (moved_red, moved_blue), visited));
             }
 
@@ -173,7 +173,7 @@ fn move_balls(
 
     map[first.0][first.1] = Empty;
 
-    if temp != Hole {
+    if !matches!(temp, Hole) {
         map[first_moved.0][first_moved.1] = first_ball;
     }
 
@@ -182,7 +182,7 @@ fn move_balls(
     map[first.0][first.1] = first_ball;
     map[first_moved.0][first_moved.1] = temp;
 
-    if first_ball == Red {
+    if let Red = first_ball {
         (first_moved, second_moved)
     } else {
         (second_moved, first_moved)
@@ -196,10 +196,10 @@ fn get_moved_coord((r, c): (usize, usize), dir: Dirs, map: &[Vec<Cells>]) -> (us
         Up => {
             let moved_r = (0..r)
                 .rev()
-                .find(|&moved_r| map[moved_r][c] != Empty)
+                .find(|&moved_r| !matches!(map[moved_r][c], Empty))
                 .unwrap();
 
-            if map[moved_r][c] == Hole {
+            if let Hole = map[moved_r][c] {
                 (moved_r, c)
             } else {
                 (moved_r + 1, c)
@@ -207,10 +207,10 @@ fn get_moved_coord((r, c): (usize, usize), dir: Dirs, map: &[Vec<Cells>]) -> (us
         }
         Down => {
             let moved_r = (r + 1..height)
-                .find(|&moved_r| map[moved_r][c] != Empty)
+                .find(|&moved_r| !matches!(map[moved_r][c], Empty))
                 .unwrap();
 
-            if map[moved_r][c] == Hole {
+            if let Hole = map[moved_r][c] {
                 (moved_r, c)
             } else {
                 (moved_r - 1, c)
@@ -219,10 +219,10 @@ fn get_moved_coord((r, c): (usize, usize), dir: Dirs, map: &[Vec<Cells>]) -> (us
         Left => {
             let moved_c = (0..c)
                 .rev()
-                .find(|&moved_c| map[r][moved_c] != Empty)
+                .find(|&moved_c| !matches!(map[r][moved_c], Empty))
                 .unwrap();
 
-            if map[r][moved_c] == Hole {
+            if let Hole = map[r][moved_c] {
                 (r, moved_c)
             } else {
                 (r, moved_c + 1)
@@ -230,10 +230,10 @@ fn get_moved_coord((r, c): (usize, usize), dir: Dirs, map: &[Vec<Cells>]) -> (us
         }
         Right => {
             let moved_c = (c + 1..width)
-                .find(|&moved_c| map[r][moved_c] != Empty)
+                .find(|&moved_c| !matches!(map[r][moved_c], Empty))
                 .unwrap();
 
-            if map[r][moved_c] == Hole {
+            if let Hole = map[r][moved_c] {
                 (r, moved_c)
             } else {
                 (r, moved_c - 1)

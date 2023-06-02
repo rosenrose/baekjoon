@@ -1,6 +1,5 @@
 use std::io;
 
-#[derive(PartialEq)]
 enum Cells {
     Empty,
     Wall,
@@ -32,8 +31,10 @@ fn main() {
 
     let (mut total_sheep, mut total_wolf) = (0, 0);
     let mut visited = vec![vec![false; width]; height];
-    let is_pass =
-        |r: usize, c: usize, visited: &[Vec<bool>]| visited[r][c] || map[r][c] == Cells::Wall;
+
+    let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| {
+        visited[r][c] || matches!(map[r][c], Cells::Wall)
+    };
 
     for y in 0..height {
         for x in 0..width {

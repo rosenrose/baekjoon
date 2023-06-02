@@ -1,4 +1,4 @@
-#[derive(Default, PartialEq, Debug)]
+#[derive(Default, Debug)]
 enum Player {
     #[default]
     SK,
@@ -22,7 +22,7 @@ fn main() {
         winners.push(
             if [i - 1, i - 3, i - 4]
                 .iter()
-                .any(|&i| winners[i] == Player::CY)
+                .any(|&i| matches!(winners[i], Player::CY))
             {
                 Player::SK
             } else {

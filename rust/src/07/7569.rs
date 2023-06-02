@@ -1,7 +1,6 @@
 use std::collections::VecDeque;
 use std::io;
 
-#[derive(PartialEq)]
 enum Cells {
     Empty,
     Raw,
@@ -43,6 +42,8 @@ fn main() {
     let mut time = 0;
 
     while let Some(((h, r, c), t)) = queue.pop_front() {
+        time = t.max(time);
+
         let adjacents = [
             ((h - 1).max(0), r, c),
             (h, (r - 1).max(0), c),
@@ -52,15 +53,17 @@ fn main() {
             (h, r, (c + 1).min(cols - 1)),
         ];
 
-        for (adj_h, adj_r, adj_c) in adjacents {
-            if tomatoes[adj_h as usize][adj_r as usize][adj_c as usize] != Cells::Raw {
+        for adj in adjacents {
+            if !matches!(
+                tomatoes[adj.0 as usize][adj.1 as usize][adj.2 as usize],
+                Cells::Raw
+            ) {
                 continue;
             }
 
-            tomatoes[adj_h as usize][adj_r as usize][adj_c as usize] = Cells::Ripen;
+            tomatoes[adj.0 as usize][adj.1 as usize][adj.2 as usize] = Cells::Ripen;
             raw_count -= 1;
-            time = time.max(t + 1);
-            queue.push_back(((adj_h, adj_r, adj_c), t + 1));
+            queue.push_back((adj, t + 1));
         }
     }
 

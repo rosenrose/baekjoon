@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::io;
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, Copy, Debug)]
 enum Cells {
     Empty,
     Snake,
@@ -86,7 +86,7 @@ fn move_snake(board: &mut Vec<Vec<Cells>>, snake: &mut VecDeque<(i8, i8)>, dir: 
             board[next_r][next_c] = Cells::Snake;
             snake.push_front(next);
 
-            if next_cell == Cells::Empty {
+            if let Cells::Empty = next_cell {
                 let back = snake.pop_back().unwrap();
                 board[back.0 as usize][back.1 as usize] = Cells::Empty;
             }

@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::io;
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone)]
 enum Cells {
     Empty,
     Wall,
@@ -47,7 +47,7 @@ fn main() {
 
         for (adj_r, adj_c) in adjacents {
             if !(0 <= adj_r && adj_r < height && 0 <= adj_c && adj_c < width) {
-                if cell == Cells::Human {
+                if let Cells::Human = cell {
                     println!("{next_time}");
                     return;
                 }
@@ -55,7 +55,7 @@ fn main() {
                 continue;
             }
 
-            if map[adj_r as usize][adj_c as usize] != Cells::Empty {
+            if !matches!(map[adj_r as usize][adj_c as usize], Cells::Empty) {
                 continue;
             }
 

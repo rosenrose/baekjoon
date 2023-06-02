@@ -1,4 +1,4 @@
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 enum Cells {
     Empty,
     Wall,
@@ -84,6 +84,7 @@ fn simulate(
             break;
         }
 
+        let next_time = time + 1;
         let adjacents = [
             (r.saturating_sub(1), c),
             (r, c.saturating_sub(1)),
@@ -96,13 +97,13 @@ fn simulate(
                 continue;
             }
 
-            if room[adj_r][adj_c] == Cells::Empty {
+            if let Cells::Empty = room[adj_r][adj_c] {
                 empty_cells -= 1;
             }
 
             room[adj_r][adj_c] = Cells::VirusActive;
-            max_time = max_time.max(time + 1);
-            queue.push_back(((adj_r, adj_c), time + 1));
+            max_time = next_time.max(max_time);
+            queue.push_back(((adj_r, adj_c), next_time));
         }
     }
 
