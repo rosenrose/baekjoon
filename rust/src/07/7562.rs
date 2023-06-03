@@ -14,7 +14,7 @@ fn main() {
         let mut visited = vec![vec![false; n as usize]; n as usize];
         visited[start.0 as usize][start.1 as usize] = true;
 
-        let mut queue = VecDeque::from([((start.0, start.1), 0)]);
+        let mut queue = VecDeque::from([(start, 0)]);
 
         while let Some(((r, c), step)) = queue.pop_front() {
             if (r, c) == end {
