@@ -1,7 +1,6 @@
 use std::collections::VecDeque;
 use std::io;
 
-#[derive(Debug)]
 enum Cells {
     Empty,
     Wall,
@@ -48,13 +47,9 @@ fn simulate(mut map: Vec<Vec<Cells>>, start: (usize, usize)) -> i32 {
     let mut visited = vec![vec![[false; 1 << 6]; width]; height];
     visited[start.0][start.1][0] = true;
 
-    let mut queue = VecDeque::from([(start, 0, 0, Vec::<((usize, usize), u8)>::new())]);
+    let mut queue = VecDeque::from([(start, 0, 0)]);
 
-    while let Some(((r, c), step, keys, opens)) = queue.pop_front() {
-        for (open, _) in &opens {
-            map[open.0][open.1] = Cells::Empty;
-        }
-
+    while let Some(((r, c), step, keys)) = queue.pop_front() {
         let next_step = step + 1;
         let adjacents = [
             (r.saturating_sub(1), c),
@@ -65,16 +60,13 @@ fn simulate(mut map: Vec<Vec<Cells>>, start: (usize, usize)) -> i32 {
 
         for (adj_r, adj_c) in adjacents {
             let mut next_keys = keys;
-            let mut next_opens = opens.clone();
 
             match map[adj_r][adj_c] {
                 Cells::Exit => return next_step,
                 Cells::Wall => continue,
                 Cells::Key(key) => next_keys |= 1 << key,
                 Cells::Door(door) => {
-                    if (next_keys & (1 << door)) >> door == 1 {
-                        next_opens.push(((adj_r, adj_c), door));
-                    } else {
+                    if next_keys & (1 << door) == 0 {
                         continue;
                     }
                 }
@@ -86,11 +78,7 @@ fn simulate(mut map: Vec<Vec<Cells>>, start: (usize, usize)) -> i32 {
             }
 
             visited[adj_r][adj_c][next_keys] = true;
-            queue.push_back(((adj_r, adj_c), next_step, next_keys, next_opens));
-        }
-
-        for (open, door) in opens {
-            map[open.0][open.1] = Cells::Door(door);
+            queue.push_back(((adj_r, adj_c), next_step, next_keys));
         }
     }
 

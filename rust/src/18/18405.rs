@@ -1,4 +1,3 @@
-use std::cmp::Reverse;
 use std::io;
 
 fn main() {
@@ -27,14 +26,14 @@ fn main() {
         .collect();
     let (s, target) = (input(), (input() - 1, input() - 1));
 
-    let mut stack = Vec::new();
+    let mut temp = Vec::new();
 
     for _ in 0..s {
-        viruses.sort_unstable_by_key(|&(virus, _)| Reverse(virus));
-        stack.clone_from(&viruses);
+        viruses.sort_unstable();
+        temp.clone_from(&viruses);
         viruses.clear();
 
-        while let Some((virus, (r, c))) = stack.pop() {
+        for &(virus, (r, c)) in &temp {
             let adjacents = [
                 (r.saturating_sub(1), c),
                 (r, c.saturating_sub(1)),
