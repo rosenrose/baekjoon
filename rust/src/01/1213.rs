@@ -1,21 +1,19 @@
-use std::collections::HashMap;
-
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let input = buf.trim();
-    let counts: HashMap<_, _> = input
-        .chars()
-        .map(|ch| (ch, input.matches(ch).count()))
-        .collect();
+    let input = buf.trim().as_bytes();
+    let offset = b'A';
+    let mut counts = [0; 26];
 
-    let mut counts = Vec::from_iter(counts);
-    counts.sort();
+    for ch in input {
+        counts[(ch - offset) as usize] += 1;
+    }
 
     let odds: Vec<_> = counts
         .iter()
-        .filter_map(|(ch, count)| (count % 2 == 1).then_some(ch))
+        .enumerate()
+        .filter_map(|(ch, count)| (count % 2 == 1).then_some((ch as u8 + offset) as char))
         .collect();
 
     if odds.len() > 1 {
@@ -23,13 +21,15 @@ fn main() {
         return;
     }
 
-    let mut palindrome = if let Some(c) = odds.get(0) {
-        c.to_string()
+    let mut palindrome = if let Some(ch) = odds.get(0) {
+        ch.to_string()
     } else {
         String::new()
     };
 
-    for &(ch, count) in counts.iter().rev() {
+    for (ch, &count) in counts.iter().enumerate().rev() {
+        let ch = (ch as u8 + offset) as char;
+
         for _ in 0..count / 2 {
             palindrome.insert(0, ch);
             palindrome.push(ch);

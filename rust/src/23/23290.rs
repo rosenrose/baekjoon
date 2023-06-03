@@ -143,17 +143,18 @@ fn move_shark(map: &mut Vec<Vec<(Vec<u8>, i8)>>, shark: &mut (usize, usize)) {
     }
 
     let (_, _, path) = moves
-        .select_nth_unstable_by_key(0, |&(count, indices, _)| (Reverse(count), indices))
-        .1;
+        .iter()
+        .max_by_key(|(count, indices, _)| (count, Reverse(indices)))
+        .unwrap();
 
-    for (r, c) in path {
-        *shark = (*r, *c);
+    for &(r, c) in path {
+        *shark = (r, c);
 
-        if map[*r][*c].0.is_empty() {
+        if map[r][c].0.is_empty() {
             continue;
         }
 
-        map[*r][*c].0.clear();
-        map[*r][*c].1 = 2;
+        map[r][c].0.clear();
+        map[r][c].1 = 2;
     }
 }

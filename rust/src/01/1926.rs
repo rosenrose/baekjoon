@@ -48,13 +48,5 @@ fn main() {
         }
     }
 
-    let len = areas.len();
-    println!("{len}");
-
-    if areas.is_empty() {
-        println!("0");
-        return;
-    }
-
-    println!("{}", areas.select_nth_unstable(len - 1).1);
+    println!("{}\n{}", areas.len(), areas.iter().max().unwrap_or(&0));
 }

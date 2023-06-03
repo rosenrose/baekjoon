@@ -13,7 +13,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, m, fuel) = (input(), input(), input() as i32);
+    let (n, m, fuel) = (input(), input(), input() as u32);
     let mut map: Vec<Vec<_>> = (0..n)
         .map(|_| {
             (0..n)
@@ -38,7 +38,7 @@ fn main() {
 
 fn simulate(
     mut map: Vec<Vec<Cells>>,
-    mut fuel: i32,
+    mut fuel: u32,
     mut taxi: (usize, usize),
     mut passenger_count: usize,
 ) -> Option<i32> {
@@ -46,22 +46,17 @@ fn simulate(
 
     loop {
         let mut passengers = get_passengers(&map, taxi);
+        let (passenger_idx, &(dist_to_start, start)) = passengers
+            .iter()
+            .enumerate()
+            .min_by_key(|&(_, passenger)| passenger)?;
 
-        if passengers.is_empty() {
-            return (passenger_count == 0).then_some(fuel);
-        }
-
-        passengers.select_nth_unstable(0);
-        let (dist_to_start, start) = passengers.swap_remove(0);
+        passengers.swap_remove(passenger_idx);
         let Cells::Passenger(end) = map[start.0][start.1] else { unreachable!() };
 
-        fuel -= dist_to_start;
+        fuel = fuel.checked_sub(dist_to_start)?;
         taxi = start;
         map[start.0][start.1] = Cells::Empty;
-
-        if fuel <= 0 {
-            return None;
-        }
 
         let dist_to_end = 'a: {
             let mut visited = vec![vec![false; n]; n];
@@ -73,35 +68,33 @@ fn simulate(
                 let new_dist = dist + 1;
 
                 for (adj_r, adj_c) in get_adjacents(r, c, n) {
-                    if is_pass(adj_r, adj_c, &visited, &map) {
-                        continue;
-                    }
-
                     if (adj_r, adj_c) == end {
                         break 'a new_dist;
                     }
 
+                    if is_pass(adj_r, adj_c, &visited, &map) {
+                        continue;
+                    }
+
                     visited[adj_r][adj_c] = true;
-                    queue.push_back(((adj_r, adj_c), dist + 1));
+                    queue.push_back(((adj_r, adj_c), new_dist));
                 }
             }
 
             return None;
         };
 
-        fuel -= dist_to_end;
+        fuel = fuel.checked_sub(dist_to_end)? + (dist_to_end * 2);
         taxi = end;
         passenger_count -= 1;
 
-        if fuel < 0 {
-            return None;
+        if passenger_count == 0 {
+            return Some(fuel as i32);
         }
-
-        fuel += dist_to_end * 2;
     }
 }
 
-fn get_passengers(map: &[Vec<Cells>], taxi: (usize, usize)) -> Vec<(i32, (usize, usize))> {
+fn get_passengers(map: &[Vec<Cells>], taxi: (usize, usize)) -> Vec<(u32, (usize, usize))> {
     let n = map.len();
     let mut passengers = Vec::new();
     let mut visited = vec![vec![false; n]; n];
@@ -127,10 +120,6 @@ fn get_passengers(map: &[Vec<Cells>], taxi: (usize, usize)) -> Vec<(i32, (usize,
     passengers
 }
 
-fn is_pass(r: usize, c: usize, visited: &[Vec<bool>], map: &[Vec<Cells>]) -> bool {
-    visited[r][c] || matches!(map[r][c], Cells::Wall)
-}
-
 fn get_adjacents(r: usize, c: usize, n: usize) -> [(usize, usize); 4] {
     [
         (r.saturating_sub(1), c),
@@ -138,4 +127,8 @@ fn get_adjacents(r: usize, c: usize, n: usize) -> [(usize, usize); 4] {
         ((r + 1).min(n - 1), c),
         (r, (c + 1).min(n - 1)),
     ]
+}
+
+fn is_pass(r: usize, c: usize, visited: &[Vec<bool>], map: &[Vec<Cells>]) -> bool {
+    visited[r][c] || matches!(map[r][c], Cells::Wall)
 }

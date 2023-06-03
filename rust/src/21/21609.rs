@@ -1,4 +1,3 @@
-use std::cmp::Reverse;
 use std::io;
 
 #[derive(Copy, Clone, Debug)]
@@ -37,7 +36,7 @@ fn simulate(mut map: Vec<Vec<Cells>>) -> i32 {
     let mut score = 0;
 
     loop {
-        let mut block_groups = get_block_groups(&map);
+        let block_groups = get_block_groups(&map);
 
         if block_groups.is_empty() {
             break;
@@ -45,21 +44,13 @@ fn simulate(mut map: Vec<Vec<Cells>>) -> i32 {
         // for r in &block_groups {
         //     println!("{r:?}");
         // }
-        let (count, _, members) = block_groups
-            .select_nth_unstable_by_key(0, |(count, rainbow_count, members)| {
-                (
-                    Reverse(*count),
-                    Reverse(*rainbow_count),
-                    Reverse(members[0]),
-                )
-            })
-            .1;
+        let (count, _, members) = block_groups.iter().max().unwrap();
 
-        for (r, c) in members {
-            map[*r][*c] = Cells::Empty;
+        for &(r, c) in members {
+            map[r][c] = Cells::Empty;
         }
 
-        score += *count * *count;
+        score += count * count;
 
         move_down(&mut map);
         rotate(&mut map);

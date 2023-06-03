@@ -15,10 +15,11 @@ fn main() {
         })
         .collect();
 
-    let mut best_sellers: Vec<_> = counts
+    let best_seller = counts
         .iter()
         .filter_map(|&(title, count)| (count == max_count).then_some(title))
-        .collect();
+        .min()
+        .unwrap();
 
-    println!("{}", best_sellers.select_nth_unstable(0).1);
+    println!("{best_seller}");
 }

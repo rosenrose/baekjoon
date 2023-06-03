@@ -1,3 +1,4 @@
+use std::cmp::Reverse;
 use std::io;
 
 fn main() {
@@ -5,13 +6,12 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
-    let mut infos: Vec<_> = (1..=input())
-        .map(|i| (i, (input(), input(), input())))
-        .collect();
-
-    let (first, _) = infos
-        .select_nth_unstable_by_key(0, |&(_, (s, c, t))| (std::cmp::Reverse(s), c, t))
-        .1;
+    let first = (1..=input())
+        .min_by_key(|_| {
+            let (score, count, time) = (input(), input(), input());
+            (Reverse(score), count, time)
+        })
+        .unwrap();
 
     println!("{first}");
 }

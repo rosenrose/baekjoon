@@ -17,15 +17,13 @@ fn main() {
 
     floyd_warshall(&mut adjacency_matrix);
 
-    let mut kevin_bacons: Vec<_> = adjacency_matrix
+    let (least_kevin_bacon, _) = adjacency_matrix
         .iter()
         .enumerate()
-        .map(|(i, row)| (row.iter().sum::<i32>(), i))
-        .collect();
+        .min_by_key(|(_, row)| row.iter().sum::<i32>())
+        .unwrap();
 
-    let (_, least) = kevin_bacons.select_nth_unstable(0).1;
-
-    println!("{}", *least + 1);
+    println!("{}", least_kevin_bacon + 1);
 }
 
 fn floyd_warshall(graph: &mut Vec<Vec<i32>>) {

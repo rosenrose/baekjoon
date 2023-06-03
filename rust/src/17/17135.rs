@@ -81,8 +81,9 @@ fn attack(map: &mut Vec<Vec<bool>>, archers: &[usize], max_range: usize) -> i32 
         }
 
         let (target_coord, _) = targets
-            .select_nth_unstable_by_key(0, |&((_, c), dist)| (dist, c))
-            .1;
+            .iter()
+            .min_by_key(|((_, c), dist)| (dist, c))
+            .unwrap();
 
         if !final_targets.contains(target_coord) {
             final_targets.push(*target_coord)

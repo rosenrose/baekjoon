@@ -6,14 +6,10 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let n: i32 = input().parse().unwrap();
-    let mut problems: Vec<_> = (0..n)
-        .map(|_| {
-            let (title, difficulty) = (input(), input());
-            (difficulty, title)
-        })
-        .collect();
-
-    let (_, easy) = problems.select_nth_unstable(0).1;
+    let (easy, _) = (0..n)
+        .map(|_| (input(), input()))
+        .min_by_key(|&(_, difficulty)| difficulty)
+        .unwrap();
 
     println!("{easy}");
 }

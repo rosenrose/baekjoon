@@ -23,7 +23,10 @@ fn main() {
         })
         .collect();
 
-    let (max_name, _) = counts.iter().find(|(_, c)| *c == max_count).unwrap();
+    let max_name = counts
+        .iter()
+        .find_map(|&(name, c)| (c == max_count).then_some(name))
+        .unwrap();
 
     println!("{sum}\n{max_name}");
 }

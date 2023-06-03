@@ -15,37 +15,37 @@ fn main() {
     }
 
     let mut min_time = u32::MAX;
+    let mut times = [0; 257];
 
-    let height_times: Vec<_> = (min..=max)
-        .filter_map(|height| {
-            let (mut time, mut blocks) = (0, b);
+    for height in min..=max {
+        let (mut time, mut blocks) = (0, b);
 
-            for h in min..=max {
-                let c = height_counts[h as usize];
-                let diff = h.abs_diff(height);
+        for h in min..=max {
+            let count = height_counts[h as usize];
+            let diff = h.abs_diff(height);
 
-                if h > height {
-                    time += diff * c * 2;
-                    blocks += (diff * c) as i32;
-                }
-                if h < height {
-                    time += diff * c;
-                    blocks -= (diff * c) as i32;
-                }
+            if h > height {
+                time += diff * count * 2;
+                blocks += (diff * count) as i32;
             }
+            if h < height {
+                time += diff * count;
+                blocks -= (diff * count) as i32;
+            }
+        }
 
-            (blocks >= 0).then(|| {
-                min_time = time.min(min_time);
-                (height, time)
-            })
-        })
-        .collect();
+        if blocks >= 0 {
+            min_time = time.min(min_time);
+            times[height as usize] = time;
+        }
+    }
 
-    let (height, time) = height_times
+    let max_height = times
         .iter()
-        .filter(|(_, t)| *t == min_time)
-        .max_by_key(|(h, _)| h)
+        .enumerate()
+        .filter_map(|(height, &time)| (time == min_time).then_some(height))
+        .max()
         .unwrap();
 
-    println!("{time} {height}");
+    println!("{min_time} {max_height}");
 }

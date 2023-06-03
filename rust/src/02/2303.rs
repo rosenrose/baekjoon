@@ -6,9 +6,9 @@ fn main() {
 
     const CARDS: usize = 5;
 
-    let sums: Vec<_> = (1..=input.next().unwrap())
-        .map(|i| {
-            let nums: Vec<_> = (0..CARDS).map(|_| input.next().unwrap()).collect();
+    let idx = (1..=input.next().unwrap())
+        .max_by_key(|_| {
+            let nums: Vec<_> = input.by_ref().take(CARDS).collect();
             let mut max_sum = 0;
 
             for a in 0..CARDS - 2 {
@@ -19,11 +19,9 @@ fn main() {
                 }
             }
 
-            (i, max_sum)
+            max_sum
         })
-        .collect();
-
-    let (idx, _) = sums.iter().max_by_key(|(_, sum)| sum).unwrap();
+        .unwrap();
 
     println!("{idx}");
 }

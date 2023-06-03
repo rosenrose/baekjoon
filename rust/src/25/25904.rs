@@ -5,20 +5,18 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let (n, x) = (input.next().unwrap(), input.next().unwrap());
-    let mut order: Vec<_> = input
+    let (first, _) = input
         .enumerate()
-        .map(|(i, t)| {
+        .min_by_key(|&(i, limit)| {
             let mut shout = x + i as i32;
 
-            while shout <= t {
+            while shout <= limit {
                 shout += n;
             }
 
-            (shout, i + 1)
+            shout
         })
-        .collect();
+        .unwrap();
 
-    let (_, first) = order.select_nth_unstable(0).1;
-
-    println!("{first}");
+    println!("{}", first + 1);
 }

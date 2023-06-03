@@ -50,12 +50,16 @@ fn simulate(mut room: Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -
                     }
                 }
 
-                empty_cells.push((Reverse(prefer_count), Reverse(empty_count), (r, c)));
+                empty_cells.push((prefer_count, empty_count, (r, c)));
             }
         }
 
-        let (_, _, (r, c)) = empty_cells.select_nth_unstable(0).1;
-        room[*r][*c] = num;
+        let (_, _, select) = empty_cells
+            .iter()
+            .max_by_key(|(prefer, empty, coord)| (prefer, empty, Reverse(coord)))
+            .unwrap();
+
+        room[select.0][select.1] = num;
     }
     // println!("{room:?}");
     students.sort();

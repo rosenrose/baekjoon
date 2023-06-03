@@ -3,7 +3,7 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: i32 = buf.trim().parse().unwrap();
-    let mut level_number: Vec<_> = [(209, 8), (219, 4), (229, 2), (239, 1)]
+    let level_number: Vec<_> = [(209, 8), (219, 4), (229, 2), (239, 1)]
         .iter()
         .enumerate()
         .filter_map(|(i, &(limit, count))| {
@@ -11,8 +11,7 @@ fn main() {
         })
         .collect();
 
-    let len = level_number.len();
-    let (_, number) = level_number.select_nth_unstable(len - 1).1;
+    let (_, number) = level_number.iter().max().unwrap();
 
     println!("{number}");
 }
