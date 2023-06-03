@@ -10,7 +10,7 @@ fn main() {
         .map(|_| (0..width).map(|_| input()).collect())
         .collect();
 
-    let max_sum = combinations(0, 0, &mut vec![(0, 0); k], &map);
+    let max_sum = combinations(0, 0, k, &mut vec![vec![false; width]; height], &map, 0);
 
     println!("{max_sum}");
 }
@@ -18,15 +18,17 @@ fn main() {
 fn combinations(
     depth: usize,
     start: usize,
-    selected: &mut Vec<(usize, usize)>,
+    max_depth: usize,
+    selected: &mut Vec<Vec<bool>>,
     map: &[Vec<i32>],
+    sum: i32,
 ) -> i32 {
-    if depth == selected.len() {
-        return selected.iter().map(|&(r, c)| map[r][c]).sum();
+    if depth == max_depth {
+        return sum;
     }
 
     let (width, height) = (map[0].len(), map.len());
-    let takes = (width * height) - (selected.len() - 1);
+    let takes = (width * height) - (max_depth - 1);
 
     (start..depth + takes)
         .map(|i| {
@@ -38,12 +40,19 @@ fn combinations(
                 (r, (c + 1).min(width - 1)),
             ];
 
-            if adjacents.iter().any(|adj| selected[..depth].contains(adj)) {
+            if adjacents
+                .iter()
+                .any(|&(adj_r, adj_c)| selected[adj_r][adj_c])
+            {
                 return i32::MIN;
             }
 
-            selected[depth] = (r, c);
-            combinations(depth + 1, i + 1, selected, map)
+            selected[r][c] = true;
+
+            let result = combinations(depth + 1, i + 1, max_depth, selected, map, sum + map[r][c]);
+            selected[r][c] = false;
+
+            result
         })
         .max()
         .unwrap()

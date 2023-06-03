@@ -1,4 +1,3 @@
-use std::cmp::Reverse;
 use std::collections::VecDeque;
 use std::io;
 
@@ -43,11 +42,11 @@ fn main() {
     let mut disjoint_set = DisjointSet::make(n);
 
     let mut edges: Vec<_> = (0..m).map(|_| (input(), input(), input())).collect();
-    edges.sort_unstable_by_key(|&(_, _, weight)| Reverse(weight));
+    edges.sort_unstable_by_key(|&(_, _, weight)| weight);
 
     let (start, end) = (input(), input());
 
-    for (a, b, c) in edges {
+    for &(a, b, c) in edges.iter().rev() {
         disjoint_set.union(a, b);
 
         if disjoint_set.is_same(start, end) {

@@ -19,7 +19,7 @@ fn next_permutation(mut chars: Vec<u8>) -> Vec<u8> {
     let j = (i..len).rfind(|&j| chars[j] > chars[i - 1]).unwrap();
 
     chars.swap(i - 1, j);
-    (&mut chars[i..]).sort();
+    chars[i..].sort();
 
     chars
 }

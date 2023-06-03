@@ -1,4 +1,3 @@
-use std::cmp::Reverse;
 use std::io;
 
 fn main() {
@@ -20,12 +19,12 @@ fn main() {
         let min_count = ((n - k) + 1) / 2;
         let max_count = n - min_count;
 
-        scores.sort_unstable_by_key(|&(atk, def)| Reverse(atk.abs_diff(def)));
+        scores.sort_unstable_by_key(|&(atk, def)| atk.abs_diff(def));
         // println!("{scores:?}");
         let (mut atk_count, mut def_count) = (0, 0);
         let mut max_sum = 0;
 
-        for (atk, def) in scores {
+        for &(atk, def) in scores.iter().rev() {
             if atk_count == max_count {
                 max_sum += def as i64;
                 continue;

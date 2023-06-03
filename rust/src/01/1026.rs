@@ -9,9 +9,9 @@ fn main() {
     let mut b: Vec<_> = input.by_ref().take(n).collect();
 
     a.sort();
-    b.sort_by_key(|&b| std::cmp::Reverse(b));
+    b.sort();
 
-    let product_sum: usize = a.iter().zip(b).map(|(a, b)| a * b).sum();
+    let product_sum: usize = a.iter().zip(b.iter().rev()).map(|(a, b)| a * b).sum();
 
     println!("{product_sum}");
 }

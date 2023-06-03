@@ -3,7 +3,7 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let mut chars: Vec<_> = buf.trim().chars().collect();
-    chars.sort_by_key(|&ch| std::cmp::Reverse(ch));
+    chars.sort();
 
-    println!("{}", String::from_iter(chars));
+    println!("{}", String::from_iter(chars.iter().rev()));
 }
