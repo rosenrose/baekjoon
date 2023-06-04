@@ -23,6 +23,7 @@ fn main() {
             continue;
         }
 
+        let new_dist = dist + 1;
         let broken_count = usize::from(has_broken);
         let adjacents = [
             ((r - 1).max(0), c),
@@ -45,7 +46,14 @@ fn main() {
                 continue;
             }
 
-            queue.push_back(((adj_r, adj_c), dist + 1, has_broken || is_wall));
+            let can_break = is_wall && !has_broken;
+
+            if can_break {
+                visited[adj.0][adj.1][usize::from(can_break)] = true;
+                queue.push_back(((adj_r, adj_c), new_dist, can_break));
+            } else {
+                queue.push_back(((adj_r, adj_c), new_dist, has_broken));
+            }
         }
     }
 

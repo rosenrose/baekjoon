@@ -59,26 +59,31 @@ fn simulate(mut map: Vec<Vec<Cells>>, start: (usize, usize)) -> i32 {
         ];
 
         for (adj_r, adj_c) in adjacents {
-            let mut next_keys = keys;
-
             match map[adj_r][adj_c] {
                 Cells::Exit => return next_step,
                 Cells::Wall => continue,
-                Cells::Key(key) => next_keys |= 1 << key,
                 Cells::Door(door) => {
-                    if next_keys & (1 << door) == 0 {
+                    if keys & (1 << door) == 0 {
                         continue;
                     }
                 }
                 _ => (),
             }
 
-            if visited[adj_r][adj_c][next_keys] {
+            if visited[adj_r][adj_c][keys] {
                 continue;
             }
 
-            visited[adj_r][adj_c][next_keys] = true;
-            queue.push_back(((adj_r, adj_c), next_step, next_keys));
+            visited[adj_r][adj_c][keys] = true;
+
+            if let Cells::Key(key) = map[adj_r][adj_c] {
+                let next_keys = keys | (1 << key);
+
+                visited[adj_r][adj_c][next_keys] = true;
+                queue.push_back(((adj_r, adj_c), next_step, next_keys));
+            } else {
+                queue.push_back(((adj_r, adj_c), next_step, keys));
+            }
         }
     }
 

@@ -4,10 +4,14 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut it = input.by_ref().take(3).flat_map(str::parse::<i16>);
+    let mut input = || input.next().unwrap();
 
-    let (height, width, k) = (it.next().unwrap(), it.next().unwrap(), it.next().unwrap());
-    let map: Vec<_> = input.map(str::as_bytes).collect();
+    let (height, width, k) = (
+        parse_int(input()),
+        parse_int(input()),
+        parse_int(input()) as u8,
+    );
+    let map: Vec<_> = (0..height).map(|_| input().as_bytes()).collect();
 
     let mut visited = vec![vec![[false; 11]; width as usize]; height as usize];
     visited[0][0][0] = true;
@@ -21,6 +25,7 @@ fn main() {
             continue;
         }
 
+        let new_dist = dist + 1;
         let adjacents = [
             ((r - 1).max(0), c),
             (r, (c - 1).max(0)),
@@ -38,13 +43,24 @@ fn main() {
             visited[adj.0][adj.1][broken_count as usize] = true;
             let is_wall = map[adj.0][adj.1] == b'1';
 
-            if is_wall && broken_count == k as u8 {
+            if is_wall && broken_count == k {
                 continue;
             }
 
-            queue.push_back(((adj_r, adj_c), dist + 1, broken_count + u8::from(is_wall)));
+            if is_wall && broken_count < k {
+                let next_count = broken_count + 1;
+
+                visited[adj.0][adj.1][next_count as usize] = true;
+                queue.push_back(((adj_r, adj_c), new_dist, next_count));
+            } else {
+                queue.push_back(((adj_r, adj_c), new_dist, broken_count));
+            }
         }
     }
 
     println!("{}", if min_dist == i32::MAX { -1 } else { min_dist });
+}
+
+fn parse_int(buf: &str) -> i16 {
+    buf.parse().unwrap()
 }

@@ -4,10 +4,14 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut it = input.by_ref().take(3).flat_map(str::parse::<i16>);
+    let mut input = || input.next().unwrap();
 
-    let (height, width, k) = (it.next().unwrap(), it.next().unwrap(), it.next().unwrap());
-    let map: Vec<_> = input.map(str::as_bytes).collect();
+    let (height, width, k) = (
+        parse_int(input()),
+        parse_int(input()),
+        parse_int(input()) as u8,
+    );
+    let map: Vec<_> = (0..height).map(|_| input().as_bytes()).collect();
 
     let mut visited = vec![vec![[[false; 2]; 11]; width as usize]; height as usize];
     visited[0][0][0][1] = true;
@@ -21,7 +25,8 @@ fn main() {
             continue;
         }
 
-        let day_idx = usize::from(is_day);
+        let new_dist = dist + 1;
+        let next_is_day_idx = usize::from(!is_day);
         let adjacents = [
             ((r - 1).max(0), c),
             (r, (c - 1).max(0)),
@@ -32,29 +37,35 @@ fn main() {
         for (adj_r, adj_c) in adjacents {
             let adj = (adj_r as usize, adj_c as usize);
 
-            if visited[adj.0][adj.1][broken_count as usize][day_idx] {
+            if visited[adj.0][adj.1][broken_count as usize][next_is_day_idx] {
                 continue;
             }
 
-            visited[adj.0][adj.1][broken_count as usize][day_idx] = true;
+            visited[adj.0][adj.1][broken_count as usize][next_is_day_idx] = true;
             let is_wall = map[adj.0][adj.1] == b'1';
 
-            if is_wall && (broken_count == k as u8 || !is_day) {
+            if is_wall && (broken_count == k || !is_day) {
                 continue;
             }
 
-            queue.push_back((
-                (adj_r, adj_c),
-                dist + 1,
-                broken_count + u8::from(is_day && is_wall),
-                !is_day,
-            ));
+            if is_wall && (broken_count < k && is_day) {
+                let next_count = broken_count + 1;
+
+                visited[adj.0][adj.1][next_count as usize][next_is_day_idx] = true;
+                queue.push_back(((adj_r, adj_c), new_dist, next_count, !is_day));
+            } else {
+                queue.push_back(((adj_r, adj_c), new_dist, broken_count, !is_day));
+            }
         }
 
         if !is_day {
-            queue.push_back(((r, c), dist + 1, broken_count, !is_day));
+            queue.push_back(((r, c), new_dist, broken_count, !is_day));
         }
     }
 
     println!("{}", if min_dist == i32::MAX { -1 } else { min_dist });
+}
+
+fn parse_int(buf: &str) -> i16 {
+    buf.parse().unwrap()
 }
