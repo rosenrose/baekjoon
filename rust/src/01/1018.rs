@@ -4,19 +4,18 @@ const SIZE: usize = 8;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.lines();
+    let mut input = buf.split_ascii_whitespace();
 
-    let (n, m) = input.next().unwrap().split_once(' ').unwrap();
-    let (n, m) = (parse_int(n), parse_int(m));
-    let board: Vec<_> = input.collect();
+    let (height, width) = (
+        parse_int(input.next().unwrap()),
+        parse_int(input.next().unwrap()),
+    );
+    let board: &Vec<_> = &input.collect();
 
-    let mut min_paint = SIZE * SIZE / 2;
-
-    for y in 0..=n - SIZE {
-        for x in 0..=m - SIZE {
-            min_paint = get_paint_count(&board, x, y).min(min_paint);
-        }
-    }
+    let min_paint = (0..=height - SIZE)
+        .flat_map(|y| (0..=width - SIZE).map(move |x| get_paint_count(board, x, y)))
+        .min()
+        .unwrap();
 
     println!("{min_paint}");
 }
