@@ -36,6 +36,8 @@ impl fmt::Display for Dirs {
     }
 }
 
+type RedBlue = ((usize, usize), (usize, usize));
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.split_ascii_whitespace();
@@ -64,7 +66,7 @@ fn main() {
         })
         .collect();
 
-    let Some((time, end_coord, visited)) = simulate(map, red, blue) else {
+    let Some((time, end_coord, visited)) = simulate(map, (red, blue)) else {
         println!("-1");
         return;
     };
@@ -86,13 +88,8 @@ fn main() {
 
 fn simulate(
     mut map: Vec<Vec<Cells>>,
-    red: (usize, usize),
-    blue: (usize, usize),
-) -> Option<(
-    i32,
-    ((usize, usize), (usize, usize)),
-    HashMap<((usize, usize), (usize, usize)), Option<(((usize, usize), (usize, usize)), Dirs)>>,
-)> {
+    (red, blue): RedBlue,
+) -> Option<(i32, RedBlue, HashMap<RedBlue, Option<(RedBlue, Dirs)>>)> {
     let mut visited = HashMap::from([((red, blue), None)]);
     let mut queue = VecDeque::from([((red, blue), 0)]);
 
@@ -110,30 +107,30 @@ fn simulate(
             let (moved_red, moved_blue) = match dir {
                 Up => {
                     if red.0 < blue.0 {
-                        move_balls(red, blue, dir, &mut map)
+                        move_balls((red, blue), dir, &mut map)
                     } else {
-                        move_balls(blue, red, dir, &mut map)
+                        move_balls((blue, red), dir, &mut map)
                     }
                 }
                 Down => {
                     if red.0 < blue.0 {
-                        move_balls(blue, red, dir, &mut map)
+                        move_balls((blue, red), dir, &mut map)
                     } else {
-                        move_balls(red, blue, dir, &mut map)
+                        move_balls((red, blue), dir, &mut map)
                     }
                 }
                 Left => {
                     if red.1 < blue.1 {
-                        move_balls(red, blue, dir, &mut map)
+                        move_balls((red, blue), dir, &mut map)
                     } else {
-                        move_balls(blue, red, dir, &mut map)
+                        move_balls((blue, red), dir, &mut map)
                     }
                 }
                 Right => {
                     if red.1 < blue.1 {
-                        move_balls(blue, red, dir, &mut map)
+                        move_balls((blue, red), dir, &mut map)
                     } else {
-                        move_balls(red, blue, dir, &mut map)
+                        move_balls((red, blue), dir, &mut map)
                     }
                 }
             };
@@ -161,12 +158,7 @@ fn simulate(
     None
 }
 
-fn move_balls(
-    first: (usize, usize),
-    second: (usize, usize),
-    dir: Dirs,
-    map: &mut Vec<Vec<Cells>>,
-) -> ((usize, usize), (usize, usize)) {
+fn move_balls((first, second): RedBlue, dir: Dirs, map: &mut Vec<Vec<Cells>>) -> RedBlue {
     let first_moved = get_moved_coord(first, dir, map);
     let first_ball = map[first.0][first.1];
     let temp = map[first_moved.0][first_moved.1];
