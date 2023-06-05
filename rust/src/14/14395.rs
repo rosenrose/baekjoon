@@ -26,7 +26,7 @@ fn main() {
         }
 
         for &(adj_num, adj_op) in adjacents.iter().flatten() {
-            if adj_num > MAX || visited.get(&adj_num).is_some() {
+            if adj_num > MAX || visited.contains_key(&adj_num) {
                 continue;
             }
 
@@ -40,7 +40,7 @@ fn main() {
         }
     }
 
-    if visited.get(&end).is_none() {
+    if !visited.contains_key(&end) {
         println!("-1");
         return;
     }

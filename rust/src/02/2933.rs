@@ -35,11 +35,11 @@ fn simulate(map: &mut Vec<Vec<bool>>, throws: impl Iterator<Item = usize>) {
             }
         }
         // print_map(map);
-        while let Some((members, falling_height)) = get_hover_group(map) {
-            for &(r, c) in &members {
+        while let Some((mut members, falling_height)) = get_hover_group(map) {
+            members.sort();
+
+            for &(r, c) in members.iter().rev() {
                 map[r][c] = false;
-            }
-            for (r, c) in members {
                 map[r + falling_height][c] = true;
             }
         }

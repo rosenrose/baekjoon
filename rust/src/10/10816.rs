@@ -8,7 +8,7 @@ fn main() {
     let mut output = String::new();
 
     let n = input.next().unwrap() as usize;
-    let mut counts = HashMap::new();
+    let mut counts = HashMap::with_capacity(n >> 1);
 
     for num in input.by_ref().take(n) {
         counts.entry(num).and_modify(|c| *c += 1).or_insert(1);
