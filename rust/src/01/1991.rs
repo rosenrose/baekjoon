@@ -28,17 +28,13 @@ fn main() {
         })
         .collect();
     // println!("{tree:?}");
-    let mut result = String::new();
-    tree_traverse(&tree, Some("A"), Orders::Pre, &mut result);
-    println!("{result}");
+    for order in [Orders::Pre, Orders::In, Orders::Post] {
+        let mut result = String::new();
 
-    result.clear();
-    tree_traverse(&tree, Some("A"), Orders::In, &mut result);
-    println!("{result}");
+        tree_traverse(&tree, Some("A"), order, &mut result);
 
-    result.clear();
-    tree_traverse(&tree, Some("A"), Orders::Post, &mut result);
-    println!("{result}");
+        println!("{result}");
+    }
 }
 
 fn tree_traverse(
@@ -52,21 +48,23 @@ fn tree_traverse(
     };
 
     let (left, right) = tree[node];
+    let visit =
+        |child: Option<&str>, result: &mut String| tree_traverse(tree, child, order, result);
 
     match order {
         Orders::Pre => {
             result.push_str(node);
-            tree_traverse(tree, left, order, result);
-            tree_traverse(tree, right, order, result);
+            visit(left, result);
+            visit(right, result);
         }
         Orders::In => {
-            tree_traverse(tree, left, order, result);
+            visit(left, result);
             result.push_str(node);
-            tree_traverse(tree, right, order, result);
+            visit(right, result);
         }
         Orders::Post => {
-            tree_traverse(tree, left, order, result);
-            tree_traverse(tree, right, order, result);
+            visit(left, result);
+            visit(right, result);
             result.push_str(node);
         }
     }

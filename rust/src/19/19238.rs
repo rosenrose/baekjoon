@@ -45,13 +45,9 @@ fn simulate(
     let n = map.len();
 
     loop {
-        let mut passengers = get_passengers(&map, taxi);
-        let (passenger_idx, &(dist_to_start, start)) = passengers
-            .iter()
-            .enumerate()
-            .min_by_key(|&(_, passenger)| passenger)?;
+        let passengers = get_passengers(&map, taxi);
+        let &(dist_to_start, start) = passengers.iter().min()?;
 
-        passengers.swap_remove(passenger_idx);
         let Cells::Passenger(end) = map[start.0][start.1] else { unreachable!() };
 
         fuel = fuel.checked_sub(dist_to_start)?;

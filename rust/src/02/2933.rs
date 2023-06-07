@@ -13,18 +13,14 @@ fn main() {
         .take(height)
         .map(|row| row.chars().map(|ch| ch == 'x').collect())
         .collect();
-    let throws = input.skip(1).flat_map(str::parse::<usize>);
+    let throws = input.skip(1).map(|s| height - s.parse::<usize>().unwrap());
 
     simulate(&mut map, throws);
     print_map(&map);
 }
 
 fn simulate(map: &mut Vec<Vec<bool>>, throws: impl Iterator<Item = usize>) {
-    let height = map.len();
-
     for (i, throw_height) in throws.enumerate() {
-        let throw_height = height - throw_height;
-
         if i & 1 == 0 {
             if let Some(destroy) = map[throw_height].iter_mut().find(|b| **b) {
                 *destroy = false;

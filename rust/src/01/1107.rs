@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     const INIT: usize = 100;
-    let n = input.next().unwrap();
+    let target = input.next().unwrap();
     let mut is_broken = [false; 10];
 
     for btn in input.skip(1) {
@@ -13,76 +13,78 @@ fn main() {
     }
 
     if is_broken.iter().all(|&b| b) {
-        println!("{}", n.abs_diff(INIT));
+        println!("{}", target.abs_diff(INIT));
         return;
     }
 
-    let dist_to_channel = |stopby: usize| {
-        (if matches!(stopby, 98..=103) {
-            stopby.abs_diff(INIT)
-        } else {
-            stopby.to_string().len()
-        }) + n.abs_diff(stopby)
+    let dist_to_target = |stopby: usize| {
+        target.abs_diff(stopby)
+            + if matches!(stopby, 98..=103) {
+                stopby.abs_diff(INIT)
+            } else {
+                stopby.to_string().len()
+            }
     };
 
-    let (mut lower, mut upper) = (None, 0);
-
-    'outer: for channel in (0..=n).rev() {
-        if channel == INIT {
-            lower = Some(channel);
-            break;
-        }
-        if channel == 0 {
-            lower = (!is_broken[0]).then_some(channel);
-            break;
-        }
-
-        let mut num = channel;
-
-        while num > 0 {
-            if is_broken[(num % 10) as usize] {
-                continue 'outer;
+    let lower = 'a: {
+        'outer: for channel in (0..=target).rev() {
+            if channel == INIT {
+                break 'a Some(channel);
+            }
+            if channel == 0 {
+                break 'a (!is_broken[0]).then_some(channel);
             }
 
-            num /= 10;
+            let mut digits = channel;
+
+            while digits > 0 {
+                if is_broken[digits % 10] {
+                    continue 'outer;
+                }
+
+                digits /= 10;
+            }
+
+            break 'a Some(channel);
         }
 
-        lower = Some(channel);
-        break;
-    }
+        None
+    };
 
     if is_broken[1..].iter().all(|&b| b) {
         // upper 불가능
-        println!("{}", dist_to_channel(lower.unwrap()));
+        println!("{}", dist_to_target(lower.unwrap()));
         return;
     }
 
-    'outer: for channel in n + 1.. {
-        if channel == INIT {
-            upper = channel;
-            break;
-        }
-
-        let mut num = channel;
-
-        while num > 0 {
-            if is_broken[(num % 10) as usize] {
-                continue 'outer;
+    let upper = 'a: {
+        'outer: for channel in target + 1.. {
+            if channel == INIT {
+                break 'a channel;
             }
 
-            num /= 10;
+            let mut digits = channel;
+
+            while digits > 0 {
+                if is_broken[digits % 10] {
+                    continue 'outer;
+                }
+
+                digits /= 10;
+            }
+
+            break 'a channel;
         }
 
-        upper = channel;
-        break;
-    }
+        unreachable!()
+    };
     // println!("{lower} {upper}");
     println!(
         "{}",
         if let Some(lower) = lower {
-            dist_to_channel(lower).min(dist_to_channel(upper))
+            dist_to_target(lower).min(dist_to_target(upper))
         } else {
-            dist_to_channel(upper)
+            dist_to_target(upper)
         }
     );
 }
