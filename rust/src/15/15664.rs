@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use std::fmt::Write;
 use std::io;
 
@@ -34,14 +33,14 @@ fn combinations(
     }
 
     let takes = nums.len() - (selected.len() - 1);
-    let mut visited = HashSet::new();
+    let mut visited = [false; 10_000 + 1];
 
     for i in start..depth + takes {
-        if visited.contains(&nums[i]) {
+        if visited[nums[i]] {
             continue;
         }
 
-        visited.insert(nums[i]);
+        visited[nums[i]] = true;
         selected[depth] = i;
 
         combinations(depth + 1, i + 1, selected, nums, output);

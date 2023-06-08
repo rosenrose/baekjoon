@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use std::fmt::Write;
 use std::io;
 
@@ -33,14 +32,14 @@ fn combinations_with_replacement(
         return;
     }
 
-    let mut visited = HashSet::new();
+    let mut visited = [false; 10_000 + 1];
 
     for i in start..nums.len() {
-        if visited.contains(&nums[i]) {
+        if visited[nums[i]] {
             continue;
         }
 
-        visited.insert(nums[i]);
+        visited[nums[i]] = true;
         selected[depth] = i;
 
         combinations_with_replacement(depth + 1, i, selected, nums, output);

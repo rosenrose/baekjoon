@@ -32,7 +32,7 @@ fn main() {
         })
         .collect();
 
-    let (min, max) = permutations(0, &mut vec![0; n - 1], &operators, &nums);
+    let (min, max) = permutations(0, &mut vec![0; n - 1], &mut [false; 10], &operators, &nums);
 
     println!("{max}\n{min}");
 }
@@ -40,6 +40,7 @@ fn main() {
 fn permutations(
     depth: usize,
     selected: &mut Vec<usize>,
+    visited: &mut [bool],
     operators: &[Tokens],
     nums: &[i32],
 ) -> (i32, i32) {
@@ -57,7 +58,7 @@ fn permutations(
         return (result, result);
     }
 
-    let mut visited = [false; 4];
+    let mut visited_local = [false; 4];
     let get_idx = |op: Tokens| match op {
         Add => 0,
         Sub => 1,
@@ -70,14 +71,16 @@ fn permutations(
         .iter()
         .enumerate()
         .fold((MAX, -MAX), |(min, max), (i, &op)| {
-            if visited[get_idx(op)] || selected[..depth].contains(&i) {
+            if visited[i] || visited_local[get_idx(op)] {
                 return (min, max);
             }
 
-            visited[get_idx(op)] = true;
+            visited[i] = true;
+            visited_local[get_idx(op)] = true;
             selected[depth] = i;
 
-            let result = permutations(depth + 1, selected, operators, nums);
+            let result = permutations(depth + 1, selected, visited, operators, nums);
+            visited[i] = false;
 
             (result.0.min(min), result.1.max(max))
         })

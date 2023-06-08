@@ -26,10 +26,10 @@ fn main() {
         .collect();
     let (s, target) = (input(), (input() - 1, input() - 1));
 
+    viruses.sort_unstable();
     let mut temp = Vec::new();
 
     for _ in 0..s {
-        viruses.sort_unstable();
         temp.clone_from(&viruses);
         viruses.clear();
 

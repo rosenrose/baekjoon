@@ -11,27 +11,37 @@ fn main() {
     let mut nums: Vec<_> = input.collect();
     nums.sort();
 
-    permutations(0, &mut vec![0; m], &nums, &mut output);
+    permutations(0, &mut vec![0; m], &mut [false; 8], &nums, &mut output);
 
     print!("{output}");
 }
 
-fn permutations(depth: usize, selected: &mut Vec<usize>, nums: &[usize], output: &mut String) {
+fn permutations(
+    depth: usize,
+    selected: &mut Vec<usize>,
+    visited: &mut [bool],
+    nums: &[usize],
+    output: &mut String,
+) {
     if depth == selected.len() {
-        for num in selected {
-            write!(output, "{num} ").unwrap();
+        for i in selected {
+            write!(output, "{} ", nums[*i]).unwrap();
         }
         writeln!(output, "").unwrap();
 
         return;
     }
 
-    for &num in nums {
-        if selected[..depth].contains(&num) {
+    for i in 0..nums.len() {
+        if visited[i] {
             continue;
         }
 
-        selected[depth] = num;
-        permutations(depth + 1, selected, nums, output);
+        visited[i] = true;
+        selected[depth] = i;
+
+        permutations(depth + 1, selected, visited, nums, output);
+
+        visited[i] = false;
     }
 }

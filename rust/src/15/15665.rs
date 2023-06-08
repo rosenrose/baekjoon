@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use std::fmt::Write;
 use std::io;
 
@@ -27,14 +26,14 @@ fn product(depth: usize, selected: &mut Vec<usize>, nums: &[usize], output: &mut
         return;
     }
 
-    let mut visited = HashSet::new();
+    let mut visited = [false; 10_000 + 1];
 
     for (i, &num) in nums.iter().enumerate() {
-        if visited.contains(&num) {
+        if visited[num] {
             continue;
         }
 
-        visited.insert(num);
+        visited[num] = true;
         selected[depth] = i;
 
         product(depth + 1, selected, nums, output);
