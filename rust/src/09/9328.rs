@@ -1,4 +1,4 @@
-use std::collections::{HashSet, VecDeque};
+use std::collections::VecDeque;
 use std::io;
 
 #[derive(Clone, Debug)]
@@ -51,8 +51,8 @@ fn simulate(mut map: Vec<Vec<Cells>>, mut keys: i32) -> i32 {
     let start = (0, 0);
 
     let mut count = 0;
-    let mut visited = vec![vec![HashSet::new(); width]; height];
-    visited[start.0][start.1].insert(keys);
+    let mut visited = vec![vec![None; width]; height];
+    visited[start.0][start.1] = Some(keys);
 
     let mut visited_doors = vec![Vec::<(usize, usize)>::new(); 26];
     let mut queue = VecDeque::from([start]);
@@ -72,7 +72,7 @@ fn simulate(mut map: Vec<Vec<Cells>>, mut keys: i32) -> i32 {
                     keys |= 1 << key;
 
                     while let Some(door) = visited_doors[key as usize].pop() {
-                        visited[door.0][door.1].insert(keys);
+                        visited[door.0][door.1] = Some(keys);
                         queue.push_front(door);
                     }
                 }
@@ -89,11 +89,11 @@ fn simulate(mut map: Vec<Vec<Cells>>, mut keys: i32) -> i32 {
                 _ => (),
             }
 
-            if visited[adj_r][adj_c].contains(&keys) {
+            if visited[adj_r][adj_c] == Some(keys) {
                 continue;
             }
 
-            visited[adj_r][adj_c].insert(keys);
+            visited[adj_r][adj_c] = Some(keys);
             queue.push_back((adj_r, adj_c));
         }
     }

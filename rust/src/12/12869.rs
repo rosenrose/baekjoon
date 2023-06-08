@@ -19,18 +19,18 @@ fn main() {
     while let Some((healths, count)) = queue.pop_front() {
         let next_count = count + 1;
         let adjacents = [
-            [healths[0], healths[1], healths[2]],
-            [healths[0], healths[2], healths[1]],
-            [healths[1], healths[0], healths[2]],
-            [healths[1], healths[2], healths[0]],
-            [healths[2], healths[0], healths[1]],
-            [healths[2], healths[1], healths[0]],
+            [0, 1, 2],
+            [0, 2, 1],
+            [1, 0, 2],
+            [1, 2, 0],
+            [2, 0, 1],
+            [2, 1, 0],
         ]
-        .map(|[one, two, three]| {
+        .map(|[first, second, third]| {
             [
-                one.saturating_sub(9),
-                two.saturating_sub(3),
-                three.saturating_sub(1),
+                healths[first].saturating_sub(9),
+                healths[second].saturating_sub(3),
+                healths[third].saturating_sub(1),
             ]
         });
 

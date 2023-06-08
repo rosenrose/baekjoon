@@ -48,16 +48,12 @@ fn main() {
 
 fn get_cycle_nodes(graph: &[Vec<usize>]) -> Vec<bool> {
     let mut cycle_nodes = vec![false; graph.len()];
-    let mut visited = vec![false; graph.len()];
-    let mut prevs = vec![0; graph.len()];
+    let start = 1;
 
-    for start in 1..graph.len() {
-        if visited[start] {
-            continue;
-        }
+    let mut visited = vec![None; graph.len()];
+    visited[start] = Some(start);
 
-        dfs(start, &graph, &mut cycle_nodes, &mut visited, &mut prevs);
-    }
+    dfs(start, &graph, &mut cycle_nodes, &mut visited);
 
     cycle_nodes
 }
@@ -66,32 +62,32 @@ fn dfs(
     node: usize,
     graph: &[Vec<usize>],
     cycle_nodes: &mut Vec<bool>,
-    visited: &mut Vec<bool>,
-    prevs: &mut Vec<usize>,
-) -> (bool, usize) {
-    if visited[node] {
-        return (true, node);
-    }
-
-    visited[node] = true;
-    let parent = prevs[node];
+    visited: &mut Vec<Option<usize>>,
+) -> Option<usize> {
+    let parent = visited[node].unwrap();
+    let mut cycle_end_node = None;
 
     for &adj in &graph[node] {
         if adj == parent || cycle_nodes[adj] {
             continue;
         }
 
-        prevs[adj] = node;
-        let (is_cycle, visited_node) = dfs(adj, graph, cycle_nodes, visited, prevs);
+        if visited[adj].is_some() {
+            cycle_end_node = Some(adj);
+            continue;
+        }
 
-        if is_cycle {
-            cycle_nodes[adj] = is_cycle;
+        visited[adj] = Some(node);
+        cycle_end_node = dfs(adj, graph, cycle_nodes, visited).or(cycle_end_node);
+    }
 
-            if visited_node != node {
-                return (is_cycle, visited_node);
-            }
+    if let Some(end) = cycle_end_node {
+        cycle_nodes[node] = true;
+
+        if end == node {
+            return None;
         }
     }
 
-    (false, node)
+    cycle_end_node
 }
