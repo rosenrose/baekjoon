@@ -1,11 +1,11 @@
 use std::fmt::Write;
 use std::io;
 
-const M: i64 = 1_000_000_007;
+const M: usize = 1_000_000_007;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
@@ -14,7 +14,7 @@ fn main() {
     factorial_rem[0] = 1;
 
     for i in 1..=MAX {
-        factorial_rem[i] = (factorial_rem[i - 1] * i as i64) % M;
+        factorial_rem[i] = (factorial_rem[i - 1] * i) % M;
     }
 
     for (n, k) in (0..input()).map(|_| (input(), input())) {
@@ -24,25 +24,22 @@ fn main() {
     print!("{output}");
 }
 
-fn combination_rem(n: i64, r: i64, factorial_rem: &[i64]) -> i64 {
+fn combination_rem(n: usize, r: usize, factorial_rem: &[usize]) -> usize {
     if n == r || r == 0 {
         return 1;
     }
 
-    let a = factorial_rem[n as usize];
-    let b = mod_inverse_rem(
-        (factorial_rem[(n - r) as usize] * factorial_rem[r as usize]) % M,
-        M,
-    );
+    let numerator = factorial_rem[n];
+    let denominator = (factorial_rem[n - r] * factorial_rem[r]) % M;
 
-    (a * b) % M
+    (numerator * mod_inverse_rem(denominator, M)) % M
 }
 
-fn mod_inverse_rem(n: i64, modular: i64) -> i64 {
+fn mod_inverse_rem(n: usize, modular: usize) -> usize {
     pow_rem(n, modular - 2)
 }
 
-fn pow_rem(mut base: i64, mut exp: i64) -> i64 {
+fn pow_rem(mut base: usize, mut exp: usize) -> usize {
     let mut rem = 1;
 
     while exp > 0 {
