@@ -70,7 +70,7 @@ fn main() {
         for ((adj_r, adj_c), adj_dir) in adjacents {
             let next_count = count + i32::from(dir != adj_dir);
 
-            if visited[adj_r][adj_c][adj_dir as usize] <= next_count || map[adj_r][adj_c] {
+            if visited[adj_r][adj_c][adj_dir as usize] <= next_count {
                 continue;
             }
 

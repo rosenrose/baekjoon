@@ -10,7 +10,7 @@ fn main() {
         .map(|op| match op {
             "<" => Ordering::Less,
             ">" => Ordering::Greater,
-            _ => Ordering::Equal,
+            _ => unreachable!(),
         })
         .collect();
 
@@ -31,22 +31,17 @@ fn permutations(
         return (result, result);
     }
 
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        .iter()
-        .fold((9_876_543_210, 1), |(min, max), &num| {
-            if visited[num] {
-                return (min, max);
-            }
-            if depth > 0 && (selected[depth - 1].cmp(&num) != operators[depth - 1]) {
-                return (min, max);
-            }
+    (0..10).fold((9_876_543_210, 1), |(min, max), num| {
+        if visited[num] || (depth > 0 && (selected[depth - 1].cmp(&num) != operators[depth - 1])) {
+            return (min, max);
+        }
 
-            visited[num] = true;
-            selected[depth] = num;
+        visited[num] = true;
+        selected[depth] = num;
 
-            let result = permutations(depth + 1, selected, visited, operators);
-            visited[num] = false;
+        let result = permutations(depth + 1, selected, visited, operators);
+        visited[num] = false;
 
-            (result.0.min(min), result.1.max(max))
-        })
+        (result.0.min(min), result.1.max(max))
+    })
 }
