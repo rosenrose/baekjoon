@@ -16,12 +16,5 @@ fn main() {
         }
     }
 
-    println!(
-        "{}",
-        if stack.is_empty() {
-            "FRULA".to_owned()
-        } else {
-            stack
-        }
-    );
+    println!("{}", if stack.is_empty() { "FRULA" } else { &stack });
 }
