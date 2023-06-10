@@ -23,16 +23,22 @@ fn main() {
 }
 
 fn get_cycle_nodes(graph: &[usize]) -> usize {
-    let mut visited = vec![false; graph.len()];
+    let mut visited_total = vec![false; graph.len()];
     let mut visited_dfs = vec![false; graph.len()];
     let mut count = graph.len() - 1;
 
     for start in 1..graph.len() {
-        if visited[start] {
+        if visited_total[start] {
             continue;
         }
 
-        dfs(start, &graph, &mut visited, &mut visited_dfs, &mut count);
+        dfs(
+            start,
+            &graph,
+            &mut visited_total,
+            &mut visited_dfs,
+            &mut count,
+        );
     }
 
     count
@@ -41,11 +47,11 @@ fn get_cycle_nodes(graph: &[usize]) -> usize {
 fn dfs(
     node: usize,
     graph: &[usize],
-    visited: &mut Vec<bool>,
+    visited_total: &mut Vec<bool>,
     visited_dfs: &mut Vec<bool>,
     count: &mut usize,
 ) -> Option<usize> {
-    visited[node] = true;
+    visited_total[node] = true;
     visited_dfs[node] = true;
 
     let adj = graph[node];
@@ -54,11 +60,11 @@ fn dfs(
             break 'a Some(adj);
         }
 
-        if visited[adj] {
+        if visited_total[adj] {
             break 'a None;
         }
 
-        dfs(adj, graph, visited, visited_dfs, count)
+        dfs(adj, graph, visited_total, visited_dfs, count)
     };
 
     visited_dfs[node] = false;

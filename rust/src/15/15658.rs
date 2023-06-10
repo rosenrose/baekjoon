@@ -39,7 +39,7 @@ fn main() {
 fn permutations(
     depth: usize,
     selected: &mut Vec<usize>,
-    visited: &mut [bool],
+    visited_idx: &mut [bool],
     operators: &[Ops],
     nums: &[i32],
 ) -> (i32, i32) {
@@ -58,22 +58,22 @@ fn permutations(
         return (result, result);
     }
 
-    let mut visited_local = [false; 4];
+    let mut visited_op = [false; 4];
 
     operators
         .iter()
         .enumerate()
         .fold((MAX, -MAX), |(min, max), (i, &op)| {
-            if visited[i] || visited_local[op as usize] {
+            if visited_idx[i] || visited_op[op as usize] {
                 return (min, max);
             }
 
-            visited[i] = true;
-            visited_local[op as usize] = true;
+            visited_idx[i] = true;
+            visited_op[op as usize] = true;
             selected[depth] = i;
 
-            let result = permutations(depth + 1, selected, visited, operators, nums);
-            visited[i] = false;
+            let result = permutations(depth + 1, selected, visited_idx, operators, nums);
+            visited_idx[i] = false;
 
             (result.0.min(min), result.1.max(max))
         })

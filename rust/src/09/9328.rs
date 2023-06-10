@@ -54,7 +54,7 @@ fn simulate(mut map: Vec<Vec<Cells>>, mut keys: i32) -> i32 {
     let mut visited = vec![vec![None; width]; height];
     visited[start.0][start.1] = Some(keys);
 
-    let mut visited_doors = vec![Vec::<(usize, usize)>::new(); 26];
+    let mut discovered_doors = vec![Vec::<(usize, usize)>::new(); 26];
     let mut queue = VecDeque::from([start]);
 
     while let Some((r, c)) = queue.pop_front() {
@@ -71,7 +71,7 @@ fn simulate(mut map: Vec<Vec<Cells>>, mut keys: i32) -> i32 {
                 Cells::Key(key) => {
                     keys |= 1 << key;
 
-                    while let Some(door) = visited_doors[key as usize].pop() {
+                    while let Some(door) = discovered_doors[key as usize].pop() {
                         visited[door.0][door.1] = Some(keys);
                         queue.push_front(door);
                     }
@@ -82,7 +82,7 @@ fn simulate(mut map: Vec<Vec<Cells>>, mut keys: i32) -> i32 {
                 }
                 Cells::Door(door) => {
                     if keys & (1 << door) == 0 {
-                        visited_doors[door as usize].push((r, c));
+                        discovered_doors[door as usize].push((r, c));
                         continue;
                     }
                 }

@@ -19,7 +19,7 @@ fn main() {
 fn permutations(
     depth: usize,
     selected: &mut Vec<usize>,
-    visited: &mut [bool],
+    visited_idx: &mut [bool],
     nums: &[usize],
     output: &mut String,
 ) {
@@ -32,19 +32,19 @@ fn permutations(
         return;
     }
 
-    let mut visited_local = [false; 10_000 + 1];
+    let mut visited_num = [false; 10_000 + 1];
 
     for (i, &num) in nums.iter().enumerate() {
-        if visited[i] || visited_local[num] {
+        if visited_idx[i] || visited_num[num] {
             continue;
         }
 
-        visited[i] = true;
-        visited_local[num] = true;
+        visited_idx[i] = true;
+        visited_num[num] = true;
         selected[depth] = i;
 
-        permutations(depth + 1, selected, visited, nums, output);
+        permutations(depth + 1, selected, visited_idx, nums, output);
 
-        visited[i] = false;
+        visited_idx[i] = false;
     }
 }

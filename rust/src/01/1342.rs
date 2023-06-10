@@ -13,19 +13,25 @@ fn main() {
         return;
     }
 
-    loop {
+    while next_permutation(&mut word) {
         if (1..len).all(|i| word[i - 1] != word[i]) {
             count += 1;
         }
-
-        let Some(i) = (1..len).rfind(|&i| word[i - 1] < word[i]) else {
-            break;
-        };
-        let j = (i..len).rfind(|&j| word[j] > word[i - 1]).unwrap();
-
-        word.swap(i - 1, j);
-        (&mut word[i..]).sort();
     }
 
     println!("{count}");
+}
+
+fn next_permutation(chars: &mut Vec<u8>) -> bool {
+    let len = chars.len();
+
+    let Some(i) = (1..len).rfind(|&i| chars[i - 1] < chars[i]) else {
+        return false;
+    };
+    let j = (i..len).rfind(|&j| chars[j] > chars[i - 1]).unwrap();
+
+    chars.swap(i - 1, j);
+    chars[i..].sort();
+
+    true
 }

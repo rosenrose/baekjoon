@@ -20,7 +20,7 @@ fn main() {
     let mut visited = vec![vec![false; n]; n];
     visited[start.0][start.1] = true;
 
-    let mut visited_darks = vec![vec![false; n]; n];
+    let mut discovered_darks = vec![vec![false; n]; n];
     let mut count = 1;
     let mut queue = VecDeque::from([start]);
 
@@ -31,7 +31,7 @@ fn main() {
                 count += 1;
             }
 
-            if visited_darks[switch.0][switch.1] && !visited[switch.0][switch.1] {
+            if discovered_darks[switch.0][switch.1] && !visited[switch.0][switch.1] {
                 visited[switch.0][switch.1] = true;
                 queue.push_back(switch);
             }
@@ -53,7 +53,7 @@ fn main() {
                 visited[adj_r][adj_c] = true;
                 queue.push_back((adj_r, adj_c));
             } else {
-                visited_darks[adj_r][adj_c] = true;
+                discovered_darks[adj_r][adj_c] = true;
             }
         }
     }
