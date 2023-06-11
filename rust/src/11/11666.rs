@@ -17,25 +17,25 @@ fn main() {
         .collect();
     times.sort_unstable();
 
-    let mut workstations = BinaryHeap::with_capacity(n >> 1);
+    let mut using_workstations = BinaryHeap::with_capacity(n >> 1);
     let mut unlock_count = 0;
 
     'outer: for (start, end) in times {
-        while let Some(&Reverse(occupied_end)) = workstations.peek() {
+        while let Some(&Reverse(occupied_end)) = using_workstations.peek() {
             if start < occupied_end {
                 break;
             }
 
-            workstations.pop();
+            using_workstations.pop();
 
             if start <= occupied_end + lock_time {
-                workstations.push(Reverse(end));
+                using_workstations.push(Reverse(end));
                 continue 'outer;
             }
         }
 
         unlock_count += 1;
-        workstations.push(Reverse(end));
+        using_workstations.push(Reverse(end));
     }
 
     println!("{}", n - unlock_count);
