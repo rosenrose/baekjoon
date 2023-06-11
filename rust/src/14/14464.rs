@@ -13,47 +13,54 @@ fn main() {
     cows.sort_unstable_by_key(|&(a, b)| (b, a));
     // println!("{chickens:?}\n{cows:?}");
     let mut visited = [false; 20_000 + 1];
+    let (mut min, mut max) = (0, chickens.len() - 1);
     let mut count = 0;
 
-    for (start, end) in cows {
-        let Some(chicken_idx) = binary_search(&chickens, start, end, &visited) else {
+    for cow in cows {
+        let Some(chicken_idx) = binary_search(&chickens, cow, (min as i32, max as i32), &visited) else {
             continue;
         };
 
         visited[chicken_idx] = true;
         count += 1;
+
+        while min < chickens.len() && visited[min] {
+            min += 1;
+        }
+        while max > 0 && visited[max] {
+            max -= 1;
+        }
     }
 
     println!("{count}");
 }
 
-fn binary_search(chickens: &[i32], start: i32, end: i32, visited: &[bool]) -> Option<usize> {
-    let (mut lo, mut hi) = (0, chickens.len() as i32 - 1);
+fn binary_search(
+    chickens: &[i32],
+    cow: (i32, i32),
+    (mut lo, mut hi): (i32, i32),
+    visited: &[bool],
+) -> Option<usize> {
+    let (start, end) = cow;
     let mut result = None;
 
     while lo <= hi {
-        let mid = (lo + ((hi - lo) >> 1)) as usize;
+        let mid = lo + ((hi - lo) >> 1);
+        let chicken = chickens[mid as usize];
 
-        if chickens[mid] < start {
-            lo = mid as i32 + 1;
-        } else if start <= chickens[mid] && chickens[mid] <= end {
-            result = Some(mid);
-            hi = mid as i32 - 1;
-        } else if end < chickens[mid] {
-            hi = mid as i32 - 1;
+        if chicken < start {
+            lo = mid + 1;
+        } else if start <= chicken && chicken <= end {
+            if !visited[mid as usize] {
+                result = Some(mid as usize);
+            }
+
+            return binary_search(chickens, cow, (lo, mid - 1), visited)
+                .or(result)
+                .or_else(|| binary_search(chickens, cow, (mid + 1, hi), visited));
+        } else if end < chicken {
+            hi = mid - 1;
         }
-    }
-
-    let Some(mut result) = result else {
-        return None;
-    };
-
-    while result < chickens.len() && chickens[result] <= end {
-        if !visited[result] {
-            return Some(result);
-        }
-
-        result += 1;
     }
 
     None
