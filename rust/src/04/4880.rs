@@ -7,7 +7,7 @@ fn main() {
     let mut output = String::new();
 
     while let (Some(a), Some(b), Some(c)) = (input.next(), input.next(), input.next()) {
-        if (a, b, c) == (0, 0, 0) {
+        if [a, b, c] == [0; 3] {
             break;
         }
 

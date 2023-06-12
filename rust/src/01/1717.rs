@@ -42,7 +42,7 @@ fn main() {
     let (n, m) = (input(), input());
     let mut disjoint_set = DisjointSet::make(n);
 
-    for (op, a, b) in (0..m).map(|_| (input(), input(), input())) {
+    for [op, a, b] in (0..m).map(|_| [(); 3].map(|_| input())) {
         match op {
             0 => disjoint_set.union(a, b),
             1 => writeln!(

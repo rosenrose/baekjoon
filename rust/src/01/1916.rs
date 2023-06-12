@@ -10,11 +10,11 @@ fn main() {
     let (n, m) = (input(), input());
     let mut adjacency_array = (vec![i32::MAX; n + 1], vec![((0, 0), 0); m]);
 
-    for (i, (u, v, w)) in (0..m).map(|i| (i, (input(), input() as i32, input() as i32))) {
+    for (i, [u, v, w]) in (0..m).map(|i| (i, [(); 3].map(|_| input()))) {
         let prev = adjacency_array.0[u];
 
         adjacency_array.0[u] = i as i32;
-        adjacency_array.1[i] = ((v, w), prev);
+        adjacency_array.1[i] = ((v as i32, w as i32), prev);
     }
 
     let (start, end) = (input(), input());

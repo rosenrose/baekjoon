@@ -7,12 +7,12 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, team, personal) = (input(), input(), input());
+    let [n, team, personal] = [(); 3].map(|_| input());
     let mut count = 0;
 
     (0..n)
         .filter_map(|_| {
-            let rating = [input(), input(), input()];
+            let rating = [(); 3].map(|_| input());
 
             (rating.iter().sum::<i32>() >= team && rating.iter().all(|&r| r >= personal))
                 .then_some(rating)

@@ -4,9 +4,8 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let (a_atk, a_hp, b_atk, b_hp) = (input(), input(), input(), input());
+    let [a_atk, a_hp, b_atk, b_hp] = [(); 4].map(|_| input.next().unwrap());
     let a_turns = (b_hp as f64 / a_atk as f64).ceil() as i32;
     let b_turns = (a_hp as f64 / b_atk as f64).ceil() as i32;
 

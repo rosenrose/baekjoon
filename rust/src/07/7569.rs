@@ -10,9 +10,8 @@ enum Cells {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let (cols, rows, height) = (input(), input(), input());
+    let [cols, rows, height] = [(); 3].map(|_| input.next().unwrap());
     let mut queue = VecDeque::new();
     let mut raw_count = 0;
 
@@ -21,7 +20,7 @@ fn main() {
             (0..rows)
                 .map(|r| {
                     (0..cols)
-                        .map(|c| match input() {
+                        .map(|c| match input.next().unwrap() {
                             1 => {
                                 queue.push_back(((h, r, c), 0));
                                 Cells::Ripen

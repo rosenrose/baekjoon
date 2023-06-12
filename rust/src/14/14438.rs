@@ -68,7 +68,7 @@ fn main() {
     let n = input() as usize;
     let mut segment_tree = SegmentTree::make(n, (0..n).map(|_| input()));
 
-    for (a, b, c) in (0..input()).map(|_| (input(), input(), input())) {
+    for [a, b, c] in (0..input()).map(|_| [(); 3].map(|_| input())) {
         match a {
             1 => segment_tree.update(b as usize - 1, c),
             2 => writeln!(output, "{}", segment_tree.query(b as usize - 1, c as usize)).unwrap(),

@@ -4,14 +4,13 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let (n, m, k) = (input() as usize, input(), input() as usize);
+    let [n, m, k] = [(); 3].map(|_| input.next().unwrap());
     let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    for (a, b, c) in (0..m).map(|_| (input(), input(), input())) {
-        adjacency_list[a as usize].push((b, c));
+    for [a, b, c] in (0..m).map(|_| [(); 3].map(|_| input.next().unwrap())) {
+        adjacency_list[a].push((b as i32, c as i32));
     }
 
     let distances = dijkstra_nth(&adjacency_list, 1, k);

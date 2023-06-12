@@ -11,7 +11,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, m, v) = (input(), input(), input());
+    let [n, m, v] = [(); 3].map(|_| input());
     let mut adjacency_list = vec![Vec::new(); n + 1];
 
     for (v1, v2) in (0..m).map(|_| (input(), input())) {

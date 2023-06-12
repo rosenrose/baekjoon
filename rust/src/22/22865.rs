@@ -8,25 +8,24 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let n = input();
-    let (a, b, c) = (input(), input(), input());
+    let [a, b, c] = [(); 3].map(|_| input());
     let m = input();
 
     let mut adjacency_array = (vec![i32::MAX; n + 1], vec![((0, 0), 0); m << 1]);
 
-    for (i, (d, e, len)) in (0..m).map(|i| (i << 1, (input(), input(), input() as i32))) {
+    for (i, [d, e, len]) in (0..m).map(|i| (i << 1, [(); 3].map(|_| input()))) {
         let prev = adjacency_array.0[d];
         adjacency_array.0[d] = i as i32;
-        adjacency_array.1[i] = ((e as i32, len), prev);
+        adjacency_array.1[i] = ((e as i32, len as i32), prev);
 
         let prev = adjacency_array.0[e];
         adjacency_array.0[e] = (i + 1) as i32;
-        adjacency_array.1[i + 1] = ((d as i32, len), prev);
+        adjacency_array.1[i + 1] = ((d as i32, len as i32), prev);
     }
 
     let dists_from_a = dijkstra(&adjacency_array, a);
     let dists_from_b = dijkstra(&adjacency_array, b);
     let dists_from_c = dijkstra(&adjacency_array, c);
-
     let mut max_dist = 0;
     let mut most_far = 0;
 

@@ -10,7 +10,7 @@ fn main() {
 
     for _ in 0..n {
         let country = input();
-        medal_ranks[country].0 = [input(), input(), input()];
+        medal_ranks[country].0 = [(); 3].map(|_| input());
     }
 
     let (k_medal, _) = medal_ranks[k];

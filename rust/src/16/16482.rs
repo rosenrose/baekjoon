@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<f64>);
     let mut input = || input.next().unwrap();
 
-    let (bc, ca, ab) = (input(), input(), input());
+    let [bc, ca, ab] = [(); 3].map(|_| input());
     let (af, bd) = (input(), input());
 
     let (fb, dc) = (ab - af, bc - bd);

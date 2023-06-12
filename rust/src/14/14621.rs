@@ -33,21 +33,20 @@ impl DisjointSet {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
 
-    let (n, m) = (parse_int(input()), parse_int(input()));
-    let schools: Vec<_> = (0..n).map(|_| input()).collect();
+    let [n, m] = [(); 2].map(|_| parse_int(input.next().unwrap()));
+    let schools: Vec<_> = input.by_ref().take(n).collect();
 
     let mut disjoint_set = DisjointSet::make(n);
     let mut edges: Vec<_> = (0..m)
-        .map(|_| (parse_int(input()), parse_int(input()), parse_int(input())))
+        .map(|_| [(); 3].map(|_| parse_int(input.next().unwrap())))
         .collect();
 
-    edges.sort_unstable_by_key(|&(_, _, weight)| weight);
+    edges.sort_unstable_by_key(|&[_, _, weight]| weight);
 
     let min_spanning_tree: Vec<_> = edges
         .iter()
-        .filter_map(|&(a, b, dist)| {
+        .filter_map(|&[a, b, dist]| {
             (schools[a - 1] != schools[b - 1] && !disjoint_set.is_same(a, b)).then(|| {
                 disjoint_set.union(a, b);
                 dist

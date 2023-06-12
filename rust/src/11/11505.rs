@@ -64,13 +64,12 @@ impl SegmentTree {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
-    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, m, k) = (input() as usize, input(), input());
-    let mut segment_tree = SegmentTree::make(n, (0..n).map(|_| input()));
+    let [n, m, k] = [(); 3].map(|_| input.next().unwrap());
+    let mut segment_tree = SegmentTree::make(n as usize, input.by_ref().take(n as usize));
 
-    for (a, b, c) in (0..m + k).map(|_| (input(), input(), input())) {
+    for [a, b, c] in (0..m + k).map(|_| [(); 3].map(|_| input.next().unwrap())) {
         match a {
             1 => segment_tree.update(b as usize - 1, c),
             2 => writeln!(output, "{}", segment_tree.query(b as usize - 1, c as usize)).unwrap(),

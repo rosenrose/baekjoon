@@ -9,15 +9,10 @@ fn main() {
     let mut output = String::new();
 
     let mut name_scores: Vec<_> = (0..parse_int(input()))
-        .map(|_| {
-            (
-                input(),
-                (parse_int(input()), parse_int(input()), parse_int(input())),
-            )
-        })
+        .map(|_| (input(), [(); 3].map(|_| parse_int(input()) as u8)))
         .collect();
 
-    name_scores.sort_unstable_by_key(|&(name, (lang, eng, math))| {
+    name_scores.sort_unstable_by_key(|&(name, [lang, eng, math])| {
         (Reverse(lang), eng, Reverse(math), name)
     });
 

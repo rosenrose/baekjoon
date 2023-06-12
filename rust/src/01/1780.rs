@@ -13,7 +13,7 @@ fn main() {
         }
     }
 
-    let (mut minus, mut zero, mut plus) = (0, 0, 0);
+    let [mut minus, mut zero, mut plus] = [0; 3];
 
     cut(&paper, 0, 0, n, &mut minus, &mut zero, &mut plus);
 
@@ -29,7 +29,7 @@ fn cut(
     zero: &mut i32,
     plus: &mut i32,
 ) {
-    let (mut count_m, mut count_z, mut count_p) = (0, 0, 0);
+    let [mut count_m, mut count_z, mut count_p] = [0; 3];
 
     'outer: for i in y..y + n {
         for j in x..x + n {

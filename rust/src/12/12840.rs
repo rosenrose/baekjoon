@@ -7,7 +7,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (mut h, mut m, mut s) = (input(), input(), input());
+    let [mut h, mut m, mut s] = [(); 3].map(|_| input());
 
     for _ in 0..input() {
         match input() {

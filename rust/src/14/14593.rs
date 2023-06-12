@@ -4,11 +4,10 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let first = (1..=input())
+    let first = (1..=input.next().unwrap())
         .min_by_key(|_| {
-            let (score, count, time) = (input(), input(), input());
+            let [score, count, time] = [(); 3].map(|_| input.next().unwrap());
             (Reverse(score), count, time)
         })
         .unwrap();

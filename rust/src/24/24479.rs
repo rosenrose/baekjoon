@@ -7,8 +7,8 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, m, r) = (input() as usize, input(), input());
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let [n, m, r] = [(); 3].map(|_| input());
+    let mut adjacency_list = vec![Vec::new(); n as usize + 1];
 
     for (u, v) in (0..m).map(|_| (input(), input())) {
         adjacency_list[u as usize].push(v);

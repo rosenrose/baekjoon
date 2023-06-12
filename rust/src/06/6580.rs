@@ -3,16 +3,15 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
-    let mut input = || input.next().unwrap();
 
-    let (width, _height, _) = (input(), input(), input());
+    let [width, _height, _] = [(); 3].map(|_| input.next().unwrap());
     let n: usize = width.split(' ').next_back().unwrap().parse().unwrap();
-    const HEX_PREFIX: &str = "0x";
 
-    let map: Vec<Vec<_>> = (0..n)
-        .map(|_| {
-            input()
-                .split_terminator(',')
+    const HEX_PREFIX: &str = "0x";
+    let map: Vec<Vec<_>> = input
+        .take(n)
+        .map(|line| {
+            line.split_terminator(',')
                 .flat_map(|hex| {
                     let mut hex = u8::from_str_radix(&hex[HEX_PREFIX.len()..], 16).unwrap();
 

@@ -8,7 +8,7 @@ fn main() {
     let (n, m) = (input(), input());
     let mut baskets: Vec<_> = (1..=n).collect();
 
-    for (i, j, k) in (0..m).map(|_| (input(), input(), input())) {
+    for [i, j, k] in (0..m).map(|_| [(); 3].map(|_| input())) {
         baskets[i - 1..j].rotate_left(k - i);
     }
 

@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (height, width, k) = (input(), input(), input());
+    let [height, width, k] = [(); 3].map(|_| input());
     let mut map = vec![vec![false; width]; height];
 
     for (r, c) in (0..k).map(|_| (input() - 1, input() - 1)) {

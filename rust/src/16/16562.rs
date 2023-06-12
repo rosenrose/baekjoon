@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, m, mut k) = (input(), input(), input());
+    let [n, m, mut k] = [(); 3].map(|_| input());
     let mut costs = vec![0; n + 1];
 
     for i in 1..=n {

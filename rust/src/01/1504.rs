@@ -10,7 +10,7 @@ fn main() {
     let (n, e) = (input() as usize, input());
     let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    for (a, b, c) in (0..e).map(|_| (input(), input(), input())) {
+    for [a, b, c] in (0..e).map(|_| [(); 3].map(|_| input())) {
         adjacency_list[a as usize].push((b, c));
         adjacency_list[b as usize].push((a, c));
     }

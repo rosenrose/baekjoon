@@ -20,16 +20,10 @@ fn main() {
     }
 
     for _ in 0..input() {
-        let (i, j, x, y) = (
-            input() as usize,
-            input() as usize,
-            input() as usize,
-            input() as usize,
-        );
-
+        let [i, j, x, y] = [(); 4].map(|_| input() as usize);
         let (i, j) = (i - 1, j - 1);
-        let sum = sum_accum[x][y] - sum_accum[i][y] - sum_accum[x][j] + sum_accum[i][j];
 
+        let sum = sum_accum[x][y] - sum_accum[i][y] - sum_accum[x][j] + sum_accum[i][j];
         writeln!(output, "{sum}").unwrap();
     }
 

@@ -4,11 +4,10 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let (height, width, max_range) = (input(), input(), input());
+    let [height, width, max_range] = [(); 3].map(|_| input.next().unwrap());
     let map: Vec<Vec<_>> = (0..height)
-        .map(|_| (0..width).map(|_| input() == 1).collect())
+        .map(|_| input.by_ref().take(width).map(|num| num == 1).collect())
         .collect();
 
     let mut archers = [0; 3];

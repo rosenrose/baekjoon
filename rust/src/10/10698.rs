@@ -3,16 +3,10 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
 
-    for i in 1..=parse_int(input()) {
-        let (x, op, y, _, z) = (
-            parse_int(input()),
-            input(),
-            parse_int(input()),
-            input(),
-            parse_int(input()),
-        );
+    for i in 1..=parse_int(input.next().unwrap()) {
+        let [x, op, y, _, z] = [(); 5].map(|_| input.next().unwrap());
+        let [x, y, z] = [x, y, z].map(parse_int);
 
         println!(
             "Case {i}: {}",

@@ -3,9 +3,8 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
 
-    let (a, b, c) = (input(), input(), input());
+    let [a, b, c] = [(); 3].map(|_| input.next().unwrap());
     let mut memo = vec![vec![vec![0; a.len() + 1]; b.len() + 1]; c.len() + 1];
     let mut max_len = 0;
 

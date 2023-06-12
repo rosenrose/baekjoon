@@ -13,17 +13,16 @@ const DIRS: [(i32, i32); 8] = [
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let (n, m, k) = (input() as usize, input() as usize, input());
+    let [n, m, k] = [(); 3].map(|_| input.next().unwrap());
     let mut map = vec![vec![Vec::new(); n]; n];
 
-    for (r, c, m, s, d) in (0..m).map(|_| (input(), input(), input(), input(), input())) {
-        map[r as usize - 1][c as usize - 1].push((m, s, d as usize));
+    for [r, c, m, s, d] in (0..m).map(|_| [(); 5].map(|_| input.next().unwrap())) {
+        map[r - 1][c - 1].push((m as i32, s as i32, d));
     }
 
-    let sum = simulate(map, k);
+    let sum = simulate(map, k as i32);
 
     println!("{sum}");
 }

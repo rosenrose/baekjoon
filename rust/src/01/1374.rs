@@ -3,11 +3,10 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let mut times: Vec<_> = (0..input())
+    let mut times: Vec<_> = (0..input.next().unwrap())
         .flat_map(|_| {
-            let (_, start, end) = (input(), input(), input());
+            let [_, start, end] = [(); 3].map(|_| input.next().unwrap());
             [(start, true), (end, false)]
         })
         .collect();

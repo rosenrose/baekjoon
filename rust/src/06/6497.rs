@@ -42,18 +42,18 @@ fn main() {
         let mut total_weight = 0;
         let mut edges: Vec<_> = (0..n)
             .map(|_| {
-                let (x, y, z) = (input(), input(), input());
+                let [x, y, z] = [(); 3].map(|_| input());
                 total_weight += z;
 
-                (x, y, z)
+                [x, y, z]
             })
             .collect();
 
-        edges.sort_unstable_by_key(|&(_, _, weight)| weight);
+        edges.sort_unstable_by_key(|&[_, _, weight]| weight);
 
         let min_weight: i32 = edges
             .iter()
-            .filter_map(|&(a, b, w)| {
+            .filter_map(|&[a, b, w]| {
                 (!disjoint_set.is_same(a, b)).then(|| {
                     disjoint_set.union(a, b);
                     w

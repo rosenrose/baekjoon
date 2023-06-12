@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
-    let (w, h, x, y, p) = (input(), input(), input(), input(), input());
+    let [w, h, x, y, p] = [(); 5].map(|_| input());
     let radius = h / 2;
     let mut count = 0;
 

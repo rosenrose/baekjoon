@@ -6,11 +6,10 @@ const DIRS: [(i32, i32); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let (height, width, k) = (input(), input(), input());
+    let [height, width, k] = [(); 3].map(|_| input.next().unwrap());
     let map: Vec<Vec<_>> = (0..height)
-        .map(|_| (0..width).map(|_| input()).collect())
+        .map(|_| input.by_ref().take(width as usize).collect())
         .collect();
 
     let (mut r, mut c) = (0, 0);

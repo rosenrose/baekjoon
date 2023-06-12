@@ -20,16 +20,10 @@ fn main() {
     }
     // println!("{sum_accum:?}");
     for _ in 0..m {
-        let (x1, y1, x2, y2) = (
-            input() as usize,
-            input() as usize,
-            input() as usize,
-            input() as usize,
-        );
-
+        let [x1, y1, x2, y2] = [(); 4].map(|_| input() as usize);
         let (x1, y1, x2, y2) = (y1 - 1, x1 - 1, y2, x2);
-        let sum = sum_accum[y2][x2] - sum_accum[y2][x1] - sum_accum[y1][x2] + sum_accum[y1][x1];
 
+        let sum = sum_accum[y2][x2] - sum_accum[y2][x1] - sum_accum[y1][x2] + sum_accum[y1][x1];
         writeln!(output, "{sum}").unwrap();
     }
 

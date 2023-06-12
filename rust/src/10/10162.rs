@@ -9,7 +9,7 @@ fn main() {
         return;
     }
 
-    let (mut a, mut b, mut c) = (0, 0, 0);
+    let [mut a, mut b, mut c] = [0; 3];
 
     a += t / 300;
     t %= 300;

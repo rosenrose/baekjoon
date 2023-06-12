@@ -8,12 +8,8 @@ fn main() {
     let mut output = String::new();
 
     for _ in 0..parse_int(input()) {
-        let (op, rd, ra, rb_or_c) = (
-            input(),
-            parse_int(input()),
-            parse_int(input()),
-            parse_int(input()),
-        );
+        let op = input();
+        let [rd, ra, rb_or_c] = [(); 3].map(|_| parse_int(input()));
 
         let asm = format!(
             "{:04b}{}0{rd:03b}{ra:03b}{}",

@@ -10,9 +10,9 @@ fn main() {
     let infos: Vec<_> = (0..n)
         .map(|_| {
             let name = input();
-            let (d, m, y) = (parse_int(input()), parse_int(input()), parse_int(input()));
+            let [d, m, y] = [(); 3].map(|_| parse_int(input()));
 
-            (name, (y, m, d))
+            (name, [y, m, d])
         })
         .collect();
 

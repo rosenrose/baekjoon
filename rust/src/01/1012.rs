@@ -6,7 +6,7 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     for _ in 0..input() {
-        let (width, height, k) = (input(), input(), input());
+        let [width, height, k] = [(); 3].map(|_| input());
         let mut map = vec![vec![false; width]; height];
 
         for (x, y) in (0..k).map(|_| (input(), input())) {

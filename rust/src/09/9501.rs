@@ -9,7 +9,7 @@ fn main() {
         let (n, d) = (input(), input());
         let count = (0..n)
             .filter(|_| {
-                let (v, f, c) = (input(), input(), input());
+                let [v, f, c] = [(); 3].map(|_| input());
                 v * f / c >= d
             })
             .count();

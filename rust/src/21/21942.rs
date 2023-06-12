@@ -19,7 +19,7 @@ fn main() {
 
     let mut rent_infos = HashMap::with_capacity(n as usize >> 1);
 
-    for (date, time, gear, name) in (0..n).map(|_| (input(), input(), input(), input())) {
+    for [date, time, gear, name] in (0..n).map(|_| [(); 4].map(|_| input())) {
         let info = rent_infos.entry(name).or_insert(RentInfo {
             gears: Vec::new(),
             fee: 0,
@@ -66,8 +66,7 @@ fn parse_time(date: &str, time: &str) -> i64 {
         .skip(1)
         .chain(time.split(':'))
         .map(parse_int);
-    let mut token = || it.next().unwrap();
-    let (month, date, hour, minute) = (token(), token(), token(), token());
+    let [month, date, hour, minute] = [(); 4].map(|_| it.next().unwrap());
 
     ((1..month).map(get_days).sum::<i64>() + date - 1) * 24 * 60 + hour * 60 + minute
 }

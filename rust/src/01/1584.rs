@@ -7,10 +7,10 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let danger_zones: Vec<_> = (0..input())
-        .map(|_| get_sorted_coords(input(), input(), input(), input()))
+        .map(|_| get_sorted_coords([(); 4].map(|_| input())))
         .collect();
     let kill_zones: Vec<_> = (0..input())
-        .map(|_| get_sorted_coords(input(), input(), input(), input()))
+        .map(|_| get_sorted_coords([(); 4].map(|_| input())))
         .collect();
     const SIZE: i32 = 500;
 
@@ -58,10 +58,10 @@ fn main() {
     println!("{}", if min_count == i32::MAX { -1 } else { min_count });
 }
 
-fn get_sorted_coords(x1: i32, y1: i32, x2: i32, y2: i32) -> (i32, i32, i32, i32) {
-    (x1.min(x2), y1.min(y2), x1.max(x2), y1.max(y2))
+fn get_sorted_coords([x1, y1, x2, y2]: [i32; 4]) -> [i32; 4] {
+    [x1.min(x2), y1.min(y2), x1.max(x2), y1.max(y2)]
 }
 
-fn is_point_inside_rect((r, c): (i32, i32), (x1, y1, x2, y2): (i32, i32, i32, i32)) -> bool {
+fn is_point_inside_rect((r, c): (i32, i32), [x1, y1, x2, y2]: [i32; 4]) -> bool {
     y1 <= r && r <= y2 && x1 <= c && c <= x2
 }

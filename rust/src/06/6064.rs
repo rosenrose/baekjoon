@@ -4,10 +4,9 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for (m, n, x, y) in (0..input()).map(|_| (input(), input(), input(), input())) {
+    for [m, n, x, y] in (0..input.next().unwrap()).map(|_| [(); 4].map(|_| input.next().unwrap())) {
         let (gcd, mut a, mut b) = get_ex_gcd(m, n);
         // println!("{a} {b} {gcd}");
         if (y - x) % gcd != 0 {
@@ -68,10 +67,9 @@ fn get_ex_gcd(a: i32, b: i32) -> (i32, i32, i32) {
 // fn main() {
 //     let buf = io::read_to_string(io::stdin()).unwrap();
 //     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-//     let mut input = || input.next().unwrap();
 //     let mut output = String::new();
 
-//     'outer: for (m, n, x, y) in (0..input()).map(|_| (input(), input(), input(), input())) {
+//     'outer: for [m, n, x, y] in (0..input.next().unwrap()).map(|_| [(); 4].map(|_| input.next().unwrap())) {
 //         let total_years = get_lcm(m, n);
 
 //         let (start_year, compare_year) = if m > n {

@@ -8,7 +8,7 @@ fn main() {
     let mut output = String::new();
 
     for _ in 0..input() {
-        let (hp, mp, atk, def) = (input(), input(), input(), input());
+        let [hp, mp, atk, def] = [(); 4].map(|_| input());
         let power = (hp + input()).max(1)
             + 5 * (mp + input()).max(1)
             + 2 * (atk + input()).max(0)

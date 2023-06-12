@@ -3,9 +3,8 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let (start, end, ice, melting, water) = (input(), input(), input(), input(), input());
+    let [start, end, ice, melting, water] = [(); 5].map(|_| input.next().unwrap());
     let mut time = (end - start.max(0)) * water;
 
     if start < 0 {

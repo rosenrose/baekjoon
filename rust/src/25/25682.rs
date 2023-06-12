@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
 
     let mut it = input.by_ref().take(3).flat_map(str::parse::<usize>);
-    let (n, m, k) = (it.next().unwrap(), it.next().unwrap(), it.next().unwrap());
+    let [n, m, k] = [(); 3].map(|_| it.next().unwrap());
 
     let mut sum_accum = vec![vec![[0; 4]; m + 1]; n + 1];
 

@@ -9,7 +9,7 @@ fn main() {
     let n = input();
     let room = vec![vec![0; n]; n];
     let students: Vec<_> = (0..n * n)
-        .map(|_| (input(), [input(), input(), input(), input()]))
+        .map(|_| (input(), [(); 4].map(|_| input())))
         .collect();
 
     let sum = simulate(room, students);

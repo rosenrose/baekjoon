@@ -7,9 +7,8 @@ fn main() {
 
     for _ in 0..input() {
         let m = input();
-        let rewards: Vec<Vec<_>> = (0..m).map(|_| (0..3).map(|_| input()).collect()).collect();
-
-        let (k, d, a) = (input(), input(), input());
+        let rewards: Vec<_> = (0..m).map(|_| [(); 3].map(|_| input())).collect();
+        let [k, d, a] = [(); 3].map(|_| input());
 
         let donation: i64 = rewards
             .iter()

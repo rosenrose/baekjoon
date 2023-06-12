@@ -3,7 +3,7 @@ use std::collections::BinaryHeap;
 use std::fmt::Write;
 use std::io;
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
@@ -13,18 +13,18 @@ fn main() {
         let (n, m) = (input(), input());
         let mut adjacency_list = vec![Vec::new(); m];
 
-        for (x, y, z) in (0..n).map(|_| (input(), input(), input() as i32)) {
-            adjacency_list[x].push((y, z));
-            adjacency_list[y].push((x, z));
+        for [x, y, z] in (0..n).map(|_| [(); 3].map(|_| input())) {
+            adjacency_list[x].push((y, z as i32));
+            adjacency_list[y].push((x, z as i32));
         }
 
         let (start, mut end) = (0, m - 1);
         let (distances, prevs) = dijkstra_with_path(&adjacency_list, start);
 
-        write!(output, "Case #{i}: ").unwrap();
+        write!(output, "Case #{i}: ")?;
 
         if distances[end] == i32::MAX {
-            writeln!(output, "-1").unwrap();
+            writeln!(output, "-1")?;
             continue;
         }
 
@@ -36,12 +36,13 @@ fn main() {
         }
 
         for p in path.iter().rev() {
-            write!(output, "{p} ").unwrap();
+            write!(output, "{p} ")?;
         }
-        writeln!(output, "").unwrap();
+        writeln!(output, "")?;
     }
 
     print!("{output}");
+    Ok(())
 }
 
 fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize) -> (Vec<i32>, Vec<usize>) {

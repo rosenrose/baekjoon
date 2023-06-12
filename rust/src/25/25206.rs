@@ -3,12 +3,12 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
 
     let mut credit_sum = 0.0;
     let sum: f64 = (0..20)
         .filter_map(|_| {
-            let (_, credit, grade) = (input(), input().parse::<f64>().unwrap(), input());
+            let [_, credit, grade] = [(); 3].map(|_| input.next().unwrap());
+            let credit: f64 = credit.parse().unwrap();
 
             (grade != "P").then(|| {
                 credit_sum += credit;

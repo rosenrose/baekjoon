@@ -35,7 +35,7 @@ fn main() {
     let mut file_infos = HashMap::with_capacity(f);
 
     for _ in 0..f {
-        let (file, perm, owner, group) = (input(), input(), input(), input());
+        let [file, perm, owner, group] = [(); 4].map(|_| input());
         let mut perms = [0; 3];
 
         for (i, ch) in perm.as_bytes().iter().enumerate() {
@@ -46,7 +46,7 @@ fn main() {
     }
     // println!("{group_infos:?}\n{file_infos:?}");
     for _ in 0..parse_int(input()) {
-        let (user, file, op) = (input(), input(), input());
+        let [user, file, op] = [(); 3].map(|_| input());
         let op = match op {
             "R" => 4,
             "W" => 2,

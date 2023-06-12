@@ -13,7 +13,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, m, fuel) = (input(), input(), input() as u32);
+    let [n, m, fuel] = [(); 3].map(|_| input());
     let mut map: Vec<Vec<_>> = (0..n)
         .map(|_| {
             (0..n)
@@ -27,11 +27,11 @@ fn main() {
         .collect();
     let taxi = (input() - 1, input() - 1);
 
-    for (start, end) in (0..m).map(|_| ((input() - 1, input() - 1), (input() - 1, input() - 1))) {
-        map[start.0][start.1] = Cells::Passenger(end);
+    for [start_r, start_c, end_r, end_c] in (0..m).map(|_| [(); 4].map(|_| input() - 1)) {
+        map[start_r][start_c] = Cells::Passenger((end_r, end_c));
     }
 
-    let fuel_remain = simulate(map, fuel, taxi, m);
+    let fuel_remain = simulate(map, fuel as u32, taxi, m);
 
     println!("{}", fuel_remain.unwrap_or(-1));
 }

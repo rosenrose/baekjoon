@@ -104,9 +104,8 @@ impl fmt::Display for BigInt {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().map(BigInt::parse);
-    let mut input = || input.next().unwrap();
 
-    let (a, b, c) = (input(), input(), input());
+    let [a, b, c] = [(); 3].map(|_| input.next().unwrap());
 
     println!("{}", &(&b - &c) / &a);
 }

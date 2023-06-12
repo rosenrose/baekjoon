@@ -4,14 +4,9 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
 
-    let (height, width, k) = (
-        parse_int(input()),
-        parse_int(input()),
-        parse_int(input()) as u8,
-    );
-    let map: Vec<_> = (0..height).map(|_| input().as_bytes()).collect();
+    let [height, width, k] = [(); 3].map(|_| parse_int(input.next().unwrap()));
+    let map: Vec<_> = input.map(str::as_bytes).collect();
 
     let mut visited = vec![vec![[false; 11]; width as usize]; height as usize];
     visited[0][0][0] = true;

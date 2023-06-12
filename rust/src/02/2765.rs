@@ -3,11 +3,10 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<f64>);
-    let mut input = || input.next().unwrap();
 
     const PI: f64 = 3.1415927;
 
-    for (i, (d, r, s)) in (1..).map(|i| (i, (input(), input(), input()))) {
+    for (i, [d, r, s]) in (1..).map(|i| (i, [(); 3].map(|_| input.next().unwrap()))) {
         if r == 0.0 {
             return;
         }

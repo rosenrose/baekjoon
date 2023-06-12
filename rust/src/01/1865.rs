@@ -6,12 +6,12 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     for _ in 0..input() {
-        let (n, m, w) = (input(), input(), input());
+        let [n, m, w] = [(); 3].map(|_| input());
         let mut edges = vec![(0, 0, 0); m * 2 + w];
 
-        for (i, (s, e, t)) in (0..m).map(|i| (i, (input(), input(), input() as i64))) {
-            edges[i * 2] = (s, e, t);
-            edges[i * 2 + 1] = (e, s, t);
+        for (i, [s, e, t]) in (0..m).map(|i| (i << 1, [(); 3].map(|_| input()))) {
+            edges[i] = (s, e, t as i64);
+            edges[i + 1] = (e, s, t as i64);
         }
         for i in 0..w {
             edges[i + m * 2] = (input(), input(), -(input() as i64))

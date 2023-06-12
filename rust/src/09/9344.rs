@@ -36,13 +36,13 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     'outer: for _ in 0..input() {
-        let (n, m, p, q) = (input(), input(), input(), input());
+        let [n, m, p, q] = [(); 4].map(|_| input());
         let mut disjoint_set = DisjointSet::make(n);
-        let mut edges: Vec<_> = (0..m).map(|_| (input(), input(), input())).collect();
+        let mut edges: Vec<_> = (0..m).map(|_| [(); 3].map(|_| input())).collect();
 
-        edges.sort_unstable_by_key(|&(_, _, weight)| weight);
+        edges.sort_unstable_by_key(|&[_, _, weight]| weight);
 
-        for (u, v, _) in edges {
+        for [u, v, _] in edges {
             if disjoint_set.is_same(u, v) {
                 continue;
             }

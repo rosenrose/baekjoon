@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
-    let (a, b, c) = (input(), input(), input());
+    let [a, b, c] = [(); 3].map(|_| input());
     let n = input();
 
     let max_score = (0..n)

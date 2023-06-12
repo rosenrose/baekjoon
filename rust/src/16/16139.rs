@@ -19,8 +19,9 @@ fn main() {
         }
     }
 
-    for (ch, left, right) in (0..q).map(|_| (input(), parse_int(input()), parse_int(input()))) {
+    for [ch, left, right] in (0..q).map(|_| [(); 3].map(|_| input())) {
         let idx = (ch.as_bytes()[0] - b'a') as usize;
+        let [left, right] = [left, right].map(parse_int);
 
         writeln!(
             output,

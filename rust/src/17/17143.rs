@@ -4,14 +4,13 @@ const DIRS: [(i32, i32); 4] = [(-1, 0), (1, 0), (0, 1), (0, -1)];
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let (r, c, m) = (input() as usize, input() as usize, input());
+    let [r, c, m] = [(); 3].map(|_| input.next().unwrap());
     let mut map = vec![vec![(0, 0, 0); c]; r];
 
-    for (row, col, s, d, z) in (0..m).map(|_| (input(), input(), input(), input(), input())) {
-        map[row as usize - 1][col as usize - 1] = (s, d - 1, z);
+    for [row, col, s, d, z] in (0..m).map(|_| [(); 5].map(|_| input.next().unwrap())) {
+        map[row - 1][col - 1] = (s as i32, d as i32 - 1, z as i32);
     }
 
     let sum = simulate(map);

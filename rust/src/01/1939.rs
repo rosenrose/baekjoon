@@ -40,13 +40,13 @@ fn main() {
 
     let (n, m) = (input(), input());
     let mut disjoint_set = DisjointSet::make(n);
+    let mut edges: Vec<_> = (0..m).map(|_| [(); 3].map(|_| input())).collect();
 
-    let mut edges: Vec<_> = (0..m).map(|_| (input(), input(), input())).collect();
-    edges.sort_unstable_by_key(|&(_, _, weight)| weight);
+    edges.sort_unstable_by_key(|&[_, _, weight]| weight);
 
     let (start, end) = (input(), input());
 
-    for &(a, b, c) in edges.iter().rev() {
+    for &[a, b, c] in edges.iter().rev() {
         disjoint_set.union(a, b);
 
         if disjoint_set.is_same(start, end) {
@@ -58,14 +58,14 @@ fn main() {
     // let mut adjacency_array = (vec![i32::MAX; n + 1], vec![((0, 0), 0); m << 1]);
     // let (mut min_weight, mut max_weight) = (i32::MAX, 0);
 
-    // for (i, (a, b, c)) in (0..m).map(|i| (i << 1, (input(), input(), input() as i32))) {
+    // for (i, [a, b, c]) in (0..m).map(|i| (i << 1, [(); 3].map(|_| input()))) {
     //     let prev = adjacency_array.0[a];
     //     adjacency_array.0[a] = i as i32;
-    //     adjacency_array.1[i] = ((b as i32, c), prev);
+    //     adjacency_array.1[i] = ((b as i32, c as i32), prev);
 
     //     let prev = adjacency_array.0[b];
     //     adjacency_array.0[b] = (i + 1) as i32;
-    //     adjacency_array.1[i + 1] = ((a as i32, c), prev);
+    //     adjacency_array.1[i + 1] = ((a as i32, c as i32), prev);
 
     //     (min_weight, max_weight) = (c.min(min_weight), c.max(max_weight));
     // }

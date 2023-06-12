@@ -30,9 +30,7 @@ fn main() {
 
 fn parse_time(time: &str) -> i32 {
     let mut it = time.split([':', '.']).map(parse_int);
-    let mut token = || it.next().unwrap();
-
-    let (hour, minute, second, millisecond) = (token(), token(), token(), token());
+    let [hour, minute, second, millisecond] = [(); 4].map(|_| it.next().unwrap());
     let seconds = hour * (60 * 60) + minute * 60 + second;
 
     seconds * 1000 + millisecond

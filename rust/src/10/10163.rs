@@ -4,14 +4,13 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n = input();
+    let n = input.next().unwrap();
     let mut visible_areas = vec![0; n + 1];
     let mut board = [[0; 1001]; 1001];
 
-    for (paper, (x, y, w, h)) in (0..n).map(|p| (p + 1, (input(), input(), input(), input()))) {
+    for (paper, [x, y, w, h]) in (0..n).map(|p| (p + 1, [(); 4].map(|_| input.next().unwrap()))) {
         for i in y..y + h {
             for j in x..x + w {
                 if board[i][j] != 0 {

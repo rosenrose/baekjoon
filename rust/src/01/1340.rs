@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.trim().split([' ', ',', ':']);
     let mut input = || input.next().unwrap();
 
-    let (month, date, _, year) = (input(), parse_int(input()), input(), parse_int(input()));
+    let [month, date, _, year] = [(); 4].map(|_| input());
     let month = match month {
         "January" => 1,
         "February" => 2,
@@ -21,6 +21,7 @@ fn main() {
         "December" => 12,
         _ => unreachable!(),
     };
+    let (date, year) = (parse_int(date), parse_int(year));
 
     let (hour, minute) = (parse_int(input()), parse_int(input()));
     const DAY_MINUTES: i32 = 24 * 60;

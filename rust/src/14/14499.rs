@@ -7,7 +7,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (height, width, mut r, mut c, k) = (input(), input(), input(), input(), input());
+    let [height, width, mut r, mut c, k] = [(); 5].map(|_| input());
     let mut map: Vec<Vec<_>> = (0..height)
         .map(|_| (0..width).map(|_| input()).collect())
         .collect();

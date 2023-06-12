@@ -7,7 +7,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (_, m, q) = (input(), parse_int(input()), parse_int(input()));
+    let [_, m, q] = [(); 3].map(|_| parse_int(input()));
     let mut pointers = vec![0; m + 1];
 
     for (i, e) in (1..=m).map(|i| (i, parse_int(input()))) {
@@ -27,7 +27,6 @@ fn main() {
     }
     // println!("{pointers:?}");
     let mut remains: Vec<_> = pointers.iter().filter(|&&p| p != 0).collect();
-
     remains.sort_unstable();
     remains.dedup();
 

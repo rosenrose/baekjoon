@@ -13,32 +13,27 @@ const MAX_PLAYERS: usize = 9;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
 
-    let (height, width, p) = (
-        parse_int(input()) as i16,
-        parse_int(input()) as i16,
-        parse_int(input()) as usize,
-    );
+    let [height, width, p] = [(); 3].map(|_| parse_int(input.next().unwrap()));
     let mut ranges = [0; MAX_PLAYERS];
 
     for range in &mut ranges[..p] {
-        *range = parse_int(input());
+        *range = parse_int(input.next().unwrap());
     }
 
     let mut castles = vec![Vec::new(); p];
     let mut areas = [0; MAX_PLAYERS];
-    let mut map: Vec<Vec<_>> = (0..height)
-        .map(|r| {
-            input()
-                .char_indices()
+    let mut map: Vec<Vec<_>> = input
+        .enumerate()
+        .map(|(r, row)| {
+            row.char_indices()
                 .map(|(c, ch)| match ch {
                     '.' => Cells::Empty,
                     '#' => Cells::Wall,
                     '1'..='9' => {
                         let player = ch as u8 - b'1';
 
-                        castles[player as usize].push((r, c as i16));
+                        castles[player as usize].push((r as i16, c as i16));
                         areas[player as usize] += 1;
 
                         Cells::Castle(player)
@@ -66,8 +61,8 @@ fn main() {
                 let adjacents = [
                     ((r - 1).max(0), c),
                     (r, (c - 1).max(0)),
-                    ((r + 1).min(height - 1), c),
-                    (r, (c + 1).min(width - 1)),
+                    ((r + 1).min(height as i16 - 1), c),
+                    (r, (c + 1).min(width as i16 - 1)),
                 ];
 
                 for (adj_r, adj_c) in adjacents {
@@ -96,6 +91,6 @@ fn main() {
     }
 }
 
-fn parse_int(buf: &str) -> i32 {
+fn parse_int(buf: &str) -> usize {
     buf.parse().unwrap()
 }

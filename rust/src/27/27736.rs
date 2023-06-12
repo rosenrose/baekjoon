@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
 
     let n: i32 = input.next().unwrap().parse().unwrap();
-    let (mut pros, mut cons, mut giveup) = (0, 0, 0);
+    let [mut pros, mut cons, mut giveup] = [0; 3];
 
     for vote in input {
         match vote {

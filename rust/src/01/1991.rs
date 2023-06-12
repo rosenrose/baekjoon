@@ -11,12 +11,11 @@ enum Orders {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
 
-    let n: i32 = input().parse().unwrap();
+    let n: i32 = input.next().unwrap().parse().unwrap();
     let tree: HashMap<_, _> = (0..n)
         .map(|_| {
-            let (node, left, right) = (input(), input(), input());
+            let [node, left, right] = [(); 3].map(|_| input.next().unwrap());
 
             (
                 node,

@@ -4,14 +4,16 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let (height, width, time_limit) = (input(), input(), input() as i32);
+    let [height, width, time_limit] = [(); 3].map(|_| input.next().unwrap());
     let mut sword = (0, 0);
     let map: Vec<Vec<_>> = (0..height)
         .map(|r| {
-            (0..width)
-                .map(|c| match input() {
+            input
+                .by_ref()
+                .take(width)
+                .enumerate()
+                .map(|(c, num)| match num {
                     0 => false,
                     1 => true,
                     2 => {
@@ -24,7 +26,7 @@ fn main() {
         })
         .collect();
 
-    if let Some(time) = simulate(map, time_limit, sword) {
+    if let Some(time) = simulate(map, time_limit as i32, sword) {
         println!("{time}");
     } else {
         println!("Fail");

@@ -4,12 +4,11 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    for _ in 0..parse_int(input()) {
-        let (name, study_date, birth_date, courses) =
-            (input(), input(), input(), parse_int(input()));
+    for _ in 0..parse_int(input.next().unwrap()) {
+        let [name, study_date, birth_date, courses] = [(); 4].map(|_| input.next().unwrap());
+        let courses = parse_int(courses);
 
         let study_year = parse_int(study_date.split_once('/').unwrap().0);
         let birth_year = parse_int(birth_date.split_once('/').unwrap().0);

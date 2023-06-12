@@ -3,11 +3,10 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let (height, width, k) = (input() as usize, input() as usize, input() as usize);
+    let [height, width, k] = [(); 3].map(|_| input.next().unwrap() as usize);
     let map: Vec<Vec<_>> = (0..height)
-        .map(|_| (0..width).map(|_| input()).collect())
+        .map(|_| input.by_ref().take(width).collect())
         .collect();
 
     let max_sum = combinations(0, 0, k, &mut vec![vec![false; width]; height], &map, 0);

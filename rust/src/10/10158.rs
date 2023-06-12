@@ -3,9 +3,8 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let (w, h, p, q, t) = (input(), input(), input(), input(), input());
+    let [w, h, p, q, t] = [(); 5].map(|_| input.next().unwrap());
     let (mut ant_x, mut ant_y) = (p, q);
 
     let mut time = t;

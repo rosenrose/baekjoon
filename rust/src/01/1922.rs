@@ -38,15 +38,14 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, m) = (input(), input());
-
     let mut disjoint_set = DisjointSet::make(n);
-    let mut edges: Vec<_> = (0..m).map(|_| (input(), input(), input())).collect();
+    let mut edges: Vec<_> = (0..m).map(|_| [(); 3].map(|_| input())).collect();
 
-    edges.sort_unstable_by_key(|&(_, _, weight)| weight);
+    edges.sort_unstable_by_key(|&[_, _, weight]| weight);
 
     let min_weight: i32 = edges
         .iter()
-        .filter_map(|&(a, b, c)| {
+        .filter_map(|&[a, b, c]| {
             (!disjoint_set.is_same(a, b)).then(|| {
                 disjoint_set.union(a, b);
                 c

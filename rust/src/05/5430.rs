@@ -5,13 +5,12 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n = parse_int(input());
+    let n = parse_int(input.next().unwrap());
 
-    'outer: for (p, len, arr) in (0..n).map(|_| (input(), parse_int(input()), input())) {
-        let mut arr = if len > 0 {
+    'outer: for [p, len, arr] in (0..n).map(|_| [(); 3].map(|_| input.next().unwrap())) {
+        let mut arr = if len != "0" {
             arr[1..arr.len() - 1].split(',').map(parse_int).collect()
         } else {
             VecDeque::new()
@@ -19,10 +18,10 @@ fn main() {
 
         let mut is_reverse = false;
 
-        for func in p.chars() {
+        for func in p.as_bytes() {
             match func {
-                'R' => is_reverse = !is_reverse,
-                'D' => {
+                b'R' => is_reverse = !is_reverse,
+                b'D' => {
                     let removed = if is_reverse {
                         arr.pop_back()
                     } else {

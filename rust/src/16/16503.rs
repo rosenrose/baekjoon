@@ -3,15 +3,8 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
-
-    let (k1, op1, k2, op2, k3) = (
-        parse_int(input()),
-        input(),
-        parse_int(input()),
-        input(),
-        parse_int(input()),
-    );
+    let [k1, op1, k2, op2, k3] = [(); 5].map(|_| input.next().unwrap());
+    let [k1, k2, k3] = [k1, k2, k3].map(parse_int);
 
     #[rustfmt::skip]
     let (first, second) = (0..2).fold((k1, k2), |(f, s), i| {

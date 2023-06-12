@@ -9,7 +9,7 @@ fn main() {
     let mut memo = [[[0; 21]; 21]; 21];
 
     while let (Some(a), Some(b), Some(c)) = (input.next(), input.next(), input.next()) {
-        if (a, b, c) == (-1, -1, -1) {
+        if [a, b, c] == [-1; 3] {
             break;
         }
 

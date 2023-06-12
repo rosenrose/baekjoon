@@ -8,7 +8,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, m, k, x) = (input(), input(), input() as i32, input());
+    let [n, m, k, x] = [(); 4].map(|_| input());
     let mut adjacency_array = (vec![i32::MAX; n + 1], vec![(0, 0); m]);
 
     for (i, (u, v)) in (0..m).map(|i| (i, (input(), input() as i32))) {
@@ -18,7 +18,7 @@ fn main() {
         adjacency_array.1[i] = (v, prev);
     }
 
-    let mut result = bfs(&adjacency_array, x, k);
+    let mut result = bfs(&adjacency_array, x, k as i32);
 
     if result.is_empty() {
         println!("-1");

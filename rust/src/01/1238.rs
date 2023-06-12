@@ -5,15 +5,14 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let (n, m, x) = (input(), input(), input());
+    let [n, m, x] = [(); 3].map(|_| input.next().unwrap());
     let mut adjacency_list = vec![Vec::new(); n + 1];
     let mut adjacency_list_reverse = vec![Vec::new(); n + 1];
 
-    for (start, end, t) in (0..m).map(|_| (input(), input(), input() as i32)) {
-        adjacency_list[start].push((end, t));
-        adjacency_list_reverse[end].push((start, t));
+    for [start, end, t] in (0..m).map(|_| [(); 3].map(|_| input.next().unwrap())) {
+        adjacency_list[start].push((end, t as i32));
+        adjacency_list_reverse[end].push((start, t as i32));
     }
 
     let dists_reverse = dijkstra(&adjacency_list_reverse, x);

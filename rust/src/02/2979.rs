@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
-    let (a, b, c) = (input(), input(), input());
+    let [a, b, c] = [(); 3].map(|_| input());
     let mut car_count = [0; 100];
 
     for (on, off) in (0..3).map(|_| (input() as usize - 1, input() as usize - 1)) {

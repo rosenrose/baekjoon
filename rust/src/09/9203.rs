@@ -42,8 +42,7 @@ fn main() {
 
 fn parse_time(date: &str, time: &str) -> i32 {
     let mut it = date.split('-').chain(time.split(':')).map(parse_int);
-    let mut token = || it.next().unwrap();
-    let (year, month, date, hour, minlute) = (token(), token(), token(), token(), token());
+    let [year, month, date, hour, minlute] = [(); 5].map(|_| it.next().unwrap());
 
     let days = (2013..year)
         .map(|y| if is_leap(y) { 366 } else { 365 })
