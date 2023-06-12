@@ -23,7 +23,7 @@ fn dijkstra(graph: &[Vec<i32>], start: (usize, usize)) -> Vec<Vec<i32>> {
     let mut distances = vec![vec![i32::MAX; n]; n];
     distances[start.0][start.1] = graph[start.0][start.1];
 
-    let mut queue = BinaryHeap::from([Reverse((0, (start)))]);
+    let mut queue = BinaryHeap::from([Reverse((0, start))]);
 
     while let Some(Reverse((dist, (r, c)))) = queue.pop() {
         let min_dist = distances[r][c];
