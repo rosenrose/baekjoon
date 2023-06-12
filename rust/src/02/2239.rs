@@ -1,30 +1,41 @@
 use std::io;
 
+const SIZE: usize = 9;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.lines();
+    let input = buf.lines().map(str::as_bytes);
 
+    let mut board = [[0; SIZE]; SIZE];
     let mut empty_cells = Vec::new();
-    let mut board: Vec<Vec<_>> = input
-        .enumerate()
-        .map(|(i, row)| {
-            row.as_bytes()
-                .iter()
-                .enumerate()
-                .map(|(j, ch)| {
-                    let num = ch - b'0';
+    let [mut row_nums, mut col_nums, mut square_nums] = [[[false; SIZE + 1]; SIZE]; 3];
 
-                    if num == 0 {
-                        empty_cells.push((i, j));
-                    }
+    for (r, row) in input.enumerate() {
+        for (c, ch) in row.iter().enumerate() {
+            let num = (ch - b'0') as usize;
 
-                    num
-                })
-                .collect()
-        })
-        .collect();
+            if num == 0 {
+                empty_cells.push((r, c));
+            } else {
+                [
+                    row_nums[r][num],
+                    col_nums[c][num],
+                    square_nums[get_square_idx(r, c)][num],
+                ] = [true; 3];
+            }
 
-    sudoku(&mut board, &empty_cells, 0);
+            board[r][c] = num as u8;
+        }
+    }
+
+    sudoku(
+        0,
+        &empty_cells,
+        &mut board,
+        &mut row_nums,
+        &mut col_nums,
+        &mut square_nums,
+    );
 
     for row in board {
         for num in row {
@@ -34,31 +45,58 @@ fn main() {
     }
 }
 
-fn sudoku(board: &mut Vec<Vec<u8>>, empty_cells: &[(usize, usize)], idx: usize) -> bool {
-    if idx == empty_cells.len() {
+fn sudoku(
+    depth: usize,
+    empty_cells: &[(usize, usize)],
+    board: &mut [[u8; SIZE]],
+    row_nums: &mut [[bool; SIZE + 1]],
+    col_nums: &mut [[bool; SIZE + 1]],
+    square_nums: &mut [[bool; SIZE + 1]],
+) -> bool {
+    if depth == empty_cells.len() {
         return true;
     }
 
-    let (row, col) = empty_cells[idx];
+    let (r, c) = empty_cells[depth];
+    let square_idx = get_square_idx(r, c);
 
     for num in 1..=9 {
-        if (0..9).any(|i| board[row][i] == num || board[i][col] == num) {
-            continue;
-        }
-        if (0..9).any(|i| board[(row / 3) * 3 + (i / 3)][(col / 3) * 3 + (i % 3)] == num) {
+        if row_nums[r][num] || col_nums[c][num] || square_nums[square_idx][num] {
             continue;
         }
 
-        board[row][col] = num;
+        board[r][c] = num as u8;
+        [
+            row_nums[r][num],
+            col_nums[c][num],
+            square_nums[square_idx][num],
+        ] = [true; 3];
 
-        let is_finished = sudoku(board, empty_cells, idx + 1);
+        let is_finished = sudoku(
+            depth + 1,
+            empty_cells,
+            board,
+            row_nums,
+            col_nums,
+            square_nums,
+        );
 
         if is_finished {
             return true;
         }
+
+        [
+            row_nums[r][num],
+            col_nums[c][num],
+            square_nums[square_idx][num],
+        ] = [false; 3];
     }
 
-    board[row][col] = 0;
+    board[r][c] = 0;
 
     false
+}
+
+fn get_square_idx(r: usize, c: usize) -> usize {
+    (r / 3) * 3 + (c / 3)
 }
