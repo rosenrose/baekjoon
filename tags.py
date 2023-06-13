@@ -34,9 +34,7 @@ def get_tag_from_web():
 
     options = webdriver.ChromeOptions()
     options.add_experimental_option("debuggerAddress", f"127.0.0.1:{port}")
-    driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()), options=options
-    )
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     try:
         login(driver)
@@ -49,9 +47,7 @@ def get_tag_from_web():
                 EC.presence_of_element_located((By.CSS_SELECTOR, ".spoiler-list"))
             )
 
-            tags = [
-                tag.text.strip() for tag in tag_list.find_elements(By.CSS_SELECTOR, "a")
-            ]
+            tags = [tag.text.strip() for tag in tag_list.find_elements(By.CSS_SELECTOR, "a")]
         except:
             ...
 
@@ -90,12 +86,7 @@ def get_tag_from_clipboard():
 def save_tags(tags):
     export = json.load(open(save_path, encoding="utf-8"))
     export[num] = tags
-    export = {
-        key: val
-        for key, val in sorted(
-            [item for item in export.items()], key=lambda x: int(x[0])
-        )
-    }
+    export = {key: val for key, val in sorted(list(export.items()), key=lambda x: int(x[0]))}
 
     json.dump(
         export,
