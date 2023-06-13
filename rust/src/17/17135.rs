@@ -10,15 +10,12 @@ fn main() {
         .map(|_| input.by_ref().take(width).map(|num| num == 1).collect())
         .collect();
 
-    let mut archers = [0; 3];
     let mut max_count = 0;
 
     for a in 0..width - 2 {
         for b in a + 1..width - 1 {
             for c in b + 1..width {
-                (archers[0], archers[1], archers[2]) = (a, b, c);
-
-                let count = simulate(map.clone(), &archers, max_range);
+                let count = simulate(map.clone(), &[a, b, c], max_range);
                 max_count = count.max(max_count);
             }
         }

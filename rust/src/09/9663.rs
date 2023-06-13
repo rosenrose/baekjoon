@@ -3,30 +3,28 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let n: usize = buf.trim().parse().unwrap();
-    let mut count = 0;
-
-    n_queen(n, 0, &mut vec![0; n], &mut count);
+    let count = n_queen(0, n, &mut vec![0; n]);
 
     println!("{count}");
 }
 
-fn n_queen(n: usize, row: usize, selected: &mut Vec<usize>, count: &mut i32) {
+fn n_queen(row: usize, n: usize, selected: &mut Vec<usize>) -> i32 {
     if row == n {
-        *count += 1;
-        return;
+        return 1;
     }
 
-    for col in 0..n {
-        if selected[..row]
-            .iter()
-            .enumerate()
-            .any(|(r, &c)| c == col || c.abs_diff(col) == r.abs_diff(row))
-        {
-            continue;
-        }
+    (0..n)
+        .map(|col| {
+            if selected[..row]
+                .iter()
+                .enumerate()
+                .any(|(r, &c)| c == col || c.abs_diff(col) == r.abs_diff(row))
+            {
+                return 0;
+            }
 
-        selected[row] = col;
-
-        n_queen(n, row + 1, selected, count);
-    }
+            selected[row] = col;
+            n_queen(row + 1, n, selected)
+        })
+        .sum()
 }
