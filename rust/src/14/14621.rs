@@ -42,7 +42,7 @@ fn main() {
         .map(|_| [(); 3].map(|_| parse_int(input.next().unwrap())))
         .collect();
 
-    edges.sort_unstable_by_key(|&[_, _, weight]| weight);
+    edges.sort_unstable_by_key(|&[.., weight]| weight);
 
     let min_spanning_tree: Vec<_> = edges
         .iter()

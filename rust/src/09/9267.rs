@@ -50,7 +50,7 @@ fn is_solvable(a: i128, b: i128, s: i128) -> bool {
     }
     // println!("{x} {y}");
     while x > 0 {
-        let (g, _, _) = get_ex_gcd(x, y);
+        let (g, ..) = get_ex_gcd(x, y);
 
         if g == 1 {
             return true;

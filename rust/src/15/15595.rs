@@ -4,22 +4,13 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
     const ADMIN: &str = "megalusion";
 
-    let n: i32 = input().parse().unwrap();
-    let mut submit_infos = HashMap::new();
+    let n: usize = input.next().unwrap().parse().unwrap();
+    let mut submit_infos = HashMap::with_capacity(n >> 1);
 
     for _ in 0..n {
-        let (_, id, result, _, _, _, _) = (
-            input(),
-            input(),
-            input(),
-            input(),
-            input(),
-            input(),
-            input(),
-        );
+        let [_, id, result, ..] = [(); 7].map(|_| input.next().unwrap());
 
         if id == ADMIN {
             continue;

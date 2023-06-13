@@ -142,7 +142,7 @@ fn move_shark(map: &mut Vec<Vec<(Vec<u8>, i8)>>, shark: &mut (usize, usize)) {
         }
     }
 
-    let (_, _, path) = moves
+    let (.., path) = moves
         .iter()
         .max_by_key(|(count, indices, _)| (count, Reverse(indices)))
         .unwrap();

@@ -12,7 +12,7 @@ fn main() {
     let mut birth_years = HashMap::from([("Bessie", ("Ox", 0))]);
 
     for input in buf.lines().skip(1) {
-        let [name, _, _, order, animal, _, _, from] = input.split(' ').collect::<Vec<_>>()[..] else { return };
+        let [name, .., order, animal, _, _, from] = input.split(' ').collect::<Vec<_>>()[..] else { return };
         let (from_animal, from_year) = birth_years[from];
 
         let from_idx = ZODIAC.iter().position(|&s| s == from_animal).unwrap() as i32;

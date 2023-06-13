@@ -49,7 +49,7 @@ fn main() {
             })
             .collect();
 
-        edges.sort_unstable_by_key(|&[_, _, weight]| weight);
+        edges.sort_unstable_by_key(|&[.., weight]| weight);
 
         let min_weight: i32 = edges
             .iter()

@@ -11,7 +11,7 @@ fn main() {
     let mut infos: Vec<_> = (0..n)
         .map(|_| [(); 3].map(|_| input.next().unwrap()))
         .collect();
-    infos.sort_by_key(|&[_, _, score]| score);
+    infos.sort_by_key(|&[.., score]| score);
 
     for &[country, student, _] in infos.iter().rev() {
         if medal_counts[country] == 2 {

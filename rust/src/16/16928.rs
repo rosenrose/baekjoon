@@ -25,9 +25,9 @@ fn main() {
 
     while let Some((num, count)) = queue.pop_front() {
         let next_count = count + 1;
-        let adjacents = [1, 2, 3, 4, 5, 6].map(|i| board.get(num + i));
+        let adjacents = (1..=6).flat_map(|i| board.get(num + i));
 
-        for &&adj in adjacents.iter().flatten() {
+        for &adj in adjacents {
             if adj == end {
                 println!("{next_count}");
                 return;

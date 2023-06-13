@@ -54,7 +54,7 @@ fn simulate(mut room: Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -
             }
         }
 
-        let (_, _, select) = empty_cells
+        let (.., select) = empty_cells
             .iter()
             .max_by_key(|(prefer, empty, coord)| (prefer, empty, Reverse(coord)))
             .unwrap();

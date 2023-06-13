@@ -36,7 +36,7 @@ fn simulate(mut map: Vec<Vec<Vec<(i32, i32, usize)>>>, k: i32) -> i32 {
         // }
     }
 
-    map.iter().flatten().flatten().map(|(m, _, _)| m).sum()
+    map.iter().flatten().flatten().map(|(m, ..)| m).sum()
 }
 
 fn move_fireballs(map: &mut Vec<Vec<Vec<(i32, i32, usize)>>>) -> Vec<Vec<Vec<(i32, i32, usize)>>> {

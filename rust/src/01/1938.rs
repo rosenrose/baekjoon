@@ -42,7 +42,7 @@ fn simulate(
     let mut visited = vec![vec![[false; 2]; n as usize]; n as usize];
     visited[log_center.0 as usize][log_center.1 as usize][usize::from(is_log_vertical)] = true;
 
-    let is_placable = |r: i32, c: i32, is_vertical: bool| {
+    let is_placeable = |r: i32, c: i32, is_vertical: bool| {
         if is_vertical {
             (1 <= r && r < n - 1 && 0 <= c && c < n)
                 && (r - 1..=r + 1).all(|row| !map[row as usize][c as usize])
@@ -58,10 +58,10 @@ fn simulate(
         let next_count = count + 1;
 
         let moved = [(r - 1, c), (r, c - 1), (r + 1, c), (r, c + 1)].map(|(moved_r, moved_c)| {
-            is_placable(moved_r, moved_c, is_vertical).then_some(((moved_r, moved_c), is_vertical))
+            is_placeable(moved_r, moved_c, is_vertical).then_some(((moved_r, moved_c), is_vertical))
         });
         let turned = (c - 1..=c + 1)
-            .all(|col| is_placable(r, col, true))
+            .all(|col| is_placeable(r, col, true))
             .then_some(((r, c), !is_vertical));
 
         for ((adj_r, adj_c), adj_is_vertical) in
@@ -73,7 +73,7 @@ fn simulate(
 
             let adj = (adj_r as usize, adj_c as usize, usize::from(adj_is_vertical));
 
-            if visited[adj.0][adj.1][adj.2] || !is_placable(adj_r, adj_c, adj_is_vertical) {
+            if visited[adj.0][adj.1][adj.2] || !is_placeable(adj_r, adj_c, adj_is_vertical) {
                 continue;
             }
 

@@ -41,7 +41,7 @@ fn main() {
     let mut disjoint_set = DisjointSet::make(v);
     let mut edges: Vec<_> = (0..e).map(|_| [(); 3].map(|_| input())).collect();
 
-    edges.sort_unstable_by_key(|&[_, _, weight]| weight);
+    edges.sort_unstable_by_key(|&[.., weight]| weight);
 
     let min_weight: i32 = edges
         .iter()

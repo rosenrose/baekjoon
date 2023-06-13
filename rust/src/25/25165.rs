@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let [n, _, _, d, r, _] = [(); 6].map(|_| input.next().unwrap());
+    let [n, .., d, r, _] = [(); 6].map(|_| input.next().unwrap());
 
     println!(
         "{}",
