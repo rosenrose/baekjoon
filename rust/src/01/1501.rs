@@ -8,10 +8,10 @@ fn main() {
     let mut output = String::new();
 
     let n: usize = input.next().unwrap().parse().unwrap();
-    let mut dict = HashMap::new();
+    let mut dict = HashMap::with_capacity(n);
 
     for word in input.by_ref().take(n) {
-        let key = get_side_chars_and_count(word);
+        let key = get_side_chars_and_counts(word);
         dict.entry(key).and_modify(|c| *c += 1).or_insert(1);
     }
     // println!("{dict:?}");
@@ -20,7 +20,7 @@ fn main() {
             .split(' ')
             .filter_map(|word| {
                 (!word.is_empty()).then(|| {
-                    let key = get_side_chars_and_count(word);
+                    let key = get_side_chars_and_counts(word);
                     dict.get(&key).unwrap_or(&0)
                 })
             })
@@ -32,7 +32,7 @@ fn main() {
     print!("{output}");
 }
 
-fn get_side_chars_and_count(word: &str) -> ((u8, u8), [i32; 52]) {
+fn get_side_chars_and_counts(word: &str) -> ((u8, u8), [i32; 52]) {
     let mut counts = [0; 52];
     let chars = word.as_bytes();
     let len = chars.len();

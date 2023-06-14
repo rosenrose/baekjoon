@@ -8,12 +8,17 @@ fn main() {
     let mut input = buf.lines().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let (mut under, mut over) = (BinaryHeap::new(), BinaryHeap::new());
-    under.push(input.by_ref().skip(1).next().unwrap());
+    let n = input.next().unwrap() as usize;
+    let (mut under, mut over) = (
+        BinaryHeap::with_capacity(n >> 1),
+        BinaryHeap::with_capacity(n >> 1),
+    );
+
+    under.push(input.next().unwrap() as i16);
 
     println!("{}", under.peek().unwrap());
 
-    for num in input {
+    for num in input.map(|num| num as i16) {
         if num < *under.peek().unwrap() {
             under.push(num);
         } else {

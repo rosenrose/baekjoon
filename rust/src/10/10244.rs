@@ -11,9 +11,7 @@ fn main() {
         let mut gcd_set = HashSet::<i32>::new();
         let mut gcd_accum = HashSet::new();
 
-        for _ in 0..n {
-            let num = input.next().unwrap();
-
+        for num in input.by_ref().take(n as usize) {
             gcd_accum = gcd_accum.iter().map(|&g| gcd(g, num)).collect();
             gcd_accum.insert(num);
 

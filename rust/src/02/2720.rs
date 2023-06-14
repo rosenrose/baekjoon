@@ -9,10 +9,10 @@ fn main() {
     let values = [25, 10, 5, 1];
 
     for mut cents in input.skip(1) {
-        let mut counts = [0, 0, 0, 0];
+        let mut counts = [0; 4];
 
-        for i in 0..counts.len() {
-            counts[i] += cents / values[i];
+        for (i, count) in counts.iter_mut().enumerate() {
+            *count += cents / values[i];
             cents %= values[i];
         }
 

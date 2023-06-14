@@ -7,19 +7,22 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut output = String::new();
 
-    let n = parse_int(input.next().unwrap());
+    let n: i32 = input.next().unwrap().parse().unwrap();
 
     'outer: for [p, len, arr] in (0..n).map(|_| [(); 3].map(|_| input.next().unwrap())) {
         let mut arr = if len != "0" {
-            arr[1..arr.len() - 1].split(',').map(parse_int).collect()
+            arr[1..arr.len() - 1]
+                .split(',')
+                .flat_map(str::parse::<u8>)
+                .collect()
         } else {
             VecDeque::new()
         };
 
         let mut is_reverse = false;
 
-        for func in p.as_bytes() {
-            match func {
+        for op in p.as_bytes() {
+            match op {
                 b'R' => is_reverse = !is_reverse,
                 b'D' => {
                     let removed = if is_reverse {
@@ -37,18 +40,25 @@ fn main() {
             };
         }
 
-        let mut arr = Vec::from_iter(arr);
-
         if is_reverse {
-            arr.reverse();
+            print_arr(arr.iter().rev().enumerate(), &mut output);
+        } else {
+            print_arr(arr.iter().enumerate(), &mut output);
         }
-
-        writeln!(output, "{}", format!("{arr:?}").replace(' ', "")).unwrap();
     }
 
     print!("{output}");
 }
 
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
+fn print_arr<'a>(arr: impl Iterator<Item = (usize, &'a u8)>, output: &mut String) {
+    write!(output, "[").unwrap();
+
+    for (i, num) in arr {
+        if i > 0 {
+            write!(output, ",").unwrap();
+        }
+        write!(output, "{num}").unwrap();
+    }
+
+    writeln!(output, "]").unwrap();
 }

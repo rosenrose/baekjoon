@@ -5,8 +5,8 @@ use std::io;
 struct DisjointSet<'a>(HashMap<&'a str, (&'a str, i32)>);
 
 impl<'a> DisjointSet<'a> {
-    fn new() -> Self {
-        Self(HashMap::new())
+    fn with_capacity(n: usize) -> Self {
+        Self(HashMap::with_capacity(n))
     }
 
     fn insert(&mut self, a: &'a str) {
@@ -53,7 +53,7 @@ fn main() {
 
     for _ in 0..parse_int(input()) {
         let n = parse_int(input());
-        let mut disjoint_set = DisjointSet::new();
+        let mut disjoint_set = DisjointSet::with_capacity(n);
 
         for (friend1, friend2) in (0..n).map(|_| (input(), input())) {
             disjoint_set.insert(friend1);
@@ -68,6 +68,6 @@ fn main() {
     print!("{output}");
 }
 
-fn parse_int(buf: &str) -> i32 {
+fn parse_int(buf: &str) -> usize {
     buf.parse().unwrap()
 }

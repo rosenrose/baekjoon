@@ -6,7 +6,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut output = String::new();
 
-    let mut tree_counts = HashMap::new();
+    let mut tree_counts = HashMap::with_capacity(10_000 >> 2);
     let mut total = 0;
 
     for name in buf.lines() {

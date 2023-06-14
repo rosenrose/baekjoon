@@ -12,7 +12,7 @@ fn main() {
         let mut numbers: Vec<_> = (0..n).map(|_| input()).collect();
         numbers.sort_unstable_by_key(|s| s.len());
 
-        let mut number_set = HashSet::new();
+        let mut number_set = HashSet::with_capacity(n);
 
         for number in numbers {
             for len in 1..number.len() {
@@ -24,7 +24,7 @@ fn main() {
 
             number_set.insert(number);
         }
-        // println!("{prefixes:?}");
+
         println!("YES");
 
         // let mut trie = Trie::new();
@@ -43,7 +43,7 @@ fn main() {
     }
 }
 
-fn parse_int(buf: &str) -> i32 {
+fn parse_int(buf: &str) -> usize {
     buf.parse().unwrap()
 }
 

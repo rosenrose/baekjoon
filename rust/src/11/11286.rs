@@ -5,18 +5,19 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.lines().flat_map(str::parse::<i32>);
+    let mut input = buf.lines().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let mut heap = BinaryHeap::new();
+    let n = input.next().unwrap() as usize;
+    let mut heap = BinaryHeap::with_capacity(n >> 1);
 
-    for x in input.skip(1) {
+    for x in input {
         match x {
             0 => {
                 let (_, smallest) = heap.pop().unwrap_or(Reverse((0, 0))).0;
                 writeln!(output, "{smallest}").unwrap();
             }
-            x => heap.push(Reverse((x.abs(), x))),
+            _ => heap.push(Reverse((x.abs(), x))),
         }
     }
 
