@@ -63,18 +63,19 @@ fn simulate(
         return None;
     }
 
-    let mut min_dist = i32::MAX;
+    let mut min_cost = i32::MAX;
 
     permutations(
         0,
         &mut vec![0; dirties.len()],
-        &mut [false; MAX_DIRTY],
+        &mut [false; MAX_DIRTY + 1],
         &dist_matrix,
         robot,
-        &mut min_dist,
+        0,
+        &mut min_cost,
     );
 
-    (min_dist != i32::MAX).then_some(min_dist)
+    (min_cost != i32::MAX).then_some(min_cost)
 }
 
 fn get_dists(
@@ -130,32 +131,41 @@ fn permutations(
     visited: &mut [bool],
     dist_matrix: &[[i32; MAX_DIRTY + 1]],
     robot: (usize, usize),
-    min_dist: &mut i32,
+    cost: i32,
+    min_cost: &mut i32,
 ) {
     if depth == selected.len() {
-        let mut dist = dist_matrix[ROBOT_IDX][selected[0]];
-
-        for i in 1..selected.len() {
-            if dist >= *min_dist {
-                return;
-            }
-
-            dist = dist.saturating_add(dist_matrix[selected[i - 1]][selected[i]]);
-        }
-
-        *min_dist = dist.min(*min_dist);
+        *min_cost = cost.min(*min_cost);
         return;
     }
 
-    for i in 0..selected.len() {
+    for i in 1..=selected.len() {
         if visited[i] {
             continue;
         }
 
-        visited[i] = true;
-        selected[depth] = i + 1;
+        selected[depth] = i;
+        let new_cost = cost.saturating_add(if depth == 0 {
+            dist_matrix[ROBOT_IDX][selected[0]]
+        } else {
+            dist_matrix[selected[depth - 1]][selected[depth]]
+        });
 
-        permutations(depth + 1, selected, visited, dist_matrix, robot, min_dist);
+        if new_cost >= *min_cost {
+            continue;
+        }
+
+        visited[i] = true;
+
+        permutations(
+            depth + 1,
+            selected,
+            visited,
+            dist_matrix,
+            robot,
+            new_cost,
+            min_cost,
+        );
 
         visited[i] = false;
     }
