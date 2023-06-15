@@ -20,10 +20,10 @@ fn main() {
 
     let path = (0..n).map(|_| input());
 
-    println!("{}", u8::from(bfs(&adjacency_list, path)));
+    println!("{}", u8::from(bfs_judge(&adjacency_list, path)));
 }
 
-fn bfs(graph: &[Vec<i32>], mut path: impl Iterator<Item = i32>) -> bool {
+fn bfs_judge(graph: &[Vec<i32>], mut path: impl Iterator<Item = i32>) -> bool {
     let start = path.next().unwrap();
 
     if start != 1 {
@@ -31,21 +31,18 @@ fn bfs(graph: &[Vec<i32>], mut path: impl Iterator<Item = i32>) -> bool {
     }
 
     let mut visited = vec![false; graph.len()];
-    visited[start as usize] = true;
-
     let mut queue = VecDeque::from([start]);
 
     while let Some(node) = queue.pop_front() {
+        visited[node as usize] = true;
+
         let adjacents = &graph[node as usize];
+        let count = adjacents
+            .iter()
+            .filter(|&&adj| !visited[adj as usize])
+            .count();
 
-        for &adj in adjacents {
-            if visited[adj as usize] {
-                continue;
-            }
-
-            visited[adj as usize] = true;
-            let next_node = path.next().unwrap();
-
+        for next_node in path.by_ref().take(count) {
             if adjacents.binary_search(&next_node).is_err() {
                 return false;
             }
