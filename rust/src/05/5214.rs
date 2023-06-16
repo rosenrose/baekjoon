@@ -6,23 +6,30 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, k, m] = [(); 3].map(|_| input.next().unwrap());
-    let mut stations = vec![Vec::new(); n + 1];
-    let tubes: Vec<Vec<_>> = (0..m)
-        .map(|i| {
-            input
-                .by_ref()
-                .take(k)
-                .map(|station| {
-                    stations[station].push(i as i16);
-                    station as i32
-                })
-                .collect()
-        })
-        .collect();
-    // println!("{stations:?}\n{tubes:?}");
-    let (start, end) = (1, n as i32);
+    let mut adjacency_array = (vec![i32::MAX; n + 1 + m], Vec::with_capacity(k * 2 * m));
+
+    for tube in (0..m).map(|i| i + n + 1) {
+        for station in input.by_ref().take(k) {
+            let prev = adjacency_array.0[station];
+            adjacency_array.0[station] = adjacency_array.1.len() as i32;
+            adjacency_array.1.push((tube as i32, prev));
+
+            let prev = adjacency_array.0[tube];
+            adjacency_array.0[tube] = adjacency_array.1.len() as i32;
+            adjacency_array.1.push((station as i32, prev));
+        }
+    }
+
+    let min_count = bfs(&adjacency_array, 1, n as i32);
+
+    println!("{}", if min_count == i32::MAX { -1 } else { min_count });
+}
+
+fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: i32, end: i32) -> i32 {
     let mut min_count = i32::MAX;
-    let mut visited = vec![false; stations.len()];
+    let is_tube = |node: i32| node > end;
+
+    let mut visited = vec![false; nodes.len()];
     visited[start as usize] = true;
 
     let mut queue = VecDeque::from([(start, 1)]);
@@ -33,17 +40,18 @@ fn main() {
             continue;
         }
 
-        for &tube in &stations[node as usize] {
-            for &adj in &tubes[tube as usize] {
-                if visited[adj as usize] {
-                    continue;
-                }
+        let next_count = count + i32::from(is_tube(node));
+        let mut edge = nodes[node as usize];
 
+        while let Some(&(adj, next_edge)) = edges.get(edge as usize) {
+            if !visited[adj as usize] {
                 visited[adj as usize] = true;
-                queue.push_back((adj, count + 1));
+                queue.push_back((adj, next_count));
             }
+
+            edge = next_edge;
         }
     }
 
-    println!("{}", if min_count == i32::MAX { -1 } else { min_count });
+    min_count
 }
