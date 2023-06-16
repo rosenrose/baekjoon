@@ -31,19 +31,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 writeln!(output, "0")?;
                 continue;
             }
-
-            let Some(path) = find_path(&prevs, i, j) else {
+            let Some(path) = get_path(&prevs, i, j) else {
                 writeln!(output, "0")?;
                 continue;
             };
 
-            write!(output, "{} ", path.len() + 1)?;
+            write!(output, "{} ", path.len())?;
 
-            for p in path {
+            for p in path.iter().rev() {
                 write!(output, "{} ", p + 1)?;
             }
 
-            writeln!(output, "{}", j + 1)?;
+            writeln!(output, "")?;
         }
     }
 
@@ -51,14 +50,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn floyd_warshall_with_path(graph: &mut Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+fn floyd_warshall_with_path(graph: &mut Vec<Vec<i32>>) -> Vec<Vec<Option<u8>>> {
     let len = graph.len();
-    let mut path: Vec<Vec<_>> = graph
+    let mut prevs: Vec<Vec<_>> = graph
         .iter()
         .enumerate()
-        .map(|(from, row)| {
+        .map(|(start, row)| {
             row.iter()
-                .map(|&d| if d == i32::MAX { -1 } else { from as i32 })
+                .map(|&dist| (dist != i32::MAX).then(|| start as u8))
                 .collect()
         })
         .collect();
@@ -70,30 +69,25 @@ fn floyd_warshall_with_path(graph: &mut Vec<Vec<i32>>) -> Vec<Vec<i32>> {
 
                 if new_dist < graph[start][end] {
                     graph[start][end] = new_dist;
-                    path[start][end] = stopby as i32;
+                    prevs[start][end] = prevs[stopby][end];
                 }
             }
         }
     }
 
-    path
+    prevs
 }
 
-fn find_path(prevs: &[Vec<i32>], start: usize, end: usize) -> Option<Vec<usize>> {
-    let prev = prevs[start][end];
+fn get_path(prevs: &[Vec<Option<u8>>], start: usize, end: usize) -> Option<Vec<u8>> {
+    let mut node = prevs[start][end]? as usize;
+    let mut path = vec![end as u8];
 
-    if prev == -1 {
-        return None;
+    while node != start {
+        path.push(node as u8);
+        node = prevs[start][node]? as usize;
     }
 
-    let prev = prev as usize;
+    path.push(start as u8);
 
-    if prev == start {
-        return Some(vec![start]);
-    }
-
-    let start_prev = find_path(prevs, start, prev)?;
-    let prev_end = find_path(prevs, prev, end)?;
-
-    Some([start_prev, prev_end].concat())
+    Some(path)
 }
