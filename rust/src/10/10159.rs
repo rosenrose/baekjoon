@@ -32,10 +32,11 @@ fn main() {
 fn floyd_warshall(graph: &mut Vec<Vec<bool>>) {
     let len = graph.len();
 
-    for k in 0..len {
-        for i in 0..len {
-            for j in 0..len {
-                graph[i][j] = graph[i][j] || (graph[i][k] && graph[k][j]);
+    for stopby in 0..len {
+        for start in 0..len {
+            for end in 0..len {
+                graph[start][end] =
+                    graph[start][end] || (graph[start][stopby] && graph[stopby][end]);
             }
         }
     }

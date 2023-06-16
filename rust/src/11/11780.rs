@@ -63,14 +63,14 @@ fn floyd_warshall_with_path(graph: &mut Vec<Vec<i32>>) -> Vec<Vec<i32>> {
         })
         .collect();
 
-    for k in 0..len {
-        for i in 0..len {
-            for j in 0..len {
-                let new_dist = graph[i][k].saturating_add(graph[k][j]);
+    for stopby in 0..len {
+        for start in 0..len {
+            for end in 0..len {
+                let new_dist = graph[start][stopby].saturating_add(graph[stopby][end]);
 
-                if new_dist < graph[i][j] {
-                    graph[i][j] = new_dist;
-                    path[i][j] = k as i32;
+                if new_dist < graph[start][end] {
+                    graph[start][end] = new_dist;
+                    path[start][end] = stopby as i32;
                 }
             }
         }
