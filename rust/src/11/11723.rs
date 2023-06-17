@@ -8,11 +8,7 @@ fn main() {
     stdin.read_line(&mut buf).unwrap();
 
     let mut s = 0;
-    let mut bits = [0; 21];
-
-    for i in 1..=20 {
-        bits[i] = 1 << i;
-    }
+    let bits: [i32; 20] = std::array::from_fn(|i| 1 << i);
 
     for _ in 0..parse_int(buf.trim_end()) {
         buf.clear();
@@ -22,15 +18,15 @@ fn main() {
 
         let op = input.next().unwrap();
         let x = if let Some(s) = input.next() {
-            parse_int(s)
+            parse_int(s) - 1
         } else {
-            0
+            Default::default()
         };
 
         match op {
             "add" => s |= bits[x],
             "remove" => s &= !bits[x],
-            "check" => writeln!(stdout, "{}", u8::from(s & bits[x] == bits[x])).unwrap(),
+            "check" => writeln!(stdout, "{}", u8::from(s & bits[x] != 0)).unwrap(),
             "toggle" => s ^= bits[x],
             "all" => s |= !0,
             "empty" => s = 0,
