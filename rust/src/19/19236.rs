@@ -16,14 +16,11 @@ const SHARK: usize = 0;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-
     let mut map = [[None; SIZE]; SIZE];
 
-    for r in 0..SIZE {
-        for c in 0..SIZE {
-            let (num, dir) = (input.next().unwrap(), input.next().unwrap() - 1);
-            map[r][c] = Some((num, dir));
-        }
+    for cell in map.iter_mut().flatten() {
+        let (num, dir) = (input.next().unwrap(), input.next().unwrap() - 1);
+        *cell = Some((num, dir));
     }
 
     let (num, dir) = map[0][0].unwrap();

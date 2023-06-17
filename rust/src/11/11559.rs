@@ -5,14 +5,12 @@ const HEIGHT: usize = 12;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.lines().flat_map(|line| line.chars());
     let mut map = [[None; WIDTH]; HEIGHT];
 
-    for (r, row) in buf.lines().enumerate() {
-        for (c, ch) in row.char_indices() {
-            if ch != '.' {
-                map[r][c] = Some(ch);
-            }
-        }
+    for cell in map.iter_mut().flatten() {
+        let ch = input.next().unwrap();
+        *cell = (ch != '.').then_some(ch);
     }
 
     let count = simulate(map);

@@ -8,10 +8,8 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i8>);
     let mut map = [[0; SIZE]; SIZE];
 
-    for r in 0..SIZE {
-        for (c, num) in input.by_ref().take(SIZE).enumerate() {
-            map[r][c] = num;
-        }
+    for cell in map.iter_mut().flatten() {
+        *cell = input.next().unwrap();
     }
 
     let ordered = [[1, 2, 3], [4, 5, 6], [7, 8, 0]];

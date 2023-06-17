@@ -5,12 +5,11 @@ const SIZE: usize = 8;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.lines().flat_map(|line| line.chars());
     let mut map = [[false; SIZE]; SIZE];
 
-    for (r, row) in buf.lines().enumerate() {
-        for (c, ch) in row.char_indices() {
-            map[r][c] = ch == '#';
-        }
+    for cell in map.iter_mut().flatten() {
+        *cell = input.next().unwrap() == '#';
     }
 
     println!("{}", u8::from(simulate(map)));
