@@ -4,25 +4,28 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, m) = (input() as usize, input());
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let (n, m) = (input(), input());
+    let mut adjacency_array = (vec![i32::MAX; n + 1], Vec::with_capacity(m));
 
     for [u, v, w] in (0..m).map(|_| [(); 3].map(|_| input())) {
-        adjacency_list[u as usize].push((v, w));
+        let prev = adjacency_array.0[u];
+
+        adjacency_array.0[u] = adjacency_array.1.len() as i32;
+        adjacency_array.1.push(((v as i32, w as i32), prev));
     }
 
-    let (start, mut end) = (input() as usize, input() as usize);
-    let (distances, prevs) = dijkstra_with_path(&adjacency_list, start);
+    let (start, mut end) = (input() as i32, input() as i32);
+    let (distance, prevs) = dijkstra_with_path(&adjacency_array, start, end);
 
-    println!("{}", distances[end]);
+    println!("{distance}");
 
     let mut path = vec![end];
 
     while end != start {
-        end = prevs[end] as usize;
+        end = prevs[end as usize];
         path.push(end);
     }
 
@@ -33,34 +36,42 @@ fn main() {
     }
 }
 
-fn dijkstra_with_path(graph: &[Vec<(i32, i32)>], start: usize) -> (Vec<i32>, Vec<i32>) {
-    let mut distances = vec![i32::MAX; graph.len()];
-    distances[start] = 0;
+fn dijkstra_with_path(
+    (nodes, edges): &(Vec<i32>, Vec<((i32, i32), i32)>),
+    start: i32,
+    end: i32,
+) -> (i32, Vec<i32>) {
+    let mut distances = vec![i32::MAX; nodes.len()];
+    distances[start as usize] = 0;
 
-    let mut prevs = vec![0; graph.len()];
-    let mut queue = BinaryHeap::from([Reverse((0, start as i32))]);
+    let mut prevs = vec![0; nodes.len()];
+    let mut queue = BinaryHeap::from([(Reverse(0), start)]);
 
-    while let Some(Reverse((dist, node))) = queue.pop() {
+    while let Some((Reverse(dist), node)) = queue.pop() {
         let min_dist = distances[node as usize];
 
+        if node == end {
+            return (min_dist, prevs);
+        }
         if dist > min_dist {
             continue;
         }
 
-        for &(adj, weight) in &graph[node as usize] {
+        let mut edge = nodes[node as usize];
+
+        while let Some(&((adj, weight), next_edge)) = edges.get(edge as usize) {
             let adj_min_dist = distances[adj as usize];
             let new_dist = min_dist + weight;
 
-            if new_dist >= adj_min_dist {
-                continue;
+            if new_dist < adj_min_dist {
+                distances[adj as usize] = new_dist;
+                prevs[adj as usize] = node;
+                queue.push((Reverse(new_dist), adj));
             }
 
-            distances[adj as usize] = new_dist;
-            prevs[adj as usize] = node;
-
-            queue.push(Reverse((new_dist, adj)));
+            edge = next_edge;
         }
     }
 
-    (distances, prevs)
+    (distances[end as usize], prevs)
 }

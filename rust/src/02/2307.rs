@@ -5,26 +5,24 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
     let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    for [a, b, t] in (0..m).map(|_| [(); 3].map(|_| input())) {
+    for [a, b, t] in (0..m).map(|_| [(); 3].map(|_| input.next().unwrap())) {
         adjacency_list[a].push((b, t as i32));
         adjacency_list[b].push((a, t as i32));
     }
 
     let (start, end) = (1, n);
-    let (times, prevs) = dijkstra_with_path(&adjacency_list, start);
-    let escape_time = times[end];
+    let (escape_time, prevs) = dijkstra_with_path(&adjacency_list, start, end);
 
     let mut max_delay_time = 0;
     let mut node = end;
 
     while node != start {
         let parent = prevs[node];
-        let delay_time = dijkstra_except_edge(&adjacency_list, start, (parent, node))[end];
+        let delay_time = dijkstra_except_edge(&adjacency_list, start, end, (parent, node));
 
         max_delay_time = delay_time.max(max_delay_time);
         node = parent;
@@ -40,16 +38,19 @@ fn main() {
     );
 }
 
-fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize) -> (Vec<i32>, Vec<usize>) {
+fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize, end: usize) -> (i32, Vec<usize>) {
     let mut dists = vec![i32::MAX; graph.len()];
     dists[start] = 0;
 
     let mut prevs = vec![0; graph.len()];
-    let mut queue = BinaryHeap::from([Reverse((0, start))]);
+    let mut queue = BinaryHeap::from([(Reverse(0), start)]);
 
-    while let Some(Reverse((dist, node))) = queue.pop() {
+    while let Some((Reverse(dist), node)) = queue.pop() {
         let min_dist = dists[node];
 
+        if node == end {
+            return (min_dist, prevs);
+        }
         if dist > min_dist {
             continue;
         }
@@ -65,26 +66,30 @@ fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize) -> (Vec<i32>, V
             dists[adj] = new_dist;
             prevs[adj] = node;
 
-            queue.push(Reverse((new_dist, adj)));
+            queue.push((Reverse(new_dist), adj));
         }
     }
 
-    (dists, prevs)
+    dists[end]
 }
 
 fn dijkstra_except_edge(
     graph: &[Vec<(usize, i32)>],
     start: usize,
+    end: usize,
     blocked_edge: (usize, usize),
-) -> Vec<i32> {
+) -> i32 {
     let mut dists = vec![i32::MAX; graph.len()];
     dists[start] = 0;
 
-    let mut queue = BinaryHeap::from([Reverse((0, start))]);
+    let mut queue = BinaryHeap::from([(Reverse(0), start)]);
 
-    while let Some(Reverse((dist, node))) = queue.pop() {
+    while let Some((Reverse(dist), node)) = queue.pop() {
         let min_dist = dists[node];
 
+        if node == end {
+            return min_dist;
+        }
         if dist > min_dist {
             continue;
         }
@@ -102,9 +107,9 @@ fn dijkstra_except_edge(
             }
 
             dists[adj] = new_dist;
-            queue.push(Reverse((new_dist, adj)));
+            queue.push((Reverse(new_dist), adj));
         }
     }
 
-    dists
+    dists[end]
 }

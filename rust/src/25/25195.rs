@@ -5,13 +5,13 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m] = [(); 2].map(|_| input.next().unwrap());
-    let mut adjacency_array = (vec![i32::MAX; n + 1], vec![(0, 0); m]);
+    let mut adjacency_array = (vec![i32::MAX; n + 1], Vec::with_capacity(m));
 
-    for (i, [u, v]) in (0..m).map(|i| (i, [(); 2].map(|_| input.next().unwrap()))) {
+    for [u, v] in (0..m).map(|_| [(); 2].map(|_| input.next().unwrap())) {
         let prev = adjacency_array.0[u];
 
-        adjacency_array.0[u] = i as i32;
-        adjacency_array.1[i] = (v as i32, prev);
+        adjacency_array.0[u] = adjacency_array.1.len() as i32;
+        adjacency_array.1.push((v as i32, prev));
     }
 
     let mut fans = vec![false; n + 1];

@@ -10,23 +10,24 @@ fn main() {
     let coins: Vec<_> = input.collect();
     let biggest = *coins.iter().max().unwrap();
 
-    let distances = dijkstra(&coins, biggest);
+    let (start, end) = (0, money % biggest);
+    let distance = dijkstra(&coins, biggest, start, end);
 
-    println!(
-        "{}",
-        money / biggest + distances[(money % biggest) as usize]
-    );
+    println!("{}", (money / biggest) + distance);
 }
 
-fn dijkstra(coins: &[i64], biggest: i64) -> Vec<i64> {
+fn dijkstra(coins: &[i64], biggest: i64, start: i64, end: i64) -> i64 {
     let mut distances = vec![i64::MAX; biggest as usize];
-    distances[0] = 0;
+    distances[start as usize] = 0;
 
-    let mut queue = BinaryHeap::from([Reverse((0, 0))]);
+    let mut queue = BinaryHeap::from([(Reverse(0), start)]);
 
-    while let Some(Reverse((a, current_coin))) = queue.pop() {
+    while let Some((Reverse(a), current_coin)) = queue.pop() {
         let b = distances[current_coin as usize];
 
+        if current_coin == end {
+            return b;
+        }
         if a != b {
             continue;
         }
@@ -41,9 +42,9 @@ fn dijkstra(coins: &[i64], biggest: i64) -> Vec<i64> {
             }
 
             distances[next as usize] = new_dist;
-            queue.push(Reverse((new_dist, next)));
+            queue.push((Reverse(new_dist), next));
         }
     }
 
-    distances
+    distances[end as usize]
 }

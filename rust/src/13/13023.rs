@@ -5,16 +5,16 @@ fn main() {
     let mut input = buf.split_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m] = [(); 2].map(|_| input.next().unwrap());
-    let mut adjacency_array = (vec![usize::MAX; n], vec![(0, 0); m << 1]);
+    let mut adjacency_array = (vec![usize::MAX; n], Vec::with_capacity(m * 2));
 
-    for (i, [a, b]) in (0..m).map(|i| (i << 1, [(); 2].map(|_| input.next().unwrap()))) {
+    for [a, b] in (0..m).map(|_| [(); 2].map(|_| input.next().unwrap())) {
         let prev = adjacency_array.0[a];
-        adjacency_array.0[a] = i;
-        adjacency_array.1[i] = (b, prev);
+        adjacency_array.0[a] = adjacency_array.1.len();
+        adjacency_array.1.push((b, prev));
 
         let prev = adjacency_array.0[b];
-        adjacency_array.0[b] = i + 1;
-        adjacency_array.1[i + 1] = (a, prev);
+        adjacency_array.0[b] = adjacency_array.1.len();
+        adjacency_array.1.push((a, prev));
     }
 
     let mut visited = vec![false; n];

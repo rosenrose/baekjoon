@@ -7,16 +7,16 @@ fn main() {
 
     for _ in 0..input() {
         let (n, m) = (input(), input());
-        let mut adjacency_array = (vec![i32::MAX; n + 1], vec![(0, 0); m << 1]);
+        let mut adjacency_array = (vec![i32::MAX; n + 1], Vec::with_capacity(m * 2));
 
-        for (i, (x, y)) in (0..m).map(|i| (i << 1, (input(), input()))) {
+        for (x, y) in (0..m).map(|_| (input(), input())) {
             let prev = adjacency_array.0[x];
-            adjacency_array.0[x] = i as i32;
-            adjacency_array.1[i] = (y as i32, prev);
+            adjacency_array.0[x] = adjacency_array.1.len() as i32;
+            adjacency_array.1.push((y as i32, prev));
 
             let prev = adjacency_array.0[y];
-            adjacency_array.0[y] = (i + 1) as i32;
-            adjacency_array.1[i + 1] = (x as i32, prev);
+            adjacency_array.0[y] = adjacency_array.1.len() as i32;
+            adjacency_array.1.push((x as i32, prev));
         }
 
         let is_bipartite = dfs(&adjacency_array);

@@ -5,17 +5,16 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let [n, m, k, x] = [(); 4].map(|_| input());
-    let mut adjacency_array = (vec![i32::MAX; n + 1], vec![(0, 0); m]);
+    let [n, m, k, x] = [(); 4].map(|_| input.next().unwrap());
+    let mut adjacency_array = (vec![i32::MAX; n + 1], Vec::with_capacity(m));
 
-    for (i, (u, v)) in (0..m).map(|i| (i, (input(), input() as i32))) {
+    for [u, v] in (0..m).map(|_| [(); 2].map(|_| input.next().unwrap())) {
         let prev = adjacency_array.0[u];
 
-        adjacency_array.0[u] = i as i32;
-        adjacency_array.1[i] = (v, prev);
+        adjacency_array.0[u] = adjacency_array.1.len() as i32;
+        adjacency_array.1.push((v as i32, prev));
     }
 
     let mut result = bfs(&adjacency_array, x, k as i32);

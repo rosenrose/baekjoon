@@ -19,11 +19,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
 
         let (start, mut end) = (0, m - 1);
-        let (distances, prevs) = dijkstra_with_path(&adjacency_list, start);
+        let (distance, prevs) = dijkstra_with_path(&adjacency_list, start, end);
 
         write!(output, "Case #{i}: ")?;
 
-        if distances[end] == i32::MAX {
+        if distance == i32::MAX {
             writeln!(output, "-1")?;
             continue;
         }
@@ -45,16 +45,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize) -> (Vec<i32>, Vec<usize>) {
+fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize, end: usize) -> (i32, Vec<usize>) {
     let mut distances = vec![i32::MAX; graph.len()];
     distances[start] = 0;
 
     let mut prevs = vec![0; graph.len()];
-    let mut queue = BinaryHeap::from([Reverse((0, start))]);
+    let mut queue = BinaryHeap::from([(Reverse(0), start)]);
 
-    while let Some(Reverse((dist, node))) = queue.pop() {
+    while let Some((Reverse(dist), node)) = queue.pop() {
         let min_dist = distances[node];
 
+        if node == end {
+            return (min_dist, prevs);
+        }
         if dist > min_dist {
             continue;
         }
@@ -70,9 +73,9 @@ fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize) -> (Vec<i32>, V
             distances[adj] = new_dist;
             prevs[adj] = node;
 
-            queue.push(Reverse((new_dist, adj)));
+            queue.push((Reverse(new_dist), adj));
         }
     }
 
-    (distances, prevs)
+    (distances[end], prevs)
 }

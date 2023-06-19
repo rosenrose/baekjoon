@@ -4,19 +4,18 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
-    let mut adjacency_array = (vec![i32::MAX; n + 1], vec![(0, 0); m << 1]);
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
+    let mut adjacency_array = (vec![i32::MAX; n + 1], Vec::with_capacity(m * 2));
 
-    for (i, (a, b)) in (0..m).map(|i| (i << 1, (input(), input()))) {
+    for [a, b] in (0..m).map(|_| [(); 2].map(|_| input.next().unwrap())) {
         let prev = adjacency_array.0[a];
-        adjacency_array.0[a] = i as i32;
-        adjacency_array.1[i] = (b as i32, prev);
+        adjacency_array.0[a] = adjacency_array.1.len() as i32;
+        adjacency_array.1.push((b as i32, prev));
 
         let prev = adjacency_array.0[b];
-        adjacency_array.0[b] = (i + 1) as i32;
-        adjacency_array.1[i + 1] = (a as i32, prev);
+        adjacency_array.0[b] = adjacency_array.1.len() as i32;
+        adjacency_array.1.push((a as i32, prev));
     }
 
     let (distances, max_dist) = bfs(&adjacency_array);

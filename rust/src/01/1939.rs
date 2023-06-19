@@ -55,17 +55,17 @@ fn main() {
         }
     }
 
-    // let mut adjacency_array = (vec![i32::MAX; n + 1], vec![((0, 0), 0); m << 1]);
+    // let mut adjacency_array = (vec![i32::MAX; n + 1], Vec::with_capacity(m * 2));
     // let (mut min_weight, mut max_weight) = (i32::MAX, 0);
 
-    // for (i, [a, b, c]) in (0..m).map(|i| (i << 1, [(); 3].map(|_| input()))) {
+    // for [a, b, c] in (0..m).map(|_| [(); 3].map(|_| input())) {
     //     let prev = adjacency_array.0[a];
-    //     adjacency_array.0[a] = i as i32;
-    //     adjacency_array.1[i] = ((b as i32, c as i32), prev);
+    //     adjacency_array.0[a] = adjacency_array.1.len() as i32;
+    //     adjacency_array.1.push(((b as i32, c as i32), prev));
 
     //     let prev = adjacency_array.0[b];
-    //     adjacency_array.0[b] = (i + 1) as i32;
-    //     adjacency_array.1[i + 1] = ((a as i32, c as i32), prev);
+    //     adjacency_array.0[b] = adjacency_array.1.len() as i32;
+    //     adjacency_array.1.push(((a as i32, c as i32), prev));
 
     //     (min_weight, max_weight) = (c.min(min_weight), c.max(max_weight));
     // }

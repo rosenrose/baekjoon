@@ -2,8 +2,8 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace().flat_map(str::parse::<f64>);
-    let [a1, a0, c, n0] = input.collect::<Vec<_>>()[..] else { return };
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<f64>);
+    let [a1, a0, c, n0] = [(); 4].map(|_| input.next().unwrap());
 
     if c == a1 {
         println!("{}", u8::from(a0 <= 0.0));

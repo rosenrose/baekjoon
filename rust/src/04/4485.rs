@@ -12,22 +12,25 @@ fn main() {
         };
 
         let cave: Vec<Vec<_>> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
-        let distances = dijkstra(&cave, (0, 0));
-        // println!("{distances:?}");
-        println!("Problem {i}: {}", distances[n - 1][n - 1]);
+        let distance = dijkstra(&cave, (0, 0), (n - 1, n - 1));
+
+        println!("Problem {i}: {distance}");
     }
 }
 
-fn dijkstra(graph: &[Vec<i32>], start: (usize, usize)) -> Vec<Vec<i32>> {
+fn dijkstra(graph: &[Vec<i32>], start: (usize, usize), end: (usize, usize)) -> i32 {
     let n = graph.len();
     let mut distances = vec![vec![i32::MAX; n]; n];
     distances[start.0][start.1] = graph[start.0][start.1];
 
-    let mut queue = BinaryHeap::from([Reverse((0, start))]);
+    let mut queue = BinaryHeap::from([(Reverse(0), start)]);
 
-    while let Some(Reverse((dist, (r, c)))) = queue.pop() {
+    while let Some((Reverse(dist), (r, c))) = queue.pop() {
         let min_dist = distances[r][c];
 
+        if (r, c) == end {
+            return min_dist;
+        }
         if dist > min_dist {
             continue;
         }
@@ -49,9 +52,9 @@ fn dijkstra(graph: &[Vec<i32>], start: (usize, usize)) -> Vec<Vec<i32>> {
             }
 
             distances[adj_r][adj_c] = new_dist;
-            queue.push(Reverse((new_dist, (adj_r, adj_c))));
+            queue.push((Reverse(new_dist), (adj_r, adj_c)));
         }
     }
 
-    distances
+    distances[end.0][end.1]
 }

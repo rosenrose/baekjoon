@@ -6,16 +6,16 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let n = input();
-    let mut adjacency_array = (vec![i32::MAX; n], vec![(0, 0); n - 1]);
+    let mut adjacency_array = (vec![i32::MAX; n], Vec::with_capacity(n - 1));
 
-    for (i, (p, c)) in (0..n - 1).map(|i| (i, (input(), input() as i32))) {
+    for (p, c) in (0..n - 1).map(|_| (input(), input())) {
         let prev = adjacency_array.0[p];
 
-        adjacency_array.0[p] = i as i32;
-        adjacency_array.1[i] = (c, prev);
+        adjacency_array.0[p] = adjacency_array.1.len() as i32;
+        adjacency_array.1.push((c as i32, prev));
     }
 
-    let costs: Vec<_> = (0..n).map(|_| [input() as i32, input() as i32]).collect();
+    let costs: Vec<_> = (0..n).map(|_| [(); 2].map(|_| input() as i32)).collect();
     let white_first_cost = dfs(&adjacency_array, &costs, 0);
     let black_first_cost = dfs(&adjacency_array, &costs, 1);
 
