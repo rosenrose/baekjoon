@@ -3,16 +3,15 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let n = input.next().unwrap();
-    let mut arr: Vec<_> = input.collect();
+    let mut arr: Vec<_> = input.skip(1).collect();
 
     // bubble_sort(&mut arr);
     // selection_sort(&mut arr);
     // insertion_sort(&mut arr);
-    quick_sort(&mut arr, n as usize);
+    quick_sort(&mut arr);
 
     for num in arr {
         writeln!(output, "{num}").unwrap();
@@ -26,7 +25,7 @@ fn bubble_sort(arr: &mut Vec<i32>) {
 
     for i in 0..len - 1 {
         for j in 1..len - i {
-            if arr[j - 1] < arr[j] {
+            if arr[j - 1] <= arr[j] {
                 continue;
             }
 
@@ -59,13 +58,15 @@ fn insertion_sort(arr: &mut Vec<i32>) {
     }
 }
 
-fn quick_sort(arr: &mut [i32], len: usize) {
+fn quick_sort(arr: &mut [i32]) {
+    let len = arr.len();
+
     if len <= 1 {
         return;
     }
 
+    let pivot_value = arr[len >> 1];
     let (mut i, mut j) = (0, len - 1);
-    let pivot_value = arr[len / 2];
 
     while i <= j {
         while arr[i] < pivot_value {
@@ -84,6 +85,6 @@ fn quick_sort(arr: &mut [i32], len: usize) {
         j -= 1;
     }
 
-    quick_sort(&mut arr[..=j], j + 1);
-    quick_sort(&mut arr[i..], len - i);
+    quick_sort(&mut arr[..=j]);
+    quick_sort(&mut arr[i..]);
 }

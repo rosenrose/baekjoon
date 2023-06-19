@@ -72,13 +72,12 @@ impl<T: Ord + Copy> Heap<T> {
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let n = input.next().unwrap() as usize;
-    let mut arr: Vec<_> = input.collect();
+    let mut arr: Vec<_> = input.skip(1).collect();
 
-    merge_sort(&mut arr, n);
+    merge_sort(&mut arr);
 
     for num in arr {
         writeln!(output, "{num}").unwrap();
@@ -86,28 +85,33 @@ fn main() {
 
     // let mut heap = Heap::new();
     // input.for_each(|num| heap.push(Reverse(num)));
-    // // let mut heap: BinaryHeap<_> = input.collect();
-
+    //
     // while let Some(Reverse(num)) = heap.pop() {
+    //     writeln!(output, "{num}").unwrap();
+    // }
+    // let heap: BinaryHeap<_> = input.collect();
+
+    // for num in heap.into_sorted_vec() {
     //     writeln!(output, "{num}").unwrap();
     // }
 
     print!("{output}");
 }
 
-fn merge_sort(arr: &mut [i32], len: usize) {
+fn merge_sort(arr: &mut [i32]) {
+    let len = arr.len();
+
     if len <= 1 {
         return;
     }
 
-    let pivot = (len / 2) as usize;
+    let pivot = len >> 1;
 
-    merge_sort(&mut arr[..pivot], pivot);
-    merge_sort(&mut arr[pivot..], len - pivot);
+    merge_sort(&mut arr[..pivot]);
+    merge_sort(&mut arr[pivot..]);
 
     let mut temp = vec![0; len];
-    let mut a = 0;
-    let mut b = pivot;
+    let (mut a, mut b) = (0, pivot);
 
     for i in 0..len {
         if a < pivot && b < len {
