@@ -105,16 +105,16 @@ fn merge_sort(arr: &mut [i32]) {
         return;
     }
 
-    let pivot = len >> 1;
+    let mid = len >> 1;
 
-    merge_sort(&mut arr[..pivot]);
-    merge_sort(&mut arr[pivot..]);
+    merge_sort(&mut arr[..mid]);
+    merge_sort(&mut arr[mid..]);
 
     let mut temp = vec![0; len];
-    let (mut a, mut b) = (0, pivot);
+    let (mut a, mut b) = (0, mid);
 
     for i in 0..len {
-        if a < pivot && b < len {
+        if a < mid && b < len {
             if arr[a] < arr[b] {
                 temp[i] = arr[a];
                 a += 1;
@@ -123,7 +123,7 @@ fn merge_sort(arr: &mut [i32]) {
                 b += 1;
             }
         } else {
-            if a == pivot {
+            if a == mid {
                 temp[i] = arr[b];
                 b += 1;
             } else {

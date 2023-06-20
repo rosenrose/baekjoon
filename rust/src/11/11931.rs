@@ -3,13 +3,12 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.lines().flat_map(str::parse::<i32>);
+    let input = buf.lines().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let n = input.next().unwrap() as usize;
-    let mut arr: Vec<_> = input.collect();
+    let mut arr: Vec<_> = input.skip(1).collect();
 
-    merge_sort(&mut arr, n);
+    merge_sort(&mut arr);
 
     for num in arr {
         writeln!(output, "{num}").unwrap();
@@ -18,21 +17,23 @@ fn main() {
     print!("{output}");
 }
 
-fn merge_sort(arr: &mut [i32], len: usize) {
+fn merge_sort(arr: &mut [i32]) {
+    let len = arr.len();
+
     if len <= 1 {
         return;
     }
 
-    let pivot = (len / 2) as usize;
+    let mid = len >> 1;
 
-    merge_sort(&mut arr[..pivot], pivot);
-    merge_sort(&mut arr[pivot..], len - pivot);
+    merge_sort(&mut arr[..mid]);
+    merge_sort(&mut arr[mid..]);
 
     let mut temp = vec![0; len];
-    let (mut a, mut b) = (0, pivot);
+    let (mut a, mut b) = (0, mid);
 
     for i in 0..len {
-        if a < pivot && b < len {
+        if a < mid && b < len {
             if arr[a] > arr[b] {
                 temp[i] = arr[a];
                 a += 1;
@@ -41,7 +42,7 @@ fn merge_sort(arr: &mut [i32], len: usize) {
                 b += 1;
             }
         } else {
-            if a == pivot {
+            if a == mid {
                 temp[i] = arr[b];
                 b += 1;
             } else {
