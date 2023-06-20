@@ -3,18 +3,20 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<f64>);
-    let [a1, a0, c, n0] = [(); 4].map(|_| input.next().unwrap());
 
-    if c == a1 {
-        println!("{}", u8::from(a0 <= 0.0));
-        return;
+    let args = [(); 4].map(|_| input.next().unwrap());
+
+    println!("{}", u8::from(big_o(args)));
+}
+
+fn big_o([a1, a0, c, n0]: [f64; 4]) -> bool {
+    // (a1-c)*n + a0 <= 0
+    if a1 == c {
+        return a0 <= 0.0;
     }
-    if (c - a1).is_sign_negative() {
-        println!("0");
-        return;
+    if (a1 - c).is_sign_positive() {
+        return false;
     }
 
-    let n = a0 / (c - a1);
-
-    println!("{}", u8::from(n0 >= n));
+    n0 >= -a0 / (a1 - c)
 }
