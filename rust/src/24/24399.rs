@@ -27,7 +27,7 @@ fn select_nth(arr: &mut [i32], query: usize, k: &mut i32) -> bool {
     let pivot = len - 1;
     let mut i = 0;
 
-    for j in 0..len - 1 {
+    for j in 0..pivot {
         if arr[j] <= arr[pivot] {
             arr.swap(i, j);
             *k -= 1;

@@ -24,7 +24,7 @@ fn quick_sort(arr: &mut [i32], k: &mut i32) -> Option<(i32, i32)> {
     let pivot = n - 1;
     let mut i = 0;
 
-    for j in 0..n - 1 {
+    for j in 0..pivot {
         if arr[j] <= arr[pivot] {
             arr.swap(i, j);
             *k -= 1;
