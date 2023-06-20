@@ -49,7 +49,7 @@ fn insertion_sort(arr: &mut Vec<i32>) {
 
     for i in 1..len {
         for j in (1..=i).rev() {
-            if arr[j - 1] < arr[j] {
+            if arr[j - 1] <= arr[j] {
                 break;
             }
 

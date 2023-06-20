@@ -20,13 +20,15 @@ fn bubble_sort(mut arr: Vec<i32>, k: i32) -> Option<(i32, i32)> {
 
     for i in 0..n - 1 {
         for j in 0..n - 1 - i {
-            if arr[j] > arr[j + 1] {
-                arr.swap(j, j + 1);
-                count += 1;
+            if arr[j] <= arr[j + 1] {
+                continue;
+            }
 
-                if count == k {
-                    return Some((arr[j], arr[j + 1]));
-                }
+            arr.swap(j, j + 1);
+            count += 1;
+
+            if count == k {
+                return Some((arr[j], arr[j + 1]));
             }
         }
     }
