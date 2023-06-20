@@ -46,18 +46,20 @@ fn quick_sort(
 
     for j in lo..pivot {
         if arr_a[j] <= arr_a[pivot] {
-            for idx in [i, j] {
-                if arr_a[idx] == arr_b[idx] {
-                    *count -= 1;
-                }
+            if arr_a[i] == arr_b[i] {
+                *count -= 1;
+            }
+            if arr_a[j] == arr_b[j] {
+                *count -= 1;
             }
 
             arr_a.swap(i, j);
 
-            for idx in [i, j] {
-                if arr_a[idx] == arr_b[idx] {
-                    *count += 1;
-                }
+            if arr_a[i] == arr_b[i] {
+                *count += 1;
+            }
+            if arr_a[j] == arr_b[j] {
+                *count += 1;
             }
 
             if *count == n {
@@ -69,18 +71,20 @@ fn quick_sort(
     }
 
     if i != pivot {
-        for idx in [i, pivot] {
-            if arr_a[idx] == arr_b[idx] {
-                *count -= 1;
-            }
+        if arr_a[i] == arr_b[i] {
+            *count -= 1;
+        }
+        if arr_a[pivot] == arr_b[pivot] {
+            *count -= 1;
         }
 
         arr_a.swap(i, pivot);
 
-        for idx in [i, pivot] {
-            if arr_a[idx] == arr_b[idx] {
-                *count += 1;
-            }
+        if arr_a[i] == arr_b[i] {
+            *count += 1;
+        }
+        if arr_a[pivot] == arr_b[pivot] {
+            *count += 1;
         }
 
         if *count == n {

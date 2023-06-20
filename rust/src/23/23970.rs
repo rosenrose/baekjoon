@@ -34,18 +34,20 @@ fn bubble_sort(mut arr_a: Vec<i32>, arr_b: Vec<i32>, mut count: usize) -> bool {
                 continue;
             }
 
-            for idx in [j, j + 1] {
-                if arr_a[idx] == arr_b[idx] {
-                    count -= 1;
-                }
+            if arr_a[j] == arr_b[j] {
+                count -= 1;
+            }
+            if arr_a[j + 1] == arr_b[j + 1] {
+                count -= 1;
             }
 
             arr_a.swap(j, j + 1);
 
-            for idx in [j, j + 1] {
-                if arr_a[idx] == arr_b[idx] {
-                    count += 1;
-                }
+            if arr_a[j] == arr_b[j] {
+                count += 1;
+            }
+            if arr_a[j + 1] == arr_b[j + 1] {
+                count += 1;
             }
 
             if count == n {
