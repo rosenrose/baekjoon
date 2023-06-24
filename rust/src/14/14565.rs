@@ -10,11 +10,7 @@ fn main() {
 fn mod_inverse(n: i64, modular: i64) -> Option<i64> {
     let (gcd, inverse, _) = get_ex_gcd(n, modular);
 
-    if gcd != 1 {
-        return None;
-    }
-
-    Some(inverse)
+    (gcd == 1).then_some(inverse)
 }
 
 fn get_ex_gcd(a: i64, b: i64) -> (i64, i64, i64) {
