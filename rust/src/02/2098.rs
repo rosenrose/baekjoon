@@ -16,12 +16,12 @@ fn main() {
         .collect();
 
     let mut memo = vec![vec![None; 1 << n]; n];
-    let min_cost = dfs(&adjacency_matrix, 0, 1, &mut memo);
+    let min_cost = tsp(&adjacency_matrix, 0, 1, &mut memo);
 
     println!("{min_cost}");
 }
 
-fn dfs(graph: &[Vec<i32>], node: usize, visited: usize, memo: &mut Vec<Vec<Option<i32>>>) -> i32 {
+fn tsp(graph: &[Vec<i32>], node: usize, visited: usize, memo: &mut Vec<Vec<Option<i32>>>) -> i32 {
     if let Some(cost) = memo[node][visited] {
         return cost;
     }
@@ -37,7 +37,7 @@ fn dfs(graph: &[Vec<i32>], node: usize, visited: usize, memo: &mut Vec<Vec<Optio
                 return i32::MAX;
             }
 
-            graph[node][next_node].saturating_add(dfs(graph, next_node, visited | bit, memo))
+            graph[node][next_node].saturating_add(tsp(graph, next_node, visited | bit, memo))
         })
         .min()
         .unwrap();
