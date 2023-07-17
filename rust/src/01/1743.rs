@@ -3,12 +3,11 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let [height, width, k] = [(); 3].map(|_| input());
+    let [height, width, k] = [(); 3].map(|_| input.next().unwrap());
     let mut map = vec![vec![false; width]; height];
 
-    for (r, c) in (0..k).map(|_| (input() - 1, input() - 1)) {
+    for [r, c] in (0..k).map(|_| [(); 2].map(|_| input.next().unwrap() - 1)) {
         map[r][c] = true;
     }
 

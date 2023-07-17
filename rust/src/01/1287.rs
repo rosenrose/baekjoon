@@ -78,7 +78,7 @@ impl BigInt {
         Self::from(result, self.sign * other.signum() as i8)
     }
 
-    fn div(self, other: &Self) -> Option<BigInt> {
+    fn checked_div(self, other: &Self) -> Option<BigInt> {
         if other.is_zero() {
             return None;
         }
@@ -286,7 +286,7 @@ fn calculate(input: &str) -> Option<BigInt> {
             "+" => &a + &b,
             "-" => &a - &b,
             "*" => &a * &b,
-            "/" => a.div(&b)?,
+            "/" => a.checked_div(&b)?,
             _ => return None,
         };
 
@@ -353,10 +353,9 @@ fn infix_to_postfix(infix: Vec<&str>) -> Option<Vec<&str>> {
         match input {
             "(" => stack.push(input),
             ")" => loop {
-                match stack.pop() {
-                    None => return None,
-                    Some(token) if token == "(" => break,
-                    Some(token) => postfix.push(token),
+                match stack.pop()? {
+                    "(" => break,
+                    token => postfix.push(token),
                 }
             },
             "+" | "-" | "*" | "/" => {

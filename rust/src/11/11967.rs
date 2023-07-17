@@ -4,16 +4,15 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
     let start = (0, 0);
     let mut map = vec![vec![false; n]; n];
     map[start.0][start.1] = true;
 
     let mut switches = vec![vec![Vec::new(); n]; n];
 
-    for [y, x, a, b] in (0..m).map(|_| [(); 4].map(|_| input() - 1)) {
+    for [y, x, a, b] in (0..m).map(|_| [(); 4].map(|_| input.next().unwrap() - 1)) {
         switches[y][x].push((a, b));
     }
 

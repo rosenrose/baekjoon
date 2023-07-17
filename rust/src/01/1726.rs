@@ -12,16 +12,16 @@ fn main() {
     let map: Vec<Vec<_>> = (0..height)
         .map(|_| (0..width).map(|_| input() == 1).collect())
         .collect();
-    let start = (input() - 1, input() - 1, input() - 1);
-    let end = (input() - 1, input() - 1, input() - 1);
+    let start = [(); 3].map(|_| input() - 1);
+    let end = [(); 3].map(|_| input() - 1);
 
     let mut visited = vec![vec![[false; DIRS.len()]; width as usize]; height as usize];
-    visited[start.0 as usize][start.1 as usize][start.2 as usize] = true;
+    visited[start[0] as usize][start[1] as usize][start[2] as usize] = true;
 
     let mut queue = VecDeque::from([(start, 0)]);
 
-    while let Some(((r, c, dir), count)) = queue.pop_front() {
-        if (r, c, dir) == end {
+    while let Some(([r, c, dir], count)) = queue.pop_front() {
+        if [r, c, dir] == end {
             println!("{count}");
             return;
         }
@@ -34,21 +34,21 @@ fn main() {
                 && 0 <= moved_c
                 && moved_c < width
                 && !map[moved_r as usize][moved_c as usize])
-                .then_some((moved_r, moved_c, dir))
+                .then_some([moved_r, moved_c, dir])
         });
         let turn = match dir {
             0 | 1 => [2, 3],
             2 | 3 => [0, 1],
             _ => unreachable!(),
         }
-        .map(|turned_dir| (r, c, turned_dir));
+        .map(|turned_dir| [r, c, turned_dir]);
 
         for adj in go.chain(turn) {
-            if visited[adj.0 as usize][adj.1 as usize][adj.2 as usize] {
+            if visited[adj[0] as usize][adj[1] as usize][adj[2] as usize] {
                 continue;
             }
 
-            visited[adj.0 as usize][adj.1 as usize][adj.2 as usize] = true;
+            visited[adj[0] as usize][adj[1] as usize][adj[2] as usize] = true;
             queue.push_back((adj, count + 1));
         }
     }

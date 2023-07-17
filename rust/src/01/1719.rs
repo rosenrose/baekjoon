@@ -4,17 +4,16 @@ use std::io;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let buf = io::read_to_string(io::stdin())?;
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let (n, m) = (input(), input());
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
     let mut adjacency_matrix: Vec<Vec<_>> = (0..n)
         .map(|i| (0..n).map(|j| if i == j { 0 } else { i32::MAX }).collect())
         .collect();
 
-    for (a, b, c) in (0..m).map(|_| (input() - 1, input() - 1, input() as i32)) {
-        adjacency_matrix[a][b] = c;
-        adjacency_matrix[b][a] = c;
+    for [a, b, c] in (0..m).map(|_| [(); 3].map(|_| input.next().unwrap())) {
+        adjacency_matrix[a - 1][b - 1] = c as i32;
+        adjacency_matrix[b - 1][a - 1] = c as i32;
     }
 
     let prevs = floyd_warshall_with_path(&mut adjacency_matrix);

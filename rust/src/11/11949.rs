@@ -3,10 +3,9 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
-    let mut students: Vec<_> = (0..n).map(|_| input()).collect();
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
+    let mut students: Vec<_> = input.by_ref().take(n).collect();
 
     for i in 1..=m {
         for j in 1..n {

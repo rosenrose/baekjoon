@@ -3,14 +3,13 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
     let mut adjacency_matrix: Vec<Vec<_>> = (0..n)
         .map(|i| (0..n).map(|j| if i == j { 0 } else { i32::MAX }).collect())
         .collect();
 
-    for (a, b) in (0..m).map(|_| (input() - 1, input() - 1)) {
+    for [a, b] in (0..m).map(|_| [(); 2].map(|_| input.next().unwrap() - 1)) {
         adjacency_matrix[a][b] = 1;
         adjacency_matrix[b][a] = 1;
     }

@@ -9,12 +9,15 @@ enum Player {
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let mut player = if input() == 1 { Player::O } else { Player::X };
+    let mut player = if input.next().unwrap() == 1 {
+        Player::O
+    } else {
+        Player::X
+    };
     let mut board = [[None; 3]; 3];
 
-    for (r, c) in (0..9).map(|_| (input() - 1, input() - 1)) {
+    for [r, c] in (0..9).map(|_| [(); 2].map(|_| input.next().unwrap() - 1)) {
         board[r][c] = Some(player);
 
         if let Some(winner) = is_gameover(&board) {

@@ -22,8 +22,8 @@ fn main() {
     let (m, s) = (input(), input());
     let mut map = vec![vec![(Vec::new(), 0); SIZE]; SIZE];
 
-    for (f, d) in (0..m).map(|_| ((input() - 1, input() - 1), input() - 1)) {
-        map[f.0][f.1].0.push(d as u8);
+    for [fx, fy, d] in (0..m).map(|_| [(); 3].map(|_| input() - 1)) {
+        map[fx][fy].0.push(d as u8);
     }
 
     let shark = (input() - 1, input() - 1);
