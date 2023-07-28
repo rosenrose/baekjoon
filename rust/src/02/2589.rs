@@ -5,10 +5,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let (height, width) = (
-        parse_int(input.next().unwrap()),
-        parse_int(input.next().unwrap()),
-    );
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
     let map: Vec<_> = input.map(str::as_bytes).collect();
     let mut max_time = 0;
 
@@ -49,8 +46,4 @@ fn main() {
     }
 
     println!("{max_time}");
-}
-
-fn parse_int(buf: &str) -> usize {
-    buf.parse().unwrap()
 }

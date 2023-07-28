@@ -19,7 +19,7 @@ fn get_count(n: i32, state: usize, memo: &mut [[i32; 5]]) -> i32 {
         return 0;
     }
     if n == 0 {
-        return i32::from(state == 0);
+        return (state == 0) as i32;
     }
 
     let mut count = memo[n as usize][state];

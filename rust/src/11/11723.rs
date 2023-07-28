@@ -26,7 +26,7 @@ fn main() {
         match op {
             "add" => s |= bits[x],
             "remove" => s &= !bits[x],
-            "check" => writeln!(stdout, "{}", u8::from(s & bits[x] != 0)).unwrap(),
+            "check" => writeln!(stdout, "{}", (s & bits[x] != 0) as u8).unwrap(),
             "toggle" => s ^= bits[x],
             "all" => s |= !0,
             "empty" => s = 0,

@@ -18,7 +18,7 @@ fn main() {
         })
         .collect();
 
-    println!("{}", u8::from(bubble_sort(arr_a, arr_b, count)));
+    println!("{}", bubble_sort(arr_a, arr_b, count) as u8);
 }
 
 fn bubble_sort(mut arr_a: Vec<i32>, arr_b: Vec<i32>, mut count: usize) -> bool {

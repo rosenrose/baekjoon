@@ -7,7 +7,7 @@ fn main() {
     let [.., height, width] = [(); 6].map(|_| parse_int(input.next().unwrap()));
     let p_count: usize = input.map(|line| line.matches('P').count()).sum();
 
-    println!("{}", u8::from(p_count < height * width));
+    println!("{}", (p_count < height * width) as u8);
 }
 
 fn parse_int(buf: &str) -> usize {

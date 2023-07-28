@@ -7,7 +7,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i16>);
     let mut output = String::new();
 
-    let (height, width) = (input.next().unwrap(), input.next().unwrap());
+    let [height, width] = [(); 2].map(|_| input.next().unwrap());
     let mut start = (0, 0);
     let mut map: Vec<Vec<_>> = (0..height)
         .map(|r| {

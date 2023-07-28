@@ -19,7 +19,7 @@ fn main() {
 
     let path = (0..n).map(|_| input());
 
-    println!("{}", u8::from(dfs_judge(&adjacency_list, path)));
+    println!("{}", dfs_judge(&adjacency_list, path) as u8);
 }
 
 fn dfs_judge(graph: &[Vec<i32>], mut path: impl Iterator<Item = i32>) -> bool {

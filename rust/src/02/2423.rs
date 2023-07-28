@@ -23,10 +23,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let (height, width) = (
-        parse_int(input.next().unwrap()),
-        parse_int(input.next().unwrap()),
-    );
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<i16>().unwrap());
     let mut map: Vec<Vec<_>> = input
         .map(|row| {
             row.chars()
@@ -107,8 +104,4 @@ fn is_diagonal(ch: Cells, dir: (i16, i16)) -> bool {
 
 fn is_cross(dir: (i16, i16)) -> bool {
     matches!(dir, (-1, 0) | (0, -1) | (0, 1) | (1, 0))
-}
-
-fn parse_int(buf: &str) -> i16 {
-    buf.parse().unwrap()
 }

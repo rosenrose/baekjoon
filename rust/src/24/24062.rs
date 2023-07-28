@@ -20,7 +20,7 @@ fn main() {
 
     println!(
         "{}",
-        u8::from(merge_sort(&mut arr_a, (0, n), &arr_b, &mut count, n))
+        merge_sort(&mut arr_a, (0, n), &arr_b, &mut count, n) as u8
     );
 }
 

@@ -15,7 +15,7 @@ fn main() {
         let idx = (ch - b'a') as usize;
 
         for col in 0..26 {
-            sum_accum[row + 1][col] = sum_accum[row][col] + i32::from(col == idx);
+            sum_accum[row + 1][col] = sum_accum[row][col] + (col == idx) as i32;
         }
     }
 

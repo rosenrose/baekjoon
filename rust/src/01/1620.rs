@@ -7,7 +7,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut output = String::new();
 
-    let (n, _) = (parse_int(input.next().unwrap()), input.next());
+    let [n, _] = [(); 2].map(|_| parse_int(input.next().unwrap()));
     let mut pokemon_index = Vec::with_capacity(n);
     let mut pokemon_name = HashMap::with_capacity(n);
 

@@ -5,10 +5,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let (width, height) = (
-        parse_int(input.next().unwrap()),
-        parse_int(input.next().unwrap()),
-    );
+    let [width, height] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
     let map: Vec<_> = input.map(str::as_bytes).collect();
 
     let mut visited = vec![vec![false; width]; height];
@@ -46,8 +43,4 @@ fn main() {
     }
 
     println!("{min_count}");
-}
-
-fn parse_int(buf: &str) -> usize {
-    buf.parse().unwrap()
 }

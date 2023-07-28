@@ -15,7 +15,7 @@ fn main() {
 
     for row in adjacency_matrix {
         for is_connected in row {
-            write!(output, "{} ", u8::from(is_connected)).unwrap();
+            write!(output, "{} ", is_connected as u8).unwrap();
         }
         writeln!(output, "").unwrap();
     }

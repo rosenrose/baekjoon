@@ -6,7 +6,7 @@ fn main() {
 
     let args = [(); 6].map(|_| input.next().unwrap());
 
-    println!("{}", u8::from(big_theta(args)));
+    println!("{}", big_theta(args) as u8);
 }
 
 fn big_theta([a2, a1, a0, c1, c2, n0]: [f64; 6]) -> bool {

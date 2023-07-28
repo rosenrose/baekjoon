@@ -21,7 +21,7 @@ fn main() {
 
     println!(
         "{}",
-        u8::from(select_nth(&mut arr_a, (0, n), query, &arr_b, &mut count, n))
+        select_nth(&mut arr_a, (0, n), query, &arr_b, &mut count, n) as u8
     );
 }
 

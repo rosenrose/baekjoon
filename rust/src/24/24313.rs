@@ -6,7 +6,7 @@ fn main() {
 
     let args = [(); 4].map(|_| input.next().unwrap());
 
-    println!("{}", u8::from(big_o(args)));
+    println!("{}", big_o(args) as u8);
 }
 
 fn big_o([a1, a0, c, n0]: [f64; 4]) -> bool {

@@ -22,7 +22,7 @@ fn combinations(
     sum: i32,
 ) -> i32 {
     if depth == selected.len() {
-        return i32::from(selected.iter().map(|&i| nums[i]).sum::<i32>() == sum);
+        return (selected.iter().map(|&i| nums[i]).sum::<i32>() == sum) as i32;
     }
 
     let takes = nums.len() - (selected.len() - 1);

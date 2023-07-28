@@ -6,10 +6,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let (height, width) = (
-        parse_int(input.next().unwrap()),
-        parse_int(input.next().unwrap()),
-    );
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
     let board: &Vec<_> = &input.collect();
 
     let min_paint = (0..=height - SIZE)
@@ -37,10 +34,6 @@ fn get_paint_count(board: &[&str], x: usize, y: usize) -> usize {
     let paint_start_white = SIZE * SIZE - paint_start_black;
 
     paint_start_black.min(paint_start_white)
-}
-
-fn parse_int(buf: &str) -> usize {
-    buf.parse().unwrap()
 }
 
 /*

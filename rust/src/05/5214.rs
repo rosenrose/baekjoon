@@ -40,7 +40,7 @@ fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: i32, end: i32) -> i3
             continue;
         }
 
-        let next_count = count + i32::from(is_tube(node));
+        let next_count = count + is_tube(node) as i32;
         let mut edge = nodes[node as usize];
 
         while let Some(&(adj, next_edge)) = edges.get(edge as usize) {

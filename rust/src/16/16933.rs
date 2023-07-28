@@ -21,7 +21,7 @@ fn main() {
         }
 
         let new_dist = dist + 1;
-        let next_is_day_idx = usize::from(!is_day);
+        let next_is_day_idx = !is_day as usize;
         let adjacents = [
             ((r - 1).max(0), c),
             (r, (c - 1).max(0)),

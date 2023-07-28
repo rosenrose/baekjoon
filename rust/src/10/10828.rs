@@ -18,7 +18,7 @@ fn main() {
             }
             "pop" => stack.pop().unwrap_or(-1),
             "size" => stack.len() as i32,
-            "empty" => i32::from(stack.is_empty()),
+            "empty" => stack.is_empty() as i32,
             "top" => *stack.last().unwrap_or(&-1),
             _ => unreachable!(),
         };

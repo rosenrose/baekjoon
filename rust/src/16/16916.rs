@@ -2,9 +2,9 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace();
+    let mut input = buf.lines();
 
-    let (s, p) = (input.next().unwrap(), input.next().unwrap());
+    let [s, p] = [(); 2].map(|_| input.next().unwrap());
 
-    println!("{}", u8::from(s.contains(p)));
+    println!("{}", s.contains(p) as u8);
 }

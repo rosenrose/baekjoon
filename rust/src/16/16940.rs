@@ -20,7 +20,7 @@ fn main() {
 
     let path = (0..n).map(|_| input());
 
-    println!("{}", u8::from(bfs_judge(&adjacency_list, path)));
+    println!("{}", bfs_judge(&adjacency_list, path) as u8);
 }
 
 fn bfs_judge(graph: &[Vec<i32>], mut path: impl Iterator<Item = i32>) -> bool {

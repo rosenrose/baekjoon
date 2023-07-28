@@ -11,7 +11,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i16>);
 
-    let (width, height) = (input.next().unwrap(), input.next().unwrap());
+    let [width, height] = [(); 2].map(|_| input.next().unwrap());
     let mut queue = VecDeque::new();
     let mut raw_count = 0;
 

@@ -48,7 +48,7 @@ fn main() {
         })
         .collect();
 
-    println!("{}", u8::from(simulate(map, red, blue)));
+    println!("{}", simulate(map, red, blue) as u8);
 }
 
 fn simulate(mut map: Vec<Vec<Cells>>, red: (usize, usize), blue: (usize, usize)) -> bool {

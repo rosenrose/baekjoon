@@ -19,7 +19,7 @@ fn main() {
             let is_heavy = adjacency_matrix[i].iter().filter(|&&b| b).count() >= middle;
             let is_light = adjacency_matrix.iter().filter(|row| row[i]).count() >= middle;
 
-            i32::from(is_heavy || is_light)
+            (is_heavy || is_light) as i32
         })
         .sum();
 

@@ -19,5 +19,5 @@ fn main() {
         odds == evens + 1
     };
 
-    println!("{}", u8::from(is_possible));
+    println!("{}", is_possible as u8);
 }

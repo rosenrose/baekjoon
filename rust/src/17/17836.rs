@@ -53,7 +53,7 @@ fn simulate(map: Vec<Vec<bool>>, time_limit: i32, sword: (usize, usize)) -> Opti
         }
 
         let next_time = time + 1;
-        let has_sword_idx = usize::from(has_sword);
+        let has_sword_idx = has_sword as usize;
         let adjacents = [
             (r.saturating_sub(1), c),
             (r, c.saturating_sub(1)),
@@ -70,7 +70,7 @@ fn simulate(map: Vec<Vec<bool>>, time_limit: i32, sword: (usize, usize)) -> Opti
             let found_sword = (adj_r, adj_c) == sword;
 
             if found_sword {
-                visited[adj_r][adj_c][usize::from(found_sword)] = true;
+                visited[adj_r][adj_c][found_sword as usize] = true;
                 queue.push_back(((adj_r, adj_c), next_time, found_sword));
             } else {
                 queue.push_back(((adj_r, adj_c), next_time, has_sword));

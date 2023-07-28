@@ -14,6 +14,6 @@ fn main() {
     let door = input.next().unwrap();
 
     for i in 0..n - 1 {
-        println!("{}", u8::from(i & 1 == door));
+        println!("{}", (i & 1 == door) as u8);
     }
 }

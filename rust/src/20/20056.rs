@@ -95,11 +95,7 @@ fn split_fireballs(
             speed /= len;
 
             for i in 0..4 {
-                map[r][c].push((
-                    mass,
-                    speed,
-                    (i * 2) + usize::from(!(is_all_even || is_all_odd)),
-                ));
+                map[r][c].push((mass, speed, (i * 2) + !(is_all_even || is_all_odd) as usize));
             }
         }
     }

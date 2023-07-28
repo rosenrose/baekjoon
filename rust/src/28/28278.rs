@@ -18,7 +18,7 @@ fn main() {
             }
             "2" => writeln!(output, "{}", stack.pop().unwrap_or("-1")),
             "3" => writeln!(output, "{}", stack.len()),
-            "4" => writeln!(output, "{}", u8::from(stack.is_empty())),
+            "4" => writeln!(output, "{}", stack.is_empty() as u8),
             "5" => writeln!(output, "{}", stack.last().unwrap_or(&"-1")),
             _ => unreachable!(),
         }

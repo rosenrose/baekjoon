@@ -17,13 +17,11 @@ fn main() {
         .iter()
         .flat_map(|a_row| {
             (0..n).map(|i| {
-                i32::from(
-                    a_row
-                        .iter()
-                        .enumerate()
-                        .map(|(j, a_num)| a_num & b[j][i])
-                        .any(|and| and),
-                )
+                a_row
+                    .iter()
+                    .enumerate()
+                    .map(|(j, a_num)| a_num & b[j][i])
+                    .any(|and| and) as i32
             })
         })
         .sum();

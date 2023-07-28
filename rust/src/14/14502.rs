@@ -10,16 +10,18 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let (height, width) = (input(), input());
+    let [height, width] = [(); 2].map(|_| input.next().unwrap());
     let mut empty_cells = Vec::new();
     let mut viruses = Vec::new();
 
     let room: Vec<Vec<_>> = (0..height)
         .map(|r| {
-            (0..width)
-                .map(|c| match input() {
+            input
+                .by_ref()
+                .take(width)
+                .enumerate()
+                .map(|(c, num)| match num {
                     0 => {
                         empty_cells.push((r, c));
                         Cells::Empty

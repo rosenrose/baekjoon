@@ -11,10 +11,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let (height, width) = (
-        parse_int(input.next().unwrap()),
-        parse_int(input.next().unwrap()),
-    );
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
     let map: Vec<Vec<_>> = input
         .take(height) // 입력 마지막 줄에 이상한 문자 들어있음
         .map(|row| {
@@ -80,8 +77,4 @@ fn main() {
     }
 
     println!("{total_sheep} {total_wolf}");
-}
-
-fn parse_int(buf: &str) -> usize {
-    buf.parse().unwrap()
 }

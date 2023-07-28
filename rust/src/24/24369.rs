@@ -6,7 +6,7 @@ fn main() {
 
     let args = [(); 5].map(|_| input.next().unwrap());
 
-    println!("{}", u8::from(big_omega(args)));
+    println!("{}", big_omega(args) as u8);
 }
 
 fn big_omega([a2, a1, a0, c, n0]: [f64; 5]) -> bool {

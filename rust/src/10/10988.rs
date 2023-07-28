@@ -2,7 +2,7 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    println!("{}", u8::from(is_palindrome(buf.trim())));
+    println!("{}", is_palindrome(buf.trim()) as u8);
 }
 
 fn is_palindrome(word: &str) -> bool {

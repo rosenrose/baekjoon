@@ -29,7 +29,7 @@ fn dfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), costs: &[[i32; 2]], first: 
     while let Some((node, color)) = stack.pop() {
         cost += costs[node as usize][color as usize] as i64;
 
-        let adj_color = u8::from(color == 0);
+        let adj_color = (color == 0) as u8;
         let mut edge = nodes[node as usize];
 
         while let Some(&(adj, next_edge)) = edges.get(edge as usize) {

@@ -7,7 +7,7 @@ fn main() {
     let mut output = String::new();
 
     for num in input.skip(1) {
-        writeln!(output, "{}", u8::from(num & -num == num)).unwrap();
+        writeln!(output, "{}", (num & -num == num) as u8).unwrap();
     }
 
     print!("{output}");

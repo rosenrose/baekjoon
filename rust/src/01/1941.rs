@@ -96,7 +96,7 @@ fn combinations_dasom(
             }
         }
 
-        return i32::from(count == PARTY_COUNT);
+        return (count == PARTY_COUNT) as i32;
     }
 
     let takes = dasom.len() - (max_depth - 1);

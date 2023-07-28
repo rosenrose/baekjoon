@@ -40,7 +40,7 @@ fn simulate(
 ) -> Option<i32> {
     let n = map.len() as i32;
     let mut visited = vec![vec![[false; 2]; n as usize]; n as usize];
-    visited[log_center.0 as usize][log_center.1 as usize][usize::from(is_log_vertical)] = true;
+    visited[log_center.0 as usize][log_center.1 as usize][is_log_vertical as usize] = true;
 
     let is_placeable = |r: i32, c: i32, is_vertical: bool| {
         if is_vertical {
@@ -71,7 +71,7 @@ fn simulate(
                 return Some(next_count);
             }
 
-            let adj = (adj_r as usize, adj_c as usize, usize::from(adj_is_vertical));
+            let adj = (adj_r as usize, adj_c as usize, adj_is_vertical as usize);
 
             if visited[adj.0][adj.1][adj.2] || !is_placeable(adj_r, adj_c, adj_is_vertical) {
                 continue;

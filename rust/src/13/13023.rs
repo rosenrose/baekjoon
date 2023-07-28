@@ -21,7 +21,7 @@ fn main() {
 
     println!(
         "{}",
-        u8::from((0..n).any(|start| dfs(&adjacency_array, start, 0, &mut visited)))
+        (0..n).any(|start| dfs(&adjacency_array, start, 0, &mut visited)) as u8
     );
 }
 

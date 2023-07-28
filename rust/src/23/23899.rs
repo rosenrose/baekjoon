@@ -18,7 +18,7 @@ fn main() {
         })
         .collect();
 
-    println!("{}", u8::from(selection_sort(arr_a, arr_b, count)));
+    println!("{}", selection_sort(arr_a, arr_b, count) as u8);
 }
 
 fn selection_sort(mut arr_a: Vec<i32>, arr_b: Vec<i32>, mut count: usize) -> bool {

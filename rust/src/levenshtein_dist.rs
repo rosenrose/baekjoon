@@ -13,7 +13,7 @@ fn main() {
                 (0, _) => j,
                 (_, 0) => i,
                 _ => {
-                    let change_cost = i32::from(source[j - 1] != target[i - 1]);
+                    let change_cost = (source[j - 1] != target[i - 1]) as usize;
 
                     (memo[i - 1][j] + 1)
                         .min(memo[i][j - 1] + 1)

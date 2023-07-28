@@ -5,10 +5,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let (height, width) = (
-        parse_int(input.next().unwrap()),
-        parse_int(input.next().unwrap()),
-    );
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<i16>().unwrap());
     let map: Vec<_> = input.map(str::as_bytes).collect();
 
     let mut visited = vec![vec![[false; 2]; width as usize]; height as usize];
@@ -24,7 +21,7 @@ fn main() {
         }
 
         let new_dist = dist + 1;
-        let broken_count = usize::from(has_broken);
+        let broken_count = has_broken as usize;
         let adjacents = [
             ((r - 1).max(0), c),
             (r, (c - 1).max(0)),
@@ -49,7 +46,7 @@ fn main() {
             let can_break = is_wall && !has_broken;
 
             if can_break {
-                visited[adj.0][adj.1][usize::from(can_break)] = true;
+                visited[adj.0][adj.1][can_break as usize] = true;
                 queue.push_back(((adj_r, adj_c), new_dist, can_break));
             } else {
                 queue.push_back(((adj_r, adj_c), new_dist, has_broken));
@@ -58,8 +55,4 @@ fn main() {
     }
 
     println!("{}", if min_dist == i32::MAX { -1 } else { min_dist });
-}
-
-fn parse_int(buf: &str) -> i16 {
-    buf.parse().unwrap()
 }

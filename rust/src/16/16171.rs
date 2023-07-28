@@ -7,5 +7,5 @@ fn main() {
     let s: String = input.next().unwrap().matches(char::is_alphabetic).collect();
     let k = input.next().unwrap();
 
-    println!("{}", u8::from(s.contains(k)));
+    println!("{}", s.contains(k) as u8);
 }

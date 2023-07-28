@@ -27,7 +27,7 @@ fn dfs(
     k: i32,
 ) -> i32 {
     if start == end {
-        return i32::from(dist == k);
+        return (dist == k) as i32;
     }
 
     let (width, height) = (map[0].len(), map.len());

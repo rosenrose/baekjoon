@@ -14,10 +14,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let (width, height) = (
-        parse_int(input.next().unwrap()),
-        parse_int(input.next().unwrap()),
-    );
+    let [width, height] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
     let mut lasers = Vec::with_capacity(2);
     let map: Vec<Vec<_>> = input
         .enumerate()
@@ -68,7 +65,7 @@ fn main() {
                 });
 
         for ((adj_r, adj_c), adj_dir) in adjacents {
-            let next_count = count + i32::from(dir != adj_dir);
+            let next_count = count + (dir != adj_dir) as i32;
 
             if visited[adj_r][adj_c][adj_dir as usize] <= next_count {
                 continue;
@@ -93,8 +90,4 @@ fn get_adjacents(
         (((r + 1).min(height - 1), c), Down),
         ((r, (c + 1).min(width - 1)), Right),
     ]
-}
-
-fn parse_int(buf: &str) -> usize {
-    buf.parse().unwrap()
 }

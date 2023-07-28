@@ -6,10 +6,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut output = String::new();
 
-    let (height, width) = (
-        parse_int(input.next().unwrap()),
-        parse_int(input.next().unwrap()),
-    );
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<i16>().unwrap());
     let map: Vec<_> = input.map(str::as_bytes).collect();
 
     let mut visited = vec![vec![false; width as usize]; height as usize];
@@ -74,8 +71,4 @@ fn main() {
     }
 
     print!("{output}");
-}
-
-fn parse_int(buf: &str) -> i16 {
-    buf.parse().unwrap()
 }

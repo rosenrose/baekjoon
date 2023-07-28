@@ -16,7 +16,7 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     for _ in 0..parse_int(input()) {
-        let (height, width) = (parse_int(input()), parse_int(input()));
+        let [height, width] = [(); 2].map(|_| parse_int(input()));
         let mut map = vec![vec![Cells::Empty; width + 2]; height + 2];
 
         for r in 0..height {

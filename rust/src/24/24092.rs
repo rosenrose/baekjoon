@@ -20,7 +20,7 @@ fn main() {
 
     println!(
         "{}",
-        u8::from(quick_sort(&mut arr_a, (0, n), &arr_b, &mut count, n))
+        quick_sort(&mut arr_a, (0, n), &arr_b, &mut count, n) as u8
     );
 }
 

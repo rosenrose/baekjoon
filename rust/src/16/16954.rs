@@ -12,7 +12,7 @@ fn main() {
         *cell = input.next().unwrap() == '#';
     }
 
-    println!("{}", u8::from(simulate(map)));
+    println!("{}", simulate(map) as u8);
 }
 
 fn simulate(map: [[bool; SIZE]; SIZE]) -> bool {

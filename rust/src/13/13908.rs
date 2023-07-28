@@ -14,7 +14,7 @@ fn main() {
 
 fn product(depth: usize, n: usize, digits: &mut [i32], nums: &[usize]) -> i32 {
     if depth == n {
-        return i32::from(nums.iter().all(|&num| digits[num] > 0));
+        return nums.iter().all(|&num| digits[num] > 0) as i32;
     }
 
     (0..10)

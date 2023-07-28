@@ -12,7 +12,7 @@ fn main() {
         let diary: HashSet<_> = (0..input()).map(|_| input()).collect();
 
         for num in (0..input()).map(|_| input()) {
-            writeln!(output, "{}", u8::from(diary.contains(&num))).unwrap();
+            writeln!(output, "{}", diary.contains(&num) as u8).unwrap();
         }
     }
 

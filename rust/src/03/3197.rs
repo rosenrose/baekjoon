@@ -36,10 +36,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let (height, width) = (
-        parse_int(input.next().unwrap()),
-        parse_int(input.next().unwrap()),
-    );
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<i16>().unwrap());
     let mut map = vec![vec![true; width as usize]; height as usize];
     let mut disjoint_set = DisjointSet::make(width as i32 * height as i32);
 
@@ -155,8 +152,4 @@ fn get_adjacents(r: i16, c: i16, width: i16, height: i16) -> [(i16, i16); 4] {
         ((r + 1).min(height - 1), c),
         (r, (c + 1).min(width - 1)),
     ]
-}
-
-fn parse_int(buf: &str) -> i16 {
-    buf.parse().unwrap()
 }
