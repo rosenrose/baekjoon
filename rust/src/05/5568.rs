@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
 
-    let (_, k) = (input.next(), input.next().unwrap().parse().unwrap());
+    let [_, k] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
     let nums: Vec<_> = input.collect();
     let mut results = Vec::new();
 

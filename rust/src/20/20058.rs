@@ -4,8 +4,8 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (n, _) = (input.next().unwrap() as usize, input.next());
-    let size = 1 << n;
+    let [n, _] = [(); 2].map(|_| input.next().unwrap());
+    let size = 1 << n as usize;
     let map: Vec<Vec<_>> = (0..size)
         .map(|_| input.by_ref().take(size).collect())
         .collect();

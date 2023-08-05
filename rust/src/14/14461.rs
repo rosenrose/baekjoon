@@ -8,9 +8,9 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (n, cross_time) = (input.next().unwrap() as usize, input.next().unwrap());
+    let [n, cross_time] = [(); 2].map(|_| input.next().unwrap() as usize);
     let map: Vec<Vec<_>> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
-    let distance = dijkstra(&map, (0, 0), (n - 1, n - 1), cross_time);
+    let distance = dijkstra(&map, (0, 0), (n - 1, n - 1), cross_time as i32);
 
     println!("{distance}");
 }

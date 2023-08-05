@@ -88,7 +88,7 @@ fn main() {
         memo.push(&memo[len - 2] + &memo[len - 1]);
     }
 
-    while let (Some(a), Some(b)) = (input.next(), input.next()) {
+    while let [Some(a), Some(b)] = [(); 2].map(|_| input.next()) {
         if a.is_zero() && b.is_zero() {
             return;
         }

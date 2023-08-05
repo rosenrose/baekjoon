@@ -5,7 +5,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let [height, width, k] = [(); 3].map(|_| parse_int(input.next().unwrap()));
+    let [height, width, k] = [(); 3].map(|_| input.next().unwrap().parse::<i16>().unwrap());
     let map: Vec<_> = input.map(str::as_bytes).collect();
 
     let mut visited = vec![vec![[false; 11]; width as usize]; height as usize];
@@ -54,8 +54,4 @@ fn main() {
     }
 
     println!("{}", if min_dist == i32::MAX { -1 } else { min_dist });
-}
-
-fn parse_int(buf: &str) -> i16 {
-    buf.parse().unwrap()
 }

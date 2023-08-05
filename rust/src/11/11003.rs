@@ -7,7 +7,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let (_, size) = (input.next(), input.next().unwrap());
+    let [_, size] = [(); 2].map(|_| input.next().unwrap());
     let mut monotone_queue = VecDeque::with_capacity(size as usize);
 
     for (i, num) in input.enumerate() {

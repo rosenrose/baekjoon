@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    while let (Some(word), Some(order)) = (input.next(), input.next()) {
+    while let [Some(word), Some(order)] = [(); 2].map(|_| input.next()) {
         print!("{word} {order} = ");
 
         let mut word = word.as_bytes().to_vec();

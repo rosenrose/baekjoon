@@ -16,7 +16,7 @@ fn main() {
         counts
     };
 
-    for (i, (a, b)) in (1..).map(|i| (i, (input.next().unwrap(), input.next().unwrap()))) {
+    for (i, [a, b]) in (1..).map(|i| (i, [(); 2].map(|_| input.next().unwrap()))) {
         if (a, b) == ("END", "END") {
             break;
         }

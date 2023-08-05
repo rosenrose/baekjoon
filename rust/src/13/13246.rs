@@ -2,10 +2,10 @@ use std::fmt;
 use std::io;
 use std::ops::{Add, Mul};
 
-struct Matrix(Vec<Vec<i64>>);
+struct Matrix(Vec<Vec<usize>>);
 
 impl Matrix {
-    fn rem(&self, m: i64) -> Self {
+    fn rem(&self, m: usize) -> Self {
         Self(
             self.0
                 .iter()
@@ -14,7 +14,7 @@ impl Matrix {
         )
     }
 
-    fn pow_rem(&self, exp: i64, m: i64) -> Self {
+    fn pow_rem(&self, exp: usize, m: usize) -> Self {
         if exp == 1 {
             return self.rem(m);
         }
@@ -34,7 +34,7 @@ impl Matrix {
 
         Self(
             (0..len)
-                .map(|i| (0..len).map(|j| (i == j) as i64).collect())
+                .map(|i| (0..len).map(|j| (i == j) as usize).collect())
                 .collect(),
         )
     }
@@ -94,19 +94,19 @@ impl fmt::Display for Matrix {
     }
 }
 
-const M: i64 = 1_000;
+const M: usize = 1_000;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let (n, b) = (input.next().unwrap() as usize, input.next().unwrap());
+    let [n, b] = [(); 2].map(|_| input.next().unwrap());
     let a = Matrix((0..n).map(|_| input.by_ref().take(n).collect()).collect());
 
     println!("{}", power_sum_rem(&a, b));
 }
 
-fn power_sum_rem(matrix: &Matrix, exp: i64) -> Matrix {
+fn power_sum_rem(matrix: &Matrix, exp: usize) -> Matrix {
     if exp == 1 {
         return matrix.rem(M);
     }

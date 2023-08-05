@@ -6,7 +6,7 @@ fn main() {
     const YES: &str = "YES";
     const NO: &str = "NO";
 
-    let (_, m) = (input.next(), input.next().unwrap());
+    let [_, m] = [(); 2].map(|_| input.next().unwrap());
     let k: usize = input.next().unwrap().parse().unwrap();
 
     if k == 0 || m.chars().all(|c| c == '0') {

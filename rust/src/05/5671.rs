@@ -6,7 +6,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut output = String::new();
 
-    while let (Some(n), Some(m)) = (input.next(), input.next()) {
+    while let [Some(n), Some(m)] = [(); 2].map(|_| input.next()) {
         let count = (n..=m)
             .filter(|num| {
                 let mut num = *num;

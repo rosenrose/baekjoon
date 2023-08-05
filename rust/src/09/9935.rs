@@ -4,9 +4,9 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
 
-    let (s, bomb) = (input.next().unwrap(), input.next().unwrap());
+    let [s, bomb] = [(); 2].map(|_| input.next().unwrap());
     let bomb_len = bomb.len();
-    let mut stack = String::new();
+    let mut stack = String::with_capacity(1_000_000);
 
     for ch in s.chars() {
         stack.push(ch);

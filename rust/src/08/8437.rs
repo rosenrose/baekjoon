@@ -126,7 +126,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().map(BigInt::parse);
 
-    let (n, x) = (input.next().unwrap(), input.next().unwrap());
+    let [n, x] = [(); 2].map(|_| input.next().unwrap());
     let b = &(&n - &x) / &BigInt(VecDeque::from([2]));
     let a = &b + &x;
 

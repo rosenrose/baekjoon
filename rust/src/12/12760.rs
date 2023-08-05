@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let (n, m) = (input.next().unwrap(), input.next().unwrap());
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
     let cards: Vec<_> = (0..n)
         .map(|_| {
             let mut card: Vec<_> = input.by_ref().take(m).collect();

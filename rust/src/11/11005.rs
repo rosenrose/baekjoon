@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (mut n, b) = (input.next().unwrap(), input.next().unwrap());
+    let [mut n, b] = [(); 2].map(|_| input.next().unwrap());
     let mut b_nums = Vec::new();
 
     while n != 0 {

@@ -7,8 +7,8 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let (na, _) = (input.next().unwrap() as usize, input.next());
-    let mut a: HashSet<_> = input.by_ref().take(na).collect();
+    let [na, _] = [(); 2].map(|_| input.next().unwrap());
+    let mut a: HashSet<_> = input.by_ref().take(na as usize).collect();
 
     for num in input {
         a.remove(&num);

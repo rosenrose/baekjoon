@@ -9,7 +9,7 @@ fn main() {
     let mut members = HashSet::with_capacity(100_000 >> 1);
     let mut count = 0;
 
-    while let (Some(time), Some(name)) = (input.next(), input.next()) {
+    while let [Some(time), Some(name)] = [(); 2].map(|_| input.next()) {
         if time <= start {
             members.insert(name);
             continue;

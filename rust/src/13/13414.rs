@@ -7,8 +7,8 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let (k, n) = (input.next().unwrap(), input.next().unwrap() as usize);
-    let mut clicks = HashMap::with_capacity(n >> 2);
+    let [k, n] = [(); 2].map(|_| input.next().unwrap());
+    let mut clicks = HashMap::with_capacity(n as usize >> 2);
     let waiting: Vec<_> = input
         .map(|num| {
             clicks.entry(num).and_modify(|c| *c += 1).or_insert(1);

@@ -4,8 +4,8 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let (n, m) = (input.next().unwrap(), input.next().unwrap());
-    let (mut houses, mut chickens) = (Vec::new(), Vec::new());
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
+    let [mut houses, mut chickens] = [(); 2].map(|_| Vec::new());
 
     for r in 0..n {
         for (c, num) in input.by_ref().take(n).enumerate() {

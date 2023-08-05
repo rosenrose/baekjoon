@@ -8,10 +8,10 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut output = String::new();
 
-    let (n, _) = (input.next().unwrap().parse::<i32>().unwrap(), input.next());
+    let [n, _] = [(); 2].map(|_| input.next().unwrap().parse::<i32>().unwrap());
 
     let mut files: Vec<_> = (0..n)
-        .map(|_| input.next().unwrap().split_once('.').unwrap())
+        .flat_map(|_| input.next().unwrap().split_once('.'))
         .collect();
     let allowed_exts: HashSet<_> = input.collect();
 

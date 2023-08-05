@@ -6,7 +6,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut output = String::new();
 
-    let (_, m) = (input.next(), input.next().unwrap());
+    let [_, m] = [(); 2].map(|_| input.next().unwrap());
 
     let mut nums: Vec<_> = input.collect();
     nums.sort();

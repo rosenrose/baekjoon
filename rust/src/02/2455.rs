@@ -7,14 +7,15 @@ fn main() {
     const FULL: i32 = 10000;
     let mut max_count = 0;
 
-    let _final_count = (0..4)
-        .map(|_| (input.next().unwrap(), input.next().unwrap()))
-        .fold(0, |current, (off, on)| {
-            let next = (current - off + on).min(FULL);
-            max_count = next.max(max_count);
+    let _final_count =
+        (0..4)
+            .map(|_| [(); 2].map(|_| input.next().unwrap()))
+            .fold(0, |current, [off, on]| {
+                let next = (current - off + on).min(FULL);
+                max_count = next.max(max_count);
 
-            next
-        });
+                next
+            });
 
     println!("{max_count}");
 }

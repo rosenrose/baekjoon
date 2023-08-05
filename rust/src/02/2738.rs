@@ -4,8 +4,8 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (n, m) = (input.next().unwrap(), input.next().unwrap() as usize);
-    let mut parse_matrix = |n: i32, m: usize| -> Vec<Vec<_>> {
+    let [n, m] = [(); 2].map(|_| input.next().unwrap() as usize);
+    let mut parse_matrix = |n: usize, m: usize| -> Vec<Vec<_>> {
         (0..n).map(|_| input.by_ref().take(m).collect()).collect()
     };
 

@@ -6,11 +6,11 @@ fn main() {
     let mut input = buf.lines().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let (n, find_num) = (input.next().unwrap(), input.next().unwrap());
+    let [n, find_num] = [(); 2].map(|_| input.next().unwrap());
     let (mut i, mut j) = (0, 0);
 
-    (-n / 2..=n / 2).for_each(|y| {
-        (-n / 2..=n / 2).for_each(|x| {
+    for y in -n / 2..=n / 2 {
+        for x in -n / 2..=n / 2 {
             let num = x.abs().max(y.abs());
             let diff = num * 2;
 
@@ -32,9 +32,9 @@ fn main() {
             }
 
             write!(output, "{cell} ").unwrap();
-        });
+        }
         writeln!(output, "").unwrap();
-    });
+    }
 
     writeln!(output, "{i} {j}").unwrap();
     print!("{output}");

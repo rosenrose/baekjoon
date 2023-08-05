@@ -3,11 +3,11 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.lines();
+    let mut input = buf.lines().map(str::as_bytes);
     let mut output = String::new();
 
-    let (t, p) = (input.next().unwrap(), input.next().unwrap());
-    let (count, indices) = kmp_with_index(t.as_bytes(), p.as_bytes());
+    let [t, p] = [(); 2].map(|_| input.next().unwrap());
+    let (count, indices) = kmp_with_index(t, p);
 
     writeln!(output, "{count}").unwrap();
 

@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().flat_map(str::parse::<i64>);
 
-    let (n, k) = (input.next().unwrap(), input.next().unwrap());
+    let [n, k] = [(); 2].map(|_| input.next().unwrap());
 
     println!("{}", binary_search(n, k));
 }

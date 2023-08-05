@@ -6,7 +6,7 @@ fn main() {
         |s: &str| -> Vec<u8> { s.as_bytes().iter().rev().map(|ch| ch - b'0').collect() };
     let mut input = buf.split_whitespace().map(parse_num);
 
-    let (a, b) = (input.next().unwrap(), input.next().unwrap());
+    let [a, b] = [(); 2].map(|_| input.next().unwrap());
     let sum = (0..a.len().max(b.len())).map(|i| a.get(i).unwrap_or(&0) + b.get(i).unwrap_or(&0));
 
     for num in sum.rev() {

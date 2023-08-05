@@ -3,7 +3,7 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let mut input = buf.split_whitespace().map(str::as_bytes);
-    let (a, b) = (input.next().unwrap(), input.next().unwrap());
+    let [a, b] = [(); 2].map(|_| input.next().unwrap());
 
     let min_diff = b
         .windows(a.len())

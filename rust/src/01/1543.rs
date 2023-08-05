@@ -3,7 +3,7 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
-    let (document, keyword) = (input.next().unwrap(), input.next().unwrap());
+    let [document, keyword] = [(); 2].map(|_| input.next().unwrap());
 
     println!("{}", document.matches(keyword).count());
 }

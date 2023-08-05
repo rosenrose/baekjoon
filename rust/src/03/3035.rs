@@ -6,7 +6,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut output = String::new();
 
-    let [.., zr, zc] = [(); 4].map(|_| parse_int(input.next().unwrap()));
+    let [.., zr, zc] = [(); 4].map(|_| input.next().unwrap().parse::<usize>().unwrap());
 
     for row in input {
         for _ in 0..zr {
@@ -18,8 +18,4 @@ fn main() {
     }
 
     print!("{output}");
-}
-
-fn parse_int(buf: &str) -> usize {
-    buf.parse().unwrap()
 }

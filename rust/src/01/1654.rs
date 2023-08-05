@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
 
-    let (_, n) = (input.next(), input.next().unwrap());
+    let [_, n] = [(); 2].map(|_| input.next().unwrap());
     let cables: Vec<_> = input.collect();
 
     println!("{}", binary_search(&cables, n));

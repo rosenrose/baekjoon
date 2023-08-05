@@ -6,9 +6,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let (_r, _c) = (input.next(), input.next());
-    let board: Vec<_> = input.map(str::as_bytes).collect();
-
+    let board: Vec<_> = input.skip(2).map(str::as_bytes).collect();
     let mut visited = [false; 26];
     visited[(board[0][0] - OFFSET) as usize] = true;
 

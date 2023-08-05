@@ -8,7 +8,7 @@ fn main() {
     let (mut x_points, mut y_points) = ([0; N], [0; N]);
 
     for i in 0..N {
-        (x_points[i], y_points[i]) = (input.next().unwrap(), input.next().unwrap());
+        [x_points[i], y_points[i]] = [(); 2].map(|_| input.next().unwrap());
     }
 
     let get_unique = |points: [i32; 3]| match points {

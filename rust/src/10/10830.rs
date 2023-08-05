@@ -2,10 +2,10 @@ use std::fmt;
 use std::io;
 use std::ops::Mul;
 
-struct Matrix(Vec<Vec<i64>>);
+struct Matrix(Vec<Vec<usize>>);
 
 impl Matrix {
-    fn rem(&self, m: i64) -> Self {
+    fn rem(&self, m: usize) -> Self {
         Self(
             self.0
                 .iter()
@@ -14,7 +14,7 @@ impl Matrix {
         )
     }
 
-    fn pow_rem(&self, exp: i64, m: i64) -> Self {
+    fn pow_rem(&self, exp: usize, m: usize) -> Self {
         if exp == 1 {
             return self.rem(m);
         }
@@ -67,9 +67,9 @@ impl fmt::Display for Matrix {
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let (n, b) = (input.next().unwrap() as usize, input.next().unwrap());
+    let [n, b] = [(); 2].map(|_| input.next().unwrap());
     let a = Matrix((0..n).map(|_| input.by_ref().take(n).collect()).collect());
 
     print!("{}", a.pow_rem(b, 1000));

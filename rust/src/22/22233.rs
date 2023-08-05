@@ -7,10 +7,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut output = String::new();
 
-    let (n, _) = (
-        input.next().unwrap().parse::<usize>().unwrap(),
-        input.next(),
-    );
+    let [n, _] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
     let mut memo: HashSet<_> = input.by_ref().take(n).collect();
 
     for blog in input {

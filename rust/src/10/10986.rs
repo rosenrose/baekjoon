@@ -4,8 +4,8 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (n, m) = (input.next().unwrap() as usize, input.next().unwrap());
-    let mut rem_accum = vec![0; n + 1];
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
+    let mut rem_accum = vec![0; n as usize + 1];
     let mut rem_count = [0; 1000];
 
     for (i, num) in input.enumerate() {

@@ -20,7 +20,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    while let (Some(b), Some(p), Some(m)) = (input.next(), input.next(), input.next()) {
+    while let [Some(b), Some(p), Some(m)] = [(); 3].map(|_| input.next()) {
         if b == "0" {
             return;
         }

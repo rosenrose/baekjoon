@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().map(parse_time);
 
-    let (current, mut end) = (input.next().unwrap(), input.next().unwrap());
+    let [current, mut end] = [(); 2].map(|_| input.next().unwrap());
 
     if end < current {
         end[0] += 24;

@@ -7,7 +7,7 @@ fn main() {
     let (snack, _) = ['S', 'N', 'U']
         .iter()
         .map(|s| {
-            let (price, weight) = (input.next().unwrap() * 10, input.next().unwrap() * 10);
+            let [price, weight] = [(); 2].map(|_| input.next().unwrap() * 10);
 
             (
                 s,

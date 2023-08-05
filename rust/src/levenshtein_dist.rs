@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().map(str::as_bytes);
 
-    let (source, target) = (input.next().unwrap(), input.next().unwrap());
+    let [source, target] = [(); 2].map(|_| input.next().unwrap());
     let mut memo = vec![vec![0; source.len() + 1]; target.len() + 1];
 
     for i in 0..=target.len() {

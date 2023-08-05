@@ -4,10 +4,10 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (n, s) = (input.next().unwrap() as usize, input.next().unwrap());
+    let [n, s] = [(); 2].map(|_| input.next().unwrap());
     let nums: Vec<_> = input.collect();
 
-    let count: i32 = (1..=n)
+    let count: i32 = (1..=n as usize)
         .map(|i| combinations(0, 0, &mut vec![0; i], &nums, s))
         .sum();
 

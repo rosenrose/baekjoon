@@ -6,7 +6,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     for _ in 0..input.next().unwrap() {
-        let (p, _) = (input.next().unwrap(), input.next());
+        let [p, _] = [(); 2].map(|_| input.next().unwrap());
         let seats: HashSet<_> = input.by_ref().take(p).collect();
 
         println!("{}", p - seats.len());

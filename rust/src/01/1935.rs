@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
 
-    let (_, formula) = (input.next(), input.next().unwrap());
+    let [_, formula] = [(); 2].map(|_| input.next().unwrap());
     let nums: Vec<_> = input.flat_map(str::parse::<f64>).collect();
 
     let mut stack = Vec::new();

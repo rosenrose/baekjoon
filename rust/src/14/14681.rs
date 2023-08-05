@@ -5,7 +5,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().flat_map(str::parse::<i32>);
 
-    let (x, y) = (input.next().unwrap(), input.next().unwrap());
+    let [x, y] = [(); 2].map(|_| input.next().unwrap());
 
     match (x.cmp(&0), y.cmp(&0)) {
         (Greater, Greater) => println!("1"),

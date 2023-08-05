@@ -8,8 +8,8 @@ fn main() {
     let mut max_count = 0;
 
     let _final_count = (0..10)
-        .map(|_| (input.next().unwrap(), input.next().unwrap()))
-        .fold(0, |current, (off, on)| {
+        .map(|_| [(); 2].map(|_| input.next().unwrap()))
+        .fold(0, |current, [off, on]| {
             let next = (current - off + on).min(FULL);
             max_count = next.max(max_count);
 

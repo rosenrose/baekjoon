@@ -8,7 +8,7 @@ fn main() {
 
     let mut memo = [[[0; 21]; 21]; 21];
 
-    while let (Some(a), Some(b), Some(c)) = (input.next(), input.next(), input.next()) {
+    while let [Some(a), Some(b), Some(c)] = [(); 3].map(|_| input.next()) {
         if [a, b, c] == [-1; 3] {
             break;
         }

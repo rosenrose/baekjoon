@@ -5,7 +5,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (_, m) = (input.next(), input.next().unwrap());
+    let [_, m] = [(); 2].map(|_| input.next().unwrap());
     let nums: HashSet<_> = input.collect();
     let count = nums.iter().filter(|&num| nums.contains(&(m - num))).count() / 2;
 

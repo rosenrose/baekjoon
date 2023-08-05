@@ -6,7 +6,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let (m, n) = (input.next().unwrap(), input.next().unwrap());
+    let [m, n] = [(); 2].map(|_| input.next().unwrap());
     let prime_nums = get_prime_nums(n as usize);
 
     for prime_num in prime_nums.iter().filter(|&&p| p >= m) {

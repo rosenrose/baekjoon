@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
 
-    let (n, _) = (input.next().unwrap(), input.next());
+    let [n, _] = [(); 2].map(|_| input.next().unwrap());
     let k: Vec<_> = input.collect();
 
     let num = (1..=n.ilog10() + 1)

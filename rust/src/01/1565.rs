@@ -2,9 +2,9 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let (d_len, _) = (input.next().unwrap() as usize, input.next());
+    let [d_len, _] = [(); 2].map(|_| input.next().unwrap());
     let d: Vec<_> = input.by_ref().take(d_len).collect();
     let m: Vec<_> = input.collect();
 
@@ -40,11 +40,11 @@ fn main() {
     println!("{count}");
 }
 
-fn get_lcm(a: i64, b: i64) -> i64 {
+fn get_lcm(a: usize, b: usize) -> usize {
     a / get_gcd([a, b].into_iter()) * b
 }
 
-fn get_gcd(nums: impl Iterator<Item = i64>) -> i64 {
+fn get_gcd(nums: impl Iterator<Item = usize>) -> usize {
     nums.reduce(|mut a, mut b| loop {
         if b == 0 {
             return a;

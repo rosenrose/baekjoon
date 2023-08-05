@@ -4,10 +4,10 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let (n, k) = (input.next().unwrap() as usize, input.next().unwrap());
+    let [n, k] = [(); 2].map(|_| input.next().unwrap());
     let height = ((n as f64).sqrt().ceil() as usize).max(4);
 
-    let mut map = vec![vec![0; n]; height];
+    let mut map = vec![vec![0; n as usize]; height];
     map[height - 1] = input.collect();
 
     let count = simulate(map, k);

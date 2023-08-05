@@ -4,7 +4,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().map(str::as_bytes);
 
-    while let (Some(a), Some(b)) = (input.next(), input.next()) {
+    while let [Some(a), Some(b)] = [(); 2].map(|_| input.next()) {
         if (a, b) == (b"0", b"0") {
             return;
         }

@@ -3,10 +3,9 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
-    let mut input = || input.next().unwrap();
 
-    let (_, k) = (input(), parse_int(input()));
-    let arr = input();
+    let [_, k] = [(); 2].map(|_| parse_int(input.next().unwrap()));
+    let arr = input.next().unwrap();
 
     if k == 0 {
         println!("{arr}");
