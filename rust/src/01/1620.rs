@@ -7,18 +7,18 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
     let mut output = String::new();
 
-    let [n, _] = [(); 2].map(|_| parse_int(input.next().unwrap()));
+    let [n, _] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
     let mut pokemon_index = Vec::with_capacity(n);
     let mut pokemon_name = HashMap::with_capacity(n);
 
     for (i, name) in input.by_ref().take(n).enumerate() {
         pokemon_index.push(name);
-        pokemon_name.insert(name, i + 1);
+        pokemon_name.insert(name, i as i32 + 1);
     }
 
     for query in input {
-        if query.starts_with(|ch: char| ch.is_ascii_digit()) {
-            writeln!(output, "{}", pokemon_index[parse_int(query) - 1])
+        if let Ok(i) = query.parse::<usize>() {
+            writeln!(output, "{}", pokemon_index[i - 1])
         } else {
             writeln!(output, "{}", pokemon_name[query])
         }
@@ -26,10 +26,6 @@ fn main() {
     }
 
     print!("{output}");
-}
-
-fn parse_int(buf: &str) -> usize {
-    buf.parse().unwrap()
 }
 
 // enum Answer<'a> {
