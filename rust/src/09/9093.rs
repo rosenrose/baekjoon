@@ -3,15 +3,17 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut output = String::new();
+    let mut output = String::with_capacity(50_000);
 
     for input in buf.lines().skip(1) {
-        let reversed: Vec<String> = input
-            .split(' ')
-            .map(|word| word.chars().rev().collect())
-            .collect();
+        for reversed in input.split(' ').map(|word| word.chars().rev()) {
+            for ch in reversed {
+                output.push(ch);
+            }
+            output.push(' ');
+        }
 
-        writeln!(output, "{}", reversed.join(" ")).unwrap();
+        writeln!(output, "").unwrap();
     }
 
     print!("{output}");

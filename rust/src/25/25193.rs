@@ -7,5 +7,5 @@ fn main() {
     let chickens = input.matches('C').count();
     let not_chickens = input.len() - chickens;
 
-    println!("{}", (chickens as f64 / (not_chickens + 1) as f64).ceil());
+    println!("{}", chickens.div_ceil(not_chickens + 1));
 }

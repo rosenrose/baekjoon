@@ -4,12 +4,11 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let n = input() as usize;
+    let n = input.next().unwrap() as usize;
     let mut adjacency_list = vec![Vec::new(); n + 1];
 
-    for (a, b) in (0..n - 1).map(|_| (input(), input())) {
+    for [a, b] in (0..n - 1).map(|_| [(); 2].map(|_| input.next().unwrap())) {
         adjacency_list[a as usize].push(b);
         adjacency_list[b as usize].push(a);
     }
@@ -18,9 +17,7 @@ fn main() {
         (*list).sort_unstable();
     }
 
-    let path = (0..n).map(|_| input());
-
-    println!("{}", bfs_judge(&adjacency_list, path) as u8);
+    println!("{}", bfs_judge(&adjacency_list, input) as u8);
 }
 
 fn bfs_judge(graph: &[Vec<i32>], mut path: impl Iterator<Item = i32>) -> bool {
