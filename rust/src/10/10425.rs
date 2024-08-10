@@ -23,7 +23,7 @@ fn main() {
     let mut output = String::new();
 
     const M: i64 = 1_000_000_009;
-    let mut memo = vec![(0, 0); 100_000 + 1];
+    let mut memo = [(0, 0); 100_000 + 1];
     memo[1] = (1, 1);
 
     for i in 2..memo.len() {

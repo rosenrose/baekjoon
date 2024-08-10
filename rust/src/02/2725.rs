@@ -9,7 +9,7 @@ fn main() {
 
     const MAX: usize = 1000;
     let min_factors = get_min_factors(MAX);
-    let mut euler_phi = vec![0; MAX + 1];
+    let mut euler_phi = [0; MAX + 1];
 
     for i in 2..=1000 {
         let mut num = i;

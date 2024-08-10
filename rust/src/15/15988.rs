@@ -7,7 +7,7 @@ fn main() {
     let mut output = String::new();
 
     const M: i32 = 1_000_000_009;
-    let mut memo = vec![0; 1_000_001];
+    let mut memo = [0; 1_000_001];
     (memo[1], memo[2], memo[3]) = (1, 2, 4);
 
     for i in 4..=1_000_000 {

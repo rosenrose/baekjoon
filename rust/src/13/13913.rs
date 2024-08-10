@@ -6,10 +6,12 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
     let mut output = String::new();
 
-    let [n, k] = parse_int_vec(&buf)[..] else { return };
+    let [n, k] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let diff = n.abs_diff(k);
 
-    let mut visited = vec![None; 200_000];
+    let mut visited = [None; 200_000];
     let mut queue = VecDeque::from([(n, 0)]);
 
     let min_time = 'a: {

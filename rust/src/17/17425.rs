@@ -7,7 +7,7 @@ fn main() {
     let mut output = String::new();
 
     const MAX: usize = 1_000_000;
-    let mut divisor_sums = vec![0; MAX + 1];
+    let mut divisor_sums = [0; MAX + 1];
 
     for i in 1..=MAX {
         for j in (i..=MAX).step_by(i) {

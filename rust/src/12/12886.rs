@@ -2,11 +2,13 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a, b, c] = parse_int_vec(&buf)[..] else { return };
+    let [a, b, c] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let sum = a + b + c;
 
     const MAX: usize = 500 * 3;
-    let mut visited = vec![vec![false; MAX + 1]; MAX + 1];
+    let mut visited = [[false; MAX + 1]; MAX + 1];
     visited[a as usize][b as usize] = true;
 
     let mut stack = vec![(a, b)];

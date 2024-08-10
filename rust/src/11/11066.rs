@@ -5,7 +5,7 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
-    let mut memo = vec![[(0, 0); 500]; 500];
+    let mut memo = [[(0, 0); 500]; 500];
 
     for _ in 0..input() {
         let n = input() as usize;

@@ -9,7 +9,7 @@ fn main() {
 
     let s = input();
     let q = parse_int(input());
-    let mut sum_accum = vec![[0; 26]; s.len() + 1];
+    let mut sum_accum = [[0; 26]; 200_000 + 1];
 
     for (row, ch) in s.as_bytes().iter().enumerate() {
         let idx = (ch - b'a') as usize;

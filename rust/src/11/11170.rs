@@ -6,7 +6,7 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     const MAX: usize = 1_000_000;
-    let mut sum_accum = vec![0; MAX + 1];
+    let mut sum_accum = [0; MAX + 1];
     sum_accum[0] = 1;
 
     for i in 1..=MAX {

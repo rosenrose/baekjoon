@@ -10,7 +10,7 @@ fn main() {
     let mut output = String::new();
 
     const MAX: usize = 4_000_000;
-    let mut factorial_rem = vec![0; MAX + 1];
+    let mut factorial_rem = [0; MAX + 1];
     factorial_rem[0] = 1;
 
     for i in 1..=MAX {

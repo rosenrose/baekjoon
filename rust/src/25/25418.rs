@@ -4,10 +4,12 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a, k] = parse_int_vec(&buf)[..] else { return };
+    let [a, k] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     const MAX: i32 = 1_000_000;
-    let mut visited = vec![false; MAX as usize + 1];
+    let mut visited = [false; MAX as usize + 1];
     let mut queue = VecDeque::from([(a, 0)]);
 
     while let Some((num, count)) = queue.pop_front() {

@@ -4,10 +4,12 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, mut k] = parse_int_vec(&buf)[..] else { return };
+    let [n, mut k] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     const MAX: u32 = 500_000;
 
-    let mut visited = vec![[u32::MAX, u32::MAX]; MAX as usize + 1];
+    let mut visited = [[u32::MAX, u32::MAX]; MAX as usize + 1];
     visited[n as usize][0] = 0;
 
     let mut prev_time = 0;
