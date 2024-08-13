@@ -18,3 +18,17 @@ fn main() {
 
     println!("{}", lis_temp.len());
 }
+
+// let n = input.next().unwrap() as usize;
+// let nums: Vec<_> = input.collect();
+// let mut lis_arr = vec![1; n];
+
+// for start in 0..n - 1 {
+//     for end in start + 1..n {
+//         if nums[start] < nums[end] && lis_arr[end] < lis_arr[start] + 1 {
+//             lis_arr[end] = lis_arr[start] + 1;
+//         }
+//     }
+// }
+
+// println!("{}", lis_arr.iter().max().unwrap());
