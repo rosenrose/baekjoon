@@ -21,12 +21,12 @@ int compare(const void *a, const void *b) {
 int main(void) {
     char words[MAX_WORD_CNT][MAX_WORD_LEN + 1];
     size_t word_cnt;
-    size_t i;
+    size_t i = 0;
 
     scanf("%ld", &word_cnt);
 
-    for (i = 0; i < word_cnt; i++) {
-        scanf("%s", words[i]);
+    while (scanf("%s", words[i]) == 1) {
+        i++;
     }
 
     qsort(words, word_cnt, sizeof(words[0]), compare);

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define MAX_LEN (8 + (10 * 1000000) + 2)
+#define MAX_LEN (8 + (10 * 1000000) + 1)
 
 int main(void) {
     char buf[MAX_LEN];
