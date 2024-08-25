@@ -1,10 +1,10 @@
 #include <stdio.h>
 
-#define MAX_LEN (8 + (10 * 1000000) + 1)
+#define BUF_LEN (8 + (10 * 1000000))
 
 int main(void) {
-    char buf[MAX_LEN];
-    size_t cnt = fread(buf, 1, MAX_LEN, stdin);
+    char buf[BUF_LEN];
+    size_t cnt = fread(buf, 1, BUF_LEN, stdin);
 
     buf[cnt] = '\0';
     size_t i = 0;

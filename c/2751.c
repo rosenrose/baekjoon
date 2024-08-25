@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define MAX_LEN (1000000)
+#define MAX_CNT (1000000)
 
 void merge_sort(int arr[], size_t len, int tmp[]) {
     if (len <= 1) {
@@ -42,8 +42,8 @@ void merge_sort(int arr[], size_t len, int tmp[]) {
 }
 
 int main(void) {
-    int nums[MAX_LEN];
-    int tmp[MAX_LEN];
+    int nums[MAX_CNT];
+    int tmp[MAX_CNT];
     size_t cnt;
     size_t i = 0;
     
