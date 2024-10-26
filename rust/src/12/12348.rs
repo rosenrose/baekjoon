@@ -8,22 +8,20 @@ fn main() {
     let min = (n - (9 * input.len() as i64)).max(1);
     let max = n - 1;
 
-    for i in min..=max {
-        if d(i) == n {
-            println!("{i}");
-            return;
-        }
+    if let Some(min_generator) = (min..=max).find(|&generator| digit_sum(generator) == n) {
+        println!("{min_generator}");
+    } else {
+        println!("0");
     }
-
-    println!("0");
 }
 
-fn d(n: i64) -> i64 {
-    let digit_sum: i64 = n
+fn digit_sum(n: i64) -> i64 {
+    let sum: i64 = n
         .to_string()
         .as_bytes()
         .iter()
         .map(|ch| (ch - b'0') as i64)
         .sum();
-    n + digit_sum
+
+    n + sum
 }
