@@ -5,7 +5,7 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let mut ballons = input.enumerate().skip(1).collect::<VecDeque<_>>();
+    let mut ballons: VecDeque<_> = input.enumerate().skip(1).collect();
 
     while let Some((idx, num)) = ballons.pop_front() {
         print!("{idx} ");

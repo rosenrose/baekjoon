@@ -7,20 +7,16 @@ fn main() {
     let mut output = String::new();
 
     let queuestack_count = input.next().unwrap() as usize;
-    let queue_or_stack = input.by_ref().take(queuestack_count).collect::<Vec<_>>();
-    let elements = input
+    let queue_or_stack: Vec<_> = input.by_ref().take(queuestack_count).collect();
+    let elements: Vec<_> = input
         .by_ref()
         .take(queuestack_count)
         .enumerate()
         .filter_map(|(i, num)| (queue_or_stack[i] == 0).then_some(num))
-        .collect::<Vec<_>>();
-    let inserts = input.skip(1).collect::<Vec<_>>();
+        .collect();
+    let insert_count = input.next().unwrap() as usize;
 
-    for num in elements.iter().rev().take(inserts.len()).chain(
-        inserts
-            .iter()
-            .take(inserts.len().saturating_sub(elements.len())),
-    ) {
+    for num in elements.into_iter().rev().chain(input).take(insert_count) {
         write!(output, "{num} ").unwrap();
     }
 
