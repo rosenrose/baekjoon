@@ -41,7 +41,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [k, n] = parse_int_vec(&buf)[..] else { return };
+    let [k, n] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     println!("{}", s(k, n));
 }

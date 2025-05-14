@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a, b, c] = parse_float_vec(&buf)[..] else { return };
+    let [a, b, c] = parse_float_vec(&buf)[..] else {
+        return;
+    };
     let s = (a + b + c) / 2.0;
     let area_sq = s * (s - a) * (s - b) * (s - c);
     let area = area_sq.sqrt();

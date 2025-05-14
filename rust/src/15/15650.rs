@@ -5,7 +5,9 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let mut output = String::new();
-    let [n, m] = parse_int_vec(&buf)[..] else { return };
+    let [n, m] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     combinations(0, 0, &mut vec![0; m], n, &mut output);
 

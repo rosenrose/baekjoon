@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, k, m] = parse_int_vec(&buf)[..] else { return };
+    let [n, k, m] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut combination_rem = vec![vec![0; m]; m];
 
     for i in 0..m {

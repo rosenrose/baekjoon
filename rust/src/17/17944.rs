@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, t] = parse_int_vec(&buf)[..] else { return };
+    let [n, t] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let (mut num, mut delta) = (1, 1);
 
     for _ in 0..t - 1 {

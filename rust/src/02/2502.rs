@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [d, k] = parse_int_vec(&buf)[..] else { return };
+    let [d, k] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     let mut memo = vec![0; d + 1];
     memo[d] = k as i32;

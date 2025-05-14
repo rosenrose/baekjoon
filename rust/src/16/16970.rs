@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, m, k] = parse_int_vec(&buf)[..] else { return };
+    let [n, m, k] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let points: Vec<_> = (0..=n).flat_map(|x| (0..=m).map(move |y| (x, y))).collect();
     let mut count = 0;
 

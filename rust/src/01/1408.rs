@@ -11,7 +11,9 @@ fn main() {
     }
 
     let diff: Vec<_> = end.iter().zip(current).map(|(e, c)| e - c).collect();
-    let [mut left_hour, mut left_minute, mut left_second] = diff[..] else { return };
+    let [mut left_hour, mut left_minute, mut left_second] = diff[..] else {
+        return;
+    };
 
     if left_second < 0 {
         left_second += 60;

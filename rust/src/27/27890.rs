@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [mut height, n] = parse_int_vec(&buf)[..] else { return };
+    let [mut height, n] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     for _ in 0..n {
         height = if height & 1 == 0 {

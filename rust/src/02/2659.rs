@@ -17,7 +17,9 @@ fn main() {
     clock_nums.sort();
     clock_nums.dedup();
     // println!("{clock_nums:?} {}", clock_nums.len());
-    let [a, b, c, d] = parse_int_vec(&buf)[..] else { return };
+    let [a, b, c, d] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let clock_num = get_clock_num(a, b, c, d);
 
     println!(

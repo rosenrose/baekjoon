@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, m] = parse_int_vec(&buf)[..] else { return };
+    let [n, m] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     println!("{}", n.min(m) / 2);
 }

@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, m] = parse_int_vec(&buf)[..] else { return };
+    let [n, m] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     let combination = (1..=m).fold((1, 1), |mut acc, num| {
         acc = (acc.0 * (n - m + num), acc.1 * num);

@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [s1, s2, s3] = parse_int_vec(&buf)[..] else { return };
+    let [s1, s2, s3] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut counts = [0; 20 + 20 + 40 + 1];
     let mut max_count = 0;
 

@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [min, max] = parse_int_vec(&buf)[..] else { return };
+    let [min, max] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let prime_nums = get_prime_nums((max as f64).sqrt() as usize);
     let mut square_free_num_sieve = vec![true; max - min + 1];
 

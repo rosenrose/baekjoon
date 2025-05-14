@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [r, g] = parse_int_vec(&buf)[..] else { return };
+    let [r, g] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let gcd = get_gcd(r, g);
 
     let mut divisors = Vec::new();

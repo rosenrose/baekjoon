@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a, b, c, n] = parse_int_vec(&buf)[..] else { return };
+    let [a, b, c, n] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     for i in 0..=n / a {
         for j in 0..=(n - a * i) / b {

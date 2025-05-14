@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [ur, tr, uo, to] = parse_int_vec(&buf)[..] else { return };
+    let [ur, tr, uo, to] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     println!("{}", 56 * ur + 24 * tr + 14 * uo + 6 * to);
 }

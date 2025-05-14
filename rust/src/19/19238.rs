@@ -48,7 +48,9 @@ fn simulate(
         let passengers = get_passengers(&map, taxi);
         let &(dist_to_start, start) = passengers.iter().min()?;
 
-        let Cells::Passenger(end) = map[start.0][start.1] else { unreachable!() };
+        let Cells::Passenger(end) = map[start.0][start.1] else {
+            unreachable!()
+        };
 
         fuel = fuel.checked_sub(dist_to_start)?;
         taxi = start;

@@ -4,7 +4,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [height, width] = parse_int_vec(&buf)[..] else { return };
+    let [height, width] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut is_visit = vec![vec![false; width as usize]; height as usize];
 
     let (mut r, mut c) = (0, -1);

@@ -5,7 +5,9 @@ fn main() {
     std::io::stdin().read_line(&mut buf).unwrap();
 
     let mut output = String::new();
-    let [a, b] = parse_int_vec(&buf)[..] else { return };
+    let [a, b] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let (a, b) = (a.min(b), a.max(b));
 
     println!("{}", (b - a - 1).max(0));

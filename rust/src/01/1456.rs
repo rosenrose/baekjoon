@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a, b] = parse_int_vec(&buf)[..] else { return };
+    let [a, b] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let prime_nums = get_prime_nums(((b as f64).sqrt()) as usize);
 
     let count: u32 = prime_nums

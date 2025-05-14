@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [d, m] = parse_int_vec(&buf)[..] else { return };
+    let [d, m] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut days = d;
 
     for i in 1..m {

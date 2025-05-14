@@ -4,7 +4,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a, b] = parse_int_vec(&buf)[..] else { return };
+    let [a, b] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let diff = a.abs_diff(b) as i64;
 
     if diff <= 1 {

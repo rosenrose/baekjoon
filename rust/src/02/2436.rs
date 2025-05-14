@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [gcd, lcm] = parse_int_vec(&buf)[..] else { return };
+    let [gcd, lcm] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let pairs = get_pairs(gcd, lcm);
 
     let min_pair = pairs.iter().min_by_key(|(a, b)| a + b).unwrap();

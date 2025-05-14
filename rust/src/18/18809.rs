@@ -137,7 +137,7 @@ fn simulate(
     }
 
     while let Some((r, c)) = queue.pop_front() {
-        let (time, Some(color)) = visited[r][c] else { 
+        let (time, Some(color)) = visited[r][c] else {
             continue;
         };
         let next_time = time + 1;

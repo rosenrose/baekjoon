@@ -4,7 +4,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, p, q, x, y] = parse_int_vec(&buf)[..] else { return };
+    let [n, p, q, x, y] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut memo = HashMap::from([(0, 1)]);
 
     println!("{}", infinite_array(n, p, q, x, y, &mut memo));

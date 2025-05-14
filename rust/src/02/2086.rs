@@ -6,7 +6,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a, b] = parse_int_vec(&buf)[..] else { return };
+    let [a, b] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut memo = HashMap::new();
 
     println!(

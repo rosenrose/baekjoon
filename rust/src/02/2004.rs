@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, m] = parse_int_vec(&buf)[..] else { return };
+    let [n, m] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let count_2 =
         get_multiple_count(n, 2) - get_multiple_count(n - m, 2) - get_multiple_count(m, 2);
     let count_5 =

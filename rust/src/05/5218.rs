@@ -9,15 +9,10 @@ fn main() {
 
     for (a, b) in (0..n).map(|_| (input(), input())) {
         let distances =
-            a.as_bytes().iter().zip(b.as_bytes()).map(
-                |(x, y)| {
-                    if x <= y {
-                        y - x
-                    } else {
-                        26 - (x - y)
-                    }
-                },
-            );
+            a.as_bytes()
+                .iter()
+                .zip(b.as_bytes())
+                .map(|(x, y)| if x <= y { y - x } else { 26 - (x - y) });
 
         print!("Distances: ");
 

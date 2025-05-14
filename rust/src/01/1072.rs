@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [x, y] = parse_int_vec(&buf)[..] else { return };
+    let [x, y] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let z = (y * 100).checked_div(x);
 
     if z.is_none() || z.unwrap() >= 99 {

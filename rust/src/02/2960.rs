@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, k] = parse_int_vec(&buf)[..] else { return };
+    let [n, k] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut deleted = 0;
 
     get_prime_sieve(n, k as i32, &mut deleted);

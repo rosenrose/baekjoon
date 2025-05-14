@@ -4,7 +4,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [mut left, mut right, a] = parse_int_vec(&buf)[..] else { return };
+    let [mut left, mut right, a] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let diff = left.abs_diff(right);
     let both = a.saturating_sub(diff);
 

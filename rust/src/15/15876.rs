@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, k] = parse_int_vec(&buf)[..] else { return };
+    let [n, k] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let k = k - 1;
     let max_len = k + n * 4;
 

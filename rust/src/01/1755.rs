@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [m, n] = parse_int_vec(&buf)[..] else { return };
+    let [m, n] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut num_engs: Vec<_> = (m..=n)
         .map(|num| {
             let eng: String = num

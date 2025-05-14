@@ -4,7 +4,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a, b, c] = parse_int_vec(&buf)[..] else { return };
+    let [a, b, c] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let tastes = [a, b, c, a * b, a * c, b * c, a * b * c];
 
     let delicious = tastes

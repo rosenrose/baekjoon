@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, r, c] = parse_int_vec(&buf)[..] else { return };
+    let [n, r, c] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let size = 1 << n;
 
     println!("{}", visit_z(r, c, 0, 0, size, 0));

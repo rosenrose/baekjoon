@@ -3,7 +3,7 @@ const LAST_COUNT: u32 = '갛' as u32 - OFFSET + 1;
 const MIDDLE_COUNT: u32 = ('깋' as u32 - OFFSET + 1) / LAST_COUNT;
 
 fn main() {
-    let consonants: [char; 30] = std::array::from_fn(|i| char::from_u32('ㄱ' as u32 + i as u32).unwrap());
+    let consonants: Vec<_> = ('ㄱ'..='ㅎ').collect();
     let firsts: Vec<_> = consonants
         .iter()
         .filter(|ch| matches!(ch, 'ㄱ'..='ㄲ' | 'ㄴ' | 'ㄷ'..='ㄹ' | 'ㅁ'..='ㅃ' | 'ㅅ'..='ㅎ'))

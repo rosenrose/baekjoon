@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [mut hour, mut minute] = parse_int_vec(&buf)[..] else { return };
+    let [mut hour, mut minute] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let offset = 45;
 
     if minute < offset {

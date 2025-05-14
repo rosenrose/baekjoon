@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a_max, b_max, c_max] = parse_int_vec(&buf)[..] else { return };
+    let [a_max, b_max, c_max] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut visited = vec![vec![vec![false; c_max + 1]; c_max + 1]; c_max + 1];
     visited[0][0][c_max] = true;
 

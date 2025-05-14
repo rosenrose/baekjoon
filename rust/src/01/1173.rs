@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, min, max, inc, dec] = parse_int_vec(&buf)[..] else { return };
+    let [n, min, max, inc, dec] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     if inc > (max - min) {
         println!("-1");

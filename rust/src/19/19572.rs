@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [d1, d2, d3] = parse_float_vec(&buf)[..] else { return };
+    let [d1, d2, d3] = parse_float_vec(&buf)[..] else {
+        return;
+    };
     let sum = (d1 + d2 + d3) / 2.0;
     let (a, b, c) = (sum - d3, sum - d2, sum - d1);
 

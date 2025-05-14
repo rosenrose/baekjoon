@@ -26,7 +26,7 @@ fn main() {
         });
 
         let time = parse_time(date, time);
-        let Some((_, start)) = info.gears.iter().find(|(g,_)| g == &gear) else {
+        let Some((_, start)) = info.gears.iter().find(|(g, _)| g == &gear) else {
             info.gears.push((gear, time));
             continue;
         };

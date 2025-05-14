@@ -4,7 +4,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [d1, d2] = parse_int_vec(&buf)[..] else { return };
+    let [d1, d2] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let euler_phi = get_euler_phi(d2 as usize);
     let mut checked = vec![false; (d2 + 1) as usize];
     let mut count = 0;

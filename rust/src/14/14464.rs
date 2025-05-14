@@ -17,7 +17,8 @@ fn main() {
     let mut count = 0;
 
     for cow in cows {
-        let Some(chicken_idx) = binary_search(&chickens, cow, (min as i32, max as i32), &visited) else {
+        let Some(chicken_idx) = binary_search(&chickens, cow, (min as i32, max as i32), &visited)
+        else {
             continue;
         };
 

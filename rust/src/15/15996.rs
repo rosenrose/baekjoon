@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, a] = parse_int_vec(&buf)[..] else { return };
+    let [n, a] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let (mut count, mut pow) = (0, a);
 
     while pow <= n {

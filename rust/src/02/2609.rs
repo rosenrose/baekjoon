@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a, b] = parse_int_vec(&buf)[..] else { return };
+    let [a, b] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let gcd = get_gcd(a, b);
     let lcm = a / gcd * b;
 

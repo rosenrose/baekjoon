@@ -4,7 +4,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [total_floor, start, startlink, up, down] = parse_int_vec(&buf)[..] else { return };
+    let [total_floor, start, startlink, up, down] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut visited = vec![false; total_floor as usize + 1];
     visited[start as usize] = true;
 

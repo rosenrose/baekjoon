@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [e, s, m] = parse_int_vec(&buf)[..] else { return };
+    let [e, s, m] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut year = s;
 
     loop {

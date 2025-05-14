@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, a] = parse_int_vec(&buf)[..] else { return };
+    let [n, a] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     println!("{} {}", n - a, mod_inverse(a, n).unwrap_or(-1));
 }

@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [a, mut b] = parse_int_vec(&buf)[..] else { return };
+    let [a, mut b] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let mut steps = 1;
 
     while b > a {

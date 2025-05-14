@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [r1, s] = parse_int_vec(&buf)[..] else { return };
+    let [r1, s] = parse_int_vec(&buf)[..] else {
+        return;
+    };
 
     println!("{}", s * 2 - r1);
 }

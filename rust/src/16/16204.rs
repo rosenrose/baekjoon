@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, m, k] = parse_int_vec(&buf)[..] else { return };
+    let [n, m, k] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let o_count = m.min(k);
     let x_count = (n - m).min(n - k);
 

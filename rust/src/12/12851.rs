@@ -4,7 +4,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, k] = parse_int_vec(&buf)[..] else { return };
+    let [n, k] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let diff = n.abs_diff(k);
 
     let mut visited = [i32::MAX; 200_000];

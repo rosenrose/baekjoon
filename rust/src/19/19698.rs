@@ -2,7 +2,9 @@ fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
 
-    let [n, w, h, l] = parse_int_vec(&buf)[..] else { return };
+    let [n, w, h, l] = parse_int_vec(&buf)[..] else {
+        return;
+    };
     let width = w / l;
     let height = h / l;
 
