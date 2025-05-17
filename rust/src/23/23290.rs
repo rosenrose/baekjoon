@@ -20,7 +20,7 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (m, s) = (input(), input());
-    let mut map = vec![vec![(Vec::new(), 0); SIZE]; SIZE];
+    let mut map = [(); SIZE].map(|_| [(); SIZE].map(|_| (Vec::new(), 0)));
 
     for [fx, fy, d] in (0..m).map(|_| [(); 3].map(|_| input() - 1)) {
         map[fx][fy].0.push(d as u8);
@@ -32,9 +32,9 @@ fn main() {
     println!("{count}");
 }
 
-fn simulate(mut map: Vec<Vec<(Vec<u8>, i8)>>, s: usize, mut shark: (usize, usize)) -> usize {
+fn simulate(mut map: [[(Vec<u8>, i8); SIZE]; SIZE], s: usize, mut shark: (usize, usize)) -> usize {
     for _ in 0..s {
-        let mut copied = vec![vec![Vec::new(); SIZE]; SIZE];
+        let mut copied = [(); SIZE].map(|_| [(); SIZE].map(|_| Vec::new()));
 
         for r in 0..SIZE {
             for c in 0..SIZE {
@@ -72,8 +72,8 @@ fn simulate(mut map: Vec<Vec<(Vec<u8>, i8)>>, s: usize, mut shark: (usize, usize
     map.iter().flatten().map(|(fishes, _)| fishes.len()).sum()
 }
 
-fn move_fishes(map: &mut Vec<Vec<(Vec<u8>, i8)>>, shark: (usize, usize)) {
-    let mut moved = vec![vec![Vec::new(); SIZE]; SIZE];
+fn move_fishes(map: &mut [[(Vec<u8>, i8); SIZE]], shark: (usize, usize)) {
+    let mut moved = [(); SIZE].map(|_| [(); SIZE].map(|_| Vec::new()));
 
     for r in 0..SIZE {
         for c in 0..SIZE {
@@ -112,7 +112,7 @@ fn get_moved_coord((r, c): (usize, usize), dir: u8) -> Option<(usize, usize)> {
     matches!(moved, (0..=3, 0..=3)).then_some((moved.0 as usize, moved.1 as usize))
 }
 
-fn move_shark(map: &mut Vec<Vec<(Vec<u8>, i8)>>, shark: &mut (usize, usize)) {
+fn move_shark(map: &mut [[(Vec<u8>, i8); SIZE]], shark: &mut (usize, usize)) {
     let up_left_down_right = [2, 0, 6, 4];
     let mut moves = Vec::with_capacity(4 * 4 * 4);
 

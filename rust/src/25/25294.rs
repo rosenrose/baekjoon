@@ -7,7 +7,7 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let mut memo = vec![Vec::new(); 4999];
+    let mut memo = [(); 4999].map(|_| Vec::new());
 
     for _ in 0..input() {
         let (query, n) = (input(), input());

@@ -7,7 +7,7 @@ fn main() {
     let mut output = String::new();
 
     let (n, _) = input.next().unwrap().split_once(' ').unwrap();
-    let mut logs = vec![Vec::new(); 7];
+    let mut logs = [(); 7].map(|_| Vec::new());
 
     for _ in 0..parse_int(n) {
         let (time, level) = input.next().unwrap().split_once('#').unwrap();
