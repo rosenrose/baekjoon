@@ -1,6 +1,9 @@
+use std::io;
+
+const MAX: usize = 44721 + 1; //(2_000_000_000_i64 as f64).sqrt() as usize
+
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
 
     let k: i32 = buf.trim().parse().unwrap();
     let max = k * 2;
@@ -9,8 +12,8 @@ fn main() {
     println!("{}", binary_search(k, &mobius_values, 0, max));
 }
 
-fn get_mobius_values(num: usize) -> Vec<i32> {
-    let mut mobius_values = vec![-1; num + 1];
+fn get_mobius_values(num: usize) -> [i32; MAX] {
+    let mut mobius_values = [-1; MAX];
     mobius_values[1] = 1;
 
     for i in (2..).take_while(|i| i * i <= num) {

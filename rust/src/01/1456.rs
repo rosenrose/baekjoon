@@ -1,22 +1,30 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [a, b] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+const MAX: usize = 10_000_000 + 1;
+
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+
+    let [a, b] = [(); 2].map(|_| input.next().unwrap());
     let prime_nums = get_prime_nums(((b as f64).sqrt()) as usize);
 
     let count: u32 = prime_nums
         .iter()
-        .map(|&p| b.ilog(p as i64) - (a - 1).checked_ilog(p as i64).unwrap_or(1))
+        .map(|&p| {
+            b.ilog(p as i64).saturating_sub(1)
+                - (a - 1)
+                    .checked_ilog(p as i64)
+                    .unwrap_or(0)
+                    .saturating_sub(1)
+        })
         .sum();
 
     println!("{count}");
 }
 
 fn get_prime_nums(num: usize) -> Vec<i32> {
-    let mut sieve = vec![true; num + 1];
+    let mut sieve = [true; MAX];
     let mut prime_nums = Vec::new();
 
     for i in 2..=num {
@@ -34,8 +42,4 @@ fn get_prime_nums(num: usize) -> Vec<i32> {
     }
 
     prime_nums
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i64> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

@@ -2,13 +2,15 @@ use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::io;
 
+const MAX: usize = 800 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
     let (n, e) = (input(), input());
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
     for [a, b, c] in (0..e).map(|_| [(); 3].map(|_| input())) {
         adjacency_list[a].push((b as i32, c as i32));
@@ -34,8 +36,8 @@ fn main() {
     );
 }
 
-fn dijkstra(graph: &[Vec<(i32, i32)>], start: usize) -> Vec<i32> {
-    let mut dists = vec![i32::MAX; graph.len()];
+fn dijkstra(graph: &[Vec<(i32, i32)>], start: usize) -> [i32; MAX] {
+    let mut dists = [i32::MAX; MAX];
     dists[start] = 0;
 
     let mut queue = BinaryHeap::from([(Reverse(0), start as i32)]);

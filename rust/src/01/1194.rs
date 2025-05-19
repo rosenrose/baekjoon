@@ -1,6 +1,7 @@
 use std::collections::VecDeque;
 use std::io;
 
+#[derive(Copy, Clone)]
 enum Cells {
     Empty,
     Wall,
@@ -9,42 +10,45 @@ enum Cells {
     Exit,
 }
 
+const WIDTH_MAX: usize = 50;
+const HEIGHT_MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace();
+    let mut input = buf.split_ascii_whitespace();
 
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
     let mut start = (0, 0);
-    let map: Vec<Vec<_>> = input
-        .skip(2)
-        .enumerate()
-        .map(|(r, row)| {
-            row.as_bytes()
-                .iter()
-                .enumerate()
-                .map(|(c, ch)| match ch {
-                    b'.' => Cells::Empty,
-                    b'#' => Cells::Wall,
-                    b'a'..=b'f' => Cells::Key(ch - b'a'),
-                    b'A'..=b'F' => Cells::Door(ch - b'A'),
-                    b'0' => {
-                        start = (r, c);
-                        Cells::Empty
-                    }
-                    b'1' => Cells::Exit,
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+    let mut map = [[Cells::Empty; WIDTH_MAX]; HEIGHT_MAX];
 
-    let step = simulate(map, start);
+    for (r, row) in input.enumerate() {
+        for (c, ch) in row.as_bytes().iter().enumerate() {
+            map[r][c] = match ch {
+                b'.' => Cells::Empty,
+                b'#' => Cells::Wall,
+                b'a'..=b'f' => Cells::Key(ch - b'a'),
+                b'A'..=b'F' => Cells::Door(ch - b'A'),
+                b'0' => {
+                    start = (r, c);
+                    Cells::Empty
+                }
+                b'1' => Cells::Exit,
+                _ => unreachable!(),
+            };
+        }
+    }
+
+    let step = simulate(map, (width, height), start);
 
     println!("{step}");
 }
 
-fn simulate(mut map: Vec<Vec<Cells>>, start: (usize, usize)) -> i32 {
-    let (width, height) = (map[0].len(), map.len());
-    let mut visited = vec![vec![[false; 1 << 6]; width]; height];
+fn simulate(
+    map: [[Cells; WIDTH_MAX]; HEIGHT_MAX],
+    (width, height): (usize, usize),
+    start: (usize, usize),
+) -> i32 {
+    let mut visited = [[[false; 1 << 6]; WIDTH_MAX]; HEIGHT_MAX];
     visited[start.0][start.1][0] = true;
 
     let mut queue = VecDeque::from([(start, 0, 0)]);

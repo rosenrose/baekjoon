@@ -1,6 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 400;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
@@ -8,13 +10,13 @@ fn main() {
     let mut output = String::new();
 
     let (n, m) = (input(), input());
-    let mut adjacency_matrix = vec![vec![false; n]; n];
+    let mut adjacency_matrix = [[false; MAX]; MAX];
 
     for (a, b) in (0..m).map(|_| (input() - 1, input() - 1)) {
         adjacency_matrix[a][b] = true;
     }
 
-    floyd_warshall(&mut adjacency_matrix);
+    floyd_warshall(&mut adjacency_matrix, n);
 
     for (a, b) in (0..input()).map(|_| (input() - 1, input() - 1)) {
         writeln!(
@@ -33,12 +35,10 @@ fn main() {
     print!("{output}");
 }
 
-fn floyd_warshall(graph: &mut Vec<Vec<bool>>) {
-    let len = graph.len();
-
-    for stopby in 0..len {
-        for start in 0..len {
-            for end in 0..len {
+fn floyd_warshall(graph: &mut [[bool; MAX]; MAX], graph_len: usize) {
+    for stopby in 0..graph_len {
+        for start in 0..graph_len {
+            for end in 0..graph_len {
                 graph[start][end] =
                     graph[start][end] || (graph[start][stopby] && graph[stopby][end]);
             }

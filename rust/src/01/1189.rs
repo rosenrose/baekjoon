@@ -1,26 +1,34 @@
 use std::io;
 
+const WIDTH_MAX: usize = 5;
+const HEIGHT_MAX: usize = 5;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let [height, width, k] = [(); 3].map(|_| input.next().unwrap().parse::<usize>().unwrap());
-    let map: Vec<Vec<_>> = input
-        .map(|row| row.chars().map(|ch| ch == 'T').collect())
-        .collect();
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
+
+    for (r, row) in input.enumerate() {
+        for (c, ch) in row.char_indices() {
+            map[r][c] = ch == 'T';
+        }
+    }
 
     let (start, end) = ((height - 1, 0), (0, width - 1));
-    let mut visited = vec![vec![false; width]; height];
+    let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
     visited[start.0][start.1] = true;
 
-    let count = dfs(&map, &mut visited, start, end, 1, k as i32);
+    let count = dfs(&map, (width, height), &mut visited, start, end, 1, k as i32);
 
     println!("{count}");
 }
 
 fn dfs(
-    map: &[Vec<bool>],
-    visited: &mut Vec<Vec<bool>>,
+    map: &[[bool; WIDTH_MAX]; HEIGHT_MAX],
+    (width, height): (usize, usize),
+    visited: &mut [[bool; WIDTH_MAX]; HEIGHT_MAX],
     start: (usize, usize),
     end: (usize, usize),
     dist: i32,
@@ -30,7 +38,6 @@ fn dfs(
         return (dist == k) as i32;
     }
 
-    let (width, height) = (map[0].len(), map.len());
     let adjacents = [
         (start.0.saturating_sub(1), start.1),
         (start.0, start.1.saturating_sub(1)),
@@ -48,7 +55,15 @@ fn dfs(
 
             visited[adj_r][adj_c] = true;
 
-            let result = dfs(map, visited, (adj_r, adj_c), end, dist + 1, k);
+            let result = dfs(
+                map,
+                (width, height),
+                visited,
+                (adj_r, adj_c),
+                end,
+                dist + 1,
+                k,
+            );
             visited[adj_r][adj_c] = false;
 
             result

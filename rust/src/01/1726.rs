@@ -1,6 +1,8 @@
 use std::collections::VecDeque;
 use std::io;
 
+const WIDTH_MAX: usize = 100;
+const HEIGHT_MAX: usize = 100;
 const DIRS: [(i8, i8); 4] = [(0, 1), (0, -1), (1, 0), (-1, 0)];
 
 fn main() {
@@ -9,13 +11,18 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (height, width) = (input(), input());
-    let map: Vec<Vec<_>> = (0..height)
-        .map(|_| (0..width).map(|_| input() == 1).collect())
-        .collect();
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
+
+    for r in 0..height {
+        for c in 0..width {
+            map[r as usize][c as usize] = input() == 1;
+        }
+    }
+
     let start = [(); 3].map(|_| input() - 1);
     let end = [(); 3].map(|_| input() - 1);
 
-    let mut visited = vec![vec![[false; DIRS.len()]; width as usize]; height as usize];
+    let mut visited = [[[false; DIRS.len()]; WIDTH_MAX]; HEIGHT_MAX];
     visited[start[0] as usize][start[1] as usize][start[2] as usize] = true;
 
     let mut queue = VecDeque::from([(start, 0)]);

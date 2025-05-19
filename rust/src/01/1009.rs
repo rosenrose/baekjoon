@@ -7,23 +7,21 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let digit_cycle: Vec<_> = (0..=9)
-        .map(|i| {
-            let mut cycle = vec![i];
-            let mut next = (i * i) % 10;
+    let digit_cycle: [Vec<_>; 10] = std::array::from_fn(|i| {
+        let mut cycle = vec![i];
+        let mut next = (i * i) % 10;
 
-            loop {
-                if cycle.contains(&next) {
-                    break;
-                }
-
-                cycle.push(next);
-                next = (next * i) % 10;
+        loop {
+            if cycle.contains(&next) {
+                break;
             }
 
-            cycle
-        })
-        .collect();
+            cycle.push(next);
+            next = (next * i) % 10;
+        }
+
+        cycle
+    });
 
     for (a, b) in (0..input()).map(|_| (input(), input())) {
         let cycle = &digit_cycle[a % 10];

@@ -1,13 +1,15 @@
 use std::io;
 
+const MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let n = input.next().unwrap() as usize;
+    let _n = input.next().unwrap() as usize;
     let delete_node = input.next_back().unwrap() as usize;
     let mut root = 0;
-    let mut adjacency_list = vec![Vec::new(); n];
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
     for (node, parent) in input.enumerate() {
         if parent == -1 {

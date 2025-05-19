@@ -1,12 +1,21 @@
 use std::io;
 
+const MAX: usize = 20;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
-    let adjacency_matrix: Vec<Vec<_>> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
-    let Some(removed) = floyd_warshall(&adjacency_matrix) else {
+    let mut adjacency_matrix = [[0; MAX]; MAX];
+
+    for r in 0..n {
+        for (c, num) in input.by_ref().take(n).enumerate() {
+            adjacency_matrix[r][c] = num;
+        }
+    }
+
+    let Some(removed) = floyd_warshall(&adjacency_matrix, n) else {
         println!("-1");
         return;
     };
@@ -22,13 +31,12 @@ fn main() {
     println!("{sum}");
 }
 
-fn floyd_warshall(graph: &Vec<Vec<i32>>) -> Option<Vec<Vec<bool>>> {
-    let len = graph.len();
-    let mut removed = vec![vec![false; len]; len];
+fn floyd_warshall(graph: &[[i32; MAX]; MAX], graph_len: usize) -> Option<[[bool; MAX]; MAX]> {
+    let mut removed = [[false; MAX]; MAX];
 
-    for stopby in 0..len {
-        for start in 0..len {
-            for end in 0..len {
+    for stopby in 0..graph_len {
+        for start in 0..graph_len {
+            for end in 0..graph_len {
                 if start == end || start == stopby || stopby == end {
                     continue;
                 }

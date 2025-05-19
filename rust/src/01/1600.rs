@@ -1,23 +1,24 @@
 use std::collections::VecDeque;
 use std::io;
 
+const WIDTH_MAX: usize = 200;
+const HEIGHT_MAX: usize = 200;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let k = input.next().unwrap() as u8;
     let [width, height] = [(); 2].map(|_| input.next().unwrap());
-    let map: Vec<Vec<_>> = (0..height)
-        .map(|_| {
-            input
-                .by_ref()
-                .take(width as usize)
-                .map(|num| num == 1)
-                .collect()
-        })
-        .collect();
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
-    let mut visited = vec![vec![[false; 31]; width as usize]; height as usize];
+    for r in 0..height {
+        for (c, num) in input.by_ref().take(width as usize).enumerate() {
+            map[r as usize][c] = num == 1;
+        }
+    }
+
+    let mut visited = [[[false; 31]; WIDTH_MAX]; HEIGHT_MAX];
     visited[0][0][0] = true;
 
     let mut queue = VecDeque::from([((0, 0), 0, 0)]);

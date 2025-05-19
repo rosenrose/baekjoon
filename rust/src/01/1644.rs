@@ -1,7 +1,9 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
+const MAX: usize = 4_000_000 + 1;
+
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let n: i32 = buf.trim().parse().unwrap();
 
     if n == 1 {
@@ -37,7 +39,7 @@ fn main() {
 }
 
 fn get_prime_nums(num: usize) -> Vec<i32> {
-    let mut sieve = vec![true; num + 1];
+    let mut sieve = [true; MAX];
     let mut prime_nums = Vec::new();
 
     for i in 2..=num {

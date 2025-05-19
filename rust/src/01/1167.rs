@@ -1,12 +1,14 @@
 use std::io;
 
+const MAX: usize = 100_000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
     let v = input() as usize;
-    let mut adjacency_array = (vec![i32::MAX; v + 1], Vec::with_capacity(v));
+    let mut adjacency_array = ([i32::MAX; MAX], Vec::with_capacity(v));
 
     for _ in 0..v {
         let a = input();
@@ -30,9 +32,9 @@ fn main() {
     println!("{diameter}");
 }
 
-fn dfs((nodes, edges): &(Vec<i32>, Vec<((i32, i32), i32)>), start: i32) -> (i32, i32) {
+fn dfs((nodes, edges): &([i32; MAX], Vec<((i32, i32), i32)>), start: i32) -> (i32, i32) {
     let (mut most_far_node, mut max_dist) = (0, 0);
-    let mut visited = vec![false; nodes.len()];
+    let mut visited = [false; MAX];
     visited[start as usize] = true;
 
     let mut stack = vec![(start, 0)];

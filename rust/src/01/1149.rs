@@ -6,16 +6,20 @@ enum RGB {
 
 use std::io;
 
+const MAX: usize = 1000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
-    let costs: Vec<_> = (0..n)
-        .map(|_| [(); 3].map(|_| input.next().unwrap()))
-        .collect();
+    let mut costs = [[0; 3]; MAX];
 
-    let mut min_costs = vec![[0; 3]; n];
+    for i in 0..n {
+        costs[i] = [(); 3].map(|_| input.next().unwrap());
+    }
+
+    let mut min_costs = [[0; 3]; MAX];
     min_costs[0] = costs[0];
 
     let (r, g, b) = (RGB::R as usize, RGB::G as usize, RGB::B as usize);

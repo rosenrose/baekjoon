@@ -1,12 +1,14 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
+const MAX: usize = 10;
+
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let n: i32 = buf.trim().parse().unwrap();
     let mut count = -1;
 
-    for i in 1..=10 {
-        let (num, is_finished) = permutations(0, &mut vec![0; i], &mut count, n);
+    for i in 1..=MAX {
+        let (num, is_finished) = permutations(0, &mut [0; MAX], i, &mut count, n);
 
         if is_finished {
             println!("{num}");
@@ -17,12 +19,18 @@ fn main() {
     println!("-1");
 }
 
-fn permutations(depth: usize, selected: &mut Vec<u8>, count: &mut i32, n: i32) -> (i64, bool) {
-    if depth == selected.len() {
+fn permutations(
+    depth: usize,
+    selected: &mut [u8],
+    selected_len: usize,
+    count: &mut i32,
+    n: i32,
+) -> (i64, bool) {
+    if depth == selected_len {
         *count += 1;
         // println!("{selected:?}");
         return if *count == n {
-            let num = selected
+            let num = selected[..selected_len]
                 .iter()
                 .fold(0, |acc, &digit| acc * 10 + digit as i64);
 
@@ -38,7 +46,7 @@ fn permutations(depth: usize, selected: &mut Vec<u8>, count: &mut i32, n: i32) -
         }
 
         selected[depth] = digit;
-        let (num, is_finished) = permutations(depth + 1, selected, count, n);
+        let (num, is_finished) = permutations(depth + 1, selected, selected_len, count, n);
 
         if is_finished {
             return (num, true);

@@ -1,13 +1,22 @@
 use std::io;
 
+const WIDTH_MAX: usize = 100;
+const HEIGHT_MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let [width, height] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
-    let map: Vec<_> = input.map(str::as_bytes).collect();
+    let mut map = [[0; WIDTH_MAX]; HEIGHT_MAX];
 
-    let mut visited = vec![vec![false; width]; height];
+    for (r, row) in input.enumerate() {
+        for (c, ch) in row.bytes().enumerate() {
+            map[r][c] = ch;
+        }
+    }
+
+    let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
     let (mut white, mut blue) = (0, 0);
 
     for y in 0..height {

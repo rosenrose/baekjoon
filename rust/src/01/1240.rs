@@ -1,6 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 1000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
@@ -8,7 +10,7 @@ fn main() {
     let mut output = String::new();
 
     let (n, m) = (input(), input());
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
     for [a, b, w] in (0..n - 1).map(|_| [(); 3].map(|_| input())) {
         adjacency_list[a].push((b, w as i32));
@@ -16,7 +18,7 @@ fn main() {
     }
 
     'outer: for (start, end) in (0..m).map(|_| (input(), input())) {
-        let mut visited = vec![false; adjacency_list.len()];
+        let mut visited = [false; MAX];
         visited[start] = true;
 
         let mut stack = vec![(start, 0)];

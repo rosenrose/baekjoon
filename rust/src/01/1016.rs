@@ -1,12 +1,15 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [min, max] = parse_int_vec(&buf)[..] else {
-        return;
-    };
-    let prime_nums = get_prime_nums((max as f64).sqrt() as usize);
-    let mut square_free_num_sieve = vec![true; max - min + 1];
+const MAX: usize = 1_000_000;
+
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
+
+    let [min, max] = [(); 2].map(|_| input.next().unwrap());
+    let max_num = (max as f64).sqrt() as usize;
+    let prime_nums = get_prime_nums(max_num);
+    let mut square_free_num_sieve = [true; MAX + 1];
 
     for p in prime_nums {
         let p_square = p * p;
@@ -14,15 +17,21 @@ fn main() {
         let start = if start < min { start + p_square } else { start };
 
         for square_num in (start..=max).step_by(p_square) {
-            square_free_num_sieve[(square_num - min)] = false;
+            square_free_num_sieve[square_num - min] = false;
         }
     }
 
-    println!("{}", square_free_num_sieve.iter().filter(|&&s| s).count());
+    println!(
+        "{}",
+        square_free_num_sieve[..max - min + 1]
+            .iter()
+            .filter(|&&s| s)
+            .count()
+    );
 }
 
 fn get_prime_nums(num: usize) -> Vec<usize> {
-    let mut sieve = vec![true; num + 1];
+    let mut sieve = [true; MAX + 1];
     let mut prime_nums = Vec::new();
 
     for i in 2..=num {
@@ -40,8 +49,4 @@ fn get_prime_nums(num: usize) -> Vec<usize> {
     }
 
     prime_nums
-}
-
-fn parse_int_vec(buf: &str) -> Vec<usize> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

@@ -2,13 +2,15 @@ use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::io;
 
+const MAX: usize = 1000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m, x] = [(); 3].map(|_| input.next().unwrap());
-    let mut adjacency_list = vec![Vec::new(); n + 1];
-    let mut adjacency_list_reverse = vec![Vec::new(); n + 1];
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
+    let mut adjacency_list_reverse = [(); MAX].map(|_| Vec::new());
 
     for [start, end, t] in (0..m).map(|_| [(); 3].map(|_| input.next().unwrap())) {
         adjacency_list[start].push((end, t as i32));
@@ -18,9 +20,9 @@ fn main() {
     let dists_reverse = dijkstra(&adjacency_list_reverse, x);
     let dists = dijkstra(&adjacency_list, x);
 
-    let max_dist = dists_reverse[1..]
+    let max_dist = dists_reverse[1..=n]
         .iter()
-        .zip(&dists[1..])
+        .zip(&dists[1..=n])
         .map(|(a, b)| a + b)
         .max()
         .unwrap();
@@ -28,8 +30,8 @@ fn main() {
     println!("{max_dist}");
 }
 
-fn dijkstra(graph: &[Vec<(usize, i32)>], start: usize) -> Vec<i32> {
-    let mut distances = vec![i32::MAX; graph.len()];
+fn dijkstra(graph: &[Vec<(usize, i32)>], start: usize) -> [i32; MAX] {
+    let mut distances = [i32::MAX; MAX];
     distances[start] = 0;
 
     let mut queue = BinaryHeap::from([(Reverse(0), start)]);
