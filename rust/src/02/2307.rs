@@ -1,13 +1,16 @@
+use core::unreachable;
 use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::io;
+
+const MAX: usize = 1000 + 1;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m] = [(); 2].map(|_| input.next().unwrap());
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
     for [a, b, t] in (0..m).map(|_| [(); 3].map(|_| input.next().unwrap())) {
         adjacency_list[a].push((b, t as i32));
@@ -38,11 +41,15 @@ fn main() {
     );
 }
 
-fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize, end: usize) -> (i32, Vec<usize>) {
-    let mut dists = vec![i32::MAX; graph.len()];
+fn dijkstra_with_path(
+    graph: &[Vec<(usize, i32)>],
+    start: usize,
+    end: usize,
+) -> (i32, [usize; MAX]) {
+    let mut dists = [i32::MAX; MAX];
     dists[start] = 0;
 
-    let mut prevs = vec![0; graph.len()];
+    let mut prevs = [0; MAX];
     let mut queue = BinaryHeap::from([(Reverse(0), start)]);
 
     while let Some((Reverse(dist), node)) = queue.pop() {
@@ -70,7 +77,7 @@ fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize, end: usize) -> 
         }
     }
 
-    dists[end]
+    unreachable!()
 }
 
 fn dijkstra_except_edge(
@@ -79,7 +86,7 @@ fn dijkstra_except_edge(
     end: usize,
     blocked_edge: (usize, usize),
 ) -> i32 {
-    let mut dists = vec![i32::MAX; graph.len()];
+    let mut dists = [i32::MAX; MAX];
     dists[start] = 0;
 
     let mut queue = BinaryHeap::from([(Reverse(0), start)]);

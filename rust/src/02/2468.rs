@@ -1,39 +1,37 @@
 use std::io;
 
+const MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
     let (mut min_height, mut max_height) = (100, 1);
-    let area: Vec<Vec<_>> = (0..n)
-        .map(|_| {
-            input
-                .by_ref()
-                .take(n)
-                .map(|height| {
-                    min_height = height.min(min_height);
-                    max_height = height.max(max_height);
-                    height
-                })
-                .collect()
-        })
-        .collect();
+    let mut map = [[0; MAX]; MAX];
+
+    for r in 0..n {
+        for (c, height) in input.by_ref().take(n).enumerate() {
+            map[r][c] = height;
+            min_height = height.min(min_height);
+            max_height = height.max(max_height);
+        }
+    }
 
     let max_safe_area = (min_height..=max_height - 1)
-        .map(|height| get_safe_area(height, &area))
+        .map(|height| get_safe_area(height, &map, n))
         .max()
         .unwrap_or(1);
 
     println!("{max_safe_area}");
 }
 
-fn get_safe_area(height: i32, area: &[Vec<i32>]) -> i32 {
-    let n = area.len();
+fn get_safe_area(height: i32, map: &[[i32; MAX]], n: usize) -> i32 {
     let mut count = 0;
-    let mut visited = vec![vec![false; n]; n];
+    let mut visited = [[false; MAX]; MAX];
 
-    let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| area[r][c] <= height || visited[r][c];
+    let is_pass =
+        |r: usize, c: usize, visited: &[[bool; MAX]]| map[r][c] <= height || visited[r][c];
 
     for y in 0..n {
         for x in 0..n {

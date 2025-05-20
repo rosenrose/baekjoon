@@ -1,11 +1,14 @@
 use std::io;
 
+const WIDTH_MAX: usize = 100;
+const HEIGHT_MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [height, width, k] = [(); 3].map(|_| input.next().unwrap());
-    let mut map = vec![vec![false; width]; height];
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
     for [x1, y1, x2, y2] in (0..k).map(|_| [(); 4].map(|_| input.next().unwrap())) {
         for y in y1..y2 {
@@ -15,22 +18,25 @@ fn main() {
         }
     }
 
-    let mut areas = get_areas(&map);
-    areas.sort();
+    let (mut areas, areas_len) = get_areas(&map, (width, height));
+    areas[..areas_len].sort();
 
-    println!("{}", areas.len());
+    println!("{}", areas_len);
 
-    for area in areas {
+    for area in &areas[..areas_len] {
         print!("{area} ");
     }
 }
 
-fn get_areas(map: &[Vec<bool>]) -> Vec<i32> {
-    let (width, height) = (map[0].len(), map.len());
-    let mut areas = Vec::new();
-    let mut visited = vec![vec![false; width]; height];
+fn get_areas(
+    map: &[[bool; WIDTH_MAX]],
+    (width, height): (usize, usize),
+) -> ([i32; WIDTH_MAX * HEIGHT_MAX / 2], usize) {
+    let mut areas = [0; WIDTH_MAX * HEIGHT_MAX / 2];
+    let mut areas_len = 0;
+    let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
-    let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| visited[r][c] || map[r][c];
+    let is_pass = |r: usize, c: usize, visited: &[[bool; WIDTH_MAX]]| visited[r][c] || map[r][c];
 
     for y in 0..height {
         for x in 0..width {
@@ -62,9 +68,10 @@ fn get_areas(map: &[Vec<bool>]) -> Vec<i32> {
                 }
             }
 
-            areas.push(count);
+            areas[areas_len] = count;
+            areas_len += 1;
         }
     }
 
-    areas
+    (areas, areas_len)
 }

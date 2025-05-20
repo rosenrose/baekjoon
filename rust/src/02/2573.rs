@@ -1,37 +1,43 @@
 use std::io;
 
+const WIDTH_MAX: usize = 300;
+const HEIGHT_MAX: usize = 300;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [height, width] = [(); 2].map(|_| input.next().unwrap());
-    let map: Vec<Vec<_>> = (0..height)
-        .map(|_| input.by_ref().take(width).map(|num| num as u8).collect())
-        .collect();
+    let mut map = [[0; WIDTH_MAX]; HEIGHT_MAX];
 
-    let time = simulate(map);
+    for r in 0..height {
+        for (c, num) in input.by_ref().take(width).enumerate() {
+            map[r][c] = num as u8;
+        }
+    }
+
+    let time = simulate(&mut map, (width, height));
 
     println!("{time}");
 }
 
-fn simulate(mut map: Vec<Vec<u8>>) -> i32 {
-    let (width, height) = (map[0].len(), map.len());
+fn simulate(map: &mut [[u8; WIDTH_MAX]; HEIGHT_MAX], (width, height): (usize, usize)) -> i32 {
     let mut time = 0;
 
-    let is_pass = |r: usize, c: usize, visited: &[Vec<bool>], map: &[Vec<u8>]| {
+    let is_pass = |r: usize, c: usize, visited: &[[bool; WIDTH_MAX]], map: &[[u8; WIDTH_MAX]]| {
         visited[r][c] || map[r][c] == 0
     };
 
     loop {
         time += 1;
-        melt_ice(&mut map);
+        melt_ice(map);
 
-        let mut visited = vec![vec![false; width]; height];
+        let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
         let mut count = 0;
 
         for y in 1..height - 1 {
             for x in 1..width - 1 {
-                if is_pass(y, x, &visited, &map) {
+                if is_pass(y, x, &visited, map) {
                     continue;
                 }
 
@@ -40,7 +46,7 @@ fn simulate(mut map: Vec<Vec<u8>>) -> i32 {
 
                 while let Some((r, c)) = stack.pop() {
                     for (adj_r, adj_c) in get_adjacents(r, c) {
-                        if is_pass(adj_r, adj_c, &visited, &map) {
+                        if is_pass(adj_r, adj_c, &visited, map) {
                             continue;
                         }
 
@@ -63,9 +69,9 @@ fn simulate(mut map: Vec<Vec<u8>>) -> i32 {
     }
 }
 
-fn melt_ice(map: &mut Vec<Vec<u8>>) {
+fn melt_ice(map: &mut [[u8; WIDTH_MAX]; HEIGHT_MAX]) {
     let (width, height) = (map[0].len(), map.len());
-    let mut melted = vec![vec![0; width]; height];
+    let mut melted = [[0; WIDTH_MAX]; HEIGHT_MAX];
 
     for r in 1..height - 1 {
         for c in 1..width - 1 {

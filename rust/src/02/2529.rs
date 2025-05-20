@@ -1,6 +1,8 @@
 use std::cmp::Ordering;
 use std::io;
 
+const MAX: usize = 10;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
@@ -14,19 +16,22 @@ fn main() {
         })
         .collect();
 
-    let (min, max) = permutations(0, &mut vec![0; k + 1], &mut [false; 10], &operators);
+    let (min, max) = permutations(0, &mut [0; MAX], k + 1, &mut [false; 10], &operators);
 
     println!("{max:0digits$}\n{min:0digits$}", digits = k + 1);
 }
 
 fn permutations(
     depth: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize],
+    selected_len: usize,
     visited: &mut [bool],
     operators: &[Ordering],
 ) -> (usize, usize) {
-    if depth == selected.len() {
-        let result = selected.iter().fold(0, |acc, num| acc * 10 + num);
+    if depth == selected_len {
+        let result = selected[..selected_len]
+            .iter()
+            .fold(0, |acc, num| acc * 10 + num);
 
         return (result, result);
     }
@@ -39,7 +44,7 @@ fn permutations(
         visited[num] = true;
         selected[depth] = num;
 
-        let result = permutations(depth + 1, selected, visited, operators);
+        let result = permutations(depth + 1, selected, selected_len, visited, operators);
         visited[num] = false;
 
         (result.0.min(min), result.1.max(max))

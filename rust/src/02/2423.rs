@@ -1,3 +1,15 @@
+#[derive(Copy, Clone, PartialEq)]
+enum Cells {
+    Slash,
+    BackSlash,
+}
+
+use std::collections::VecDeque;
+use std::io;
+use Cells::*;
+
+const WIDTH_MAX: usize = 500;
+const HEIGHT_MAX: usize = 500;
 const DIRS: [(i16, i16); 8] = [
     (-1, -1),
     (-1, 0),
@@ -9,34 +21,24 @@ const DIRS: [(i16, i16); 8] = [
     (1, 1),
 ];
 
-#[derive(Copy, Clone, PartialEq)]
-enum Cells {
-    Slash,
-    BackSlash,
-}
-
-use std::collections::VecDeque;
-use std::io;
-use Cells::*;
-
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<i16>().unwrap());
-    let mut map: Vec<Vec<_>> = input
-        .map(|row| {
-            row.chars()
-                .map(|ch| match ch {
-                    '/' => Slash,
-                    '\\' => BackSlash,
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+    let mut map = [[Slash; WIDTH_MAX]; HEIGHT_MAX];
 
-    let mut visited = vec![vec![false; width as usize]; height as usize];
+    for (r, row) in input.enumerate() {
+        for (c, ch) in row.char_indices() {
+            map[r][c] = match ch {
+                '/' => Slash,
+                '\\' => BackSlash,
+                _ => unreachable!(),
+            };
+        }
+    }
+
+    let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
     visited[0][0] = true;
 
     let mut min_count = i32::MAX;

@@ -1,12 +1,22 @@
 use std::collections::VecDeque;
 use std::io;
 
+const WIDTH_MAX: usize = 50;
+const HEIGHT_MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
-    let map: Vec<_> = input.map(str::as_bytes).collect();
+    let mut map = [[0; WIDTH_MAX]; HEIGHT_MAX];
+
+    for (r, row) in input.map(str::as_bytes).enumerate() {
+        for (c, &num) in row.iter().enumerate() {
+            map[r][c] = num;
+        }
+    }
+
     let mut max_time = 0;
 
     for y in 0..height {
@@ -15,7 +25,7 @@ fn main() {
                 continue;
             }
 
-            let mut visited = vec![vec![false; width]; height];
+            let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
             visited[y][x] = true;
 
             let mut time = 0;

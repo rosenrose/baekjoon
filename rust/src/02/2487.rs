@@ -1,16 +1,23 @@
+use core::iter::Iterator;
 use std::collections::HashSet;
 use std::io;
 
+const MAX: usize = 20000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf
-        .split_ascii_whitespace()
-        .map(|s| s.parse::<usize>().unwrap() - 1);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let shuffle: Vec<_> = input.skip(1).collect();
-    let mut cycles = vec![0; shuffle.len()];
+    let n = input.next().unwrap();
+    let mut shuffle = [0; MAX];
 
-    for i in 0..cycles.len() {
+    for (i, num) in input.enumerate() {
+        shuffle[i] = num - 1;
+    }
+
+    let mut cycles = [0_usize; MAX];
+
+    for i in 0..n {
         if cycles[i] != 0 {
             continue;
         }
@@ -30,7 +37,7 @@ fn main() {
         }
     }
 
-    let cycles: HashSet<_> = cycles.into_iter().collect();
+    let cycles: HashSet<_> = cycles[..n].iter().copied().collect();
 
     println!("{}", get_lcm(cycles.into_iter()));
 }

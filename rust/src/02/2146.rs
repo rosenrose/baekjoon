@@ -1,16 +1,22 @@
 use std::collections::VecDeque;
 use std::io;
 
+const MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let n = input.next().unwrap();
-    let map: Vec<Vec<_>> = (0..n)
-        .map(|_| input.by_ref().take(n).map(|num| num == 1).collect())
-        .collect();
+    let mut map = [[false; MAX]; MAX];
 
-    let mut visited = vec![vec![i32::MAX; n]; n];
+    for r in 0..n {
+        for (c, num) in input.by_ref().take(n).enumerate() {
+            map[r][c] = num == 1;
+        }
+    }
+
+    let mut visited = [[i32::MAX; MAX]; MAX];
     let mut min_dist = i32::MAX;
 
     for y in 0..n {
@@ -20,7 +26,7 @@ fn main() {
             }
 
             visited[y][x] = 0;
-            let mut borders = get_borders((y, x), &map, &mut visited);
+            let mut borders = get_borders((y, x), &map, n, &mut visited);
 
             'outer: while let Some(((r, c), dist)) = borders.pop_front() {
                 let new_dist = dist + 1;
@@ -48,10 +54,10 @@ fn main() {
 
 fn get_borders(
     start: (usize, usize),
-    map: &[Vec<bool>],
-    visited: &mut Vec<Vec<i32>>,
+    map: &[[bool; MAX]],
+    n: usize,
+    visited: &mut [[i32; MAX]],
 ) -> VecDeque<((usize, usize), i32)> {
-    let n = map.len();
     let mut borders = VecDeque::new();
     let mut stack = vec![start];
 

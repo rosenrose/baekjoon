@@ -1,12 +1,14 @@
+use std::io;
+
+const MAX: usize = 30 + 1;
+
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let [d, k] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+    let [d, k] = [(); 2].map(|_| input.next().unwrap());
 
-    let mut memo = vec![0; d + 1];
+    let mut memo = [0; MAX];
     memo[d] = k as i32;
 
     'outer: for prev in (k + 1) / 2..k {
@@ -24,8 +26,4 @@ fn main() {
     }
     // println!("{memo:?}");
     println!("{}\n{}", memo[1], memo[2]);
-}
-
-fn parse_int_vec(buf: &str) -> Vec<usize> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

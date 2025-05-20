@@ -1,6 +1,9 @@
 use std::fmt::Write;
 use std::io;
 
+const WIDTH_MAX: usize = 300 + 1;
+const HEIGHT_MAX: usize = 300 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
@@ -8,7 +11,7 @@ fn main() {
     let mut output = String::new();
 
     let (n, m) = (input() as usize, input() as usize);
-    let mut sum_accum = vec![vec![0; m + 1]; n + 1];
+    let mut sum_accum = [[0; WIDTH_MAX]; HEIGHT_MAX];
 
     for i in 1..=n {
         for j in 1..=m {

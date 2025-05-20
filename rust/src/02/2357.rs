@@ -1,15 +1,17 @@
 use std::fmt::Write;
 use std::io;
 
-struct SegmentTree {
-    tree: Vec<(i32, i32)>,
+const MAX: usize = 1 << 18; // 2^18 = 262_144
+
+struct SegmentTree<const N: usize> {
+    tree: [(i32, i32); N],
     leaf_start: usize,
 }
 
-impl SegmentTree {
+impl<const N: usize> SegmentTree<N> {
     fn make(n: usize, input: impl Iterator<Item = i32>) -> Self {
         let pow = n.next_power_of_two();
-        let mut tree = vec![(0, 0); pow << 1];
+        let mut tree = [(0, 0); N];
 
         for (i, num) in input.enumerate() {
             tree[i + pow] = (num, num);
@@ -61,7 +63,7 @@ fn main() {
     let mut output = String::new();
 
     let (n, m) = (input() as usize, input());
-    let segment_tree = SegmentTree::make(n, (0..n).map(|_| input()));
+    let segment_tree = SegmentTree::<MAX>::make(n, (0..n).map(|_| input()));
 
     for (a, b) in (0..m).map(|_| (input() as usize - 1, input() as usize)) {
         let (min, max) = segment_tree.query(a, b);

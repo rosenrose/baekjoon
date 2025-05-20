@@ -1,19 +1,23 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [a_max, b_max, c_max] = parse_int_vec(&buf)[..] else {
-        return;
-    };
-    let mut visited = vec![vec![vec![false; c_max + 1]; c_max + 1]; c_max + 1];
+const MAX: usize = 200 + 1;
+
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
+
+    let [a_max, b_max, c_max] = [(); 3].map(|_| input.next().unwrap());
+    let mut visited = [[[false; MAX]; MAX]; MAX];
     visited[0][0][c_max] = true;
 
-    let mut c_waters = Vec::new();
+    let mut c_waters = [0; MAX];
+    let mut c_waters_len = 0;
     let mut stack = vec![(0, 0, c_max)];
 
     while let Some((a, b, c)) = stack.pop() {
         if a == 0 {
-            c_waters.push(c);
+            c_waters[c_waters_len] = c;
+            c_waters_len += 1;
         }
 
         let (a_spare, b_spare, c_spare) = (a_max - a, b_max - b, c_max - c);
@@ -36,13 +40,9 @@ fn main() {
         }
     }
 
-    c_waters.sort();
+    c_waters[..c_waters_len].sort();
 
-    for water in c_waters {
+    for water in &c_waters[..c_waters_len] {
         print!("{water} ");
     }
-}
-
-fn parse_int_vec(buf: &str) -> Vec<usize> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

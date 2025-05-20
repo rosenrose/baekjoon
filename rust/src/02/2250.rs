@@ -1,13 +1,15 @@
 use std::collections::VecDeque;
 use std::io;
 
+const MAX: usize = 10000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
-    let mut tree = vec![[None; 2]; n + 1];
-    let mut parents = vec![0; n + 1];
+    let mut tree = [[None; 2]; MAX];
+    let mut parents = [0; MAX];
 
     for [node, children @ ..] in (0..n).map(|_| [(); 3].map(|_| input.next().unwrap())) {
         for (i, &child) in children.iter().enumerate() {
@@ -20,17 +22,17 @@ fn main() {
         }
     }
 
-    let root = parents[1..].iter().position(|&p| p == 0).unwrap() + 1;
-    let mut tree_widths = vec![0; n + 1];
+    let root = parents[1..=n].iter().position(|&p| p == 0).unwrap() + 1;
+    let mut tree_widths = [0; MAX];
     tree_widths[root] = get_tree_width(&tree, root, &mut tree_widths);
 
-    let mut cols = vec![0; n + 1];
+    let mut cols = [0; MAX];
     get_cols(&tree, root, &mut cols, root, &tree_widths, &parents);
 
     let level_widths = bfs(&tree, root, &cols);
     let (mut max_width, mut max_width_level) = (0, 0);
     // println!("{tree_widths:?}\n{cols:?}\n{level_widths:?}");
-    for (i, &width) in level_widths.iter().enumerate() {
+    for (i, &width) in level_widths[..=n].iter().enumerate() {
         if max_width < width {
             max_width = width;
             max_width_level = i;
@@ -40,11 +42,7 @@ fn main() {
     println!("{max_width_level} {max_width}");
 }
 
-fn get_tree_width(
-    tree: &[[Option<usize>; 2]],
-    start: usize,
-    tree_widths: &mut Vec<usize>,
-) -> usize {
+fn get_tree_width(tree: &[[Option<usize>; 2]], start: usize, tree_widths: &mut [usize]) -> usize {
     let left_tree_width = if let Some(left) = tree[start][0] {
         let ret = get_tree_width(tree, left, tree_widths);
         tree_widths[left] = ret;
@@ -53,6 +51,7 @@ fn get_tree_width(
     } else {
         0
     };
+
     let right_tree_width = if let Some(right) = tree[start][1] {
         let ret = get_tree_width(tree, right, tree_widths);
         tree_widths[right] = ret;
@@ -68,7 +67,7 @@ fn get_tree_width(
 fn get_cols(
     tree: &[[Option<usize>; 2]],
     start: usize,
-    cols: &mut Vec<usize>,
+    cols: &mut [usize],
     root: usize,
     tree_widths: &[usize],
     parents: &[usize],
@@ -93,8 +92,8 @@ fn get_cols(
     }
 }
 
-fn bfs(tree: &[[Option<usize>; 2]], root: usize, cols: &[usize]) -> Vec<usize> {
-    let mut level_widths = vec![0; tree.len()];
+fn bfs(tree: &[[Option<usize>; 2]], root: usize, cols: &[usize]) -> [usize; MAX] {
+    let mut level_widths = [0; MAX];
     let mut prev_level = 1;
     let (mut min_col, mut max_col) = (usize::MAX, 0);
     let mut queue = VecDeque::from([(root, 1)]);

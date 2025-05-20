@@ -1,7 +1,9 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
+const MAX: usize = 15 + 1;
+
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let n: usize = buf.trim().parse().unwrap();
 
     if n % 2 == 1 {
@@ -9,7 +11,7 @@ fn main() {
         return;
     }
 
-    let mut memo = vec![0; n / 2 + 1];
+    let mut memo = [0; MAX];
     (memo[0], memo[1]) = (1, 3);
 
     for i in 2..=n / 2 {
