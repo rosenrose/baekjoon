@@ -31,7 +31,7 @@ fn main() {
     println!("{sum}");
 }
 
-fn floyd_warshall(graph: &[[i32; MAX]; MAX], graph_len: usize) -> Option<[[bool; MAX]; MAX]> {
+fn floyd_warshall(graph: &[[i32; MAX]], graph_len: usize) -> Option<[[bool; MAX]; MAX]> {
     let mut removed = [[false; MAX]; MAX];
 
     for stopby in 0..graph_len {

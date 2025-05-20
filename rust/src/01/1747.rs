@@ -1,9 +1,12 @@
+use std::io;
+
+const MAX_PRIME: usize = 1_003_001;
+
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
 
     let n: i32 = buf.trim().parse().unwrap();
-    let prime_nums = get_prime_nums(1_003_001);
+    let prime_nums = get_prime_nums(MAX_PRIME);
 
     let prime_palindrome = prime_nums
         .iter()
@@ -15,7 +18,7 @@ fn main() {
 }
 
 fn get_prime_nums(num: usize) -> Vec<i32> {
-    let mut sieve = vec![true; num + 1];
+    let mut sieve = [true; MAX_PRIME + 1];
     let mut prime_nums = Vec::new();
 
     for i in 2..=num {

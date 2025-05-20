@@ -1,12 +1,14 @@
 use std::io;
 
+const MAX: usize = 100 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let n = input();
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let n: usize = input();
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
     for i in 1..=n {
         for dislike in (0..input()).map(|_| input()) {
@@ -14,7 +16,7 @@ fn main() {
         }
     }
 
-    let mut visited = vec![None; n + 1];
+    let mut visited = [None; MAX];
 
     for start in 1..=n {
         if visited[start].is_some() {
@@ -38,25 +40,28 @@ fn main() {
         }
     }
 
-    let (mut blue, mut white) = (Vec::new(), Vec::new());
+    let (mut blue, mut white) = ([0; MAX], [0; MAX]);
+    let (mut blue_len, mut white_len) = (0, 0);
 
-    for (i, &color) in visited.iter().enumerate().skip(1) {
-        if color.unwrap() {
-            blue.push(i);
+    for (i, &color) in visited[1..=n].iter().flatten().enumerate() {
+        if color {
+            blue[blue_len] = i + 1;
+            blue_len += 1;
         } else {
-            white.push(i);
+            white[white_len] = i + 1;
+            white_len += 1;
         }
     }
 
-    println!("{}", blue.len());
+    println!("{}", blue_len);
 
-    for num in blue {
+    for num in &blue[..blue_len] {
         print!("{num} ");
     }
 
-    println!("\n{}", white.len());
+    println!("\n{}", white_len);
 
-    for num in white {
+    for num in &white[..white_len] {
         print!("{num} ");
     }
 }

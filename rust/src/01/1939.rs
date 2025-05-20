@@ -1,11 +1,14 @@
 use std::collections::VecDeque;
 use std::io;
 
-struct DisjointSet(Vec<i32>);
+const NODES_MAX: usize = 10000 + 1;
+const EDGES_MAX: usize = 100_000;
 
-impl DisjointSet {
-    fn make(n: i32) -> Self {
-        Self((0..=n).collect())
+struct DisjointSet<const N: usize>([i32; N]);
+
+impl<const N: usize> DisjointSet<N> {
+    fn make() -> Self {
+        Self(std::array::from_fn(|i| i as i32))
     }
 
     fn find(&mut self, a: i32) -> i32 {
@@ -39,10 +42,14 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, m) = (input(), input());
-    let mut disjoint_set = DisjointSet::make(n);
-    let mut edges: Vec<_> = (0..m).map(|_| [(); 3].map(|_| input())).collect();
+    let mut disjoint_set = DisjointSet::<NODES_MAX>::make();
+    let mut edges = [[0; 3]; EDGES_MAX];
 
-    edges.sort_unstable_by_key(|&[.., weight]| weight);
+    for (i, edge) in (0..m).map(|_| [(); 3].map(|_| input())).enumerate() {
+        edges[i] = edge;
+    }
+
+    edges[..m as usize].sort_unstable_by_key(|&[.., weight]| weight);
 
     let (start, end) = (input(), input());
 
@@ -55,17 +62,17 @@ fn main() {
         }
     }
 
-    // let mut adjacency_array = (vec![i32::MAX; n + 1], Vec::with_capacity(m * 2));
+    // let mut adjacency_array = ([i32::MAX; NODES_MAX], [((0, 0), 0); EDGES_MAX * 2]);
     // let (mut min_weight, mut max_weight) = (i32::MAX, 0);
 
-    // for [a, b, c] in (0..m).map(|_| [(); 3].map(|_| input())) {
-    //     let prev = adjacency_array.0[a];
-    //     adjacency_array.0[a] = adjacency_array.1.len() as i32;
-    //     adjacency_array.1.push(((b as i32, c as i32), prev));
+    // for (i, [a, b, c]) in (0..m).map(|i| (i << 1, [(); 3].map(|_| input()))) {
+    //     let prev = adjacency_array.0[a as usize];
+    //     adjacency_array.0[a as usize] = i;
+    //     adjacency_array.1[i as usize] = ((b, c), prev);
 
-    //     let prev = adjacency_array.0[b];
-    //     adjacency_array.0[b] = adjacency_array.1.len() as i32;
-    //     adjacency_array.1.push(((a as i32, c as i32), prev));
+    //     let prev = adjacency_array.0[b as usize];
+    //     adjacency_array.0[b as usize] = i + 1;
+    //     adjacency_array.1[(i + 1) as usize] = ((a, c), prev);
 
     //     (min_weight, max_weight) = (c.min(min_weight), c.max(max_weight));
     // }
@@ -74,12 +81,18 @@ fn main() {
 
     // println!(
     //     "{}",
-    //     binary_search(&adjacency_array, min_weight, max_weight, start, end)
+    //     binary_search(
+    //         &adjacency_array,
+    //         min_weight,
+    //         max_weight,
+    //         start as usize,
+    //         end as usize
+    //     )
     // );
 }
 
 fn binary_search(
-    graph: &(Vec<i32>, Vec<((i32, i32), i32)>),
+    graph: &([i32; NODES_MAX], [((i32, i32), i32); EDGES_MAX * 2]),
     mut lo: i32,
     mut hi: i32,
     start: usize,
@@ -102,12 +115,12 @@ fn binary_search(
 }
 
 fn bfs(
-    (nodes, edges): &(Vec<i32>, Vec<((i32, i32), i32)>),
+    (nodes, edges): &([i32; NODES_MAX], [((i32, i32), i32); EDGES_MAX * 2]),
     start: usize,
     end: usize,
     weight: i32,
 ) -> bool {
-    let mut visited = vec![0; nodes.len()];
+    let mut visited = [0; NODES_MAX];
     visited[start] = i32::MAX;
 
     let mut queue = VecDeque::from([(start as i32, i32::MAX)]);

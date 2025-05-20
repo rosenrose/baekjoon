@@ -1,6 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 1_000_000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
@@ -17,7 +19,7 @@ fn main() {
 }
 
 fn get_prime_nums(num: usize) -> Vec<i32> {
-    let mut sieve = vec![true; num + 1];
+    let mut sieve = [true; MAX];
     let mut prime_nums = Vec::new();
 
     for i in 2..=num {

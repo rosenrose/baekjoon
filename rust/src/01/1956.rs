@@ -1,17 +1,19 @@
 use std::io;
 
+const MAX: usize = 400;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m] = [(); 2].map(|_| input.next().unwrap());
-    let mut adjacency_matrix = vec![vec![i32::MAX; n]; n];
+    let mut adjacency_matrix = [[i32::MAX; MAX]; MAX];
 
     for [a, b, c] in (0..m).map(|_| [(); 3].map(|_| input.next().unwrap())) {
         adjacency_matrix[a - 1][b - 1] = c as i32;
     }
 
-    floyd_warshall(&mut adjacency_matrix);
+    floyd_warshall(&mut adjacency_matrix, n);
 
     let min_dist = (0..n)
         .filter_map(|i| {
@@ -24,12 +26,10 @@ fn main() {
     println!("{min_dist}");
 }
 
-fn floyd_warshall(graph: &mut Vec<Vec<i32>>) {
-    let len = graph.len();
-
-    for stopby in 0..len {
-        for start in 0..len {
-            for end in 0..len {
+fn floyd_warshall(graph: &mut [[i32; MAX]], graph_len: usize) {
+    for stopby in 0..graph_len {
+        for start in 0..graph_len {
+            for end in 0..graph_len {
                 graph[start][end] =
                     graph[start][end].min(graph[start][stopby].saturating_add(graph[stopby][end]));
             }

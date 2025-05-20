@@ -26,9 +26,9 @@ fn main() {
 }
 
 fn dfs(
-    map: &[[bool; WIDTH_MAX]; HEIGHT_MAX],
+    map: &[[bool; WIDTH_MAX]],
     (width, height): (usize, usize),
-    visited: &mut [[bool; WIDTH_MAX]; HEIGHT_MAX],
+    visited: &mut [[bool; WIDTH_MAX]],
     start: (usize, usize),
     end: (usize, usize),
     dist: i32,

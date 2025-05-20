@@ -1,5 +1,6 @@
 struct BigInt(Vec<i32>);
 
+const MAX: usize = 1_000_000 + 1;
 const DIGITS: usize = 3;
 
 impl BigInt {
@@ -51,7 +52,7 @@ fn main() {
 }
 
 fn get_prime_nums(num: usize) -> Vec<i32> {
-    let mut sieve = vec![true; num + 1];
+    let mut sieve = [true; MAX];
     let mut prime_nums = Vec::new();
 
     for i in 2..=num {

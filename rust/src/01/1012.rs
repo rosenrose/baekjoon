@@ -18,9 +18,8 @@ fn main() {
 
         let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
         let mut count = 0;
-        let is_pass = |r: usize, c: usize, visited: &[[bool; WIDTH_MAX]; HEIGHT_MAX]| {
-            visited[r][c] || !map[r][c]
-        };
+        let is_pass =
+            |r: usize, c: usize, visited: &[[bool; WIDTH_MAX]]| visited[r][c] || !map[r][c];
 
         for y in 0..height {
             for x in 0..width {

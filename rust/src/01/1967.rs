@@ -1,11 +1,13 @@
 use std::io;
 
+const MAX: usize = 10000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let n = input.next().unwrap();
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
     for [a, b, c] in (0..n - 1).map(|_| [(); 3].map(|_| input.next().unwrap())) {
         adjacency_list[a].push((b, c as i32));
@@ -20,7 +22,7 @@ fn main() {
 
 fn dfs(graph: &[Vec<(usize, i32)>], start: usize) -> (usize, i32) {
     let (mut most_far_node, mut max_dist) = (0, 0);
-    let mut visited = vec![false; graph.len()];
+    let mut visited = [false; MAX];
     visited[start] = true;
 
     let mut stack = vec![(start, 0)];

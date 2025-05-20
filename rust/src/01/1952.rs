@@ -1,13 +1,15 @@
+use std::io;
+
+const WIDTH_MAX: usize = 100;
+const HEIGHT_MAX: usize = 100;
 const DIRS: [(i32, i32); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_whitespace().flat_map(str::parse::<i32>);
 
-    let [height, width] = parse_int_vec(&buf)[..] else {
-        return;
-    };
-    let mut is_visit = vec![vec![false; width as usize]; height as usize];
+    let [height, width] = [(); 2].map(|_| input.next().unwrap());
+    let mut is_visit = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
     let (mut r, mut c) = (0, -1);
     let mut dir = 0;
@@ -46,8 +48,4 @@ fn main() {
     }
 
     println!("{count}");
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

@@ -1,15 +1,17 @@
 use std::io;
 
+const MAX: usize = 2187; //3**7
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
-    let mut paper = vec![vec![0; n]; n];
+    let mut paper = [[0; MAX]; MAX];
 
     for r in 0..n {
-        for c in 0..n {
-            paper[r][c] = input.next().unwrap();
+        for (c, num) in input.by_ref().take(n).enumerate() {
+            paper[r][c] = num;
         }
     }
 
@@ -21,7 +23,7 @@ fn main() {
 }
 
 fn cut(
-    paper: &[Vec<i32>],
+    paper: &[[i32; MAX]],
     x: usize,
     y: usize,
     n: usize,

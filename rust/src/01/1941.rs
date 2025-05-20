@@ -6,53 +6,82 @@ const PARTY_COUNT: usize = 7;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut selected = [[false; SIZE]; SIZE];
-    let mut dasom = Vec::new();
-    let mut doyeon = Vec::new();
+    let (mut dasoms, mut doyeons) = ([(0, 0); SIZE * SIZE], [(0, 0); SIZE * SIZE]);
+    let (mut dasoms_len, mut doyeons_len) = (0, 0);
 
     for (r, row) in buf.lines().enumerate() {
         for (c, ch) in row.char_indices() {
             match ch {
-                'S' => dasom.push((r, c)),
-                'Y' => doyeon.push((r, c)),
+                'S' => {
+                    dasoms[dasoms_len] = (r, c);
+                    dasoms_len += 1
+                }
+                'Y' => {
+                    doyeons[doyeons_len] = (r, c);
+                    doyeons_len += 1
+                }
                 _ => unreachable!(),
             }
         }
     }
 
-    let count: i32 = (0..=3.min(doyeon.len()))
-        .map(|i| combinations_doyeon(0, 0, i, &mut selected, &doyeon, &dasom))
+    let count: i32 = (0..=3.min(doyeons_len))
+        .map(|i| {
+            combinations_doyeons(
+                0,
+                0,
+                i,
+                &mut selected,
+                &doyeons,
+                doyeons_len,
+                &dasoms,
+                dasoms_len,
+            )
+        })
         .sum();
 
     println!("{count}");
 }
 
-fn combinations_doyeon(
+fn combinations_doyeons(
     depth: usize,
     start: usize,
     max_depth: usize,
     selected: &mut [[bool; SIZE]],
-    doyeon: &[(usize, usize)],
-    dasom: &[(usize, usize)],
+    doyeons: &[(usize, usize)],
+    doyeons_len: usize,
+    dasoms: &[(usize, usize)],
+    dasoms_len: usize,
 ) -> i32 {
     if depth == max_depth {
-        return combinations_dasom(
+        return combinations_dasoms(
             0,
             0,
-            (PARTY_COUNT - max_depth).min(dasom.len()),
+            (PARTY_COUNT - max_depth).min(dasoms_len),
             selected,
-            dasom,
+            dasoms,
+            dasoms_len,
             Default::default(),
         );
     }
 
-    let takes = doyeon.len() - (max_depth - 1);
+    let takes = doyeons_len - (max_depth - 1);
 
     (start..depth + takes)
         .map(|i| {
-            let (r, c) = doyeon[i];
+            let (r, c) = doyeons[i];
             selected[r][c] = true;
 
-            let result = combinations_doyeon(depth + 1, i + 1, max_depth, selected, doyeon, dasom);
+            let result = combinations_doyeons(
+                depth + 1,
+                i + 1,
+                max_depth,
+                selected,
+                doyeons,
+                doyeons_len,
+                dasoms,
+                dasoms_len,
+            );
             selected[r][c] = false;
 
             result
@@ -60,12 +89,13 @@ fn combinations_doyeon(
         .sum()
 }
 
-fn combinations_dasom(
+fn combinations_dasoms(
     depth: usize,
     start: usize,
     max_depth: usize,
     selected: &mut [[bool; SIZE]],
-    dasom: &[(usize, usize)],
+    dasoms: &[(usize, usize)],
+    dasoms_len: usize,
     last_dasom: (usize, usize),
 ) -> i32 {
     if depth == max_depth {
@@ -99,14 +129,22 @@ fn combinations_dasom(
         return (count == PARTY_COUNT) as i32;
     }
 
-    let takes = dasom.len() - (max_depth - 1);
+    let takes = dasoms_len - (max_depth - 1);
 
     (start..depth + takes)
         .map(|i| {
-            let (r, c) = dasom[i];
+            let (r, c) = dasoms[i];
             selected[r][c] = true;
 
-            let result = combinations_dasom(depth + 1, i + 1, max_depth, selected, dasom, dasom[i]);
+            let result = combinations_dasoms(
+                depth + 1,
+                i + 1,
+                max_depth,
+                selected,
+                dasoms,
+                dasoms_len,
+                dasoms[i],
+            );
             selected[r][c] = false;
 
             result

@@ -28,9 +28,9 @@ fn main() {
 fn get_count(
     r: usize,
     c: usize,
-    map: &[[i32; WIDTH_MAX]; HEIGHT_MAX],
+    map: &[[i32; WIDTH_MAX]],
     (width, height): (usize, usize),
-    memo: &mut [[Option<i32>; WIDTH_MAX]; HEIGHT_MAX],
+    memo: &mut [[Option<i32>; WIDTH_MAX]],
 ) -> i32 {
     if let Some(count) = memo[r][c] {
         return count;

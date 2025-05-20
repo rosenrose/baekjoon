@@ -1,21 +1,22 @@
 use std::collections::VecDeque;
 use std::io;
 
+const MAX: usize = 10000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    const MAX: usize = 9999;
-    let prime_nums = get_prime_nums(MAX);
-    let mut prime_digits = [[0; 4]; MAX + 1];
+    let prime_nums = get_prime_nums(MAX - 1);
+    let mut prime_digits = [[0; 4]; MAX];
 
     for &p in prime_nums.iter().filter(|&&p| p >= 1000) {
         prime_digits[p] = to_digits(p);
     }
 
     'outer: for (a, b) in (0..input()).map(|_| (input(), input())) {
-        let mut visited = [false; MAX + 1];
+        let mut visited = [false; MAX];
         visited[a] = true;
 
         let mut queue = VecDeque::from([(a, 0)]);
@@ -51,7 +52,7 @@ fn main() {
 }
 
 fn get_prime_nums(num: usize) -> Vec<usize> {
-    let mut sieve = vec![true; num + 1];
+    let mut sieve = [true; MAX];
     let mut prime_nums = Vec::new();
 
     for i in 2..=num {

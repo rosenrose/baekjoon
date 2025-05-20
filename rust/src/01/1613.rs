@@ -35,7 +35,7 @@ fn main() {
     print!("{output}");
 }
 
-fn floyd_warshall(graph: &mut [[bool; MAX]; MAX], graph_len: usize) {
+fn floyd_warshall(graph: &mut [[bool; MAX]], graph_len: usize) {
     for stopby in 0..graph_len {
         for start in 0..graph_len {
             for end in 0..graph_len {

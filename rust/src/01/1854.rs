@@ -2,12 +2,14 @@ use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::io;
 
+const MAX: usize = 1000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m, k] = [(); 3].map(|_| input.next().unwrap());
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
     for [a, b, c] in (0..m).map(|_| [(); 3].map(|_| input.next().unwrap())) {
         adjacency_list[a].push((b as i32, c as i32));
@@ -15,7 +17,7 @@ fn main() {
 
     let distances = dijkstra_nth(&adjacency_list, 1, k);
     // println!("{distances:?}");
-    for dists in &distances[1..] {
+    for dists in &distances[1..=n] {
         println!(
             "{}",
             if dists.len() < k {
@@ -27,8 +29,8 @@ fn main() {
     }
 }
 
-fn dijkstra_nth(graph: &[Vec<(i32, i32)>], start: usize, order: usize) -> Vec<BinaryHeap<i32>> {
-    let mut distances = vec![BinaryHeap::new(); graph.len()];
+fn dijkstra_nth(graph: &[Vec<(i32, i32)>], start: usize, order: usize) -> [BinaryHeap<i32>; MAX] {
+    let mut distances = [(); MAX].map(|_| BinaryHeap::new());
     distances[start].push(0);
 
     let mut queue = BinaryHeap::from([(Reverse(0), start as i32)]);

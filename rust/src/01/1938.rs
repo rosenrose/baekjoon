@@ -1,45 +1,51 @@
 use std::collections::VecDeque;
 use std::io;
 
+const WIDTH_MAX: usize = 50;
+const HEIGHT_MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let (mut log_coords, mut end_coords) = (Vec::with_capacity(3), Vec::with_capacity(3));
+    let mut input = buf.lines();
 
-    let map: Vec<Vec<_>> = buf
-        .lines()
-        .skip(1)
-        .enumerate()
-        .map(|(r, row)| {
-            row.char_indices()
-                .map(|(c, ch)| match ch {
-                    '0' => false,
-                    '1' => true,
-                    'B' => {
-                        log_coords.push((r as i32, c as i32));
-                        false
-                    }
-                    'E' => {
-                        end_coords.push((r as i32, c as i32));
-                        false
-                    }
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+    let n: i32 = input.next().unwrap().parse().unwrap();
+    let (mut log_coords, mut end_coords) = ([(0, 0); 3], [(0, 0); 3]);
+    let (mut log_coords_len, mut end_coords_len) = (0, 0);
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
+
+    for (r, row) in input.enumerate() {
+        for (c, ch) in row.char_indices() {
+            map[r][c] = match ch {
+                '0' => false,
+                '1' => true,
+                'B' => {
+                    log_coords[log_coords_len] = (r as i32, c as i32);
+                    log_coords_len += 1;
+                    false
+                }
+                'E' => {
+                    end_coords[end_coords_len] = (r as i32, c as i32);
+                    end_coords_len += 1;
+                    false
+                }
+                _ => unreachable!(),
+            };
+        }
+    }
+
     let log = (log_coords[1], log_coords[0].0 + 1 == log_coords[1].0);
     let end = (end_coords[1], end_coords[0].0 + 1 == end_coords[1].0);
 
-    println!("{}", simulate(map, log, end).unwrap_or(0));
+    println!("{}", simulate(&map, n, log, end).unwrap_or(0));
 }
 
 fn simulate(
-    map: Vec<Vec<bool>>,
+    map: &[[bool; WIDTH_MAX]],
+    n: i32,
     (log_center, is_log_vertical): ((i32, i32), bool),
     end: ((i32, i32), bool),
 ) -> Option<i32> {
-    let n = map.len() as i32;
-    let mut visited = vec![vec![[false; 2]; n as usize]; n as usize];
+    let mut visited = [[[false; 2]; WIDTH_MAX]; HEIGHT_MAX];
     visited[log_center.0 as usize][log_center.1 as usize][is_log_vertical as usize] = true;
 
     let is_placeable = |r: i32, c: i32, is_vertical: bool| {

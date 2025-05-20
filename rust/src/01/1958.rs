@@ -1,11 +1,13 @@
 use std::io;
 
+const MAX: usize = 100 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let [a, b, c] = [(); 3].map(|_| input.next().unwrap());
-    let mut memo = vec![vec![vec![0; a.len() + 1]; b.len() + 1]; c.len() + 1];
+    let mut memo = [[[0; MAX]; MAX]; MAX];
     let mut max_len = 0;
 
     for (i, c) in c.char_indices() {

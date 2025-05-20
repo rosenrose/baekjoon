@@ -1,22 +1,23 @@
 use std::io;
 
+const MAX: usize = 500;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let n = input();
-    let mut max_sum = Vec::new();
+    let n = input.next().unwrap();
+    let mut max_sum = [0; MAX];
 
     for i in 1..=n {
         if i == 1 {
-            max_sum.push(input());
+            max_sum[0] = input.next().unwrap();
             continue;
         }
 
-        let mut next = vec![0; i];
+        let mut next = [0; MAX];
 
-        for (j, num) in (0..i).map(|j| (j, input())) {
+        for (j, num) in input.by_ref().take(i).enumerate() {
             next[j] = num
                 + match j {
                     0 => max_sum[0],
