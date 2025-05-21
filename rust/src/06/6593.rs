@@ -1,6 +1,8 @@
 use std::collections::VecDeque;
 use std::io;
 
+const MAX: usize = 30;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
@@ -10,31 +12,29 @@ fn main() {
         (parse_int(input()), parse_int(input()), parse_int(input()))
     {
         let (mut start, mut end) = ((0, 0, 0), (0, 0, 0));
-        let map: Vec<Vec<Vec<_>>> = (0..height)
-            .map(|h| {
-                (0..rows)
-                    .map(|r| {
-                        input()
-                            .char_indices()
-                            .map(|(c, ch)| match ch {
-                                'S' => {
-                                    start = (h, r, c);
-                                    false
-                                }
-                                'E' => {
-                                    end = (h, r, c);
-                                    false
-                                }
-                                '#' => true,
-                                '.' => false,
-                                _ => unreachable!(),
-                            })
-                            .collect()
-                    })
-                    .collect()
-            })
-            .collect();
-        let mut visited = vec![vec![vec![false; cols]; rows]; height];
+        let mut map = [[[false; MAX]; MAX]; MAX];
+
+        for h in 0..height {
+            for r in 0..rows {
+                for (c, ch) in input().char_indices() {
+                    map[h][r][c] = match ch {
+                        'S' => {
+                            start = (h, r, c);
+                            false
+                        }
+                        'E' => {
+                            end = (h, r, c);
+                            false
+                        }
+                        '#' => true,
+                        '.' => false,
+                        _ => unreachable!(),
+                    };
+                }
+            }
+        }
+
+        let mut visited = [[[false; MAX]; MAX]; MAX];
         visited[start.0][start.1][start.2] = true;
 
         let mut queue = VecDeque::from([(start, 0)]);

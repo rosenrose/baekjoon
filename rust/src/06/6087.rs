@@ -10,30 +10,34 @@ use std::collections::VecDeque;
 use std::io;
 use Dirs::*;
 
+const WIDTH_MAX: usize = 100;
+const HEIGHT_MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let [width, height] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
-    let mut lasers = Vec::with_capacity(2);
-    let map: Vec<Vec<_>> = input
-        .enumerate()
-        .map(|(r, row)| {
-            row.char_indices()
-                .map(|(c, ch)| match ch {
-                    '.' => false,
-                    '*' => true,
-                    'C' => {
-                        lasers.push((r, c));
-                        false
-                    }
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+    let mut lasers = [(0, 0); 2];
+    let mut lasers_len = 0;
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
-    let mut visited = vec![vec![[i32::MAX; 4]; width]; height];
+    for (r, row) in input.enumerate() {
+        for (c, ch) in row.char_indices() {
+            map[r][c] = match ch {
+                '.' => false,
+                '*' => true,
+                'C' => {
+                    lasers[lasers_len] = (r, c);
+                    lasers_len += 1;
+                    false
+                }
+                _ => unreachable!(),
+            }
+        }
+    }
+
+    let mut visited = [[[i32::MAX; 4]; WIDTH_MAX]; HEIGHT_MAX];
     let mut queue = VecDeque::from_iter(get_adjacents(lasers[0], width, height).iter().filter_map(
         |&(coord, dir)| {
             (coord != lasers[0] && !map[coord.0][coord.1]).then(|| {

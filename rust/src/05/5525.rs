@@ -1,5 +1,7 @@
 use std::io;
 
+const MAX: usize = 1_000_000 * 2 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
@@ -12,7 +14,7 @@ fn main() {
 }
 
 fn kmp(source: &[u8], target: &[u8]) -> i32 {
-    let mut partial_match = vec![0; target.len()];
+    let mut partial_match = [0; MAX];
     let mut i = 0;
 
     for j in 1..target.len() {

@@ -2,6 +2,8 @@ use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::io;
 
+const MAX: usize = 125;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
@@ -11,16 +13,23 @@ fn main() {
             return;
         };
 
-        let cave: Vec<Vec<_>> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
-        let distance = dijkstra(&cave, (0, 0), (n - 1, n - 1));
+        let mut cave = [[0; MAX]; MAX];
+
+        for r in 0..n {
+            for (c, num) in input.by_ref().take(n).enumerate() {
+                cave[r][c] = num;
+            }
+        }
+
+        let distance = dijkstra(&cave[..n], (0, 0), (n - 1, n - 1));
 
         println!("Problem {i}: {distance}");
     }
 }
 
-fn dijkstra(graph: &[Vec<i32>], start: (usize, usize), end: (usize, usize)) -> i32 {
+fn dijkstra(graph: &[[i32; MAX]], start: (usize, usize), end: (usize, usize)) -> i32 {
     let n = graph.len();
-    let mut distances = vec![vec![i32::MAX; n]; n];
+    let mut distances = [[i32::MAX; MAX]; MAX];
     distances[start.0][start.1] = graph[start.0][start.1];
 
     let mut queue = BinaryHeap::from([(Reverse(0), start)]);

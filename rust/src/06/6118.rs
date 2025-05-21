@@ -1,25 +1,28 @@
 use std::collections::VecDeque;
 use std::io;
 
+const NODES_MAX: usize = 20000 + 1;
+const EDGES_MAX: usize = 50000 * 2;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m] = [(); 2].map(|_| input.next().unwrap());
-    let mut adjacency_array = (vec![i32::MAX; n + 1], Vec::with_capacity(m * 2));
+    let mut adjacency_array = ([i32::MAX; NODES_MAX], [(0, 0); EDGES_MAX]);
 
-    for [a, b] in (0..m).map(|_| [(); 2].map(|_| input.next().unwrap())) {
+    for (i, [a, b]) in (0..m).map(|i| (i << 1, [(); 2].map(|_| input.next().unwrap()))) {
         let prev = adjacency_array.0[a];
-        adjacency_array.0[a] = adjacency_array.1.len() as i32;
-        adjacency_array.1.push((b as i32, prev));
+        adjacency_array.0[a] = i as i32;
+        adjacency_array.1[i] = (b as i32, prev);
 
         let prev = adjacency_array.0[b];
-        adjacency_array.0[b] = adjacency_array.1.len() as i32;
-        adjacency_array.1.push((a as i32, prev));
+        adjacency_array.0[b] = (i + 1) as i32;
+        adjacency_array.1[i + 1] = (a as i32, prev);
     }
 
     let (distances, max_dist) = bfs(&adjacency_array);
-    let mut hides = distances
+    let mut hides = distances[..=n]
         .iter()
         .enumerate()
         .skip(2)
@@ -29,8 +32,8 @@ fn main() {
     println!("{}", hides.count() + 1);
 }
 
-fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>)) -> (Vec<u16>, u16) {
-    let mut distances = vec![u16::MAX; nodes.len()];
+fn bfs((nodes, edges): &([i32; NODES_MAX], [(i32, i32); EDGES_MAX])) -> ([u16; NODES_MAX], u16) {
+    let mut distances = [u16::MAX; NODES_MAX];
     distances[1] = 0;
 
     let mut max_dist = 0;

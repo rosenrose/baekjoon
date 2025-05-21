@@ -8,27 +8,29 @@ enum Cells {
     Apple,
 }
 
+const MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
     let mut input = || input.next().unwrap();
 
     let n = parse_int(input());
-    let mut board = vec![vec![Cells::Empty; n]; n];
+    let mut board = [[Cells::Empty; MAX]; MAX];
     board[0][0] = Cells::Snake;
 
-    for (r, c) in (0..parse_int(input())).map(|_| (parse_int(input()), parse_int(input()))) {
+    for [r, c] in (0..parse_int(input())).map(|_| [(); 2].map(|_| parse_int(input()))) {
         board[r - 1][c - 1] = Cells::Apple;
     }
 
     let rotates = (0..parse_int(input())).map(|_| (parse_int(input()), input()));
-    let time = simulate(board, rotates);
+    let time = simulate(&mut board[..n], rotates);
 
     println!("{time}");
 }
 
 fn simulate<'a>(
-    mut board: Vec<Vec<Cells>>,
+    board: &mut [[Cells; MAX]],
     rotates: impl Iterator<Item = (usize, &'a str)>,
 ) -> usize {
     let mut snake = VecDeque::from([(0, 0)]);
@@ -38,7 +40,7 @@ fn simulate<'a>(
     for (rotate_time, rotate_dir) in rotates {
         while time < rotate_time {
             time += 1;
-            let can_move = move_snake(&mut board, &mut snake, dir);
+            let can_move = move_snake(board, &mut snake, dir);
 
             if !can_move {
                 return time;
@@ -60,7 +62,7 @@ fn simulate<'a>(
 
     loop {
         time += 1;
-        let can_move = move_snake(&mut board, &mut snake, dir);
+        let can_move = move_snake(board, &mut snake, dir);
 
         if !can_move {
             return time;
@@ -68,7 +70,7 @@ fn simulate<'a>(
     }
 }
 
-fn move_snake(board: &mut Vec<Vec<Cells>>, snake: &mut VecDeque<(i8, i8)>, dir: (i8, i8)) -> bool {
+fn move_snake(board: &mut [[Cells; MAX]], snake: &mut VecDeque<(i8, i8)>, dir: (i8, i8)) -> bool {
     let n = board.len() as i8;
     let head = *snake.front().unwrap();
     let next = (head.0 + dir.0, head.1 + dir.1);

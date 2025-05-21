@@ -32,12 +32,15 @@ impl DisjointSet {
     }
 }
 
+const WIDTH_MAX: usize = 1500;
+const HEIGHT_MAX: usize = 1500;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<i16>().unwrap());
-    let mut map = vec![vec![true; width as usize]; height as usize];
+    let mut map = [[true; WIDTH_MAX]; HEIGHT_MAX];
     let mut disjoint_set = DisjointSet::make(width as i32 * height as i32);
 
     let mut waters = Vec::new();
@@ -82,18 +85,25 @@ fn main() {
         }
     }
 
-    let days = simulate(map, disjoint_set, waters, swans);
+    let days = simulate(
+        &mut map[..height as usize],
+        width,
+        disjoint_set,
+        waters,
+        swans,
+    );
 
     println!("{days}");
 }
 
 fn simulate(
-    mut map: Vec<Vec<bool>>,
+    map: &mut [[bool; WIDTH_MAX]],
+    width: i16,
     mut disjoint_set: DisjointSet,
     mut waters: Vec<(i16, i16)>,
     swans: Vec<i32>,
 ) -> i32 {
-    let (width, height) = (map[0].len() as i16, map.len() as i16);
+    let height = map.len() as i16;
     let mut days = 0;
     let mut temp = Vec::new();
 

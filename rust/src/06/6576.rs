@@ -1,6 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 512;
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let buf = io::read_to_string(io::stdin())?;
     let mut input = buf.lines();
@@ -8,16 +10,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let n: usize = input.next().unwrap().parse().unwrap();
     let quad_tree = input.next().unwrap();
-    let mut map = vec![vec!['\0'; n]; n];
+    let mut map = [['\0'; MAX]; MAX];
 
-    fill_map(&mut map, quad_tree, n, 0, 0);
+    fill_map(&mut map[..n], quad_tree, n, 0, 0);
 
     writeln!(output, "#define quadtree_width {n}")?;
     writeln!(output, "#define quadtree_height {n}")?;
     writeln!(output, "static char quadtree_bits[] = {{")?;
 
-    for row in map {
-        for chunk in row.chunks(8) {
+    for row in &map[..n] {
+        for chunk in row[..n].chunks(8) {
             let hex: u8 = chunk
                 .iter()
                 .enumerate()
@@ -34,7 +36,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn fill_map(map: &mut Vec<Vec<char>>, quad_tree: &str, n: usize, x: usize, y: usize) {
+fn fill_map(map: &mut [[char; MAX]], quad_tree: &str, n: usize, x: usize, y: usize) {
     if quad_tree.len() == 1 {
         let ch = quad_tree.chars().nth(0).unwrap();
 
@@ -47,21 +49,24 @@ fn fill_map(map: &mut Vec<Vec<char>>, quad_tree: &str, n: usize, x: usize, y: us
         return;
     }
 
-    let mut indices = Vec::with_capacity(4);
+    let mut indices = [0; 4];
+    let mut indices_len = 0;
     let mut depth = 0;
 
     for (i, ch) in quad_tree.char_indices().skip(1) {
         match ch {
             'Q' => {
                 if depth == 0 {
-                    indices.push(i);
+                    indices[indices_len] = i;
+                    indices_len += 1;
                 }
 
                 depth += if depth == 0 { 4 } else { 3 };
             }
             'B' | 'W' => {
                 if depth == 0 {
-                    indices.push(i);
+                    indices[indices_len] = i;
+                    indices_len += 1;
                 } else {
                     depth -= 1;
                 }

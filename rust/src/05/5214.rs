@@ -1,22 +1,28 @@
 use std::collections::VecDeque;
 use std::io;
 
+const NODES_MAX: usize = 100_000 + 1 + 1000;
+const EDGES_MAX: usize = 1000 * 2 * 1000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, k, m] = [(); 3].map(|_| input.next().unwrap());
-    let mut adjacency_array = (vec![i32::MAX; n + 1 + m], Vec::with_capacity(k * 2 * m));
+    let mut adjacency_array = ([i32::MAX; NODES_MAX], [(0, 0); EDGES_MAX]);
+    let mut i = 0;
 
-    for tube in (0..m).map(|i| i + n + 1) {
+    for tube in (0..m).map(|t| t + n + 1) {
         for station in input.by_ref().take(k) {
             let prev = adjacency_array.0[station];
-            adjacency_array.0[station] = adjacency_array.1.len() as i32;
-            adjacency_array.1.push((tube as i32, prev));
+            adjacency_array.0[station] = i as i32;
+            adjacency_array.1[i] = (tube as i32, prev);
+            i += 1;
 
             let prev = adjacency_array.0[tube];
-            adjacency_array.0[tube] = adjacency_array.1.len() as i32;
-            adjacency_array.1.push((station as i32, prev));
+            adjacency_array.0[tube] = i as i32;
+            adjacency_array.1[i] = (station as i32, prev);
+            i += 1;
         }
     }
 
@@ -25,11 +31,11 @@ fn main() {
     println!("{}", if min_count == i32::MAX { -1 } else { min_count });
 }
 
-fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: i32, end: i32) -> i32 {
+fn bfs((nodes, edges): &([i32; NODES_MAX], [(i32, i32); EDGES_MAX]), start: i32, end: i32) -> i32 {
     let mut min_count = i32::MAX;
     let is_tube = |node: i32| node > end;
 
-    let mut visited = vec![false; nodes.len()];
+    let mut visited = [false; NODES_MAX];
     visited[start as usize] = true;
 
     let mut queue = VecDeque::from([(start, 1)]);

@@ -1,5 +1,7 @@
 use std::io;
 
+const MAX: usize = 3000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
@@ -15,7 +17,7 @@ fn main() {
             continue;
         }
 
-        let mut jumps = vec![false; n];
+        let mut jumps = [false; MAX];
 
         for i in 1..n {
             let diff = nums[i - 1].abs_diff(nums[i]) as usize;
@@ -27,7 +29,7 @@ fn main() {
 
         println!(
             "{}",
-            if jumps[1..].iter().all(|&b| b) {
+            if jumps[1..n].iter().all(|&b| b) {
                 JOLLY
             } else {
                 "Not jolly"

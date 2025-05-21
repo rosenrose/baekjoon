@@ -1,6 +1,7 @@
 use std::collections::VecDeque;
 use std::io;
 
+#[derive(Copy, Clone)]
 enum Cells {
     Clean,
     Dirty(u8),
@@ -8,52 +9,57 @@ enum Cells {
 }
 
 const ROBOT_IDX: usize = 0;
-const MAX_DIRTY: usize = 10;
+const WIDTH_MAX: usize = 20;
+const HEIGHT_MAX: usize = 20;
+const DIRTY_MAX: usize = 10;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    while let (_width @ 1.., height @ 1..) = (
+    while let (width @ 1.., height @ 1..) = (
         parse_int(input.next().unwrap()),
         parse_int(input.next().unwrap()),
     ) {
-        let mut dirties = Vec::new();
+        let mut dirties = [(0, 0); DIRTY_MAX];
+        let mut dirties_len = 0;
         let mut robot = (0, 0);
 
-        let map: Vec<Vec<_>> = input
-            .by_ref()
-            .take(height)
-            .enumerate()
-            .map(|(r, row)| {
-                row.char_indices()
-                    .map(|(c, ch)| match ch {
-                        '.' => Cells::Clean,
-                        '*' => {
-                            dirties.push((r, c));
-                            Cells::Dirty(dirties.len() as u8)
-                        }
-                        'x' => Cells::Wall,
-                        'o' => {
-                            robot = (r, c);
-                            Cells::Clean
-                        }
-                        _ => unreachable!(),
-                    })
-                    .collect()
-            })
-            .collect();
+        let mut map = [[Cells::Clean; WIDTH_MAX]; HEIGHT_MAX];
 
-        println!("{}", simulate(map, dirties, robot).unwrap_or(-1));
+        for (r, row) in input.by_ref().take(height).enumerate() {
+            for (c, ch) in row.char_indices() {
+                map[r][c] = match ch {
+                    '.' => Cells::Clean,
+                    '*' => {
+                        dirties[dirties_len] = (r, c);
+                        dirties_len += 1;
+                        Cells::Dirty(dirties_len as u8)
+                    }
+                    'x' => Cells::Wall,
+                    'o' => {
+                        robot = (r, c);
+                        Cells::Clean
+                    }
+                    _ => unreachable!(),
+                };
+            }
+        }
+
+        println!(
+            "{}",
+            simulate(&map[..height], width, &dirties[..dirties_len], robot).unwrap_or(-1)
+        );
     }
 }
 
 fn simulate(
-    map: Vec<Vec<Cells>>,
-    dirties: Vec<(usize, usize)>,
+    map: &[[Cells; WIDTH_MAX]],
+    width: usize,
+    dirties: &[(usize, usize)],
     robot: (usize, usize),
 ) -> Option<i32> {
-    let dist_matrix = get_dists(&map, &dirties, robot);
+    let dist_matrix = get_dists(map, width, dirties, robot);
 
     if dist_matrix[..dirties.len()]
         .iter()
@@ -67,8 +73,8 @@ fn simulate(
 
     permutations(
         0,
-        &mut vec![0; dirties.len()],
-        &mut [false; MAX_DIRTY + 1],
+        &mut [0; DIRTY_MAX][..dirties.len()],
+        &mut [false; DIRTY_MAX + 1],
         &dist_matrix,
         robot,
         0,
@@ -79,19 +85,20 @@ fn simulate(
 }
 
 fn get_dists(
-    map: &[Vec<Cells>],
+    map: &[[Cells; WIDTH_MAX]],
+    width: usize,
     dirties: &[(usize, usize)],
     robot: (usize, usize),
-) -> [[i32; MAX_DIRTY + 1]; MAX_DIRTY + 1] {
-    let (width, height) = (map[0].len(), map.len());
-    let mut matrix = [[i32::MAX; MAX_DIRTY + 1]; MAX_DIRTY + 1];
+) -> [[i32; DIRTY_MAX + 1]; DIRTY_MAX + 1] {
+    let height = map.len();
+    let mut matrix = [[i32::MAX; DIRTY_MAX + 1]; DIRTY_MAX + 1];
 
     for i in 0..=dirties.len() {
         matrix[i][i] = 0;
     }
 
     for (idx, &start) in std::iter::once(&robot).chain(dirties).enumerate() {
-        let mut visited = vec![vec![false; width]; height];
+        let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
         visited[start.0][start.1] = true;
 
         let mut queue = VecDeque::from([(start, 0)]);
@@ -127,9 +134,9 @@ fn get_dists(
 
 fn permutations(
     depth: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize],
     visited: &mut [bool],
-    dist_matrix: &[[i32; MAX_DIRTY + 1]],
+    dist_matrix: &[[i32; DIRTY_MAX + 1]],
     robot: (usize, usize),
     cost: i32,
     min_cost: &mut i32,

@@ -1,13 +1,14 @@
 use std::collections::VecDeque;
+use std::io;
+
+const MAX: usize = 1_000_000 + 1;
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let [total_floor, start, startlink, up, down] = parse_int_vec(&buf)[..] else {
-        return;
-    };
-    let mut visited = vec![false; total_floor as usize + 1];
+    let [total_floor, start, startlink, up, down] = [(); 5].map(|_| input.next().unwrap());
+    let mut visited = [false; MAX];
     visited[start as usize] = true;
 
     let mut queue = VecDeque::from([(start, 0)]);
@@ -32,8 +33,4 @@ fn main() {
     }
 
     println!("use the stairs");
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

@@ -1,23 +1,30 @@
 use std::io;
 
+const WIDTH_MAX: usize = 500;
+const HEIGHT_MAX: usize = 10000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_whitespace();
+    let mut input = buf.split_whitespace();
 
-    let map: Vec<Vec<_>> = input
-        .skip(2)
-        .map(|row| row.as_bytes().iter().map(|&ch| ch == b'x').collect())
-        .collect();
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
-    let max_count = dfs(&map);
+    for (r, row) in input.map(str::as_bytes).enumerate() {
+        for (c, &ch) in row.iter().enumerate() {
+            map[r][c] = ch == b'x';
+        }
+    }
+
+    let max_count = dfs(&map[..height], width);
 
     println!("{max_count}");
 }
 
-fn dfs(map: &[Vec<bool>]) -> i32 {
-    let (width, height) = (map[0].len(), map.len());
+fn dfs(map: &[[bool; WIDTH_MAX]], width: usize) -> i32 {
+    let height = map.len();
     let mut count = 0;
-    let mut visited = vec![vec![false; width]; height];
+    let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
     for y in 0..height {
         let mut stack = vec![(y, 0)];

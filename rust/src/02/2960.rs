@@ -1,10 +1,12 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [n, k] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+const MAX: usize = 1000 + 1;
+
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_whitespace().flat_map(str::parse::<usize>);
+
+    let [n, k] = [(); 2].map(|_| input.next().unwrap());
     let mut deleted = 0;
 
     get_prime_sieve(n, k as i32, &mut deleted);
@@ -12,8 +14,8 @@ fn main() {
     println!("{deleted}");
 }
 
-fn get_prime_sieve(num: usize, mut k: i32, deleted: &mut usize) -> Vec<bool> {
-    let mut prime_sieve = vec![true; num + 1];
+fn get_prime_sieve(num: usize, mut k: i32, deleted: &mut usize) -> [bool; MAX] {
+    let mut prime_sieve = [true; MAX];
     prime_sieve[0] = false;
     prime_sieve[1] = false;
 
@@ -39,8 +41,8 @@ fn get_prime_sieve(num: usize, mut k: i32, deleted: &mut usize) -> Vec<bool> {
     prime_sieve
 }
 
-// fn get_prime_sieve(num: usize) -> Vec<bool> {
-//     let mut sieve = vec![true; num + 1];
+// fn get_prime_sieve(num: usize) -> [bool; MAX] {
+//     let mut sieve = [true; MAX];
 //     (sieve[0], sieve[1]) = (false, false);
 
 //     for i in (2..).take_while(|i| i * i <= num) {
@@ -55,7 +57,3 @@ fn get_prime_sieve(num: usize, mut k: i32, deleted: &mut usize) -> Vec<bool> {
 
 //     sieve
 // }
-
-fn parse_int_vec(buf: &str) -> Vec<usize> {
-    buf.split_whitespace().flat_map(str::parse).collect()
-}

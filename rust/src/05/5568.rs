@@ -1,5 +1,7 @@
 use std::io;
 
+const MAX: usize = 4;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
@@ -8,7 +10,7 @@ fn main() {
     let nums: Vec<_> = input.collect();
     let mut results = Vec::new();
 
-    permutations(0, &mut vec![0; k], &mut [false; 10], &nums, &mut results);
+    permutations(0, &mut [0; MAX][..k], &mut [false; 10], &nums, &mut results);
 
     results.sort();
     results.dedup();
@@ -18,7 +20,7 @@ fn main() {
 
 fn permutations(
     depth: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize],
     visited: &mut [bool],
     nums: &[&str],
     results: &mut Vec<String>,

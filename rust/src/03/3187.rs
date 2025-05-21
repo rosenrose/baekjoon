@@ -1,5 +1,6 @@
 use std::io;
 
+#[derive(Copy, Clone)]
 enum Cells {
     Empty,
     Wall,
@@ -7,30 +8,33 @@ enum Cells {
     Wolf,
 }
 
+const WIDTH_MAX: usize = 250;
+const HEIGHT_MAX: usize = 250;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
-    let map: Vec<Vec<_>> = input
-        .take(height) // 입력 마지막 줄에 이상한 문자 들어있음
-        .map(|row| {
-            row.chars()
-                .map(|ch| match ch {
-                    '.' => Cells::Empty,
-                    '#' => Cells::Wall,
-                    'k' => Cells::Sheep,
-                    'v' => Cells::Wolf,
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+    let mut map = [[Cells::Empty; WIDTH_MAX]; HEIGHT_MAX];
+
+    for (r, row) in input.take(height).enumerate() {
+        // 입력 마지막 줄에 이상한 문자 들어있음
+        for (c, ch) in row.char_indices() {
+            map[r][c] = match ch {
+                '.' => Cells::Empty,
+                '#' => Cells::Wall,
+                'k' => Cells::Sheep,
+                'v' => Cells::Wolf,
+                _ => unreachable!(),
+            };
+        }
+    }
 
     let (mut total_sheep, mut total_wolf) = (0, 0);
-    let mut visited = vec![vec![false; width]; height];
+    let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
-    let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| {
+    let is_pass = |r: usize, c: usize, visited: &[[bool; WIDTH_MAX]]| {
         visited[r][c] || matches!(map[r][c], Cells::Wall)
     };
 

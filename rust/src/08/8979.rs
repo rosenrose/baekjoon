@@ -1,12 +1,14 @@
 use std::io;
 
+const MAX: usize = 1000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
     let (n, k) = (input(), input());
-    let mut medal_ranks = vec![([0; 3], 1); n + 1];
+    let mut medal_ranks = [([0; 3], 1); MAX];
 
     for _ in 0..n {
         let country = input();

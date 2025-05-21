@@ -1,5 +1,7 @@
 use std::io;
 
+const MAX: usize = 10000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
@@ -7,16 +9,16 @@ fn main() {
 
     for _ in 0..input() {
         let n = input();
-        let mut adjacency_list = vec![Vec::new(); n + 1];
-        let mut parents = vec![0; n + 1];
+        let mut adjacency_list = [(); MAX].map(|_| Vec::new());
+        let mut parents = [0; MAX];
 
         for (a, b) in (0..n - 1).map(|_| (input(), input())) {
             adjacency_list[a].push(b);
             parents[b] = a;
         }
 
-        let root = parents[1..].iter().position(|&p| p == 0).unwrap() + 1;
-        let mut depths = vec![0; n + 1];
+        let root = parents[1..=n].iter().position(|&p| p == 0).unwrap() + 1;
+        let mut depths = [0; MAX];
         let mut stack = vec![(root, 1)];
 
         while let Some((node, depth)) = stack.pop() {
@@ -27,7 +29,7 @@ fn main() {
             }
         }
 
-        println!("{}", lca((input(), input()), &depths, &parents));
+        println!("{}", lca((input(), input()), &depths[..=n], &parents[..=n]));
     }
 }
 

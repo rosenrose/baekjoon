@@ -1,6 +1,8 @@
 use std::collections::VecDeque;
 use std::io;
 
+const MAX: usize = 300;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
@@ -11,7 +13,7 @@ fn main() {
         let start = (input(), input());
         let end = (input(), input());
 
-        let mut visited = vec![vec![false; n as usize]; n as usize];
+        let mut visited = [[false; MAX]; MAX];
         visited[start.0 as usize][start.1 as usize] = true;
 
         let mut queue = VecDeque::from([(start, 0)]);
