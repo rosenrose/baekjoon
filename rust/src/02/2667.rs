@@ -1,25 +1,36 @@
 use std::io;
 
+const MAX: usize = 25;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let map: Vec<_> = buf.lines().skip(1).map(str::as_bytes).collect();
+    let mut input = buf.split_ascii_whitespace();
 
-    let mut house_counts = get_house_counts(&map);
-    house_counts.sort();
+    let n: usize = input.next().unwrap().parse().unwrap();
+    let mut map = [[0; MAX]; MAX];
 
-    println!("{}", house_counts.len());
+    for (r, row) in input.map(str::as_bytes).enumerate() {
+        for (c, &num) in row.iter().enumerate() {
+            map[r][c] = num;
+        }
+    }
 
-    for count in house_counts {
+    let (mut house_counts, house_counts_len) = get_house_counts(&map, n);
+    house_counts[..house_counts_len].sort();
+
+    println!("{}", house_counts_len);
+
+    for count in &house_counts[..house_counts_len] {
         println!("{count}");
     }
 }
 
-fn get_house_counts(map: &[&[u8]]) -> Vec<i32> {
-    let n = map.len();
-    let mut house_counts = Vec::new();
-    let mut visited = vec![vec![false; n]; n];
+fn get_house_counts(map: &[[u8; MAX]], n: usize) -> ([i32; (MAX * MAX).div_ceil(2)], usize) {
+    let mut house_counts = [0; (MAX * MAX).div_ceil(2)];
+    let mut house_counts_len = 0;
+    let mut visited = [[false; MAX]; MAX];
 
-    let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| map[r][c] == b'0' || visited[r][c];
+    let is_pass = |r: usize, c: usize, visited: &[[bool; MAX]]| map[r][c] == b'0' || visited[r][c];
 
     for y in 0..n {
         for x in 0..n {
@@ -50,9 +61,10 @@ fn get_house_counts(map: &[&[u8]]) -> Vec<i32> {
                 }
             }
 
-            house_counts.push(count);
+            house_counts[house_counts_len] = count;
+            house_counts_len += 1;
         }
     }
 
-    house_counts
+    (house_counts, house_counts_len)
 }

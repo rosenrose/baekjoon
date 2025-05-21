@@ -1,17 +1,16 @@
 use std::collections::VecDeque;
 use std::io;
 
-const WIDTH_MAX: usize = 50;
-const HEIGHT_MAX: usize = 50;
+const MAX: usize = 50;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
 
-    let n: i32 = input.next().unwrap().parse().unwrap();
+    let n: usize = input.next().unwrap().parse().unwrap();
     let (mut log_coords, mut end_coords) = ([(0, 0); 3], [(0, 0); 3]);
     let (mut log_coords_len, mut end_coords_len) = (0, 0);
-    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
+    let mut map = [[false; MAX]; MAX];
 
     for (r, row) in input.enumerate() {
         for (c, ch) in row.char_indices() {
@@ -36,16 +35,16 @@ fn main() {
     let log = (log_coords[1], log_coords[0].0 + 1 == log_coords[1].0);
     let end = (end_coords[1], end_coords[0].0 + 1 == end_coords[1].0);
 
-    println!("{}", simulate(&map, n, log, end).unwrap_or(0));
+    println!("{}", simulate(&map[..n], log, end).unwrap_or(0));
 }
 
 fn simulate(
-    map: &[[bool; WIDTH_MAX]],
-    n: i32,
+    map: &[[bool; MAX]],
     (log_center, is_log_vertical): ((i32, i32), bool),
     end: ((i32, i32), bool),
 ) -> Option<i32> {
-    let mut visited = [[[false; 2]; WIDTH_MAX]; HEIGHT_MAX];
+    let n = map.len() as i32;
+    let mut visited = [[[false; 2]; MAX]; MAX];
     visited[log_center.0 as usize][log_center.1 as usize][is_log_vertical as usize] = true;
 
     let is_placeable = |r: i32, c: i32, is_vertical: bool| {

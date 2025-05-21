@@ -15,7 +15,7 @@ fn main() {
         }
     }
 
-    let Some(removed) = floyd_warshall(&adjacency_matrix, n) else {
+    let Some(removed) = floyd_warshall(&adjacency_matrix[..n]) else {
         println!("-1");
         return;
     };
@@ -31,12 +31,13 @@ fn main() {
     println!("{sum}");
 }
 
-fn floyd_warshall(graph: &[[i32; MAX]], graph_len: usize) -> Option<[[bool; MAX]; MAX]> {
+fn floyd_warshall(graph: &[[i32; MAX]]) -> Option<[[bool; MAX]; MAX]> {
+    let len = graph.len();
     let mut removed = [[false; MAX]; MAX];
 
-    for stopby in 0..graph_len {
-        for start in 0..graph_len {
-            for end in 0..graph_len {
+    for stopby in 0..len {
+        for start in 0..len {
+            for end in 0..len {
                 if start == end || start == stopby || stopby == end {
                     continue;
                 }

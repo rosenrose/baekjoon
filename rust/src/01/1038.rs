@@ -8,7 +8,7 @@ fn main() {
     let mut count = -1;
 
     for i in 1..=MAX {
-        let (num, is_finished) = permutations(0, &mut [0; MAX], i, &mut count, n);
+        let (num, is_finished) = permutations(0, &mut [0; MAX][..i], &mut count, n);
 
         if is_finished {
             println!("{num}");
@@ -19,18 +19,12 @@ fn main() {
     println!("-1");
 }
 
-fn permutations(
-    depth: usize,
-    selected: &mut [u8],
-    selected_len: usize,
-    count: &mut i32,
-    n: i32,
-) -> (i64, bool) {
-    if depth == selected_len {
+fn permutations(depth: usize, selected: &mut [u8], count: &mut i32, n: i32) -> (i64, bool) {
+    if depth == selected.len() {
         *count += 1;
         // println!("{selected:?}");
         return if *count == n {
-            let num = selected[..selected_len]
+            let num = selected
                 .iter()
                 .fold(0, |acc, &digit| acc * 10 + digit as i64);
 
@@ -46,7 +40,7 @@ fn permutations(
         }
 
         selected[depth] = digit;
-        let (num, is_finished) = permutations(depth + 1, selected, selected_len, count, n);
+        let (num, is_finished) = permutations(depth + 1, selected, count, n);
 
         if is_finished {
             return (num, true);

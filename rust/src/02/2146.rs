@@ -26,7 +26,7 @@ fn main() {
             }
 
             visited[y][x] = 0;
-            let mut borders = get_borders((y, x), &map, n, &mut visited);
+            let mut borders = get_borders((y, x), &map[..n], &mut visited);
 
             'outer: while let Some(((r, c), dist)) = borders.pop_front() {
                 let new_dist = dist + 1;
@@ -55,9 +55,9 @@ fn main() {
 fn get_borders(
     start: (usize, usize),
     map: &[[bool; MAX]],
-    n: usize,
     visited: &mut [[i32; MAX]],
 ) -> VecDeque<((usize, usize), i32)> {
+    let n = map.len();
     let mut borders = VecDeque::new();
     let mut stack = vec![start];
 

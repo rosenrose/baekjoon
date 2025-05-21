@@ -16,14 +16,13 @@ fn main() {
     }
 
     let mut memo = [[None; 1 << MAX]; MAX];
-    let min_cost = tsp(&adjacency_matrix, n, 0, 1, &mut memo);
+    let min_cost = tsp(&adjacency_matrix[..n], 0, 1, &mut memo);
 
     println!("{min_cost}");
 }
 
 fn tsp(
     graph: &[[i32; MAX]],
-    graph_len: usize,
     node: usize,
     visited: usize,
     memo: &mut [[Option<i32>; 1 << MAX]],
@@ -31,11 +30,11 @@ fn tsp(
     if let Some(cost) = memo[node][visited] {
         return cost;
     }
-    if visited == (1 << graph_len) - 1 {
+    if visited == (1 << graph.len()) - 1 {
         return graph[node][0];
     }
 
-    let result = (0..graph_len)
+    let result = (0..graph.len())
         .map(|next_node| {
             let bit = 1 << next_node;
 
@@ -43,13 +42,7 @@ fn tsp(
                 return i32::MAX;
             }
 
-            graph[node][next_node].saturating_add(tsp(
-                graph,
-                graph_len,
-                next_node,
-                visited | bit,
-                memo,
-            ))
+            graph[node][next_node].saturating_add(tsp(graph, next_node, visited | bit, memo))
         })
         .min()
         .unwrap();

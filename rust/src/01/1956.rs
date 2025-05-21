@@ -13,7 +13,7 @@ fn main() {
         adjacency_matrix[a - 1][b - 1] = c as i32;
     }
 
-    floyd_warshall(&mut adjacency_matrix, n);
+    floyd_warshall(&mut adjacency_matrix[..n]);
 
     let min_dist = (0..n)
         .filter_map(|i| {
@@ -26,10 +26,12 @@ fn main() {
     println!("{min_dist}");
 }
 
-fn floyd_warshall(graph: &mut [[i32; MAX]], graph_len: usize) {
-    for stopby in 0..graph_len {
-        for start in 0..graph_len {
-            for end in 0..graph_len {
+fn floyd_warshall(graph: &mut [[i32; MAX]]) {
+    let len = graph.len();
+
+    for stopby in 0..len {
+        for start in 0..len {
+            for end in 0..len {
                 graph[start][end] =
                     graph[start][end].min(graph[start][stopby].saturating_add(graph[stopby][end]));
             }

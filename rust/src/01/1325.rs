@@ -16,7 +16,7 @@ fn main() {
         adjacency_list[b as usize].push(a as i16);
     }
 
-    let (counts, max_count) = dfs(&adjacency_list, n + 1);
+    let (counts, max_count) = dfs(&adjacency_list[..=n]);
 
     for node in counts[..=n]
         .iter()
@@ -30,11 +30,11 @@ fn main() {
     print!("{output}");
 }
 
-fn dfs(graph: &[Vec<i16>], graph_len: usize) -> ([i16; MAX], i16) {
+fn dfs(graph: &[Vec<i16>]) -> ([i16; MAX], i16) {
     let mut counts = [0; MAX];
     let mut max_count = 0;
 
-    for start in 1..graph_len {
+    for start in 1..graph.len() {
         let mut visited = [false; MAX];
         visited[start] = true;
 

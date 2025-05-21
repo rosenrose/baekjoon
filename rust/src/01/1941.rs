@@ -32,10 +32,8 @@ fn main() {
                 0,
                 i,
                 &mut selected,
-                &doyeons,
-                doyeons_len,
-                &dasoms,
-                dasoms_len,
+                &doyeons[..doyeons_len],
+                &dasoms[..dasoms_len],
             )
         })
         .sum();
@@ -49,39 +47,28 @@ fn combinations_doyeons(
     max_depth: usize,
     selected: &mut [[bool; SIZE]],
     doyeons: &[(usize, usize)],
-    doyeons_len: usize,
     dasoms: &[(usize, usize)],
-    dasoms_len: usize,
 ) -> i32 {
     if depth == max_depth {
         return combinations_dasoms(
             0,
             0,
-            (PARTY_COUNT - max_depth).min(dasoms_len),
+            (PARTY_COUNT - max_depth).min(dasoms.len()),
             selected,
             dasoms,
-            dasoms_len,
             Default::default(),
         );
     }
 
-    let takes = doyeons_len - (max_depth - 1);
+    let takes = doyeons.len() - (max_depth - 1);
 
     (start..depth + takes)
         .map(|i| {
             let (r, c) = doyeons[i];
             selected[r][c] = true;
 
-            let result = combinations_doyeons(
-                depth + 1,
-                i + 1,
-                max_depth,
-                selected,
-                doyeons,
-                doyeons_len,
-                dasoms,
-                dasoms_len,
-            );
+            let result =
+                combinations_doyeons(depth + 1, i + 1, max_depth, selected, doyeons, dasoms);
             selected[r][c] = false;
 
             result
@@ -95,7 +82,6 @@ fn combinations_dasoms(
     max_depth: usize,
     selected: &mut [[bool; SIZE]],
     dasoms: &[(usize, usize)],
-    dasoms_len: usize,
     last_dasom: (usize, usize),
 ) -> i32 {
     if depth == max_depth {
@@ -129,22 +115,15 @@ fn combinations_dasoms(
         return (count == PARTY_COUNT) as i32;
     }
 
-    let takes = dasoms_len - (max_depth - 1);
+    let takes = dasoms.len() - (max_depth - 1);
 
     (start..depth + takes)
         .map(|i| {
             let (r, c) = dasoms[i];
             selected[r][c] = true;
 
-            let result = combinations_dasoms(
-                depth + 1,
-                i + 1,
-                max_depth,
-                selected,
-                dasoms,
-                dasoms_len,
-                dasoms[i],
-            );
+            let result =
+                combinations_dasoms(depth + 1, i + 1, max_depth, selected, dasoms, dasoms[i]);
             selected[r][c] = false;
 
             result

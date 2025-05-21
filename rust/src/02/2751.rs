@@ -3,6 +3,8 @@ use std::collections::BinaryHeap;
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 1_000_000;
+
 struct Heap<T>(Vec<T>);
 
 impl<T: Ord + Copy> Heap<T> {
@@ -72,14 +74,19 @@ impl<T: Ord + Copy> Heap<T> {
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let mut arr: Vec<_> = input.skip(1).collect();
+    let n = input.next().unwrap() as usize;
+    let mut arr = [0; MAX];
 
-    merge_sort(&mut arr);
+    for (i, num) in input.enumerate() {
+        arr[i] = num;
+    }
 
-    for num in arr {
+    merge_sort(&mut arr[..n]);
+
+    for num in &arr[..n] {
         writeln!(output, "{num}").unwrap();
     }
 

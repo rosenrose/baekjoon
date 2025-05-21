@@ -1,6 +1,8 @@
 use std::collections::VecDeque;
 use std::io;
 
+const MAX: usize = 100 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
@@ -8,7 +10,7 @@ fn main() {
 
     let n = input();
     let (start, end) = (input(), input());
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
     for (x, y) in (0..input()).map(|_| (input(), input())) {
         adjacency_list[x].push(y);
@@ -21,7 +23,7 @@ fn main() {
 }
 
 fn bfs(graph: &[Vec<usize>], start: usize, end: usize) -> i32 {
-    let mut visited = vec![false; graph.len()];
+    let mut visited = [false; MAX];
     let mut queue = VecDeque::from([(start, 0)]);
     visited[start] = true;
 

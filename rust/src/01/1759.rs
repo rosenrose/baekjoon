@@ -17,19 +17,12 @@ fn main() {
 
     chars[..chars_len].sort();
 
-    combinations(0, 0, &mut ['\0'; MAX], len, &chars, chars_len);
+    combinations(0, 0, &mut ['\0'; MAX][..len], &chars[..chars_len]);
 }
 
-fn combinations(
-    depth: usize,
-    start: usize,
-    selected: &mut [char; MAX],
-    selected_len: usize,
-    chars: &[char],
-    chars_len: usize,
-) {
-    if depth == selected_len {
-        let result = String::from_iter(selected[..selected_len].iter());
+fn combinations(depth: usize, start: usize, selected: &mut [char], chars: &[char]) {
+    if depth == selected.len() {
+        let result = String::from_iter(selected.iter());
 
         if result.matches(VOWELS).count() < 1 {
             return;
@@ -43,10 +36,10 @@ fn combinations(
         return;
     }
 
-    let takes = chars_len - (selected_len - 1);
+    let takes = chars.len() - (selected.len() - 1);
 
     for i in start..depth + takes {
         selected[depth] = chars[i];
-        combinations(depth + 1, i + 1, selected, selected_len, chars, chars_len);
+        combinations(depth + 1, i + 1, selected, chars);
     }
 }

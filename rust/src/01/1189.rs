@@ -20,14 +20,14 @@ fn main() {
     let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
     visited[start.0][start.1] = true;
 
-    let count = dfs(&map, (width, height), &mut visited, start, end, 1, k as i32);
+    let count = dfs(&map[..height], width, &mut visited, start, end, 1, k as i32);
 
     println!("{count}");
 }
 
 fn dfs(
     map: &[[bool; WIDTH_MAX]],
-    (width, height): (usize, usize),
+    width: usize,
     visited: &mut [[bool; WIDTH_MAX]],
     start: (usize, usize),
     end: (usize, usize),
@@ -38,6 +38,7 @@ fn dfs(
         return (dist == k) as i32;
     }
 
+    let height = map.len();
     let adjacents = [
         (start.0.saturating_sub(1), start.1),
         (start.0, start.1.saturating_sub(1)),
@@ -55,15 +56,7 @@ fn dfs(
 
             visited[adj_r][adj_c] = true;
 
-            let result = dfs(
-                map,
-                (width, height),
-                visited,
-                (adj_r, adj_c),
-                end,
-                dist + 1,
-                k,
-            );
+            let result = dfs(map, width, visited, (adj_r, adj_c), end, dist + 1, k);
             visited[adj_r][adj_c] = false;
 
             result

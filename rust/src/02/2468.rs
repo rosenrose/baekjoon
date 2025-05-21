@@ -19,14 +19,15 @@ fn main() {
     }
 
     let max_safe_area = (min_height..=max_height - 1)
-        .map(|height| get_safe_area(height, &map, n))
+        .map(|height| get_safe_area(height, &map[..n]))
         .max()
         .unwrap_or(1);
 
     println!("{max_safe_area}");
 }
 
-fn get_safe_area(height: i32, map: &[[i32; MAX]], n: usize) -> i32 {
+fn get_safe_area(height: i32, map: &[[i32; MAX]]) -> i32 {
+    let n = map.len();
     let mut count = 0;
     let mut visited = [[false; MAX]; MAX];
 

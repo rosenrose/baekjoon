@@ -26,20 +26,14 @@ fn main() {
         }
     }
 
-    let white_count = product(0, &mut [false; MAX], white_cells_len, &white_cells, 0);
-    let black_count = product(0, &mut [false; MAX], black_cells_len, &black_cells, 0);
+    let white_count = product(0, &mut [false; MAX][..white_cells_len], &white_cells, 0);
+    let black_count = product(0, &mut [false; MAX][..black_cells_len], &black_cells, 0);
 
     println!("{}", white_count + black_count);
 }
 
-fn product(
-    depth: usize,
-    selected: &mut [bool; MAX],
-    selected_len: usize,
-    cells: &[(usize, usize)],
-    count: i32,
-) -> i32 {
-    if depth == selected_len {
+fn product(depth: usize, selected: &mut [bool], cells: &[(usize, usize)], count: i32) -> i32 {
+    if depth == selected.len() {
         return count;
     }
 
@@ -51,11 +45,11 @@ fn product(
         .all(|(r, c)| r.abs_diff(row) != c.abs_diff(col))
     {
         selected[depth] = true;
-        result_on = product(depth + 1, selected, selected_len, cells, count + 1);
+        result_on = product(depth + 1, selected, cells, count + 1);
         selected[depth] = false;
     }
 
-    let result_off = product(depth + 1, selected, selected_len, cells, count);
+    let result_off = product(depth + 1, selected, cells, count);
 
     result_on.max(result_off)
 }

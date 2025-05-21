@@ -1,14 +1,22 @@
 use std::collections::VecDeque;
 use std::io;
 
+const MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let n: usize = input.next().unwrap().parse().unwrap();
-    let map: Vec<_> = input.map(str::as_bytes).collect();
+    let mut map = [[0; MAX]; MAX];
 
-    let mut visited = vec![vec![false; n]; n];
+    for (r, row) in input.map(str::as_bytes).enumerate() {
+        for (c, &num) in row.iter().enumerate() {
+            map[r][c] = num;
+        }
+    }
+
+    let mut visited = [[false; MAX]; MAX];
     visited[0][0] = true;
 
     let mut min_count = i32::MAX;

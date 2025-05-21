@@ -18,7 +18,7 @@ fn main() {
         }
     }
 
-    let (mut areas, areas_len) = get_areas(&map, (width, height));
+    let (mut areas, areas_len) = get_areas(&map[..height], width);
     areas[..areas_len].sort();
 
     println!("{}", areas_len);
@@ -30,8 +30,9 @@ fn main() {
 
 fn get_areas(
     map: &[[bool; WIDTH_MAX]],
-    (width, height): (usize, usize),
+    width: usize,
 ) -> ([i32; WIDTH_MAX * HEIGHT_MAX / 2], usize) {
+    let height = map.len();
     let mut areas = [0; WIDTH_MAX * HEIGHT_MAX / 2];
     let mut areas_len = 0;
     let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];

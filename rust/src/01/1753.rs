@@ -14,7 +14,10 @@ fn main() {
     let [v, e, k] = [(); 3].map(|_| input.next().unwrap());
     let mut adjacency_array = ([i32::MAX; NODES_MAX], [((0, 0), 0); EDGES_MAX]);
 
-    for (i, [u, v, w]) in (0..e).map(|i| (i, [(); 3].map(|_| input.next().unwrap()))) {
+    for (i, [u, v, w]) in (0..e)
+        .map(|_| [(); 3].map(|_| input.next().unwrap()))
+        .enumerate()
+    {
         let prev = adjacency_array.0[u];
 
         adjacency_array.0[u] = i as i32;

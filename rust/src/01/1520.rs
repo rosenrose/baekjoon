@@ -19,7 +19,7 @@ fn main() {
     let mut memo = [[None; WIDTH_MAX]; HEIGHT_MAX];
     memo[height - 1][width - 1] = Some(1);
 
-    println!("{}", get_count(0, 0, &map, (width, height), &mut memo));
+    println!("{}", get_count(0, 0, &map[..height], width, &mut memo));
     // for r in &memo {
     //     println!("{r:?}");
     // }
@@ -29,13 +29,14 @@ fn get_count(
     r: usize,
     c: usize,
     map: &[[i32; WIDTH_MAX]],
-    (width, height): (usize, usize),
+    width: usize,
     memo: &mut [[Option<i32>; WIDTH_MAX]],
 ) -> i32 {
     if let Some(count) = memo[r][c] {
         return count;
     }
 
+    let height = map.len();
     let adjacents = [
         (r.saturating_sub(1), c),
         (r, c.saturating_sub(1)),
@@ -46,8 +47,7 @@ fn get_count(
     let count: i32 = adjacents
         .iter()
         .filter_map(|&(adj_r, adj_c)| {
-            (map[adj_r][adj_c] < map[r][c])
-                .then(|| get_count(adj_r, adj_c, map, (width, height), memo))
+            (map[adj_r][adj_c] < map[r][c]).then(|| get_count(adj_r, adj_c, map, width, memo))
         })
         .sum();
 

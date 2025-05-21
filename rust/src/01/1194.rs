@@ -38,16 +38,13 @@ fn main() {
         }
     }
 
-    let step = simulate(map, (width, height), start);
+    let step = simulate(&map[..height], width, start);
 
     println!("{step}");
 }
 
-fn simulate(
-    map: [[Cells; WIDTH_MAX]; HEIGHT_MAX],
-    (width, height): (usize, usize),
-    start: (usize, usize),
-) -> i32 {
+fn simulate(map: &[[Cells; WIDTH_MAX]], width: usize, start: (usize, usize)) -> i32 {
+    let height = map.len();
     let mut visited = [[[false; 1 << 6]; WIDTH_MAX]; HEIGHT_MAX];
     visited[start.0][start.1][0] = true;
 

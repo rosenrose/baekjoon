@@ -16,7 +16,7 @@ fn main() {
         adjacency_matrix[a][b] = true;
     }
 
-    floyd_warshall(&mut adjacency_matrix, n);
+    floyd_warshall(&mut adjacency_matrix[..n]);
 
     for (a, b) in (0..input()).map(|_| (input() - 1, input() - 1)) {
         writeln!(
@@ -35,10 +35,12 @@ fn main() {
     print!("{output}");
 }
 
-fn floyd_warshall(graph: &mut [[bool; MAX]], graph_len: usize) {
-    for stopby in 0..graph_len {
-        for start in 0..graph_len {
-            for end in 0..graph_len {
+fn floyd_warshall(graph: &mut [[bool; MAX]]) {
+    let len = graph.len();
+
+    for stopby in 0..len {
+        for start in 0..len {
+            for end in 0..len {
                 graph[start][end] =
                     graph[start][end] || (graph[start][stopby] && graph[stopby][end]);
             }

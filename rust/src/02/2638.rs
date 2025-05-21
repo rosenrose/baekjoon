@@ -1,36 +1,44 @@
 use std::io;
 
+const WIDTH_MAX: usize = 100;
+const HEIGHT_MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [height, width] = [(); 2].map(|_| input.next().unwrap());
-    let map: Vec<Vec<_>> = (0..height)
-        .map(|_| input.by_ref().take(width).map(|num| num == 1).collect())
-        .collect();
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
-    let time = simulate(map);
+    for r in 0..height {
+        for (c, num) in input.by_ref().take(width).enumerate() {
+            map[r][c] = num == 1;
+        }
+    }
+
+    let time = simulate(&mut map[..height], width);
 
     println!("{time}");
 }
 
-fn simulate(mut map: Vec<Vec<bool>>) -> i32 {
-    let (width, height) = (map[0].len(), map.len());
+fn simulate(map: &mut [[bool; WIDTH_MAX]], width: usize) -> i32 {
+    let height = map.len();
     let mut time = 0;
 
-    let is_pass =
-        |r: usize, c: usize, visited: &[Vec<bool>], map: &[Vec<bool>]| visited[r][c] || !map[r][c];
+    let is_pass = |r: usize, c: usize, visited: &[[bool; WIDTH_MAX]], map: &[[bool; WIDTH_MAX]]| {
+        visited[r][c] || !map[r][c]
+    };
 
     loop {
         time += 1;
-        melt_cheese(&mut map);
+        melt_cheese(map, width);
 
-        let mut visited = vec![vec![false; width]; height];
+        let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
         let mut count = 0;
 
         for y in 1..height - 1 {
             for x in 1..width - 1 {
-                if is_pass(y, x, &visited, &map) {
+                if is_pass(y, x, &visited, map) {
                     continue;
                 }
 
@@ -42,7 +50,7 @@ fn simulate(mut map: Vec<Vec<bool>>) -> i32 {
                     let adjacents = [(r - 1, c), (r, c - 1), (r + 1, c), (r, c + 1)];
 
                     for (adj_r, adj_c) in adjacents {
-                        if is_pass(adj_r, adj_c, &visited, &map) {
+                        if is_pass(adj_r, adj_c, &visited, map) {
                             continue;
                         }
 
@@ -59,17 +67,21 @@ fn simulate(mut map: Vec<Vec<bool>>) -> i32 {
     }
 }
 
-fn melt_cheese(map: &mut Vec<Vec<bool>>) {
-    let (width, height) = (map[0].len(), map.len());
-    let mut visited = vec![vec![None; width]; height];
-    let mut melted = map.clone();
+fn melt_cheese(map: &mut [[bool; WIDTH_MAX]], width: usize) {
+    let height = map.len();
+    let mut visited = [[None; WIDTH_MAX]; HEIGHT_MAX];
+    let mut melted = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
-    let x_full_range: Vec<_> = (0..width).collect();
+    for (r, row) in melted[..height].iter_mut().enumerate() {
+        *row = map[r];
+    }
+
+    let x_full_range: [usize; WIDTH_MAX] = std::array::from_fn(|i| i);
     let x_edges = [0, width - 1];
 
     for y in 0..height {
         let x_range = if y == 0 || y == height - 1 {
-            &x_full_range[..]
+            &x_full_range[..width]
         } else {
             &x_edges
         };
@@ -113,5 +125,7 @@ fn melt_cheese(map: &mut Vec<Vec<bool>>) {
         }
     }
 
-    *map = melted;
+    for (r, row) in map.iter_mut().enumerate() {
+        *row = melted[r];
+    }
 }

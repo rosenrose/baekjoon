@@ -22,7 +22,7 @@ fn main() {
 
         println!(
             "{}",
-            if bellman_ford(n, &edges, m * 2 + w) {
+            if bellman_ford(n, &edges[..m * 2 + w]) {
                 "YES"
             } else {
                 "NO"
@@ -31,11 +31,11 @@ fn main() {
     }
 }
 
-fn bellman_ford(nodes_len: usize, edges: &[(usize, usize, i64)], edges_len: usize) -> bool {
+fn bellman_ford(nodes_len: usize, edges: &[(usize, usize, i64)]) -> bool {
     let mut distances = [0; NODES_MAX]; // 모든 정점에서 동시에 시작. https://www.acmicpc.net/board/view/72995
 
     for i in 0..nodes_len {
-        for &(start, end, weight) in &edges[..edges_len] {
+        for &(start, end, weight) in edges {
             let new_dist = distances[start] + weight;
 
             if distances[end] <= new_dist {

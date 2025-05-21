@@ -14,43 +14,23 @@ fn main() {
     }
 
     let count: i32 = (1..=n as usize)
-        .map(|i| combinations(0, 0, &mut [0; MAX], i, &nums, n as usize, s))
+        .map(|i| combinations(0, 0, &mut [0; MAX][..i], &nums[..n as usize], s))
         .sum();
 
     println!("{count}");
 }
 
-fn combinations(
-    depth: usize,
-    start: usize,
-    selected: &mut [usize; MAX],
-    selected_len: usize,
-    nums: &[i32],
-    nums_len: usize,
-    sum: i32,
-) -> i32 {
-    if depth == selected_len {
-        return (selected[..selected_len]
-            .iter()
-            .map(|&i| nums[i])
-            .sum::<i32>()
-            == sum) as i32;
+fn combinations(depth: usize, start: usize, selected: &mut [usize], nums: &[i32], sum: i32) -> i32 {
+    if depth == selected.len() {
+        return (selected.iter().map(|&i| nums[i]).sum::<i32>() == sum) as i32;
     }
 
-    let takes = nums_len - (selected_len - 1);
+    let takes = nums.len() - (selected.len() - 1);
 
     (start..depth + takes)
         .map(|i| {
             selected[depth] = i;
-            combinations(
-                depth + 1,
-                i + 1,
-                selected,
-                selected_len,
-                nums,
-                nums_len,
-                sum,
-            )
+            combinations(depth + 1, i + 1, selected, nums, sum)
         })
         .sum()
 }

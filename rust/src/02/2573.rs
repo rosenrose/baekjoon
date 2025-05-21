@@ -1,3 +1,4 @@
+use core::iter::Iterator;
 use std::io;
 
 const WIDTH_MAX: usize = 300;
@@ -16,12 +17,13 @@ fn main() {
         }
     }
 
-    let time = simulate(&mut map, (width, height));
+    let time = simulate(&mut map[..height], width);
 
     println!("{time}");
 }
 
-fn simulate(map: &mut [[u8; WIDTH_MAX]; HEIGHT_MAX], (width, height): (usize, usize)) -> i32 {
+fn simulate(map: &mut [[u8; WIDTH_MAX]], width: usize) -> i32 {
+    let height = map.len();
     let mut time = 0;
 
     let is_pass = |r: usize, c: usize, visited: &[[bool; WIDTH_MAX]], map: &[[u8; WIDTH_MAX]]| {
@@ -30,7 +32,7 @@ fn simulate(map: &mut [[u8; WIDTH_MAX]; HEIGHT_MAX], (width, height): (usize, us
 
     loop {
         time += 1;
-        melt_ice(map);
+        melt_ice(map, width);
 
         let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
         let mut count = 0;
@@ -69,8 +71,8 @@ fn simulate(map: &mut [[u8; WIDTH_MAX]; HEIGHT_MAX], (width, height): (usize, us
     }
 }
 
-fn melt_ice(map: &mut [[u8; WIDTH_MAX]; HEIGHT_MAX]) {
-    let (width, height) = (map[0].len(), map.len());
+fn melt_ice(map: &mut [[u8; WIDTH_MAX]], width: usize) {
+    let height = map.len();
     let mut melted = [[0; WIDTH_MAX]; HEIGHT_MAX];
 
     for r in 1..height - 1 {
@@ -88,7 +90,9 @@ fn melt_ice(map: &mut [[u8; WIDTH_MAX]; HEIGHT_MAX]) {
         }
     }
 
-    *map = melted;
+    for (r, row) in map.iter_mut().enumerate() {
+        *row = melted[r];
+    }
 }
 
 fn get_adjacents(r: usize, c: usize) -> [(usize, usize); 4] {
