@@ -16,7 +16,7 @@ fn main() {
         })
         .collect();
 
-    let (min, max) = permutations(0, &mut [0; MAX][..k + 1], &mut [false; 10], &operators);
+    let (min, max) = permutations(0, &mut [0; MAX][..k + 1], &mut [false; MAX], &operators);
 
     println!("{max:0digits$}\n{min:0digits$}", digits = k + 1);
 }

@@ -1,5 +1,7 @@
 use std::io;
 
+const WIDTH_MAX: usize = 1000;
+const HEIGHT_MAX: usize = 1000;
 const DIRS: [(i32, i32); 4] = [(1, 0), (0, 1), (-1, 0), (0, -1)];
 
 fn main() {
@@ -14,7 +16,7 @@ fn main() {
         return;
     }
 
-    let mut seats = vec![vec![0; col as usize]; row as usize];
+    let mut seats = [[0; WIDTH_MAX]; HEIGHT_MAX];
     let mut num = 0;
     let (mut x, mut y) = (-1, 0);
     let mut dir = 0;

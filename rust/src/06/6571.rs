@@ -5,6 +5,7 @@ use std::ops::Add;
 
 const DIGITS: usize = 37;
 const POW: i128 = 10_i128.pow(DIGITS as u32);
+const MAX: usize = 480;
 
 #[derive(PartialEq)]
 struct BigInt(Vec<i128>);
@@ -81,11 +82,14 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().map(BigInt::parse);
 
-    let mut memo = vec![BigInt(vec![1]), BigInt(vec![2])];
+    let mut memo = [(); MAX].map(|_| BigInt(vec![0]));
+    memo[0] = BigInt(vec![1]);
+    memo[1] = BigInt(vec![2]);
+    let mut memo_len = 2;
 
-    while memo.last().unwrap().to_string().len() <= 100 {
-        let len = memo.len();
-        memo.push(&memo[len - 2] + &memo[len - 1]);
+    while memo[memo_len - 1].to_string().len() <= 100 {
+        memo[memo_len] = &memo[memo_len - 2] + &memo[memo_len - 1];
+        memo_len += 1;
     }
 
     while let [Some(a), Some(b)] = [(); 2].map(|_| input.next()) {
@@ -93,8 +97,8 @@ fn main() {
             return;
         }
 
-        let start = memo.iter().position(|num| num >= &a).unwrap();
-        let end = memo.iter().rposition(|num| num <= &b).unwrap();
+        let start = memo[..memo_len].iter().position(|num| num >= &a).unwrap();
+        let end = memo[..memo_len].iter().rposition(|num| num <= &b).unwrap();
 
         println!("{}", end as i32 - start as i32 + 1);
     }

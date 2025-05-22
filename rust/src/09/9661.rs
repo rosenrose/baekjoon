@@ -1,4 +1,6 @@
-#[derive(Default, Debug)]
+use std::io;
+
+#[derive(Copy, Clone, Default, PartialEq, Debug)]
 enum Player {
     #[default]
     SK,
@@ -6,11 +8,12 @@ enum Player {
 }
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let n: usize = buf.trim().parse().unwrap();
 
-    let n: i64 = buf.trim().parse().unwrap();
-    let mut winners = vec![Default::default(), Player::SK, Player::CY];
+    let mut winners = [Default::default(); 6];
+    winners[1] = Player::SK;
+    winners[2] = Player::CY;
 
     for i in 3..=5 {
         let winner = 'w: {
@@ -21,7 +24,7 @@ fn main() {
             if [1, 4]
                 .iter()
                 .filter(|&&power_4| power_4 < i)
-                .any(|p| matches!(winners[i - p], Player::CY))
+                .any(|p| winners[i - p] == Player::CY)
             {
                 Player::SK
             } else {
@@ -29,10 +32,10 @@ fn main() {
             }
         };
 
-        winners.push(winner);
+        winners[i] = winner;
     }
 
-    let idx = (n % 5) as usize;
+    let idx = n % 5;
 
     println!("{:?}", winners[if idx == 0 { 5 } else { idx }]);
 }

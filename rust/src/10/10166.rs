@@ -1,5 +1,7 @@
 use std::collections::HashSet;
 
+const MAX: usize = 2000;
+
 fn main() {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
@@ -7,8 +9,8 @@ fn main() {
     let [d1, d2] = parse_int_vec(&buf)[..] else {
         return;
     };
-    let euler_phi = get_euler_phi(d2 as usize);
-    let mut checked = vec![false; (d2 + 1) as usize];
+    let euler_phi = get_euler_phi(MAX);
+    let mut checked = [false; MAX + 1];
     let mut count = 0;
 
     for mut d in d1..=d2 {
@@ -42,9 +44,9 @@ fn main() {
     println!("{count}");
 }
 
-fn get_euler_phi(size: usize) -> Vec<i32> {
+fn get_euler_phi(size: usize) -> [i32; MAX + 1] {
     let min_factors = get_min_factors(size);
-    let mut euler_phi = vec![0; size + 1];
+    let mut euler_phi = [0; MAX + 1];
     euler_phi[1] = 1;
 
     for i in 2..=size {
@@ -62,8 +64,8 @@ fn get_euler_phi(size: usize) -> Vec<i32> {
     euler_phi
 }
 
-fn get_min_factors(num: usize) -> Vec<i32> {
-    let mut min_factors: Vec<_> = (0..=num as i32).collect();
+fn get_min_factors(num: usize) -> [i32; MAX + 1] {
+    let mut min_factors = std::array::from_fn(|i| i as i32);
 
     for i in (2..).take_while(|i| i * i <= num) {
         if min_factors[i] != i as i32 {

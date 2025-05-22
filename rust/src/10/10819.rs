@@ -1,23 +1,24 @@
 use std::io;
 
+const MAX: usize = 8;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
-    let nums: Vec<_> = input.collect();
+    let mut nums = [0; MAX];
 
-    let max_sum = permutations(0, &mut vec![0; n], &mut [false; 8], &nums);
+    for (i, num) in input.enumerate() {
+        nums[i] = num;
+    }
+
+    let max_sum = permutations(0, &mut [0; MAX][..n], &mut [false; MAX], &nums[..n]);
 
     println!("{max_sum}");
 }
 
-fn permutations(
-    depth: usize,
-    selected: &mut Vec<usize>,
-    visited: &mut [bool],
-    nums: &[i32],
-) -> u32 {
+fn permutations(depth: usize, selected: &mut [usize], visited: &mut [bool], nums: &[i32]) -> u32 {
     if depth == selected.len() {
         let sum = (1..selected.len())
             .map(|i| nums[selected[i - 1]].abs_diff(nums[selected[i]]))

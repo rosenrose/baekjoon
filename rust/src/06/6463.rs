@@ -2,6 +2,7 @@ use std::io;
 
 const DIGITS: usize = 18;
 const POW: i128 = 10_i128.pow(DIGITS as u32);
+const MAX: usize = 9999;
 
 struct BigInt(Vec<i64>);
 
@@ -31,10 +32,10 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.lines().flat_map(str::parse::<usize>);
 
-    let mut memo = vec![BigInt(vec![1])];
+    let mut memo = [(); MAX + 1].map(|_| BigInt(vec![1]));
 
-    for i in 1..=9999 {
-        let mut factorial = memo.last().unwrap().mul(i);
+    for i in 1..=MAX {
+        let mut factorial = memo[i - 1].mul(i as i64);
 
         while factorial.0[0] == 0 {
             factorial.0.remove(0);
@@ -42,7 +43,7 @@ fn main() {
 
         let next = factorial.0.into_iter().take(2).collect();
 
-        memo.push(BigInt(next));
+        memo[i] = BigInt(next);
     }
 
     for n in input {

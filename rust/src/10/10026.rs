@@ -1,18 +1,29 @@
 use std::io;
 
+const MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let picture: Vec<_> = buf.lines().skip(1).map(str::as_bytes).collect();
+    let mut input = buf.lines();
 
-    let normal_count = get_count(&picture, false);
-    let blind_count = get_count(&picture, true);
+    let n: usize = input.next().unwrap().parse().unwrap();
+    let mut picture = [['\0'; MAX]; MAX];
+
+    for (r, row) in input.enumerate() {
+        for (c, ch) in row.char_indices() {
+            picture[r][c] = ch;
+        }
+    }
+
+    let normal_count = get_count(&picture[..n], false);
+    let blind_count = get_count(&picture[..n], true);
 
     println!("{normal_count} {blind_count}");
 }
 
-fn get_count(picture: &[&[u8]], is_blind: bool) -> i32 {
+fn get_count(picture: &[[char; MAX]], is_blind: bool) -> i32 {
     let n = picture.len();
-    let mut visited = vec![vec![false; n]; n];
+    let mut visited = [[false; MAX]; MAX];
     let mut count = 0;
 
     for y in 0..n {
@@ -43,11 +54,7 @@ fn get_count(picture: &[&[u8]], is_blind: bool) -> i32 {
                     if !is_blind && (adj_color != color) {
                         continue;
                     }
-                    if is_blind
-                        && matches!(
-                            (adj_color as char, color as char),
-                            ('R' | 'G', 'B') | ('B', 'R' | 'G')
-                        )
+                    if is_blind && matches!((adj_color, color), ('R' | 'G', 'B') | ('B', 'R' | 'G'))
                     {
                         continue;
                     }

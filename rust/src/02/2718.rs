@@ -1,13 +1,14 @@
 use std::io;
 
+const MAX: usize = 21;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.lines().flat_map(str::parse::<usize>);
 
-    const MAX: i32 = 21;
-    let mut memo = [[-1; 5]; MAX as usize + 1];
+    let mut memo = [[-1; 5]; MAX + 1];
 
-    get_count(MAX, 0, &mut memo);
+    get_count(MAX as i32, 0, &mut memo);
     // println!("{memo:?}");
     for n in input.skip(1) {
         println!("{}", memo[n][0]);
@@ -47,8 +48,8 @@ fn get_count(n: i32, state: usize, memo: &mut [[i32; 5]]) -> i32 {
     count
 }
 
-// let mut memo = vec![0; 22];
-// (memo[0], memo[1], memo[2]) = (1, 1, 5);
+// let mut memo = [0; MAX + 1];
+// memo[0..3].copy_from_slice(&[1, 1, 5]);
 
 // for i in 3..=21 {
 //     memo[i] = memo[i - 1]

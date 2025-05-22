@@ -3,6 +3,8 @@ use std::collections::BinaryHeap;
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 20;
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
@@ -11,7 +13,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     for i in 1..=input() {
         let (n, m) = (input(), input());
-        let mut adjacency_list = vec![Vec::new(); m];
+        let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
         for [x, y, z] in (0..n).map(|_| [(); 3].map(|_| input())) {
             adjacency_list[x].push((y, z as i32));
@@ -19,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
 
         let (start, mut end) = (0, m - 1);
-        let (distance, prevs) = dijkstra_with_path(&adjacency_list, start, end);
+        let (distance, prevs) = dijkstra_with_path(&adjacency_list[..m], start, end);
 
         write!(output, "Case #{i}: ")?;
 
@@ -28,14 +30,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             continue;
         }
 
-        let mut path = vec![end];
+        let mut path = [0; MAX];
+        path[0] = end;
+        let mut path_len = 1;
 
         while end != start {
             end = prevs[end];
-            path.push(end);
+            path[path_len] = end;
+            path_len += 1;
         }
 
-        for p in path.iter().rev() {
+        for p in path[..path_len].iter().rev() {
             write!(output, "{p} ")?;
         }
         writeln!(output, "")?;
@@ -45,11 +50,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn dijkstra_with_path(graph: &[Vec<(usize, i32)>], start: usize, end: usize) -> (i32, Vec<usize>) {
-    let mut distances = vec![i32::MAX; graph.len()];
+fn dijkstra_with_path(
+    graph: &[Vec<(usize, i32)>],
+    start: usize,
+    end: usize,
+) -> (i32, [usize; MAX]) {
+    let mut distances = [i32::MAX; MAX];
     distances[start] = 0;
 
-    let mut prevs = vec![0; graph.len()];
+    let mut prevs = [0; MAX];
     let mut queue = BinaryHeap::from([(Reverse(0), start)]);
 
     while let Some((Reverse(dist), node)) = queue.pop() {

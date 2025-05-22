@@ -1,6 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 200_000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
@@ -11,8 +13,8 @@ fn main() {
     let mut color_sizes: Vec<_> = (0..n).map(|i| (i, (input() - 1, input()))).collect();
     color_sizes.sort_unstable_by_key(|&(_, (_, size))| size);
     // println!("{color_sizes:?}");
-    let mut results = vec![0; n];
-    let mut sums = vec![0; n];
+    let mut results = [0; MAX];
+    let mut sums = [0; MAX];
     let mut total_sum = 0;
     let mut cursor = 0;
 
@@ -37,7 +39,7 @@ fn main() {
         cursor = i + 1;
     }
 
-    for sum in results {
+    for sum in &results[..n] {
         writeln!(output, "{sum}").unwrap();
     }
 

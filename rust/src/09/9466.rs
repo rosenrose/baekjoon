@@ -1,6 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 100_000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
@@ -8,13 +10,13 @@ fn main() {
 
     for _ in 0..input.next().unwrap() {
         let n = input.next().unwrap();
-        let mut adjacency_list = vec![0; n + 1];
+        let mut adjacency_list = [0; MAX];
 
         for (i, num) in input.by_ref().take(n).enumerate() {
             adjacency_list[i + 1] = num;
         }
 
-        let count = get_cycle_nodes(&adjacency_list);
+        let count = get_cycle_nodes(&adjacency_list[..=n]);
 
         writeln!(output, "{count}").unwrap();
     }
@@ -23,11 +25,12 @@ fn main() {
 }
 
 fn get_cycle_nodes(graph: &[usize]) -> usize {
-    let mut visited_total = vec![false; graph.len()];
-    let mut visited_dfs = vec![false; graph.len()];
-    let mut count = graph.len() - 1;
+    let graph_len = graph.len();
+    let mut visited_total = [false; MAX];
+    let mut visited_dfs = [false; MAX];
+    let mut count = graph_len - 1;
 
-    for start in 1..graph.len() {
+    for start in 1..graph_len {
         if visited_total[start] {
             continue;
         }
@@ -35,8 +38,8 @@ fn get_cycle_nodes(graph: &[usize]) -> usize {
         dfs(
             start,
             &graph,
-            &mut visited_total,
-            &mut visited_dfs,
+            &mut visited_total[..graph_len],
+            &mut visited_dfs[..graph_len],
             &mut count,
         );
     }
@@ -47,8 +50,8 @@ fn get_cycle_nodes(graph: &[usize]) -> usize {
 fn dfs(
     node: usize,
     graph: &[usize],
-    visited_total: &mut Vec<bool>,
-    visited_dfs: &mut Vec<bool>,
+    visited_total: &mut [bool],
+    visited_dfs: &mut [bool],
     count: &mut usize,
 ) -> Option<usize> {
     visited_total[node] = true;

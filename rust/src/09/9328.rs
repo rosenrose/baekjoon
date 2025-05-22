@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::io;
 
-#[derive(Clone, Debug)]
+#[derive(Copy, Clone, Debug)]
 enum Cells {
     Empty,
     Wall,
@@ -10,6 +10,9 @@ enum Cells {
     Document,
 }
 
+const WIDTH_MAX: usize = 100 + 2;
+const HEIGHT_MAX: usize = 100 + 2;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
@@ -17,7 +20,7 @@ fn main() {
 
     for _ in 0..parse_int(input()) {
         let [height, width] = [(); 2].map(|_| parse_int(input()));
-        let mut map = vec![vec![Cells::Empty; width + 2]; height + 2];
+        let mut map = [[Cells::Empty; WIDTH_MAX]; HEIGHT_MAX];
 
         for r in 0..height {
             for (c, ch) in input().as_bytes().iter().enumerate() {
@@ -42,19 +45,19 @@ fn main() {
             keys |= 1 << (ch - b'a');
         }
 
-        println!("{}", simulate(map, keys));
+        println!("{}", simulate(&mut map[..height + 2], width + 2, keys));
     }
 }
 
-fn simulate(mut map: Vec<Vec<Cells>>, mut keys: i32) -> i32 {
-    let (width, height) = (map[0].len(), map.len());
+fn simulate(map: &mut [[Cells; WIDTH_MAX]], width: usize, mut keys: i32) -> i32 {
+    let height = map.len();
     let start = (0, 0);
 
     let mut count = 0;
-    let mut visited = vec![vec![None; width]; height];
+    let mut visited = [[None; WIDTH_MAX]; HEIGHT_MAX];
     visited[start.0][start.1] = Some(keys);
 
-    let mut discovered_doors = vec![Vec::<(usize, usize)>::new(); 26];
+    let mut discovered_doors = [(); 26].map(|_| Vec::<(usize, usize)>::new());
     let mut queue = VecDeque::from([start]);
 
     while let Some((r, c)) = queue.pop_front() {
