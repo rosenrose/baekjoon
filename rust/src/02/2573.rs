@@ -1,4 +1,3 @@
-use core::iter::Iterator;
 use std::io;
 
 const WIDTH_MAX: usize = 300;

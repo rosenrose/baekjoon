@@ -1,4 +1,3 @@
-use core::iter::Iterator;
 use std::fmt::Write;
 use std::io;
 

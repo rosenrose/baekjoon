@@ -1,4 +1,3 @@
-use core::iter::Iterator;
 use std::collections::HashSet;
 use std::io;
 

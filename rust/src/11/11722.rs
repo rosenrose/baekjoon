@@ -21,5 +21,5 @@ fn main() {
         lis_temp[i] = num;
     }
 
-    println!("{}", lis_temp_len);
+    println!("{lis_temp_len}");
 }

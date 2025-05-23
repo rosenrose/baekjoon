@@ -7,7 +7,6 @@ enum Dirs {
     Right,
 }
 
-use core::iter::Iterator;
 use std::io;
 use Dirs::*;
 
