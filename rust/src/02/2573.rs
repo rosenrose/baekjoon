@@ -91,7 +91,7 @@ fn melt_ice(map: &mut [[u8; WIDTH_MAX]], width: usize) {
     }
 
     for (r, row) in map.iter_mut().enumerate() {
-        *row = melted[r];
+        row[..width].copy_from_slice(&melted[r][..width]);
     }
 }
 

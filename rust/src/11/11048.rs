@@ -1,18 +1,19 @@
 use std::io;
 
+const MAX: usize = 1000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
-    let mut memo = vec![0; m];
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
+    let mut memo = [0; MAX];
 
     for _ in 0..n {
-        let mut next = vec![0; m];
+        let mut next = [0; MAX];
 
         for c in 0..m {
-            next[c] = input()
+            next[c] = input.next().unwrap()
                 + next[c.saturating_sub(1)]
                     .max(memo[c])
                     .max(memo[c.saturating_sub(1)]);

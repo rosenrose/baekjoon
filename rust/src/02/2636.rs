@@ -79,8 +79,8 @@ fn melt_cheese(map: &mut [[bool; WIDTH_MAX]], width: usize) {
     let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
     let mut melted = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
-    for (r, row) in melted[..height].iter_mut().enumerate() {
-        *row = map[r];
+    for (r, row) in map.iter().enumerate() {
+        melted[r][..width].copy_from_slice(&row[..width]);
     }
 
     let x_full_range: [usize; WIDTH_MAX] = std::array::from_fn(|i| i);
@@ -128,6 +128,6 @@ fn melt_cheese(map: &mut [[bool; WIDTH_MAX]], width: usize) {
     }
 
     for (r, row) in map.iter_mut().enumerate() {
-        *row = melted[r];
+        row[..width].copy_from_slice(&melted[r][..width]);
     }
 }

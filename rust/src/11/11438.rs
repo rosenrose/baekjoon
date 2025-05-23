@@ -1,7 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
-const MAX_PARENTS: usize = 17;
+const NODES_MAX: usize = 100_000 + 1;
+const PARENTS_MAX: usize = 17;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -10,15 +11,15 @@ fn main() {
     let mut output = String::new();
 
     let n = input();
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let mut adjacency_list = [(); NODES_MAX].map(|_| Vec::new());
 
     for (a, b) in (0..n - 1).map(|_| (input(), input())) {
         adjacency_list[a].push(b as i32);
         adjacency_list[b].push(a as i32);
     }
 
-    let mut depths = vec![0; n + 1];
-    let mut parents = vec![[0; MAX_PARENTS]; n + 1];
+    let mut depths = [0; NODES_MAX];
+    let mut parents = [[0; PARENTS_MAX]; NODES_MAX];
     let root = 1;
     let mut stack = vec![(root, 1)];
 
@@ -34,7 +35,7 @@ fn main() {
             stack.push((adj as usize, depth + 1));
         }
 
-        for i in 1..MAX_PARENTS {
+        for i in 1..PARENTS_MAX {
             let parent = parents[node][i - 1] as usize;
 
             if parent == 0 {
@@ -46,13 +47,13 @@ fn main() {
     }
 
     for (u, v) in (0..input()).map(|_| (input(), input())) {
-        writeln!(output, "{}", lca((u, v), &depths, &parents)).unwrap();
+        writeln!(output, "{}", lca((u, v), &depths[..=n], &parents[..=n])).unwrap();
     }
 
     print!("{output}");
 }
 
-fn lca((mut u, mut v): (usize, usize), depths: &[i32], parents: &[[i32; MAX_PARENTS]]) -> usize {
+fn lca((mut u, mut v): (usize, usize), depths: &[i32], parents: &[[i32; PARENTS_MAX]]) -> usize {
     if depths[v] > depths[u] {
         (u, v) = (v, u);
     }
@@ -68,7 +69,7 @@ fn lca((mut u, mut v): (usize, usize), depths: &[i32], parents: &[[i32; MAX_PARE
         return u;
     }
 
-    while let Some(i) = (0..MAX_PARENTS)
+    while let Some(i) = (0..PARENTS_MAX)
         .rev()
         .find(|&i| parents[u][i] != parents[v][i])
     {

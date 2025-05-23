@@ -1,24 +1,26 @@
 use std::io;
 
+const MAX: usize = 1000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, m) = (input() as usize, input());
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let [n, m] = [(); 2].map(|_| input());
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
-    for (u, v) in (0..m).map(|_| (input() as i16, input() as i16)) {
+    for [u, v] in (0..m).map(|_| [(); 2].map(|_| input() as i16)) {
         adjacency_list[u as usize].push(v);
         adjacency_list[v as usize].push(u);
     }
 
-    println!("{}", dfs(&adjacency_list));
+    println!("{}", dfs(&adjacency_list[..=n]));
 }
 
 fn dfs(graph: &[Vec<i16>]) -> i16 {
     let mut count = 0;
-    let mut visited = vec![false; graph.len()];
+    let mut visited = [false; MAX];
 
     for start in 1..graph.len() {
         if visited[start] {

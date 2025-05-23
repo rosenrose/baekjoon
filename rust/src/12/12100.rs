@@ -7,23 +7,35 @@ enum Dirs {
     Right,
 }
 
+use core::iter::Iterator;
 use std::io;
 use Dirs::*;
+
+const MAX: usize = 20;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
-    let board: Vec<Vec<_>> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
+    let mut board = [[0; MAX]; MAX];
+
+    for r in 0..n {
+        for (c, num) in input.by_ref().take(n).enumerate() {
+            board[r][c] = num;
+        }
+    }
+
+    let range: [usize; MAX] = std::array::from_fn(|i| i);
+    let range_rev: [usize; MAX] = std::array::from_fn(|i| MAX - 1 - i);
     let rows_cols = [
-        ((1..n).collect(), (0..n).collect()),
-        ((0..n - 1).rev().collect(), (0..n).collect()),
-        ((0..n).collect(), (1..n).collect()),
-        ((0..n).collect(), (0..n - 1).rev().collect()),
+        (&range[1..n], &range[0..n]),
+        (&range_rev[(MAX - 1) - (n - 2)..], &range[0..n]),
+        (&range[0..n], &range[1..n]),
+        (&range[0..n], &range_rev[(MAX - 1) - (n - 2)..]),
     ];
 
-    let max_block = product(0, &mut [Default::default(); 5], &board, &rows_cols);
+    let max_block = product(0, &mut [Default::default(); 5], &board[..n], &rows_cols);
 
     println!("{max_block}");
 }
@@ -31,11 +43,19 @@ fn main() {
 fn product(
     depth: usize,
     selected: &mut [Dirs],
-    board: &[Vec<i32>],
-    rows_cols: &[(Vec<usize>, Vec<usize>)],
+    board: &[[i32; MAX]],
+    rows_cols: &[(&[usize], &[usize])],
 ) -> i32 {
+    let n = board.len();
+
     if depth == selected.len() {
-        return simulate(selected, board.to_owned(), rows_cols);
+        let mut temp = [[0; MAX]; MAX];
+
+        for (r, row) in board.iter().enumerate() {
+            temp[r][..n].copy_from_slice(&row[..n]);
+        }
+
+        return simulate(selected, &mut temp[..n], rows_cols);
     }
 
     [Up, Right, Down, Left]
@@ -50,14 +70,14 @@ fn product(
 
 fn simulate(
     selected: &mut [Dirs],
-    mut board: Vec<Vec<i32>>,
-    rows_cols: &[(Vec<usize>, Vec<usize>)],
+    board: &mut [[i32; MAX]],
+    rows_cols: &[(&[usize], &[usize])],
 ) -> i32 {
     let n = board.len();
-    let mut merged = vec![vec![false; n]; n];
+    let mut merged = [[false; MAX]; MAX];
 
     for dir in selected {
-        let (rows, cols) = &rows_cols[*dir as usize];
+        let (rows, cols) = rows_cols[*dir as usize];
 
         for &r in rows {
             for &c in cols {

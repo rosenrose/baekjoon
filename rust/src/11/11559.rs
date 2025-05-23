@@ -2,6 +2,7 @@ use std::io;
 
 const WIDTH: usize = 6;
 const HEIGHT: usize = 12;
+const GROUP_MIN: usize = 4;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -13,19 +14,20 @@ fn main() {
         *cell = (ch != '.').then_some(ch);
     }
 
-    let count = simulate(map);
+    let count = simulate(&mut map);
 
     println!("{count}");
 }
 
-fn simulate(mut map: [[Option<char>; WIDTH]; HEIGHT]) -> i32 {
+fn simulate(map: &mut [[Option<char>; WIDTH]]) -> i32 {
     let mut count = 0;
     let is_pass = |r: usize, c: usize, visited: &[[bool; WIDTH]], map: &[[Option<char>; WIDTH]]| {
         visited[r][c] || map[r][c].is_none()
     };
 
     loop {
-        let mut groups = Vec::new();
+        let mut groups = [(); WIDTH * HEIGHT / GROUP_MIN].map(|_| Vec::new());
+        let mut groups_len = 0;
         let mut visited = [[false; WIDTH]; HEIGHT];
 
         for y in 0..HEIGHT {
@@ -61,23 +63,24 @@ fn simulate(mut map: [[Option<char>; WIDTH]; HEIGHT]) -> i32 {
                     }
                 }
 
-                if group.len() >= 4 {
-                    groups.push(group);
+                if group.len() >= GROUP_MIN {
+                    groups[groups_len] = group;
+                    groups_len += 1;
                 }
             }
         }
 
-        if groups.is_empty() {
+        if groups_len == 0 {
             return count;
         }
 
-        for group in groups {
-            for (r, c) in group {
+        for group in &groups[..groups_len] {
+            for &(r, c) in group {
                 map[r][c] = None;
             }
         }
 
-        move_down(&mut map);
+        move_down(map);
         count += 1;
     }
 }

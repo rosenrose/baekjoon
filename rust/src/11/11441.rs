@@ -1,6 +1,8 @@
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 100_000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
@@ -8,10 +10,10 @@ fn main() {
     let mut output = String::new();
 
     let n = input() as usize;
-    let mut sum_accum = vec![0; n + 1];
+    let mut sum_accum = [0; MAX];
 
-    for (i, num) in (1..=n).map(|i| (i, input())) {
-        sum_accum[i] = sum_accum[i - 1] + num;
+    for i in 1..=n {
+        sum_accum[i] = sum_accum[i - 1] + input();
     }
 
     for (i, j) in (0..input()).map(|_| (input() as usize, input() as usize)) {

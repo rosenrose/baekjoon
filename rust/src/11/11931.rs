@@ -1,16 +1,24 @@
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 1_000_000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.lines().flat_map(str::parse::<i32>);
+    let mut input = buf.lines().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let mut arr: Vec<_> = input.skip(1).collect();
+    let n = input.next().unwrap() as usize;
+    let mut arr = [0; MAX];
 
-    merge_sort(&mut arr);
+    for (i, num) in input.enumerate() {
+        arr[i] = num;
+    }
 
-    for num in arr {
+    // merge_sort(&mut arr[..n]);
+    arr[..n].sort_unstable_by_key(|&num| std::cmp::Reverse(num));
+
+    for num in &arr[..n] {
         writeln!(output, "{num}").unwrap();
     }
 

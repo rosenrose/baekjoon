@@ -1,10 +1,10 @@
 use std::collections::HashMap;
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let n: i32 = buf.trim().parse().unwrap();
+
     let mut memo = HashMap::from([
         (1, (0, vec![1])),
         (2, (1, vec![1, 2])),

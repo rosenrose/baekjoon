@@ -1,26 +1,30 @@
 use std::io;
 
+const PLAYERS_MAX: usize = 100;
+const CARDS_MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m] = [(); 2].map(|_| input.next().unwrap());
-    let cards: Vec<_> = (0..n)
-        .map(|_| {
-            let mut card: Vec<_> = input.by_ref().take(m).collect();
-            card.sort();
+    let mut cards = [[0; CARDS_MAX]; PLAYERS_MAX];
 
-            card
-        })
-        .collect();
+    for r in 0..n {
+        for (c, num) in input.by_ref().take(m).enumerate() {
+            cards[r][c] = num;
+        }
 
-    let mut scores = vec![0; n];
+        cards[r][..m].sort();
+    }
+
+    let mut scores = [0; PLAYERS_MAX];
     let mut max_score = 0;
 
     for col in (0..m).rev() {
-        let max_card = cards.iter().map(|row| row[col]).max().unwrap();
+        let max_card = cards[..n].iter().map(|row| row[col]).max().unwrap();
 
-        cards
+        cards[..n]
             .iter()
             .enumerate()
             .filter_map(|(p, row)| (row[col] == max_card).then_some(p))
@@ -30,7 +34,11 @@ fn main() {
             });
     }
 
-    for (player, _) in scores.iter().enumerate().filter(|(_, &s)| s == max_score) {
+    for (player, _) in scores[..n]
+        .iter()
+        .enumerate()
+        .filter(|(_, &s)| s == max_score)
+    {
         print!("{} ", player + 1);
     }
 }

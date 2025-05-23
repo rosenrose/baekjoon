@@ -1,25 +1,27 @@
 use std::collections::VecDeque;
 use std::io;
 
+const MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m] = [(); 2].map(|_| input.next().unwrap());
     let start = (0, 0);
-    let mut map = vec![vec![false; n]; n];
+    let mut map = [[false; MAX]; MAX];
     map[start.0][start.1] = true;
 
-    let mut switches = vec![vec![Vec::new(); n]; n];
+    let mut switches = [(); MAX].map(|_| [(); MAX].map(|_| Vec::new()));
 
     for [y, x, a, b] in (0..m).map(|_| [(); 4].map(|_| input.next().unwrap() - 1)) {
         switches[y][x].push((a, b));
     }
 
-    let mut visited = vec![vec![false; n]; n];
+    let mut visited = [[false; MAX]; MAX];
     visited[start.0][start.1] = true;
 
-    let mut discovered_darks = vec![vec![false; n]; n];
+    let mut discovered_darks = [[false; MAX]; MAX];
     let mut count = 1;
     let mut queue = VecDeque::from([start]);
 

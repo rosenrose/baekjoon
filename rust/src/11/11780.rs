@@ -1,5 +1,8 @@
+use core::iter::Iterator;
 use std::fmt::Write;
 use std::io;
+
+const MAX: usize = 100;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let buf = io::read_to_string(io::stdin())?;
@@ -7,18 +10,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut output = String::new();
 
     let [n, m] = [(); 2].map(|_| input.next().unwrap());
-    let mut adjacency_matrix: Vec<Vec<_>> = (0..n)
-        .map(|i| (0..n).map(|j| if i == j { 0 } else { i32::MAX }).collect())
-        .collect();
+    let mut adjacency_matrix = [[0; MAX]; MAX];
+
+    for r in 0..n {
+        for c in 0..n {
+            adjacency_matrix[r][c] = if r == c { 0 } else { i32::MAX };
+        }
+    }
 
     for [a, b, c] in (0..m).map(|_| [(); 3].map(|_| input.next().unwrap())) {
         adjacency_matrix[a - 1][b - 1] = adjacency_matrix[a - 1][b - 1].min(c as i32);
     }
 
-    let prevs = floyd_warshall_with_path(&mut adjacency_matrix);
+    let prevs = floyd_warshall_with_path(&mut adjacency_matrix[..n]);
 
-    for row in adjacency_matrix {
-        for dist in row {
+    for row in &adjacency_matrix[..n] {
+        for &dist in &row[..n] {
             write!(output, "{} ", if dist == i32::MAX { 0 } else { dist })?;
         }
         writeln!(output, "")?;
@@ -30,14 +37,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 writeln!(output, "0")?;
                 continue;
             }
-            let Some(path) = get_path(&prevs, i, j) else {
+            let Some((path, path_len)) = get_path(&prevs[..n], i, j) else {
                 writeln!(output, "0")?;
                 continue;
             };
 
-            write!(output, "{} ", path.len())?;
+            write!(output, "{path_len} ")?;
 
-            for p in path.iter().rev() {
+            for p in path[..path_len].iter().rev() {
                 write!(output, "{} ", p + 1)?;
             }
 
@@ -49,17 +56,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn floyd_warshall_with_path(graph: &mut Vec<Vec<i32>>) -> Vec<Vec<Option<u8>>> {
+fn floyd_warshall_with_path(graph: &mut [[i32; MAX]]) -> [[Option<u8>; MAX]; MAX] {
     let len = graph.len();
-    let mut prevs: Vec<Vec<_>> = graph
-        .iter()
-        .enumerate()
-        .map(|(start, row)| {
-            row.iter()
-                .map(|&dist| (dist != i32::MAX).then(|| start as u8))
-                .collect()
-        })
-        .collect();
+    let mut prevs = [[None; MAX]; MAX];
+
+    for (start, row) in graph.iter().enumerate() {
+        for (c, &dist) in row.iter().enumerate() {
+            prevs[start][c] = (dist != i32::MAX).then(|| start as u8);
+        }
+    }
 
     for stopby in 0..len {
         for start in 0..len {
@@ -77,16 +82,20 @@ fn floyd_warshall_with_path(graph: &mut Vec<Vec<i32>>) -> Vec<Vec<Option<u8>>> {
     prevs
 }
 
-fn get_path(prevs: &[Vec<Option<u8>>], start: usize, end: usize) -> Option<Vec<u8>> {
+fn get_path(prevs: &[[Option<u8>; MAX]], start: usize, end: usize) -> Option<([u8; MAX], usize)> {
     let mut node = prevs[start][end]? as usize;
-    let mut path = vec![end as u8];
+    let mut path = [0; MAX];
+    path[0] = end as u8;
+    let mut path_len = 1;
 
     while node != start {
-        path.push(node as u8);
+        path[path_len] = node as u8;
+        path_len += 1;
         node = prevs[start][node]? as usize;
     }
 
-    path.push(start as u8);
+    path[path_len] = start as u8;
+    path_len += 1;
 
-    Some(path)
+    Some((path, path_len))
 }

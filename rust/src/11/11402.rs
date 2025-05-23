@@ -1,11 +1,13 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [n, k, m] = parse_int_vec(&buf)[..] else {
-        return;
-    };
-    let mut combination_rem = vec![vec![0; m]; m];
+const MAX: usize = 2000;
+
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
+
+    let [n, k, m] = [(); 3].map(|_| input.next().unwrap());
+    let mut combination_rem = [[0; MAX]; MAX];
 
     for i in 0..m {
         combination_rem[i][0] = 1;
@@ -15,7 +17,7 @@ fn main() {
             combination_rem[i][j] = (combination_rem[i - 1][j] + combination_rem[i - 1][j - 1]) % m;
         }
     }
-
+    // 뤼카의 정리
     let n_digits = get_digits(n, m);
     let k_digits = get_digits(k, m);
 
@@ -44,8 +46,4 @@ fn get_digits(mut num: usize, radix: usize) -> Vec<usize> {
     }
 
     digits
-}
-
-fn parse_int_vec(buf: &str) -> Vec<usize> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }
