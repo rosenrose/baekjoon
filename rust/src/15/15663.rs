@@ -1,24 +1,36 @@
 use std::fmt::Write;
 use std::io;
 
+const COUNT_MAX: usize = 8;
+const NUM_MAX: usize = 10000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut output = String::new();
 
-    let [_, m] = [(); 2].map(|_| input.next().unwrap());
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
+    let mut nums = [0; COUNT_MAX];
 
-    let mut nums: Vec<_> = input.collect();
-    nums.sort();
+    for (i, num) in input.enumerate() {
+        nums[i] = num;
+    }
 
-    permutations(0, &mut vec![0; m], &mut [false; 8], &nums, &mut output);
+    nums[..n].sort();
+    permutations(
+        0,
+        &mut [0; COUNT_MAX][..m],
+        &mut [false; COUNT_MAX],
+        &nums[..n],
+        &mut output,
+    );
 
     print!("{output}");
 }
 
 fn permutations(
     depth: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize],
     visited_idx: &mut [bool],
     nums: &[usize],
     output: &mut String,
@@ -32,7 +44,7 @@ fn permutations(
         return;
     }
 
-    let mut visited_num = [false; 10_000 + 1];
+    let mut visited_num = [false; NUM_MAX + 1];
 
     for (i, &num) in nums.iter().enumerate() {
         if visited_idx[i] || visited_num[num] {

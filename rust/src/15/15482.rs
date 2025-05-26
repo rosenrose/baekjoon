@@ -1,11 +1,13 @@
 use std::io;
 
+const MAX: usize = 1000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
 
     let [s, t] = [(); 2].map(|_| input.next().unwrap());
-    let mut memo = vec![vec![0; s.chars().count() + 1]; t.chars().count() + 1];
+    let mut memo = [[0; MAX]; MAX];
     let mut max_len = 0;
 
     for (i, t_char) in t.chars().enumerate() {

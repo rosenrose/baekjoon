@@ -1,17 +1,23 @@
 use std::fmt::Write;
 use std::io;
 
+const COUNT_MAX: usize = 8;
+const NUM_MAX: usize = 10000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut output = String::new();
 
-    let [_, m] = [(); 2].map(|_| input.next().unwrap());
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
+    let mut nums = [0; COUNT_MAX];
 
-    let mut nums: Vec<_> = input.collect();
-    nums.sort();
+    for (i, num) in input.enumerate() {
+        nums[i] = num;
+    }
 
-    combinations_with_replacement(0, 0, &mut vec![0; m], &nums, &mut output);
+    nums[..n].sort();
+    combinations_with_replacement(0, 0, &mut [0; COUNT_MAX][..m], &nums[..n], &mut output);
 
     print!("{output}");
 }
@@ -19,7 +25,7 @@ fn main() {
 fn combinations_with_replacement(
     depth: usize,
     start: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize],
     nums: &[usize],
     output: &mut String,
 ) {
@@ -32,7 +38,7 @@ fn combinations_with_replacement(
         return;
     }
 
-    let mut visited = [false; 10_000 + 1];
+    let mut visited = [false; NUM_MAX + 1];
 
     for i in start..nums.len() {
         if visited[nums[i]] {

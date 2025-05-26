@@ -1,24 +1,35 @@
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 8;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut output = String::new();
 
-    let [_, m] = [(); 2].map(|_| input.next().unwrap());
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
+    let mut nums = [0; MAX];
 
-    let mut nums: Vec<_> = input.collect();
-    nums.sort();
+    for (i, num) in input.enumerate() {
+        nums[i] = num;
+    }
 
-    permutations(0, &mut vec![0; m], &mut [false; 8], &nums, &mut output);
+    nums[..n].sort();
+    permutations(
+        0,
+        &mut [0; MAX][..m],
+        &mut [false; MAX],
+        &nums[..n],
+        &mut output,
+    );
 
     print!("{output}");
 }
 
 fn permutations(
     depth: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize],
     visited: &mut [bool],
     nums: &[usize],
     output: &mut String,

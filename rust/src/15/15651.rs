@@ -1,20 +1,21 @@
 use std::fmt::Write;
+use std::io;
+
+const MAX: usize = 8;
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut output = String::new();
-    let [n, m] = parse_int_vec(&buf)[..] else {
-        return;
-    };
 
-    product(0, &mut vec![0; m], n, &mut output);
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
+
+    product(0, &mut [0; MAX][..m], n, &mut output);
 
     print!("{output}");
 }
 
-fn product(depth: usize, selected: &mut Vec<usize>, nums: usize, output: &mut String) {
+fn product(depth: usize, selected: &mut [usize], nums: usize, output: &mut String) {
     if depth == selected.len() {
         for num in selected {
             write!(output, "{num} ").unwrap();
@@ -28,8 +29,4 @@ fn product(depth: usize, selected: &mut Vec<usize>, nums: usize, output: &mut St
         selected[depth] = num;
         product(depth + 1, selected, nums, output);
     }
-}
-
-fn parse_int_vec(buf: &str) -> Vec<usize> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

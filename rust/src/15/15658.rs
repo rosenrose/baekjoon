@@ -1,5 +1,6 @@
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 enum Ops {
+    #[default]
     Add,
     Sub,
     Mul,
@@ -9,36 +10,51 @@ enum Ops {
 use std::io;
 use Ops::*;
 
-const MAX: i32 = 1_000_000_000;
+const NUMS_MAX: usize = 11;
+const RESULT_MAX: i32 = 1_000_000_000;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
-    let nums: Vec<_> = input.by_ref().take(n).collect();
-    let operators: Vec<_> = input
-        .enumerate()
-        .flat_map(|(i, count)| {
-            std::iter::repeat(match i {
-                0 => Add,
-                1 => Sub,
-                2 => Mul,
-                3 => Div,
-                _ => unreachable!(),
-            })
-            .take(count as usize)
-        })
-        .collect();
+    let mut nums = [0; NUMS_MAX];
 
-    let (min, max) = permutations(0, &mut vec![0; n - 1], &mut [false; 45], &operators, &nums);
+    for (i, num) in input.by_ref().take(n).enumerate() {
+        nums[i] = num;
+    }
+
+    let mut operators = [Default::default(); NUMS_MAX * 4];
+    let mut operators_len = 0;
+
+    for op in input.enumerate().flat_map(|(i, count)| {
+        std::iter::repeat(match i {
+            0 => Add,
+            1 => Sub,
+            2 => Mul,
+            3 => Div,
+            _ => unreachable!(),
+        })
+        .take(count as usize)
+    }) {
+        operators[operators_len] = op;
+        operators_len += 1;
+    }
+
+    let (min, max) = permutations(
+        0,
+        &mut [0; NUMS_MAX - 1][..n - 1],
+        &mut [false; NUMS_MAX * 4],
+        &operators[..operators_len],
+        &nums[..n],
+    );
 
     println!("{max}\n{min}");
 }
 
 fn permutations(
     depth: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize],
     visited_idx: &mut [bool],
     operators: &[Ops],
     nums: &[i32],
@@ -63,7 +79,7 @@ fn permutations(
     operators
         .iter()
         .enumerate()
-        .fold((MAX, -MAX), |(min, max), (i, &op)| {
+        .fold((RESULT_MAX, -RESULT_MAX), |(min, max), (i, &op)| {
             if visited_idx[i] || visited_op[op as usize] {
                 return (min, max);
             }

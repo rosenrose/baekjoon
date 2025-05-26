@@ -1,22 +1,25 @@
 use std::io;
 
+const NODES_MAX: usize = 1000 + 1;
+const EDGES_MAX: usize = 100_000 * 2;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
     for _ in 0..input() {
-        let (n, m) = (input(), input());
-        let mut adjacency_array = (vec![i32::MAX; n + 1], Vec::with_capacity(m * 2));
+        let (_n, m) = (input(), input());
+        let mut adjacency_array = ([i32::MAX; NODES_MAX], [(0, 0); EDGES_MAX]);
 
-        for (x, y) in (0..m).map(|_| (input(), input())) {
+        for (i, (x, y)) in (0..m).map(|i| (i << 1, (input(), input()))) {
             let prev = adjacency_array.0[x];
-            adjacency_array.0[x] = adjacency_array.1.len() as i32;
-            adjacency_array.1.push((y as i32, prev));
+            adjacency_array.0[x] = i as i32;
+            adjacency_array.1[i] = (y as i32, prev);
 
             let prev = adjacency_array.0[y];
-            adjacency_array.0[y] = adjacency_array.1.len() as i32;
-            adjacency_array.1.push((x as i32, prev));
+            adjacency_array.0[y] = (i + 1) as i32;
+            adjacency_array.1[i + 1] = (x as i32, prev);
         }
 
         let is_bipartite = dfs(&adjacency_array);
@@ -32,8 +35,8 @@ fn main() {
     }
 }
 
-fn dfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>)) -> bool {
-    let mut visited = vec![None; nodes.len()];
+fn dfs((nodes, edges): &([i32; NODES_MAX], [(i32, i32); EDGES_MAX])) -> bool {
+    let mut visited = [None; NODES_MAX];
 
     for start in 1..nodes.len() {
         if visited[start].is_some() {

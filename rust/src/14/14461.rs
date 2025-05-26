@@ -2,6 +2,7 @@ use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::io;
 
+const MAX: usize = 100;
 const CYCLE: i32 = 3;
 
 fn main() {
@@ -9,20 +10,27 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let [n, cross_time] = [(); 2].map(|_| input.next().unwrap() as usize);
-    let map: Vec<Vec<_>> = (0..n).map(|_| input.by_ref().take(n).collect()).collect();
-    let distance = dijkstra(&map, (0, 0), (n - 1, n - 1), cross_time as i32);
+    let mut map = [[0; MAX]; MAX];
+
+    for r in 0..n {
+        for (c, num) in input.by_ref().take(n).enumerate() {
+            map[r][c] = num;
+        }
+    }
+
+    let distance = dijkstra(&map[..n], (0, 0), (n - 1, n - 1), cross_time as i32);
 
     println!("{distance}");
 }
 
 fn dijkstra(
-    graph: &[Vec<i32>],
+    graph: &[[i32; MAX]],
     start: (usize, usize),
     end: (usize, usize),
     cross_time: i32,
 ) -> i32 {
     let n = graph.len() as i32;
-    let mut distances = vec![vec![i32::MAX; n as usize]; n as usize];
+    let mut distances = [[i32::MAX; MAX]; MAX];
     distances[start.0][start.1] = 0;
 
     let mut queue = BinaryHeap::from([(Reverse(0), (start.0 as i32, start.1 as i32))]);

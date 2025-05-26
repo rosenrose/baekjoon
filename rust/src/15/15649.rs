@@ -1,22 +1,23 @@
 use std::fmt::Write;
+use std::io;
+
+const MAX: usize = 8;
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
-
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut output = String::new();
-    let [n, m] = parse_int_vec(&buf)[..] else {
-        return;
-    };
 
-    permutations(0, &mut vec![0; m], &mut [false; 9], n, &mut output);
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
+
+    permutations(0, &mut [0; MAX][..m], &mut [false; 9], n, &mut output);
 
     print!("{output}");
 }
 
 fn permutations(
     depth: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize],
     visited: &mut [bool],
     nums: usize,
     output: &mut String,
@@ -42,8 +43,4 @@ fn permutations(
 
         visited[num] = false;
     }
-}
-
-fn parse_int_vec(buf: &str) -> Vec<usize> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }
