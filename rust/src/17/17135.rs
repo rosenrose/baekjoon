@@ -1,21 +1,29 @@
 use std::collections::VecDeque;
 use std::io;
 
+const WIDTH_MAX: usize = 15;
+const HEIGHT_MAX: usize = 15;
+const ARCHER_COUNT: usize = 3;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [height, width, max_range] = [(); 3].map(|_| input.next().unwrap());
-    let map: Vec<Vec<_>> = (0..height)
-        .map(|_| input.by_ref().take(width).map(|num| num == 1).collect())
-        .collect();
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
+
+    for r in 0..height {
+        for (c, num) in input.by_ref().take(width).enumerate() {
+            map[r][c] = num == 1;
+        }
+    }
 
     let mut max_count = 0;
 
     for a in 0..width - 2 {
         for b in a + 1..width - 1 {
             for c in b + 1..width {
-                let count = simulate(map.clone(), &[a, b, c], max_range);
+                let count = simulate(&map[..height], width, &[a, b, c], max_range);
                 max_count = count.max(max_count);
             }
         }
@@ -24,31 +32,46 @@ fn main() {
     println!("{max_count}");
 }
 
-fn simulate(mut map: Vec<Vec<bool>>, archers: &[usize], max_range: usize) -> i32 {
-    (0..map.len())
+fn simulate(map: &[[bool; WIDTH_MAX]], width: usize, archers: &[usize], max_range: usize) -> usize {
+    let height = map.len();
+    let mut temp = [[false; WIDTH_MAX]; HEIGHT_MAX];
+
+    for (r, row) in map.iter().enumerate() {
+        temp[r][..width].copy_from_slice(&row[..width]);
+    }
+
+    (0..height)
         .map(|_| {
-            let count = attack(&mut map, archers, max_range);
-            move_down(&mut map);
+            let count = attack(&mut temp[..height], width, archers, max_range);
+            move_down(&mut temp[..height], width);
 
             count
         })
         .sum()
 }
 
-fn attack(map: &mut Vec<Vec<bool>>, archers: &[usize], max_range: usize) -> i32 {
-    let (width, height) = (map[0].len(), map.len());
-    let mut final_targets = Vec::with_capacity(archers.len());
+fn attack(
+    map: &mut [[bool; WIDTH_MAX]],
+    width: usize,
+    archers: &[usize],
+    max_range: usize,
+) -> usize {
+    let height = map.len();
+    let mut final_targets = [(0, 0); ARCHER_COUNT];
+    let mut final_targets_len = 0;
 
     for &archer in archers {
-        let mut targets = Vec::new();
-        let mut visited = vec![vec![false; width]; height];
+        let mut targets = [((0, 0), 0); WIDTH_MAX * HEIGHT_MAX];
+        let mut targets_len = 0;
+        let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
         visited[height - 1][archer] = true;
 
         let mut queue = VecDeque::from([((height - 1, archer), 1)]);
 
         while let Some(((r, c), dist)) = queue.pop_front() {
             if dist <= max_range && map[r][c] {
-                targets.push(((r, c), dist));
+                targets[targets_len] = ((r, c), dist);
+                targets_len += 1;
             }
 
             if dist == max_range {
@@ -72,31 +95,30 @@ fn attack(map: &mut Vec<Vec<bool>>, archers: &[usize], max_range: usize) -> i32 
             }
         }
 
-        if targets.is_empty() {
+        if targets_len == 0 {
             continue;
         }
 
-        let (target_coord, _) = targets
+        let (target_coord, _) = targets[..targets_len]
             .iter()
             .min_by_key(|((_, c), dist)| (dist, c))
             .unwrap();
 
-        if !final_targets.contains(target_coord) {
-            final_targets.push(*target_coord)
+        if !final_targets[..final_targets_len].contains(target_coord) {
+            final_targets[final_targets_len] = *target_coord;
+            final_targets_len += 1;
         }
     }
 
-    let count = final_targets.len() as i32;
-
-    for (r, c) in final_targets {
+    for &(r, c) in &final_targets[..final_targets_len] {
         map[r][c] = false;
     }
 
-    count
+    final_targets_len
 }
 
-fn move_down(map: &mut Vec<Vec<bool>>) {
-    let (width, height) = (map[0].len(), map.len());
+fn move_down(map: &mut [[bool; WIDTH_MAX]], width: usize) {
+    let height = map.len();
 
     for r in (1..height).rev() {
         for c in 0..width {

@@ -1,39 +1,45 @@
 use std::io;
 
+const SIZE_MAX: usize = 200;
+const VIRUS_MAX: usize = SIZE_MAX * SIZE_MAX;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, _) = (input(), input());
-    let mut viruses = Vec::new();
-    let mut visited = vec![vec![false; n]; n];
-    let mut map: Vec<Vec<_>> = (0..n)
-        .map(|r| {
-            (0..n)
-                .map(|c| {
-                    let num = input();
+    let (n, _k) = (input(), input());
+    let mut viruses = [(0, (0, 0)); VIRUS_MAX];
+    let mut viruses_len = 0;
+    let mut visited = [[false; SIZE_MAX]; SIZE_MAX];
+    let mut map = [[0; SIZE_MAX]; SIZE_MAX];
 
-                    if num > 0 {
-                        viruses.push((num, (r, c)));
-                        visited[r][c] = true;
-                    }
+    for r in 0..n {
+        for c in 0..n {
+            let num = input();
 
-                    num
-                })
-                .collect()
-        })
-        .collect();
+            if num > 0 {
+                viruses[viruses_len] = (num, (r, c));
+                viruses_len += 1;
+                visited[r][c] = true;
+            }
+
+            map[r][c] = num;
+        }
+    }
+
     let (s, target) = (input(), (input() - 1, input() - 1));
 
-    viruses.sort_unstable();
-    let mut temp = Vec::new();
+    viruses[..viruses_len].sort_unstable();
+    let mut temp = [(0, (0, 0)); VIRUS_MAX];
+    let mut temp_len;
 
     for _ in 0..s {
-        temp.clone_from(&viruses);
-        viruses.clear();
+        temp[..viruses_len].copy_from_slice(&viruses[..viruses_len]);
+        temp_len = viruses_len;
+        viruses_len = 0;
 
-        for &(virus, (r, c)) in &temp {
+        for &(virus, (r, c)) in &temp[..temp_len] {
             let adjacents = [
                 (r.saturating_sub(1), c),
                 (r, c.saturating_sub(1)),
@@ -50,7 +56,9 @@ fn main() {
 
                 visited[adj_r][adj_c] = true;
                 map[adj_r][adj_c] = virus;
-                viruses.push((virus, (adj_r, adj_c)));
+
+                viruses[viruses_len] = (virus, (adj_r, adj_c));
+                viruses_len += 1;
             }
         }
     }

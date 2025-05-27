@@ -1,17 +1,34 @@
 use std::io;
 
+const WIDTH_MAX: usize = 50;
+const HEIGHT_MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace();
+    let mut input = buf.split_ascii_whitespace();
 
-    let map: Vec<_> = input.skip(2).map(str::as_bytes).collect();
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
+    let mut map = [[0; WIDTH_MAX]; HEIGHT_MAX];
 
-    println!("{}", if dfs(&map) { "Yes" } else { "No" });
+    for (r, row) in input.map(str::as_bytes).enumerate() {
+        for (c, &num) in row.iter().enumerate() {
+            map[r][c] = num;
+        }
+    }
+
+    println!(
+        "{}",
+        if dfs(&map[..height], width) {
+            "Yes"
+        } else {
+            "No"
+        }
+    );
 }
 
-fn dfs(map: &[&[u8]]) -> bool {
-    let (width, height) = (map[0].len(), map.len());
-    let mut visited = vec![vec![None; width]; height];
+fn dfs(map: &[[u8; WIDTH_MAX]], width: usize) -> bool {
+    let height = map.len();
+    let mut visited = [[None; WIDTH_MAX]; HEIGHT_MAX];
 
     for y in 0..height {
         for x in 0..width {
@@ -25,6 +42,7 @@ fn dfs(map: &[&[u8]]) -> bool {
             while let Some((r, c)) = stack.pop() {
                 let parent = visited[r][c].unwrap();
                 let color = map[r][c];
+
                 let adjacents = [
                     (r.saturating_sub(1), c),
                     (r, c.saturating_sub(1)),

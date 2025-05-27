@@ -1,24 +1,44 @@
 use std::io;
 
+const SIZE_MAX: usize = 50;
+const HOUSE_MAX: usize = SIZE_MAX * 2;
+const CHICKEN_MAX: usize = 13;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m] = [(); 2].map(|_| input.next().unwrap());
-    let [mut houses, mut chickens] = [(); 2].map(|_| Vec::new());
+    let mut houses = [(0, 0); HOUSE_MAX];
+    let mut chickens = [(0, 0); CHICKEN_MAX];
+    let (mut houses_len, mut chickens_len) = (0, 0);
 
     for r in 0..n {
         for (c, num) in input.by_ref().take(n).enumerate() {
             match num {
-                1 => houses.push((r, c)),
-                2 => chickens.push((r, c)),
+                1 => {
+                    houses[houses_len] = (r, c);
+                    houses_len += 1;
+                }
+                2 => {
+                    chickens[chickens_len] = (r, c);
+                    chickens_len += 1;
+                }
                 _ => (),
             }
         }
     }
 
     let min_dist = (1..=m)
-        .map(|i| combinations(0, 0, &mut vec![(0, 0); i], &chickens, &houses))
+        .map(|i| {
+            combinations(
+                0,
+                0,
+                &mut [(0, 0); CHICKEN_MAX][..i],
+                &chickens[..chickens_len],
+                &houses[..houses_len],
+            )
+        })
         .min()
         .unwrap();
 
@@ -28,7 +48,7 @@ fn main() {
 fn combinations(
     depth: usize,
     start: usize,
-    selected: &mut Vec<(usize, usize)>,
+    selected: &mut [(usize, usize)],
     chickens: &[(usize, usize)],
     houses: &[(usize, usize)],
 ) -> usize {

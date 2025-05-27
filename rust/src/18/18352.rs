@@ -2,19 +2,25 @@ use std::collections::VecDeque;
 use std::fmt::Write;
 use std::io;
 
+const NODES_MAX: usize = 300_000 + 1;
+const EDGES_MAX: usize = 1_000_000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut output = String::new();
 
-    let [n, m, k, x] = [(); 4].map(|_| input.next().unwrap());
-    let mut adjacency_array = (vec![i32::MAX; n + 1], Vec::with_capacity(m));
+    let [_n, m, k, x] = [(); 4].map(|_| input.next().unwrap());
+    let mut adjacency_array = ([i32::MAX; NODES_MAX], [(0, 0); EDGES_MAX]);
 
-    for [u, v] in (0..m).map(|_| [(); 2].map(|_| input.next().unwrap())) {
+    for (i, [u, v]) in (0..m)
+        .map(|_| [(); 2].map(|_| input.next().unwrap()))
+        .enumerate()
+    {
         let prev = adjacency_array.0[u];
 
-        adjacency_array.0[u] = adjacency_array.1.len() as i32;
-        adjacency_array.1.push((v as i32, prev));
+        adjacency_array.0[u] = i as i32;
+        adjacency_array.1[i] = (v as i32, prev);
     }
 
     let mut result = bfs(&adjacency_array, x, k as i32);
@@ -33,9 +39,13 @@ fn main() {
     print!("{output}");
 }
 
-fn bfs((nodes, edges): &(Vec<i32>, Vec<(i32, i32)>), start: usize, target_dist: i32) -> Vec<i32> {
-    let mut result = Vec::new();
-    let mut visited = vec![false; nodes.len()];
+fn bfs(
+    (nodes, edges): &([i32; NODES_MAX], [(i32, i32); EDGES_MAX]),
+    start: usize,
+    target_dist: i32,
+) -> Vec<i32> {
+    let mut result = Vec::with_capacity(NODES_MAX >> 1);
+    let mut visited = [false; NODES_MAX];
     visited[start] = true;
 
     let mut queue = VecDeque::from([(start as i32, 0)]);

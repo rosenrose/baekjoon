@@ -1,42 +1,42 @@
 use std::collections::VecDeque;
 use std::io;
 
+#[derive(Copy, Clone)]
 enum Cells {
     Empty,
     Fish(i32),
     Shark,
 }
 
+const MAX: usize = 20;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let n: usize = input.next().unwrap() as usize;
+    let n = input.next().unwrap() as usize;
     let mut shark_coord = (0, 0);
     let (mut shark_size, mut shark_eats) = (2, 0);
+    let mut map = [[Cells::Empty; MAX]; MAX];
 
-    let mut map: Vec<Vec<_>> = (0..n)
-        .map(|r| {
-            input
-                .by_ref()
-                .take(n)
-                .enumerate()
-                .map(|(c, num)| match num {
-                    0 => Cells::Empty,
-                    1..=6 => Cells::Fish(num),
-                    9 => {
-                        shark_coord = (r, c);
-                        Cells::Shark
-                    }
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+    for r in 0..n {
+        for (c, num) in input.by_ref().take(n).enumerate() {
+            map[r][c] = match num {
+                0 => Cells::Empty,
+                1..=6 => Cells::Fish(num),
+                9 => {
+                    shark_coord = (r, c);
+                    Cells::Shark
+                }
+                _ => unreachable!(),
+            };
+        }
+    }
+
     let mut time = 0;
 
     loop {
-        let (target, cost) = eat(&map, shark_coord, shark_size);
+        let (target, cost) = eat(&map[..n], shark_coord, shark_size);
 
         if cost == i32::MAX {
             break;
@@ -59,9 +59,13 @@ fn main() {
     println!("{time}");
 }
 
-fn eat(map: &[Vec<Cells>], shark_coord: (usize, usize), shark_size: i32) -> ((usize, usize), i32) {
+fn eat(
+    map: &[[Cells; MAX]],
+    shark_coord: (usize, usize),
+    shark_size: i32,
+) -> ((usize, usize), i32) {
     let n = map.len();
-    let mut visited = vec![vec![false; n]; n];
+    let mut visited = [[false; MAX]; MAX];
     visited[shark_coord.0][shark_coord.1] = true;
 
     let mut queue = VecDeque::from([(shark_coord, 0)]);

@@ -1,15 +1,21 @@
 use std::io;
 
+const MAX: usize = 3;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap();
-    let map: Vec<Vec<_>> = (0..n)
-        .map(|_| input.by_ref().take(n as usize).collect())
-        .collect();
+    let mut map = [[0; MAX]; MAX];
 
-    let mut visited = vec![vec![false; n as usize]; n as usize];
+    for r in 0..n as usize {
+        for (c, num) in input.by_ref().take(n as usize).enumerate() {
+            map[r][c] = num;
+        }
+    }
+
+    let mut visited = [[false; MAX]; MAX];
     visited[0][0] = true;
 
     let mut stack = vec![(0, 0)];

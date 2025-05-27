@@ -1,5 +1,6 @@
 use std::io;
 
+const MAX: usize = 20;
 const DISTRICTS: usize = 5;
 
 fn main() {
@@ -8,18 +9,14 @@ fn main() {
 
     let n = input.next().unwrap() as usize;
     let mut total_population = 0;
-    let map: Vec<Vec<_>> = (0..n)
-        .map(|_| {
-            input
-                .by_ref()
-                .take(n)
-                .map(|num| {
-                    total_population += num;
-                    num
-                })
-                .collect()
-        })
-        .collect();
+    let mut map = [[0; MAX]; MAX];
+
+    for r in 0..n {
+        for (c, num) in input.by_ref().take(n).enumerate() {
+            total_population += num;
+            map[r][c] = num;
+        }
+    }
 
     let mut min_diff = i32::MAX;
 
@@ -27,7 +24,8 @@ fn main() {
         for x in 1..n - 1 {
             for d1 in 1..(x + 1).min(n - (y + 1)) {
                 for d2 in 1..(n - x).min(n.saturating_sub(y + d1)) {
-                    min_diff = get_diff((y, x), (d1, d2), &map, total_population).min(min_diff);
+                    min_diff =
+                        get_diff((y, x), (d1, d2), &map[..n], total_population).min(min_diff);
                 }
             }
         }
@@ -39,12 +37,12 @@ fn main() {
 fn get_diff(
     (y, x): (usize, usize),
     (d1, d2): (usize, usize),
-    map: &[Vec<i32>],
+    map: &[[i32; MAX]],
     total_population: i32,
 ) -> i32 {
     let n = map.len();
     let mut populations = [0; DISTRICTS + 1];
-    let mut borders = vec![vec![false; n]; n];
+    let mut borders = [[false; MAX]; MAX];
     let mut border = (y, x);
 
     for _ in 0..d1 {

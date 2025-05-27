@@ -1,25 +1,35 @@
 use std::io;
 
+const MAX: usize = 10 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let n = input.next().unwrap();
-    let mut populations = vec![0; n + 1];
+    let mut populations = [0; MAX];
 
     for (i, num) in input.by_ref().take(n).enumerate() {
         populations[i + 1] = num as i32;
     }
 
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
     for i in 1..=n {
         let adj_count = input.next().unwrap();
-        adjacency_list[i].extend(input.by_ref().take(adj_count));
+        adjacency_list[i] = input.by_ref().take(adj_count).collect();
     }
 
     let min_diff = (1..=n / 2)
-        .flat_map(|i| combinations(0, 1, &mut vec![0; i], &adjacency_list, &populations))
+        .flat_map(|i| {
+            combinations(
+                0,
+                1,
+                &mut [0; MAX / 2][..i],
+                &adjacency_list[..=n],
+                &populations[..=n],
+            )
+        })
         .min()
         .unwrap_or(-1);
 
@@ -29,14 +39,20 @@ fn main() {
 fn combinations(
     depth: usize,
     start: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize],
     graph: &[Vec<usize>],
     populations: &[i32],
 ) -> Option<i32> {
     if depth == selected.len() {
-        let rest: Vec<_> = (1..graph.len()).filter(|n| !selected.contains(n)).collect();
+        let mut rest = [0; MAX];
+        let mut rest_len = 0;
 
-        return get_population_diff(selected, &rest, graph, populations);
+        for i in (1..graph.len()).filter(|n| !selected.contains(n)) {
+            rest[rest_len] = i;
+            rest_len += 1;
+        }
+
+        return get_population_diff(selected, &rest[..rest_len], graph, populations);
     }
 
     let takes = graph.len() - (selected.len() - 1);
@@ -56,7 +72,7 @@ fn get_population_diff(
     populations: &[i32],
 ) -> Option<i32> {
     let (mut population_a, mut population_b) = (0, 0);
-    let mut visited = vec![false; graph.len()];
+    let mut visited = [false; MAX];
     visited[district_a[0]] = true;
 
     let mut stack = vec![district_a[0]];

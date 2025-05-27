@@ -1,26 +1,33 @@
 use std::io;
 
+const MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<u32>);
 
     let [n, min, max] = [(); 3].map(|_| input.next().unwrap());
-    let map: Vec<Vec<_>> = (0..n)
-        .map(|_| input.by_ref().take(n as usize).collect())
-        .collect();
+    let mut map = [[0; MAX]; MAX];
 
-    let days = simulate(map, min, max);
+    for r in 0..n as usize {
+        for (c, num) in input.by_ref().take(n as usize).enumerate() {
+            map[r][c] = num;
+        }
+    }
+
+    let days = simulate(&mut map[..n as usize], min, max);
 
     println!("{days}");
 }
 
-fn simulate(mut map: Vec<Vec<u32>>, min: u32, max: u32) -> u32 {
+fn simulate(map: &mut [[u32; MAX]], min: u32, max: u32) -> u32 {
     let n = map.len();
     let mut days = 0;
 
     loop {
-        let mut moves = Vec::new();
-        let mut visited = vec![vec![false; n]; n];
+        let mut moves = [(); MAX * MAX / 2].map(|_| (Vec::new(), 0));
+        let mut moves_len = 0;
+        let mut visited = [[false; MAX]; MAX];
 
         for y in 0..n {
             for x in 0..n {
@@ -62,18 +69,20 @@ fn simulate(mut map: Vec<Vec<u32>>, min: u32, max: u32) -> u32 {
                 }
 
                 let sum: u32 = countries.iter().map(|&(r, c)| map[r][c]).sum();
-                moves.push((countries, sum));
+
+                moves[moves_len] = (countries, sum);
+                moves_len += 1;
             }
         }
 
-        if moves.is_empty() {
+        if moves_len == 0 {
             return days;
         }
 
-        for (countries, sum) in moves {
+        for (countries, sum) in &moves[..moves_len] {
             let population = sum / countries.len() as u32;
 
-            for (r, c) in countries {
+            for &(r, c) in countries {
                 map[r][c] = population;
             }
         }

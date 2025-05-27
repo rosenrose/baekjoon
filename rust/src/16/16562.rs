@@ -1,26 +1,27 @@
 use std::io;
 
+const MAX: usize = 10000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let [n, m, mut k] = [(); 3].map(|_| input());
-    let mut costs = vec![0; n + 1];
+    let [n, m, mut k] = [(); 3].map(|_| input.next().unwrap());
+    let mut costs = [0; MAX];
 
-    for i in 1..=n {
-        costs[i] = input();
+    for (i, num) in input.by_ref().take(n).enumerate() {
+        costs[i + 1] = num;
     }
 
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
-    for (v, w) in (0..m).map(|_| (input(), input())) {
+    for [v, w] in (0..m).map(|_| [(); 2].map(|_| input.next().unwrap())) {
         adjacency_list[v].push(w);
         adjacency_list[w].push(v);
     }
 
     let mut cost = 0;
-    let mut visited = vec![false; adjacency_list.len()];
+    let mut visited = [false; MAX];
 
     for start in 1..=n {
         if visited[start] {

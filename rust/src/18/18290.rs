@@ -1,15 +1,30 @@
 use std::io;
 
+const WIDTH_MAX: usize = 10;
+const HEIGHT_MAX: usize = 10;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let [height, width, k] = [(); 3].map(|_| input.next().unwrap() as usize);
-    let map: Vec<Vec<_>> = (0..height)
-        .map(|_| input.by_ref().take(width).collect())
-        .collect();
+    let mut map = [[0; WIDTH_MAX]; HEIGHT_MAX];
 
-    let max_sum = combinations(0, 0, k, &mut vec![vec![false; width]; height], &map, 0);
+    for r in 0..height {
+        for (c, num) in input.by_ref().take(width).enumerate() {
+            map[r][c] = num;
+        }
+    }
+
+    let max_sum = combinations(
+        0,
+        0,
+        k,
+        &mut [[false; WIDTH_MAX]; HEIGHT_MAX],
+        &map[..height],
+        width,
+        0,
+    );
 
     println!("{max_sum}");
 }
@@ -18,15 +33,16 @@ fn combinations(
     depth: usize,
     start: usize,
     max_depth: usize,
-    selected: &mut Vec<Vec<bool>>,
-    map: &[Vec<i32>],
+    selected: &mut [[bool; WIDTH_MAX]],
+    map: &[[i32; WIDTH_MAX]],
+    width: usize,
     sum: i32,
 ) -> i32 {
     if depth == max_depth {
         return sum;
     }
 
-    let (width, height) = (map[0].len(), map.len());
+    let height = map.len();
     let takes = (width * height) - (max_depth - 1);
 
     (start..depth + takes)
@@ -48,7 +64,15 @@ fn combinations(
 
             selected[r][c] = true;
 
-            let result = combinations(depth + 1, i + 1, max_depth, selected, map, sum + map[r][c]);
+            let result = combinations(
+                depth + 1,
+                i + 1,
+                max_depth,
+                selected,
+                map,
+                width,
+                sum + map[r][c],
+            );
             selected[r][c] = false;
 
             result

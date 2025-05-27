@@ -1,48 +1,49 @@
 use std::collections::VecDeque;
 use std::io;
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 enum Cells {
     Empty,
     Wall,
     Castle(u8),
 }
 
-const MAX_PLAYERS: usize = 9;
+const WIDTH_MAX: usize = 1000;
+const HEIGHT_MAX: usize = 1000;
+const PLAYER_MAX: usize = 9;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
     let [height, width, p] = [(); 3].map(|_| parse_int(input.next().unwrap()));
-    let mut ranges = [0; MAX_PLAYERS];
+    let mut ranges = [0; PLAYER_MAX];
 
     for range in &mut ranges[..p] {
         *range = parse_int(input.next().unwrap());
     }
 
-    let mut castles = vec![Vec::new(); p];
-    let mut areas = [0; MAX_PLAYERS];
-    let mut map: Vec<Vec<_>> = input
-        .enumerate()
-        .map(|(r, row)| {
-            row.char_indices()
-                .map(|(c, ch)| match ch {
-                    '.' => Cells::Empty,
-                    '#' => Cells::Wall,
-                    '1'..='9' => {
-                        let player = ch as u8 - b'1';
+    let mut castles = [(); PLAYER_MAX].map(|_| Vec::new());
+    let mut areas = [0; PLAYER_MAX];
+    let mut map = [[Cells::Empty; WIDTH_MAX]; HEIGHT_MAX];
 
-                        castles[player as usize].push((r as i16, c as i16));
-                        areas[player as usize] += 1;
+    for (r, row) in input.enumerate() {
+        for (c, ch) in row.char_indices() {
+            map[r][c] = match ch {
+                '.' => Cells::Empty,
+                '#' => Cells::Wall,
+                '1'..='9' => {
+                    let player = ch as u8 - b'1';
 
-                        Cells::Castle(player)
-                    }
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+                    castles[player as usize].push((r as i16, c as i16));
+                    areas[player as usize] += 1;
+
+                    Cells::Castle(player)
+                }
+                _ => unreachable!(),
+            };
+        }
+    }
 
     let mut temp = VecDeque::new();
 
@@ -66,7 +67,7 @@ fn main() {
                 ];
 
                 for (adj_r, adj_c) in adjacents {
-                    if !matches!(map[adj_r as usize][adj_c as usize], Cells::Empty) {
+                    if map[adj_r as usize][adj_c as usize] != Cells::Empty {
                         continue;
                     }
 

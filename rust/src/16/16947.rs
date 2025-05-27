@@ -1,24 +1,25 @@
 use std::collections::VecDeque;
 use std::io;
 
+const MAX: usize = 3000 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
-    let mut input = || input.next().unwrap();
 
-    let n = input();
-    let mut adjacency_list = vec![Vec::new(); n + 1];
+    let n = input.next().unwrap();
+    let mut adjacency_list = [(); MAX].map(|_| Vec::new());
 
-    for (a, b) in (0..n).map(|_| (input(), input())) {
+    for [a, b] in (0..n).map(|_| [(); 2].map(|_| input.next().unwrap())) {
         adjacency_list[a].push(b);
         adjacency_list[b].push(a);
     }
 
-    let cycle_nodes = get_cycle_nodes(&adjacency_list);
-    let start = cycle_nodes.iter().position(|&b| b).unwrap();
+    let cycle_nodes = get_cycle_nodes(&adjacency_list[..=n]);
+    let start = cycle_nodes[..=n].iter().position(|&b| b).unwrap();
 
-    let mut dists = vec![0; adjacency_list.len()];
-    let mut visited = vec![false; adjacency_list.len()];
+    let mut dists = [0; MAX];
+    let mut visited = [false; MAX];
     visited[start] = true;
 
     let mut queue = VecDeque::from([(start, 0)]);
@@ -41,19 +42,24 @@ fn main() {
         }
     }
 
-    for dist in &dists[1..] {
+    for dist in &dists[1..=n] {
         print!("{dist} ");
     }
 }
 
-fn get_cycle_nodes(graph: &[Vec<usize>]) -> Vec<bool> {
-    let mut cycle_nodes = vec![false; graph.len()];
+fn get_cycle_nodes(graph: &[Vec<usize>]) -> [bool; MAX] {
+    let mut cycle_nodes = [false; MAX];
     let start = 1;
 
-    let mut visited = vec![None; graph.len()];
+    let mut visited = [None; MAX];
     visited[start] = Some(start);
 
-    dfs(start, &graph, &mut cycle_nodes, &mut visited);
+    dfs(
+        start,
+        &graph,
+        &mut cycle_nodes[..graph.len()],
+        &mut visited[..graph.len()],
+    );
 
     cycle_nodes
 }
@@ -61,8 +67,8 @@ fn get_cycle_nodes(graph: &[Vec<usize>]) -> Vec<bool> {
 fn dfs(
     node: usize,
     graph: &[Vec<usize>],
-    cycle_nodes: &mut Vec<bool>,
-    visited: &mut Vec<Option<usize>>,
+    cycle_nodes: &mut [bool],
+    visited: &mut [Option<usize>],
 ) -> Option<usize> {
     let parent = visited[node].unwrap();
     let mut cycle_end_node = None;

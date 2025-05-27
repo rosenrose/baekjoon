@@ -1,42 +1,47 @@
 use std::collections::VecDeque;
 use std::io;
 
+const WIDTH_MAX: usize = 100;
+const HEIGHT_MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [height, width, time_limit] = [(); 3].map(|_| input.next().unwrap());
     let mut sword = (0, 0);
-    let map: Vec<Vec<_>> = (0..height)
-        .map(|r| {
-            input
-                .by_ref()
-                .take(width)
-                .enumerate()
-                .map(|(c, num)| match num {
-                    0 => false,
-                    1 => true,
-                    2 => {
-                        sword = (r, c);
-                        false
-                    }
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
 
-    if let Some(time) = simulate(map, time_limit as i32, sword) {
+    for r in 0..height {
+        for (c, num) in input.by_ref().take(width).enumerate() {
+            map[r][c] = match num {
+                0 => false,
+                1 => true,
+                2 => {
+                    sword = (r, c);
+                    false
+                }
+                _ => unreachable!(),
+            };
+        }
+    }
+
+    if let Some(time) = simulate(&map[..height], width, time_limit as i32, sword) {
         println!("{time}");
     } else {
         println!("Fail");
     }
 }
 
-fn simulate(map: Vec<Vec<bool>>, time_limit: i32, sword: (usize, usize)) -> Option<i32> {
-    let (width, height) = (map[0].len(), map.len());
+fn simulate(
+    map: &[[bool; WIDTH_MAX]],
+    width: usize,
+    time_limit: i32,
+    sword: (usize, usize),
+) -> Option<i32> {
+    let height = map.len();
     let start = (0, 0);
-    let mut visited = vec![vec![[false; 2]; width]; height];
+    let mut visited = [[[false; 2]; WIDTH_MAX]; HEIGHT_MAX];
     visited[start.0][start.1][0] = true;
 
     let mut min_time = i32::MAX;
