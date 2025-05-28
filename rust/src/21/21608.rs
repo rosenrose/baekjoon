@@ -1,23 +1,27 @@
 use std::cmp::Reverse;
 use std::io;
 
+const MAX: usize = 20;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
     let n = input();
-    let room = vec![vec![0; n]; n];
-    let students: Vec<_> = (0..n * n)
-        .map(|_| (input(), [(); 4].map(|_| input())))
-        .collect();
+    let mut room = [[0; MAX]; MAX];
+    let mut students = [(0, [0; 4]); MAX * MAX];
 
-    let sum = simulate(room, students);
+    for i in 0..n * n {
+        students[i] = (input(), [(); 4].map(|_| input()));
+    }
+
+    let sum = simulate(&mut room[..n], &mut students[..n * n]);
 
     println!("{sum}");
 }
 
-fn simulate(mut room: Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -> i32 {
+fn simulate(room: &mut [[usize; MAX]], students: &mut [(usize, [usize; 4])]) -> i32 {
     let n = room.len();
     let get_adjacents = |r: usize, c: usize| {
         [
@@ -28,11 +32,12 @@ fn simulate(mut room: Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -
         ]
     };
 
-    for &(num, prefers) in &students {
-        let mut empty_cells = Vec::new();
+    for &(num, prefers) in students.iter() {
+        let mut empty_cells = [(0, 0, (0, 0)); MAX * MAX];
+        let mut empty_cells_len = 0;
 
         for (r, row) in room.iter().enumerate() {
-            for (c, &cell) in row.iter().enumerate() {
+            for (c, &cell) in row[..n].iter().enumerate() {
                 if cell != 0 {
                     continue;
                 }
@@ -50,11 +55,12 @@ fn simulate(mut room: Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -
                     }
                 }
 
-                empty_cells.push((prefer_count, empty_count, (r, c)));
+                empty_cells[empty_cells_len] = (prefer_count, empty_count, (r, c));
+                empty_cells_len += 1;
             }
         }
 
-        let (.., select) = empty_cells
+        let (.., select) = empty_cells[..empty_cells_len]
             .iter()
             .max_by_key(|(prefer, empty, coord)| (prefer, empty, Reverse(coord)))
             .unwrap();
@@ -66,7 +72,7 @@ fn simulate(mut room: Vec<Vec<usize>>, mut students: Vec<(usize, [usize; 4])>) -
     let mut satisfaction = 0;
 
     for (r, row) in room.iter().enumerate() {
-        for (c, &num) in row.iter().enumerate() {
+        for (c, &num) in row[..n].iter().enumerate() {
             let prefer_count = get_adjacents(r, c)
                 .iter()
                 .filter(|&&(adj_r, adj_c)| students[num - 1].1.contains(&room[adj_r][adj_c]))

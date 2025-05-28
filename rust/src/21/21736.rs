@@ -1,10 +1,14 @@
 use std::io;
 
+#[derive(Copy, Clone, PartialEq)]
 enum Cells {
     Empty,
     Wall,
     People,
 }
+
+const WIDTH_MAX: usize = 600;
+const HEIGHT_MAX: usize = 600;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -12,26 +16,26 @@ fn main() {
 
     let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
     let mut start = (0, 0);
-    let map: Vec<Vec<_>> = input
-        .enumerate()
-        .map(|(r, row)| {
-            row.char_indices()
-                .map(|(c, ch)| match ch {
-                    'O' => Cells::Empty,
-                    'X' => Cells::Wall,
-                    'I' => {
-                        start = (r, c);
-                        Cells::Empty
-                    }
-                    'P' => Cells::People,
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+
+    let mut map = [[Cells::Empty; WIDTH_MAX]; HEIGHT_MAX];
+
+    for (r, row) in input.enumerate() {
+        for (c, ch) in row.char_indices() {
+            map[r][c] = match ch {
+                'O' => Cells::Empty,
+                'X' => Cells::Wall,
+                'I' => {
+                    start = (r, c);
+                    Cells::Empty
+                }
+                'P' => Cells::People,
+                _ => unreachable!(),
+            };
+        }
+    }
 
     let mut count = 0;
-    let mut visited = vec![vec![false; width]; height];
+    let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
     visited[start.0][start.1] = true;
 
     let mut stack = vec![start];
@@ -49,7 +53,7 @@ fn main() {
         ];
 
         for (adj_r, adj_c) in adjacents {
-            if visited[adj_r][adj_c] || matches!(map[adj_r][adj_c], Cells::Wall) {
+            if visited[adj_r][adj_c] || map[adj_r][adj_c] == Cells::Wall {
                 continue;
             }
 

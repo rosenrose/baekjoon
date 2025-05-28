@@ -1,16 +1,22 @@
 use std::cmp::Ordering;
 use std::io;
 
+const WIDTH_MAX: usize = 20;
+const HEIGHT_MAX: usize = 20;
 const DIRS: [(i32, i32); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let [height, width, k] = [(); 3].map(|_| input.next().unwrap());
-    let map: Vec<Vec<_>> = (0..height)
-        .map(|_| input.by_ref().take(width as usize).collect())
-        .collect();
+    let [height, width, k] = [(); 3].map(|_| input.next().unwrap() as usize);
+    let mut map = [[0; WIDTH_MAX]; HEIGHT_MAX];
+
+    for r in 0..height {
+        for (c, num) in input.by_ref().take(width).enumerate() {
+            map[r][c] = num;
+        }
+    }
 
     let (mut r, mut c) = (0, 0);
     let mut dir = 0;
@@ -18,8 +24,8 @@ fn main() {
 
     let get_moved_coord = |r: i32, c: i32, dir: usize| {
         (
-            (r + DIRS[dir].0).clamp(0, height - 1),
-            (c + DIRS[dir].1).clamp(0, width - 1),
+            (r + DIRS[dir].0).clamp(0, height as i32 - 1),
+            (c + DIRS[dir].1).clamp(0, width as i32 - 1),
         )
     };
 
@@ -42,7 +48,7 @@ fn main() {
                 _ => unreachable!(),
             }
 
-            let score = get_score(r, c, &map);
+            let score = get_score(r, c, &map[..height], width);
 
             dir = match bottom.cmp(&map[r as usize][c as usize]) {
                 Ordering::Greater => (dir + 1) % DIRS.len(),
@@ -57,9 +63,9 @@ fn main() {
     println!("{sum}");
 }
 
-fn get_score(y: i32, x: i32, map: &[Vec<i32>]) -> i32 {
-    let (width, height) = (map[0].len(), map.len());
-    let mut visited = vec![vec![false; width]; height];
+fn get_score(y: i32, x: i32, map: &[[i32; WIDTH_MAX]], width: usize) -> i32 {
+    let height = map.len();
+    let mut visited = [[false; WIDTH_MAX]; HEIGHT_MAX];
     visited[y as usize][x as usize] = true;
 
     let num = map[y as usize][x as usize];

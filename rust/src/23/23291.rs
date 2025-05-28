@@ -1,44 +1,55 @@
 use std::io;
 
+const WIDTH_MAX: usize = 100;
+const HEIGHT_MAX: usize = 10;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let [n, k] = [(); 2].map(|_| input.next().unwrap());
+    let [n, k] = [(); 2].map(|_| input.next().unwrap() as usize);
     let height = ((n as f64).sqrt().ceil() as usize).max(4);
 
-    let mut map = vec![vec![0; n as usize]; height];
-    map[height - 1] = input.collect();
+    let mut map = [[0; WIDTH_MAX]; HEIGHT_MAX];
 
-    let count = simulate(map, k);
+    for (i, num) in input.enumerate() {
+        map[height - 1][i] = num;
+    }
+
+    let count = simulate(&mut map[..height], n, k as u32);
 
     println!("{count}");
 }
 
-fn simulate(mut map: Vec<Vec<i32>>, k: i32) -> i32 {
+fn simulate(map: &mut [[i32; WIDTH_MAX]], width: usize, k: u32) -> i32 {
     let height = map.len();
     let mut count = 0;
 
     loop {
-        let (min, max) = map[height - 1].iter().fold((i32::MAX, 0), |acc, &fish| {
-            (acc.0.min(fish), acc.1.max(fish))
-        });
+        let (min, max) = map[height - 1][..width]
+            .iter()
+            .fold((i32::MAX, 0), |acc, &fish| {
+                (acc.0.min(fish), acc.1.max(fish))
+            });
 
-        if min.abs_diff(max) <= k as u32 {
+        if min.abs_diff(max) <= k {
             return count;
         }
 
-        for fish in map[height - 1].iter_mut().filter(|fish| **fish == min) {
+        for fish in map[height - 1][..width]
+            .iter_mut()
+            .filter(|fish| **fish == min)
+        {
             *fish += 1;
         }
 
-        let (start, size) = levitate_first(&mut map);
-        move_fishes(&mut map, start, size);
-        flatten(&mut map, start, size);
+        let (start, size) = levitate_first(map, width);
+        move_fishes(map, width, start, size);
+        flatten(map, start, size);
 
-        let (start, size) = levitate_second(&mut map);
-        move_fishes(&mut map, start, size);
-        flatten(&mut map, start, size);
+        let (start, size) = levitate_second(map, width);
+        move_fishes(map, width, start, size);
+        flatten(map, start, size);
         // for r in &map {
         //     println!("{r:?}");
         // }
@@ -47,8 +58,11 @@ fn simulate(mut map: Vec<Vec<i32>>, k: i32) -> i32 {
     }
 }
 
-fn levitate_first(map: &mut Vec<Vec<i32>>) -> ((usize, usize), (usize, usize)) {
-    let (map_width, map_height) = (map[0].len(), map.len());
+fn levitate_first(
+    map: &mut [[i32; WIDTH_MAX]],
+    map_width: usize,
+) -> ((usize, usize), (usize, usize)) {
+    let map_height = map.len();
     let (mut width, mut height) = (1, 1);
     let mut rest = map_width - height;
 
@@ -77,12 +91,13 @@ fn levitate_first(map: &mut Vec<Vec<i32>>) -> ((usize, usize), (usize, usize)) {
 }
 
 fn move_fishes(
-    map: &mut Vec<Vec<i32>>,
+    map: &mut [[i32; WIDTH_MAX]],
+    map_width: usize,
     (start_r, start_c): (usize, usize),
     (width, height): (usize, usize),
 ) {
-    let (map_width, map_height) = (map[0].len(), map.len());
-    let mut diffs = vec![vec![0; map_width - start_c]; map_height - start_r];
+    let map_height = map.len();
+    let mut diffs = [[0; WIDTH_MAX]; HEIGHT_MAX];
 
     for r in start_r..start_r + height {
         for c in start_c..start_c + width {
@@ -120,7 +135,7 @@ fn move_fishes(
 }
 
 fn flatten(
-    map: &mut Vec<Vec<i32>>,
+    map: &mut [[i32; WIDTH_MAX]],
     (start_r, start_c): (usize, usize),
     (width, height): (usize, usize),
 ) {
@@ -134,8 +149,11 @@ fn flatten(
     }
 }
 
-fn levitate_second(map: &mut Vec<Vec<i32>>) -> ((usize, usize), (usize, usize)) {
-    let (map_width, map_height) = (map[0].len(), map.len());
+fn levitate_second(
+    map: &mut [[i32; WIDTH_MAX]],
+    map_width: usize,
+) -> ((usize, usize), (usize, usize)) {
+    let map_height = map.len();
     let mut width = map_width;
     let (mut y, mut x) = (0, 0);
 

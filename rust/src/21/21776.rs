@@ -1,35 +1,38 @@
 use std::io;
 
+const MAX: usize = 9;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
 
     let (n, c) = input.next().unwrap().split_once(' ').unwrap();
     let (n, c) = (parse_int(n), parse_int(c));
+    let mut orders = [(); MAX].map(|_| Vec::new());
 
-    let card_orders: Vec<Vec<_>> = input
-        .by_ref()
-        .take(n)
-        .map(|line| line.split(' ').map(parse_int).skip(1).collect())
-        .collect();
-    let cards: Vec<Vec<_>> = input
-        .map(|line| {
-            line.split(',')
-                .map(|card| {
-                    let (action, arg) = card.split_once(' ').unwrap();
-                    (action, arg.chars().nth(0).unwrap())
-                })
-                .collect()
-        })
-        .collect();
-    // println!("{card_orders:?}\n{cards:?}");
+    for (i, line) in input.by_ref().take(n).enumerate() {
+        orders[i] = line.split(' ').map(parse_int).skip(1).collect();
+    }
+
+    let mut cards = [(); MAX].map(|_| Vec::new());
+
+    for (i, line) in input.enumerate() {
+        cards[i] = line
+            .split(',')
+            .map(|card| {
+                let (action, arg) = card.split_once(' ').unwrap();
+                (action, arg.chars().nth(0).unwrap())
+            })
+            .collect();
+    }
+    // println!("{orders:?}\n{cards:?}");
     let mut result = Vec::new();
 
     product(
-        &mut vec![0; n],
-        &mut vec![0; c],
-        &card_orders,
-        &cards,
+        &mut [0; MAX][..n],
+        &mut [0; MAX][..c],
+        &orders[..n],
+        &cards[..c],
         &mut result,
     );
     result.sort();
@@ -39,9 +42,9 @@ fn main() {
 }
 
 fn product(
-    depths: &mut Vec<usize>,
-    selected: &mut Vec<usize>,
-    card_orders: &[Vec<usize>],
+    depths: &mut [usize],
+    selected: &mut [usize],
+    orders: &[Vec<usize>],
     cards: &[Vec<(&str, char)>],
     result: &mut Vec<String>,
 ) {
@@ -78,15 +81,15 @@ fn product(
         return;
     }
 
-    for (i, orders) in card_orders.iter().enumerate() {
-        let Some(&card_num) = orders.get(depths[i]) else {
+    for (i, order) in orders.iter().enumerate() {
+        let Some(&card_num) = order.get(depths[i]) else {
             continue;
         };
 
         selected[total_depth] = card_num;
         depths[i] += 1;
 
-        product(depths, selected, card_orders, cards, result);
+        product(depths, selected, orders, cards, result);
 
         depths[i] -= 1;
     }

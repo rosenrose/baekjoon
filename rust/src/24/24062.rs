@@ -1,31 +1,36 @@
 use std::io;
 
+const MAX: usize = 500_000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
     let n = input.next().unwrap() as usize;
-    let mut arr_a: Vec<_> = input.by_ref().take(n).collect();
-    let mut count = 0;
-    let arr_b: Vec<_> = input
-        .enumerate()
-        .map(|(i, num)| {
-            if arr_a[i] == num {
-                count += 1;
-            }
+    let (mut arr_a, mut arr_b) = ([0; MAX], [0; MAX]);
 
-            num
-        })
-        .collect();
+    for (i, num) in input.by_ref().take(n).enumerate() {
+        arr_a[i] = num;
+    }
+
+    let mut count = 0;
+
+    for (i, num) in input.enumerate() {
+        if arr_a[i] == num {
+            count += 1;
+        }
+
+        arr_b[i] = num;
+    }
 
     println!(
         "{}",
-        merge_sort(&mut arr_a, (0, n), &arr_b, &mut count, n) as u8
+        merge_sort(&mut arr_a[..n], (0, n), &arr_b[..n], &mut count, n) as u8
     );
 }
 
 fn merge_sort(
-    arr_a: &mut Vec<i32>,
+    arr_a: &mut [i32],
     (lo, hi): (usize, usize),
     arr_b: &[i32],
     count: &mut usize,

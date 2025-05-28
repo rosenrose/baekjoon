@@ -1,5 +1,7 @@
 use std::io;
 
+const SIZE_MAX: usize = 20;
+const SHARK_MAX: usize = 20 * 20 + 1;
 const DIRS: [(i8, i8); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 
 fn main() {
@@ -8,25 +10,22 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let (n, m, k) = (input(), input(), input() as i32);
-    let mut sharks = vec![(0, 0); m + 1];
-    let mut precedences = vec![[[0; 4]; 4]; m + 1];
+    let mut sharks = [(0, 0); SHARK_MAX];
+    let mut precedences = [[[0; 4]; 4]; SHARK_MAX];
+    let mut map = [[(None, 0, 0); SIZE_MAX]; SIZE_MAX];
 
-    let mut map: Vec<Vec<_>> = (0..n)
-        .map(|r| {
-            (0..n)
-                .map(|c| {
-                    let num = input();
-                    let is_shark = num > 0;
+    for r in 0..n {
+        for c in 0..n {
+            let num = input();
+            let is_shark = num > 0;
 
-                    if is_shark {
-                        sharks[num] = (r, c);
-                    }
+            if is_shark {
+                sharks[num] = (r, c);
+            }
 
-                    (None, num, if is_shark { k } else { 0 })
-                })
-                .collect()
-        })
-        .collect();
+            map[r][c] = (None, num, if is_shark { k } else { 0 });
+        }
+    }
 
     for ((r, c), dir) in (1..=m).map(|i| (sharks[i], input() - 1)) {
         map[r][c].0 = Some(dir);
@@ -39,25 +38,25 @@ fn main() {
         }
     }
     // println!("{map:?}\n{precedences:?}\n");
-    let elapsed = simulate(map, precedences, m, k);
+    let elapsed = simulate(&mut map[..n], &precedences[..=m], m, k);
 
     println!("{elapsed}");
 }
 
 fn simulate(
-    mut map: Vec<Vec<(Option<usize>, usize, i32)>>,
-    precedences: Vec<[[usize; 4]; 4]>,
+    map: &mut [[(Option<usize>, usize, i32); SIZE_MAX]],
+    precedences: &[[[usize; 4]; 4]],
     mut shark_count: usize,
     duration: i32,
 ) -> i32 {
     for time in 1..=1000 {
-        move_sharks(&mut map, &precedences, &mut shark_count);
+        move_sharks(map, precedences, &mut shark_count);
 
         if shark_count == 1 {
             return time;
         }
 
-        modify_scents(&mut map, duration);
+        modify_scents(map, duration);
         // for r in &map {
         //     println!("{r:?}");
         // }
@@ -68,12 +67,16 @@ fn simulate(
 }
 
 fn move_sharks(
-    map: &mut Vec<Vec<(Option<usize>, usize, i32)>>,
+    map: &mut [[(Option<usize>, usize, i32); SIZE_MAX]],
     precedences: &[[[usize; 4]; 4]],
     shark_count: &mut usize,
 ) {
     let n = map.len();
-    let mut moved = map.clone();
+    let mut moved = [[(None, 0, 0); SIZE_MAX]; SIZE_MAX];
+
+    for (r, row) in map.iter().enumerate() {
+        moved[r][..n].clone_from_slice(&row[..n]);
+    }
 
     for r in 0..n {
         for c in 0..n {
@@ -122,12 +125,16 @@ fn move_sharks(
         }
     }
 
-    *map = moved
+    for (r, row) in map.iter_mut().enumerate() {
+        row[..n].clone_from_slice(&moved[r][..n]);
+    }
 }
 
-fn modify_scents(map: &mut Vec<Vec<(Option<usize>, usize, i32)>>, duration: i32) {
+fn modify_scents(map: &mut [[(Option<usize>, usize, i32); SIZE_MAX]], duration: i32) {
+    let n = map.len();
+
     for row in map {
-        for (dir, num, scents) in row {
+        for (dir, num, scents) in &mut row[..n] {
             if *num == 0 {
                 continue;
             }

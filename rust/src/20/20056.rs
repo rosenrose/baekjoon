@@ -1,5 +1,6 @@
 use std::io;
 
+const MAX: usize = 50;
 const DIRS: [(i32, i32); 8] = [
     (-1, 0),
     (-1, 1),
@@ -16,21 +17,25 @@ fn main() {
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [n, m, k] = [(); 3].map(|_| input.next().unwrap());
-    let mut map = vec![vec![Vec::new(); n]; n];
+    let mut map = [(); MAX].map(|_| [(); MAX].map(|_| Vec::new()));
 
     for [r, c, m, s, d] in (0..m).map(|_| [(); 5].map(|_| input.next().unwrap())) {
         map[r - 1][c - 1].push((m as i32, s as i32, d));
     }
 
-    let sum = simulate(map, k as i32);
+    let sum = simulate(&mut map[..n], k as i32);
 
     println!("{sum}");
 }
 
-fn simulate(mut map: Vec<Vec<Vec<(i32, i32, usize)>>>, k: i32) -> i32 {
+fn simulate(map: &mut [[Vec<(i32, i32, usize)>; MAX]], k: i32) -> i32 {
+    let n = map.len();
+
     for _ in 0..k {
-        let moved = move_fireballs(&mut map);
-        split_fireballs(&mut map, moved);
+        let mut moved = [(); MAX].map(|_| [(); MAX].map(|_| Vec::new()));
+
+        move_fireballs(map, &mut moved[..n]);
+        split_fireballs(map, &moved[..n]);
         // for r in &map {
         //     println!("{r:?}");
         // }
@@ -39,12 +44,14 @@ fn simulate(mut map: Vec<Vec<Vec<(i32, i32, usize)>>>, k: i32) -> i32 {
     map.iter().flatten().flatten().map(|(m, ..)| m).sum()
 }
 
-fn move_fireballs(map: &mut Vec<Vec<Vec<(i32, i32, usize)>>>) -> Vec<Vec<Vec<(i32, i32, usize)>>> {
+fn move_fireballs(
+    map: &mut [[Vec<(i32, i32, usize)>; MAX]],
+    moved: &mut [[Vec<(i32, i32, usize)>; MAX]],
+) {
     let n = map.len();
-    let mut moved = vec![vec![Vec::new(); n]; n];
 
     for (r, row) in map.iter_mut().enumerate() {
-        for (c, fireballs) in row.iter_mut().enumerate() {
+        for (c, fireballs) in row[..n].iter_mut().enumerate() {
             while let Some((m, s, d)) = fireballs.pop() {
                 let dir = DIRS[d];
                 let (moved_r, moved_c) = (
@@ -56,16 +63,16 @@ fn move_fireballs(map: &mut Vec<Vec<Vec<(i32, i32, usize)>>>) -> Vec<Vec<Vec<(i3
             }
         }
     }
-
-    moved
 }
 
 fn split_fireballs(
-    map: &mut Vec<Vec<Vec<(i32, i32, usize)>>>,
-    moved: Vec<Vec<Vec<(i32, i32, usize)>>>,
+    map: &mut [[Vec<(i32, i32, usize)>; MAX]],
+    moved: &[[Vec<(i32, i32, usize)>; MAX]],
 ) {
+    let n = map.len();
+
     for (r, row) in moved.iter().enumerate() {
-        for (c, fireballs) in row.iter().enumerate() {
+        for (c, fireballs) in row[..n].iter().enumerate() {
             if fireballs.len() == 1 {
                 map[r][c].push(fireballs[0]);
                 continue;

@@ -1,20 +1,26 @@
 use std::io;
 
+const MAX: usize = 500_000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let [_, mut k] = [(); 2].map(|_| input.next().unwrap());
-    let mut arr: Vec<_> = input.collect();
+    let [n, mut k] = [(); 2].map(|_| input.next().unwrap() as usize);
+    let mut arr = [0; MAX];
 
-    if let Some(num) = merge_sort(&mut arr, &mut k) {
+    for (i, num) in input.enumerate() {
+        arr[i] = num;
+    }
+
+    if let Some(num) = merge_sort(&mut arr[..n], &mut k) {
         println!("{num}");
     } else {
         println!("-1");
     }
 }
 
-fn merge_sort(arr: &mut [i32], k: &mut i32) -> Option<i32> {
+fn merge_sort(arr: &mut [i32], k: &mut usize) -> Option<i32> {
     let n = arr.len();
 
     if n <= 1 {

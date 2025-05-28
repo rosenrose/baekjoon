@@ -1,16 +1,22 @@
 use std::fmt::Write;
 use std::io;
 
+const MAX: usize = 500_000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut output = String::new();
 
-    let [_, mut k] = [(); 2].map(|_| input.next().unwrap());
-    let mut arr: Vec<_> = input.collect();
+    let [n, mut k] = [(); 2].map(|_| input.next().unwrap() as usize);
+    let mut arr = [0; MAX];
 
-    if merge_sort(&mut arr, &mut k) {
-        for num in arr {
+    for (i, num) in input.enumerate() {
+        arr[i] = num;
+    }
+
+    if merge_sort(&mut arr[..n], &mut k) {
+        for num in &arr[..n] {
             write!(output, "{num} ").unwrap();
         }
     } else {
@@ -20,7 +26,7 @@ fn main() {
     print!("{output}");
 }
 
-fn merge_sort(arr: &mut [i32], k: &mut i32) -> bool {
+fn merge_sort(arr: &mut [i32], k: &mut usize) -> bool {
     let n = arr.len();
 
     if n <= 1 {

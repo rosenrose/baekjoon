@@ -1,6 +1,6 @@
 use std::io;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 enum Cells {
     Black,
     Rainbow,
@@ -8,43 +8,43 @@ enum Cells {
     Empty,
 }
 
+const MAX: usize = 20;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let [n, _] = [(); 2].map(|_| input.next().unwrap());
-    let map: Vec<Vec<_>> = (0..n)
-        .map(|_| {
-            input
-                .by_ref()
-                .take(n as usize)
-                .map(|num| match num {
-                    -1 => Cells::Black,
-                    0 => Cells::Rainbow,
-                    _ => Cells::Normal(num as u8),
-                })
-                .collect()
-        })
-        .collect();
+    let [n, _m] = [(); 2].map(|_| input.next().unwrap() as usize);
+    let mut map = [[Cells::Empty; MAX]; MAX];
 
-    let sum = simulate(map);
+    for r in 0..n {
+        for (c, num) in input.by_ref().take(n).enumerate() {
+            map[r][c] = match num {
+                -1 => Cells::Black,
+                0 => Cells::Rainbow,
+                _ => Cells::Normal(num as u8),
+            };
+        }
+    }
+
+    let sum = simulate(&mut map[..n]);
 
     println!("{sum}");
 }
 
-fn simulate(mut map: Vec<Vec<Cells>>) -> i32 {
+fn simulate(map: &mut [[Cells; MAX]]) -> i32 {
     let mut score = 0;
 
     loop {
-        let block_groups = get_block_groups(&map);
+        let (groups, groups_len) = get_block_groups(map);
 
-        if block_groups.is_empty() {
+        if groups_len == 0 {
             break;
         }
         // for r in &block_groups {
         //     println!("{r:?}");
         // }
-        let (count, _, members) = block_groups.iter().max().unwrap();
+        let (count, _, members) = groups[..groups_len].iter().max().unwrap();
 
         for &(r, c) in members {
             map[r][c] = Cells::Empty;
@@ -52,9 +52,9 @@ fn simulate(mut map: Vec<Vec<Cells>>) -> i32 {
 
         score += count * count;
 
-        move_down(&mut map);
-        rotate(&mut map);
-        move_down(&mut map);
+        move_down(map);
+        rotate(map);
+        move_down(map);
         // for r in &map {
         //     println!("{r:?}");
         // }
@@ -64,10 +64,13 @@ fn simulate(mut map: Vec<Vec<Cells>>) -> i32 {
     score
 }
 
-fn get_block_groups(map: &[Vec<Cells>]) -> Vec<(i32, i32, Vec<(usize, usize)>)> {
+fn get_block_groups(
+    map: &[[Cells; MAX]],
+) -> ([(i32, i32, Vec<(usize, usize)>); MAX * MAX / 2], usize) {
     let n = map.len();
-    let mut visited = vec![vec![false; n]; n];
-    let mut block_groups = Vec::new();
+    let mut visited = [[false; MAX]; MAX];
+    let mut groups = [(); MAX * MAX / 2].map(|_| (0, 0, Vec::new()));
+    let mut groups_len = 0;
 
     for y in 0..n {
         for x in 0..n {
@@ -81,11 +84,11 @@ fn get_block_groups(map: &[Vec<Cells>]) -> Vec<(i32, i32, Vec<(usize, usize)>)> 
             visited[y][x] = true;
 
             let (mut count, mut rainbow_count) = (1, 0);
-            let mut members = Vec::new();
+            let mut group = Vec::new();
             let mut stack = vec![(y, x)];
 
             while let Some((r, c)) = stack.pop() {
-                members.push((r, c));
+                group.push((r, c));
 
                 let adjacents = [
                     (r.saturating_sub(1), c),
@@ -116,7 +119,8 @@ fn get_block_groups(map: &[Vec<Cells>]) -> Vec<(i32, i32, Vec<(usize, usize)>)> 
             }
 
             if count > 1 {
-                block_groups.push((count, rainbow_count, members));
+                groups[groups_len] = (count, rainbow_count, group);
+                groups_len += 1;
             }
 
             for r in 0..n {
@@ -129,10 +133,10 @@ fn get_block_groups(map: &[Vec<Cells>]) -> Vec<(i32, i32, Vec<(usize, usize)>)> 
         }
     }
 
-    block_groups
+    (groups, groups_len)
 }
 
-fn move_down(map: &mut Vec<Vec<Cells>>) {
+fn move_down(map: &mut [[Cells; MAX]]) {
     let n = map.len();
 
     for r in (0..n - 1).rev() {
@@ -141,20 +145,24 @@ fn move_down(map: &mut Vec<Vec<Cells>>) {
                 continue;
             }
 
-            let down = (r + 1..n)
-                .find(|&r| !matches!(map[r][c], Cells::Empty))
-                .unwrap_or(n);
+            let down = (r + 1..n).find(|&r| map[r][c] != Cells::Empty).unwrap_or(n);
 
             (map[down - 1][c], map[r][c]) = (map[r][c], map[down - 1][c]);
         }
     }
 }
 
-fn rotate(map: &mut Vec<Vec<Cells>>) {
-    let rotated: Vec<Vec<_>> = (0..map.len())
-        .rev()
-        .map(|c| (0..map.len()).map(|r| map[r][c]).collect())
-        .collect();
+fn rotate(map: &mut [[Cells; MAX]]) {
+    let n = map.len();
+    let mut rotated = [[Cells::Empty; MAX]; MAX];
 
-    *map = rotated;
+    for r in 0..n {
+        for c in 0..n {
+            rotated[r][c] = map[c][n - 1 - r];
+        }
+    }
+
+    for (r, row) in map.iter_mut().enumerate() {
+        row[..n].copy_from_slice(&rotated[r][..n]);
+    }
 }

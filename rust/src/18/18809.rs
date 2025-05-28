@@ -7,39 +7,43 @@ enum Colors {
     Red,
 }
 
+const WIDTH_MAX: usize = 50;
+const HEIGHT_MAX: usize = 50;
+const PLACEALBE_MAX: usize = 10;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
     let [height, width, g, r] = [(); 4].map(|_| input.next().unwrap());
-    let mut placeables = Vec::new();
-    let map: Vec<Vec<_>> = (0..height)
-        .map(|r| {
-            input
-                .by_ref()
-                .take(width)
-                .enumerate()
-                .map(|(c, num)| match num {
-                    0 => true,
-                    1 => false,
-                    2 => {
-                        placeables.push((r, c));
-                        false
-                    }
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+    let mut placeables = [(0, 0); PLACEALBE_MAX];
+    let mut placeables_len = 0;
+
+    let mut map = [[false; WIDTH_MAX]; HEIGHT_MAX];
+
+    for r in 0..height {
+        for (c, num) in input.by_ref().take(width).enumerate() {
+            map[r][c] = match num {
+                0 => true,
+                1 => false,
+                2 => {
+                    placeables[placeables_len] = (r, c);
+                    placeables_len += 1;
+                    false
+                }
+                _ => unreachable!(),
+            };
+        }
+    }
 
     let max_count = combinations_green(
         0,
         0,
-        &mut vec![false; placeables.len()],
-        &placeables,
-        g,
-        r,
-        &map,
+        &mut [false; PLACEALBE_MAX][..placeables_len],
+        &placeables[..placeables_len],
+        (g, r),
+        &map[..height],
+        width,
     );
 
     println!("{max_count}");
@@ -48,31 +52,36 @@ fn main() {
 fn combinations_green(
     depth: usize,
     start: usize,
-    selected: &mut Vec<bool>,
+    selected: &mut [bool],
     placeables: &[(usize, usize)],
-    greens: usize,
-    reds: usize,
-    map: &[Vec<bool>],
+    (greens, reds): (usize, usize),
+    map: &[[bool; WIDTH_MAX]],
+    width: usize,
 ) -> i32 {
     if depth == greens {
-        let mut selected_green = Vec::with_capacity(greens);
-        let mut rest_placeables = Vec::with_capacity(reds);
+        let mut selected_green = [(0, 0); PLACEALBE_MAX];
+        let mut selected_green_len = 0;
+        let mut rest_placeables = [(0, 0); PLACEALBE_MAX];
+        let mut rest_placeables_len = 0;
 
         for (i, &is_select) in selected.iter().enumerate() {
             if is_select {
-                selected_green.push(placeables[i]);
+                selected_green[selected_green_len] = placeables[i];
+                selected_green_len += 1;
             } else {
-                rest_placeables.push(placeables[i]);
+                rest_placeables[rest_placeables_len] = placeables[i];
+                rest_placeables_len += 1;
             }
         }
 
         return combinations_red(
             0,
             0,
-            &mut vec![0; reds],
-            &rest_placeables,
+            &mut [0; PLACEALBE_MAX][..reds],
+            &rest_placeables[..rest_placeables_len],
             map,
-            &selected_green,
+            width,
+            &selected_green[..selected_green_len],
         );
     }
 
@@ -82,8 +91,15 @@ fn combinations_green(
         .map(|i| {
             selected[i] = true;
 
-            let result =
-                combinations_green(depth + 1, i + 1, selected, placeables, greens, reds, map);
+            let result = combinations_green(
+                depth + 1,
+                i + 1,
+                selected,
+                placeables,
+                (greens, reds),
+                map,
+                width,
+            );
             selected[i] = false;
 
             result
@@ -95,15 +111,27 @@ fn combinations_green(
 fn combinations_red(
     depth: usize,
     start: usize,
-    selected: &mut Vec<usize>,
+    selected: &mut [usize],
     placeables: &[(usize, usize)],
-    map: &[Vec<bool>],
+    map: &[[bool; WIDTH_MAX]],
+    width: usize,
     selected_green: &[(usize, usize)],
 ) -> i32 {
     if depth == selected.len() {
-        let selected_red: Vec<_> = selected.iter().map(|&i| placeables[i]).collect();
+        let mut selected_red = [(0, 0); PLACEALBE_MAX];
+        let mut selected_red_len = 0;
 
-        return simulate(map, selected_green.to_owned(), selected_red);
+        for &mut i in selected {
+            selected_red[selected_red_len] = placeables[i];
+            selected_red_len += 1;
+        }
+
+        return simulate(
+            map,
+            width,
+            selected_green,
+            &selected_red[..selected_red_len],
+        );
     }
 
     let takes = placeables.len() - (selected.len() - 1);
@@ -111,27 +139,36 @@ fn combinations_red(
     (start..depth + takes)
         .map(|i| {
             selected[depth] = i;
-            combinations_red(depth + 1, i + 1, selected, placeables, map, selected_green)
+            combinations_red(
+                depth + 1,
+                i + 1,
+                selected,
+                placeables,
+                map,
+                width,
+                selected_green,
+            )
         })
         .max()
         .unwrap()
 }
 
 fn simulate(
-    map: &[Vec<bool>],
-    selected_green: Vec<(usize, usize)>,
-    selected_red: Vec<(usize, usize)>,
+    map: &[[bool; WIDTH_MAX]],
+    width: usize,
+    selected_green: &[(usize, usize)],
+    selected_red: &[(usize, usize)],
 ) -> i32 {
-    let (width, height) = (map[0].len(), map.len());
+    let height = map.len();
     let mut count = 0;
-    let mut visited = vec![vec![(i32::MAX, None); width]; height];
+    let mut visited = [[(i32::MAX, None); WIDTH_MAX]; HEIGHT_MAX];
     let mut queue = VecDeque::with_capacity(selected_green.len() + selected_red.len());
 
-    for (r, c) in selected_green {
+    for &(r, c) in selected_green {
         visited[r][c] = (0, Some(Colors::Green));
         queue.push_back((r, c));
     }
-    for (r, c) in selected_red {
+    for &(r, c) in selected_red {
         visited[r][c] = (0, Some(Colors::Red));
         queue.push_back((r, c));
     }

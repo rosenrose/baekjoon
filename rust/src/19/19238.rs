@@ -1,12 +1,15 @@
 use std::collections::VecDeque;
 use std::io;
 
-#[derive(Debug)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 enum Cells {
     Empty,
     Wall,
     Passenger((usize, usize)),
 }
+
+const SIZE_MAX: usize = 20;
+const PASSENGER_MAX: usize = SIZE_MAX * SIZE_MAX;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -14,30 +17,31 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let [n, m, fuel] = [(); 3].map(|_| input());
-    let mut map: Vec<Vec<_>> = (0..n)
-        .map(|_| {
-            (0..n)
-                .map(|_| match input() {
-                    0 => Cells::Empty,
-                    1 => Cells::Wall,
-                    _ => unreachable!(),
-                })
-                .collect()
-        })
-        .collect();
+    let mut map = [[Cells::Empty; SIZE_MAX]; SIZE_MAX];
+
+    for r in 0..n {
+        for c in 0..n {
+            map[r][c] = match input() {
+                0 => Cells::Empty,
+                1 => Cells::Wall,
+                _ => unreachable!(),
+            };
+        }
+    }
+
     let taxi = (input() - 1, input() - 1);
 
     for [start_r, start_c, end_r, end_c] in (0..m).map(|_| [(); 4].map(|_| input() - 1)) {
         map[start_r][start_c] = Cells::Passenger((end_r, end_c));
     }
 
-    let fuel_remain = simulate(map, fuel as u32, taxi, m);
+    let fuel_remain = simulate(&mut map[..n], fuel as u32, taxi, m);
 
     println!("{}", fuel_remain.unwrap_or(-1));
 }
 
 fn simulate(
-    mut map: Vec<Vec<Cells>>,
+    map: &mut [[Cells; SIZE_MAX]],
     mut fuel: u32,
     mut taxi: (usize, usize),
     mut passenger_count: usize,
@@ -45,8 +49,8 @@ fn simulate(
     let n = map.len();
 
     loop {
-        let passengers = get_passengers(&map, taxi);
-        let &(dist_to_start, start) = passengers.iter().min()?;
+        let (passengers, passengers_len) = get_passengers(map, taxi);
+        let &(dist_to_start, start) = passengers[..passengers_len].iter().min()?;
 
         let Cells::Passenger(end) = map[start.0][start.1] else {
             unreachable!()
@@ -57,7 +61,7 @@ fn simulate(
         map[start.0][start.1] = Cells::Empty;
 
         let dist_to_end = 'a: {
-            let mut visited = vec![vec![false; n]; n];
+            let mut visited = [[false; SIZE_MAX]; SIZE_MAX];
             visited[taxi.0][taxi.1] = true;
 
             let mut queue = VecDeque::from([(taxi, 0)]);
@@ -92,17 +96,22 @@ fn simulate(
     }
 }
 
-fn get_passengers(map: &[Vec<Cells>], taxi: (usize, usize)) -> Vec<(u32, (usize, usize))> {
+fn get_passengers(
+    map: &[[Cells; SIZE_MAX]],
+    taxi: (usize, usize),
+) -> ([(u32, (usize, usize)); PASSENGER_MAX], usize) {
     let n = map.len();
-    let mut passengers = Vec::new();
-    let mut visited = vec![vec![false; n]; n];
+    let mut passengers = [(0, (0, 0)); PASSENGER_MAX];
+    let mut passengers_len = 0;
+    let mut visited = [[false; SIZE_MAX]; SIZE_MAX];
     visited[taxi.0][taxi.1] = true;
 
     let mut queue = VecDeque::from([(taxi, 0)]);
 
     while let Some(((r, c), dist)) = queue.pop_front() {
         if let Cells::Passenger(_) = map[r][c] {
-            passengers.push((dist, (r, c)));
+            passengers[passengers_len] = (dist, (r, c));
+            passengers_len += 1;
         }
 
         for (adj_r, adj_c) in get_adjacents(r, c, n) {
@@ -115,7 +124,7 @@ fn get_passengers(map: &[Vec<Cells>], taxi: (usize, usize)) -> Vec<(u32, (usize,
         }
     }
 
-    passengers
+    (passengers, passengers_len)
 }
 
 fn get_adjacents(r: usize, c: usize, n: usize) -> [(usize, usize); 4] {
@@ -127,6 +136,6 @@ fn get_adjacents(r: usize, c: usize, n: usize) -> [(usize, usize); 4] {
     ]
 }
 
-fn is_pass(r: usize, c: usize, visited: &[Vec<bool>], map: &[Vec<Cells>]) -> bool {
-    visited[r][c] || matches!(map[r][c], Cells::Wall)
+fn is_pass(r: usize, c: usize, visited: &[[bool; SIZE_MAX]], map: &[[Cells; SIZE_MAX]]) -> bool {
+    visited[r][c] || map[r][c] == Cells::Wall
 }

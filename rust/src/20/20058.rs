@@ -1,34 +1,40 @@
 use std::io;
 
+const MAX: usize = 64;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let [n, _] = [(); 2].map(|_| input.next().unwrap());
+    let [n, _q] = [(); 2].map(|_| input.next().unwrap());
     let size = 1 << n as usize;
-    let map: Vec<Vec<_>> = (0..size)
-        .map(|_| input.by_ref().take(size).collect())
-        .collect();
+    let mut map = [[0; MAX]; MAX];
 
-    let (sum, max_count) = simulate(map, input);
+    for r in 0..size {
+        for (c, num) in input.by_ref().take(size).enumerate() {
+            map[r][c] = num;
+        }
+    }
+
+    let (sum, max_count) = simulate(&mut map[..size], input);
 
     println!("{sum}\n{max_count}");
 }
 
-fn simulate(mut map: Vec<Vec<i32>>, steps: impl Iterator<Item = i32>) -> (i32, i32) {
+fn simulate(map: &mut [[i32; MAX]], steps: impl Iterator<Item = i32>) -> (i32, i32) {
     let size = map.len();
     let (mut sum, mut max_count) = (0, 0);
 
     for step in steps {
-        rotate(&mut map, 1 << step as usize);
-        melt_ice(&mut map);
+        rotate(map, 1 << step as usize);
+        melt_ice(map);
         // for r in &map {
         //     println!("{r:?}");
         // }
     }
 
-    let mut visited = vec![vec![false; size]; size];
-    let is_pass = |r: usize, c: usize, visited: &[Vec<bool>]| visited[r][c] || map[r][c] == 0;
+    let mut visited = [[false; MAX]; MAX];
+    let is_pass = |r: usize, c: usize, visited: &[[bool; MAX]]| visited[r][c] || map[r][c] == 0;
 
     for y in 0..size {
         for x in 0..size {
@@ -70,13 +76,13 @@ fn get_adjacents(r: usize, c: usize, size: usize) -> [(usize, usize); 4] {
     ]
 }
 
-fn rotate(map: &mut Vec<Vec<i32>>, inner_size: usize) {
+fn rotate(map: &mut [[i32; MAX]], inner_size: usize) {
     if inner_size == 1 {
         return;
     }
 
     let size = map.len();
-    let mut rotated = vec![vec![0; size]; size];
+    let mut rotated = [[0; MAX]; MAX];
 
     for y in (0..size).step_by(inner_size) {
         for x in (0..size).step_by(inner_size) {
@@ -88,12 +94,15 @@ fn rotate(map: &mut Vec<Vec<i32>>, inner_size: usize) {
         }
     }
 
-    *map = rotated;
+    for (r, row) in map.iter_mut().enumerate() {
+        row[..size].copy_from_slice(&rotated[r][..size]);
+    }
 }
 
-fn melt_ice(map: &mut Vec<Vec<i32>>) {
+fn melt_ice(map: &mut [[i32; MAX]]) {
     let size = map.len();
-    let mut melts = Vec::new();
+    let mut melts = [(0, 0); MAX * MAX];
+    let mut melts_len = 0;
 
     for r in 0..size {
         for c in 0..size {
@@ -107,12 +116,13 @@ fn melt_ice(map: &mut Vec<Vec<i32>>) {
                 .count();
 
             if ice_count < 3 {
-                melts.push((r, c));
+                melts[melts_len] = (r, c);
+                melts_len += 1;
             }
         }
     }
 
-    for (r, c) in melts {
+    for &(r, c) in &melts[..melts_len] {
         map[r][c] -= 1;
     }
 }
