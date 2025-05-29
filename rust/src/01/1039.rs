@@ -1,18 +1,17 @@
 use std::collections::VecDeque;
+use std::io;
 
-const MAX_DIGITS: usize = 7;
+const NUM_MAX: usize = 1_000_000;
+const DIGIT_MAX: usize = 7;
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<u32>);
 
-    let [n, k] = parse_int_vec(&buf)[..] else {
-        return;
-    };
-    const MAX: usize = 1_000_000;
+    let [n, k] = [(); 2].map(|_| input.next().unwrap());
 
     let mut max_num = 0;
-    let mut visited = [0; MAX + 1];
+    let mut visited = [0; NUM_MAX + 1];
     let mut queue = VecDeque::from([(n, 0)]);
 
     while let Some((num, count)) = queue.pop_front() {
@@ -25,8 +24,8 @@ fn main() {
         let digits = to_digits(num);
         let first_non_zero = digits.iter().position(|&digit| digit != 0).unwrap();
 
-        for i in first_non_zero..MAX_DIGITS - 1 {
-            for j in i + 1..MAX_DIGITS {
+        for i in first_non_zero..DIGIT_MAX - 1 {
+            for j in i + 1..DIGIT_MAX {
                 if i == first_non_zero && digits[j] == 0 {
                     continue;
                 }
@@ -54,8 +53,8 @@ fn main() {
     println!("{max_num}");
 }
 
-fn to_digits(mut num: u32) -> [u8; MAX_DIGITS] {
-    let mut digits = [0; MAX_DIGITS];
+fn to_digits(mut num: u32) -> [u8; DIGIT_MAX] {
+    let mut digits = [0; DIGIT_MAX];
 
     for digit in digits.iter_mut().rev() {
         *digit = (num % 10) as u8;
@@ -65,10 +64,6 @@ fn to_digits(mut num: u32) -> [u8; MAX_DIGITS] {
     digits
 }
 
-fn to_int(digits: [u8; MAX_DIGITS]) -> u32 {
+fn to_int(digits: [u8; DIGIT_MAX]) -> u32 {
     digits.iter().fold(0, |acc, &digit| acc * 10 + digit as u32)
-}
-
-fn parse_int_vec(buf: &str) -> Vec<u32> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

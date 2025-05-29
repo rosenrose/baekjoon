@@ -1,5 +1,8 @@
 use std::io;
 
+const WIDTH_MAX: usize = 2000;
+const HEIGHT_MAX: usize = 2000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
@@ -7,17 +10,17 @@ fn main() {
     let mut it = input.by_ref().take(3).flat_map(str::parse::<usize>);
     let [n, m, k] = [(); 3].map(|_| it.next().unwrap());
 
-    let mut sum_accum = vec![vec![[0; 4]; m + 1]; n + 1];
+    let mut sum_accum = [[[0; 4]; WIDTH_MAX + 1]; HEIGHT_MAX + 1];
 
-    for (i, row) in input.enumerate() {
-        for (j, ch) in row.char_indices() {
+    for (i, row) in input.map(str::as_bytes).enumerate() {
+        for (j, ch) in row.iter().enumerate() {
             sum_accum[i + 1][j + 1] = sum_accum[i + 1][j];
 
             match (i & 1, j & 1, ch) {
-                (0, 0, 'B') | (1, 1, 'B') => sum_accum[i + 1][j + 1][0] += 1,
-                (0, 1, 'B') | (1, 0, 'B') => sum_accum[i + 1][j + 1][1] += 1,
-                (0, 0, 'W') | (1, 1, 'W') => sum_accum[i + 1][j + 1][2] += 1,
-                (0, 1, 'W') | (1, 0, 'W') => sum_accum[i + 1][j + 1][3] += 1,
+                (0, 0, b'B') | (1, 1, b'B') => sum_accum[i + 1][j + 1][0] += 1,
+                (0, 1, b'B') | (1, 0, b'B') => sum_accum[i + 1][j + 1][1] += 1,
+                (0, 0, b'W') | (1, 1, b'W') => sum_accum[i + 1][j + 1][2] += 1,
+                (0, 1, b'W') | (1, 0, b'W') => sum_accum[i + 1][j + 1][3] += 1,
                 _ => unreachable!(),
             }
         }

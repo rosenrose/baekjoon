@@ -1,10 +1,19 @@
 use std::io;
 
+const MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let file_names: Vec<_> = buf.lines().skip(1).collect();
+    let mut input = buf.lines();
 
-    if file_names.len() == 1 {
+    let n: usize = input.next().unwrap().parse().unwrap();
+    let mut file_names = [""; MAX];
+
+    for (i, name) in input.enumerate() {
+        file_names[i] = name;
+    }
+
+    if n == 1 {
         println!("{}", file_names[0]);
         return;
     }
@@ -12,10 +21,10 @@ fn main() {
     let pattern: String = (0..file_names[0].len())
         .map(|i| {
             let letter = file_names[0].chars().nth(i).unwrap();
-            let is_same = file_names[1..]
+            let is_same = file_names[1..n]
                 .iter()
                 .flat_map(|file_name| file_name.chars().nth(i))
-                .all(|c| c == letter);
+                .all(|ch| ch == letter);
 
             if is_same {
                 letter

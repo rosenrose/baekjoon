@@ -1,5 +1,6 @@
 use std::io;
 
+const HEIGHT_MAX: usize = 50;
 const SIZE: usize = 8;
 
 fn main() {
@@ -7,10 +8,14 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
 
     let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
-    let board: &Vec<_> = &input.collect();
+    let mut board = [""; HEIGHT_MAX];
+
+    for (r, row) in input.enumerate() {
+        board[r] = row;
+    }
 
     let min_paint = (0..=height - SIZE)
-        .flat_map(|y| (0..=width - SIZE).map(move |x| get_paint_count(board, x, y)))
+        .flat_map(|y| (0..=width - SIZE).map(move |x| get_paint_count(&board[..height], x, y)))
         .min()
         .unwrap();
 

@@ -1,11 +1,10 @@
+use std::io;
+
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let [n, k] = parse_int_vec(&buf)[..] else {
-        return;
-    };
-
+    let [n, k] = [(); 2].map(|_| input.next().unwrap());
     let mut circle: Vec<_> = (1..=n).collect();
     let mut index = 0;
     let mut josephus_permutation = Vec::new();
@@ -19,8 +18,4 @@ fn main() {
         "<{}>",
         format!("{josephus_permutation:?}").replace(['[', ']'], "")
     );
-}
-
-fn parse_int_vec(buf: &str) -> Vec<usize> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

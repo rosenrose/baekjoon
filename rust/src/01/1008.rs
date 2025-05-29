@@ -1,8 +1,10 @@
+use std::io;
+
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<f64>);
 
-    let nums: Vec<f64> = buf.split_whitespace().flat_map(str::parse).collect();
+    let [a, b] = [(); 2].map(|_| input.next().unwrap());
 
-    println!("{:.9}", nums[0] / nums[1]);
+    println!("{:.9}", a / b);
 }

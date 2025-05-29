@@ -1,10 +1,10 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [x, y] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+
+    let [x, y] = [(); 2].map(|_| input.next().unwrap());
     let z = (y * 100).checked_div(x);
 
     if z.is_none() || z.unwrap() >= 99 {
@@ -32,8 +32,4 @@ fn binary_search(x: i64, y: i64, z: i64) -> i64 {
     }
 
     result
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i64> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

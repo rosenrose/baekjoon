@@ -2,6 +2,8 @@ use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
 
+const GROUP_MAX: usize = 10 + 1;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
@@ -13,19 +15,28 @@ fn main() {
 
     for _ in 0..u {
         let user_info = input.next().unwrap();
-        let (user, groups) = if let Some((user, groups)) = user_info.split_once(' ') {
-            let mut g = vec![user];
-            g.extend(groups.split(','));
+        let mut groups = [""; GROUP_MAX];
+        let mut groups_len;
 
-            (user, g)
+        if let Some((user, group_info)) = user_info.split_once(' ') {
+            groups[0] = user;
+            groups_len = 1;
+
+            for group in group_info.split(',') {
+                groups[groups_len] = group;
+                groups_len += 1;
+            }
         } else {
-            (user_info, vec![user_info])
-        };
+            groups[0] = user_info;
+            groups_len = 1;
+        }
 
-        for group in groups {
+        let user = groups[0];
+
+        for &group in &groups[..groups_len] {
             group_infos
                 .entry(group)
-                .and_modify(|g: &mut Vec<_>| (*g).push(user))
+                .and_modify(|users: &mut Vec<_>| (*users).push(user))
                 .or_insert(vec![user]);
         }
     }

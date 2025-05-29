@@ -1,10 +1,10 @@
 use std::io;
 
-struct DisjointSet(Vec<usize>);
+struct DisjointSet<const N: usize>([usize; N]);
 
-impl DisjointSet {
-    fn make(n: usize) -> Self {
-        Self((0..=n).collect())
+impl<const N: usize> DisjointSet<N> {
+    fn make() -> Self {
+        Self(std::array::from_fn(|i| i))
     }
 
     fn find(&mut self, a: usize) -> usize {
@@ -30,32 +30,42 @@ impl DisjointSet {
     }
 }
 
+const PEOPLE_MAX: usize = 50 + 1;
+const PARTY_MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
-    let know_truth: Vec<_> = (0..input()).map(|_| input()).collect();
+    let (_n, m) = (input(), input());
+    let know_truth_len = input();
+    let mut know_truth = [0; PEOPLE_MAX];
 
-    if know_truth.is_empty() {
+    for i in 0..know_truth_len {
+        know_truth[i] = input();
+    }
+
+    if know_truth_len == 0 {
         println!("{m}");
         return;
     }
 
     let know_truth_group = know_truth[0];
-    let mut disjoint_set = DisjointSet::make(n);
+    let mut disjoint_set = DisjointSet::<PEOPLE_MAX>::make();
 
     for i in 1..know_truth.len() {
         disjoint_set.union(know_truth_group, know_truth[i]);
     }
 
-    let parties: Vec<Vec<_>> = (0..m)
-        .map(|_| (0..input()).map(|_| input()).collect())
-        .collect();
+    let mut parties = [(); PARTY_MAX].map(|_| Vec::new());
+
+    for r in 0..m {
+        parties[r] = (0..input()).map(|_| input()).collect();
+    }
 
     for _ in 0..m - 1 {
-        for party in &parties {
+        for party in &parties[..m] {
             if party
                 .iter()
                 .any(|&p| disjoint_set.is_same(p, know_truth_group))
@@ -67,7 +77,7 @@ fn main() {
         }
     }
 
-    let count = parties
+    let count = parties[..m]
         .iter()
         .filter(|party| {
             party

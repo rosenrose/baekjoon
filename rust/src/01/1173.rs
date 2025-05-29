@@ -1,10 +1,10 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [n, min, max, inc, dec] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+
+    let [n, min, max, inc, dec] = [(); 5].map(|_| input.next().unwrap());
 
     if inc > (max - min) {
         println!("-1");
@@ -32,8 +32,4 @@ fn main() {
     }
 
     println!("{time}");
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

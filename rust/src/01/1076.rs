@@ -1,13 +1,12 @@
 use std::io;
 
+#[rustfmt::skip]
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut values = [0; 3];
 
-    #[rustfmt::skip]
-    let values: Vec<_> = buf
-        .lines()
-        .enumerate()
-        .map(|(i, s)| match s {
+    for (i, s) in buf.lines().enumerate() {
+        values[i] = match s {
             "black"  => if i < 2 { 0 } else { 1 },
             "brown"  => if i < 2 { 1 } else { 10 },
             "red"    => if i < 2 { 2 } else { 100 },
@@ -19,8 +18,8 @@ fn main() {
             "grey"   => if i < 2 { 8 } else { 100_000_000 },
             "white"  => if i < 2 { 9 } else { 1_000_000_000 },
             _ => unreachable!(),
-        })
-        .collect();
+        };
+    }
 
     println!("{}", (values[0] * 10 + values[1]) * values[2]);
 }
