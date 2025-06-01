@@ -5,10 +5,9 @@ fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let times: Vec<_> = input.skip(1).collect();
     let (mut y, mut m) = (0, 0);
 
-    for time in times {
+    for time in input.skip(1) {
         y += ((time / 30) + 1) * 10;
         m += ((time / 60) + 1) * 15;
     }

@@ -1,17 +1,25 @@
 use std::io;
 
+const MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let [d_len, _] = [(); 2].map(|_| input.next().unwrap());
-    let d: Vec<_> = input.by_ref().take(d_len).collect();
-    let m: Vec<_> = input.collect();
+    let [d_len, m_len] = [(); 2].map(|_| input.next().unwrap());
+    let (mut d, mut m) = ([0; MAX], [0; MAX]);
 
-    let gcd = get_gcd(m.into_iter());
+    for (i, num) in input.by_ref().take(d_len).enumerate() {
+        d[i] = num;
+    }
+    for (i, num) in input.enumerate() {
+        m[i] = num;
+    }
+
+    let gcd = get_gcd(m[..m_len].iter().copied());
     let mut lcm = 1;
 
-    for num in d {
+    for &num in &d[..d_len] {
         lcm = get_lcm(lcm, num);
 
         if lcm > gcd {

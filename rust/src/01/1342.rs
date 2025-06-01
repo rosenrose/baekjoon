@@ -1,6 +1,7 @@
+use std::io;
+
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
 
     let mut word = buf.trim().as_bytes().to_vec();
     word.sort();

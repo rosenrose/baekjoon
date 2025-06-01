@@ -26,5 +26,5 @@ fn main() {
         most_letter = ch;
     }
 
-    println!("{}", most_letter);
+    println!("{most_letter}");
 }

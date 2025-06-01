@@ -1,8 +1,9 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
     let input = buf.trim().as_bytes();
+
     let offset = b'A';
     let mut counts = [0; 26];
 
@@ -10,21 +11,25 @@ fn main() {
         counts[(ch - offset) as usize] += 1;
     }
 
-    let odds: Vec<_> = counts
+    let mut odd_letter = '\0';
+
+    for ch in counts
         .iter()
         .enumerate()
         .filter_map(|(ch, count)| (count % 2 == 1).then_some((ch as u8 + offset) as char))
-        .collect();
+    {
+        if odd_letter != '\0' {
+            println!("I'm Sorry Hansoo");
+            return;
+        }
 
-    if odds.len() > 1 {
-        println!("I'm Sorry Hansoo");
-        return;
+        odd_letter = ch;
     }
 
-    let mut palindrome = if let Some(ch) = odds.get(0) {
-        ch.to_string()
-    } else {
+    let mut palindrome = if odd_letter == '\0' {
         String::new()
+    } else {
+        odd_letter.to_string()
     };
 
     for (ch, &count) in counts.iter().enumerate().rev() {

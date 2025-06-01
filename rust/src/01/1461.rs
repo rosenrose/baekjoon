@@ -1,14 +1,21 @@
 use std::io;
 
+const MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let [_, m] = [(); 2].map(|_| input.next().unwrap() as usize);
-    let mut coords: Vec<_> = input.collect();
-    coords.sort();
+    let [n, m] = [(); 2].map(|_| input.next().unwrap() as usize);
+    let mut coords = [0; MAX];
 
-    let (left, right) = coords.split_at(coords.partition_point(|&x| x < 0));
+    for (i, num) in input.enumerate() {
+        coords[i] = num;
+    }
+
+    coords[..n].sort();
+
+    let (left, right) = coords[..n].split_at(coords[..n].partition_point(|&x| x < 0));
     // println!("{left:?} {right:?}");
     let first = left.first().unwrap_or(&0).abs();
     let last = right.last().unwrap_or(&0).abs();

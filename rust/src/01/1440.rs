@@ -1,10 +1,10 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [a, b, c] = parse_int_vec(buf.trim())[..] else {
-        return;
-    };
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.trim().split(':').flat_map(str::parse::<i32>);
+
+    let [a, b, c] = [(); 3].map(|_| input.next().unwrap());
     let mut count = 0;
 
     if matches!((a, b, c), (1..=12, 0..=59, 0..=59)) {
@@ -18,8 +18,4 @@ fn main() {
     }
 
     println!("{count}");
-}
-
-fn parse_int_vec(s: &str) -> Vec<i32> {
-    s.split(':').flat_map(str::parse).collect()
 }

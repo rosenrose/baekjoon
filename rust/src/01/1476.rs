@@ -1,10 +1,10 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [e, s, m] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+
+    let [e, s, m] = [(); 3].map(|_| input.next().unwrap());
     let mut year = s;
 
     loop {
@@ -15,8 +15,4 @@ fn main() {
 
         year += 28;
     }
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i64> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

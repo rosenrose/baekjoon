@@ -2,8 +2,6 @@ use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
 
-const GROUP_MAX: usize = 10 + 1;
-
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
@@ -13,27 +11,14 @@ fn main() {
     let (u, f) = (parse_int(u), parse_int(f));
     let mut group_infos = HashMap::with_capacity(u);
 
-    for _ in 0..u {
-        let user_info = input.next().unwrap();
-        let mut groups = [""; GROUP_MAX];
-        let mut groups_len;
+    for line in input.by_ref().take(u) {
+        let mut user = "";
 
-        if let Some((user, group_info)) = user_info.split_once(' ') {
-            groups[0] = user;
-            groups_len = 1;
-
-            for group in group_info.split(',') {
-                groups[groups_len] = group;
-                groups_len += 1;
+        for (i, group) in line.split([' ', ',']).enumerate() {
+            if i == 0 {
+                user = group;
             }
-        } else {
-            groups[0] = user_info;
-            groups_len = 1;
-        }
 
-        let user = groups[0];
-
-        for &group in &groups[..groups_len] {
             group_infos
                 .entry(group)
                 .and_modify(|users: &mut Vec<_>| (*users).push(user))
@@ -65,8 +50,8 @@ fn main() {
             _ => unreachable!(),
         };
 
-        let (perms, owner, group) = &file_infos[file];
-        let permission = if owner == &user {
+        let (perms, owner, group) = file_infos[file];
+        let permission = if owner == user {
             perms[0]
         } else if group_infos[group].contains(&user) {
             perms[1]

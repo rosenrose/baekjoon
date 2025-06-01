@@ -1,8 +1,17 @@
 use std::io;
 
+const MAX: usize = 50;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut numbers: Vec<_> = buf.lines().skip(1).collect();
+    let mut input = buf.lines();
+
+    let n: usize = input.next().unwrap().parse().unwrap();
+    let mut numbers = [""; MAX];
+
+    for (i, num) in input.enumerate() {
+        numbers[i] = num;
+    }
 
     let digit_sum = |s: &str| {
         s.as_bytes()
@@ -11,12 +20,12 @@ fn main() {
             .sum::<i32>()
     };
 
-    numbers.sort_by(|a, b| {
+    numbers[..n].sort_by(|a, b| {
         a.len()
             .cmp(&b.len())
             .then_with(|| digit_sum(a).cmp(&digit_sum(b)))
             .then_with(|| a.cmp(b))
     });
 
-    println!("{}", numbers.join("\n"));
+    println!("{}", numbers[..n].join("\n"));
 }

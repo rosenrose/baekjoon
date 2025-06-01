@@ -1,6 +1,7 @@
 use std::io;
 
-const MAX: usize = 100_000 + 1;
+const NODES_MAX: usize = 100_000 + 1;
+const EDGES_MAX: usize = (NODES_MAX - 1) * 2;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -8,7 +9,8 @@ fn main() {
     let mut input = || input.next().unwrap();
 
     let v = input() as usize;
-    let mut adjacency_array = ([i32::MAX; MAX], Vec::with_capacity(v));
+    let mut adjacency_array = ([i32::MAX; NODES_MAX], [((0, 0), 0); EDGES_MAX]);
+    let mut i = 0;
 
     for _ in 0..v {
         let a = input();
@@ -17,12 +19,9 @@ fn main() {
             let c = input();
 
             let prev = adjacency_array.0[a as usize];
-            adjacency_array.0[a as usize] = adjacency_array.1.len() as i32;
-            adjacency_array.1.push(((b, c), prev));
-
-            let prev = adjacency_array.0[b as usize];
-            adjacency_array.0[b as usize] = adjacency_array.1.len() as i32;
-            adjacency_array.1.push(((a, c), prev));
+            adjacency_array.0[a as usize] = i as i32;
+            adjacency_array.1[i] = ((b, c), prev);
+            i += 1;
         }
     }
 
@@ -32,9 +31,12 @@ fn main() {
     println!("{diameter}");
 }
 
-fn dfs((nodes, edges): &([i32; MAX], Vec<((i32, i32), i32)>), start: i32) -> (i32, i32) {
+fn dfs(
+    (nodes, edges): &([i32; NODES_MAX], [((i32, i32), i32); EDGES_MAX]),
+    start: i32,
+) -> (i32, i32) {
     let (mut most_far_node, mut max_dist) = (0, 0);
-    let mut visited = [false; MAX];
+    let mut visited = [false; NODES_MAX];
     visited[start as usize] = true;
 
     let mut stack = vec![(start, 0)];

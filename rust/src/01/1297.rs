@@ -1,15 +1,11 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [d, h, w] = parse_float_vec(&buf)[..] else {
-        return;
-    };
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<f64>);
+
+    let [d, h, w] = [(); 3].map(|_| input.next().unwrap());
     let multiple = d / h.hypot(w);
 
     println!("{} {}", (h * multiple).floor(), (w * multiple).floor());
-}
-
-fn parse_float_vec(buf: &str) -> Vec<f64> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

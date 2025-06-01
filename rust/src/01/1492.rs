@@ -1,14 +1,13 @@
+use std::io;
+
+const MAX: usize = 50;
 const M: i64 = 1_000_000_007;
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let [n, k] = parse_int_vec(&buf)[..] else {
-        return;
-    };
-    const MAX: usize = 50;
-
+    let [n, k] = [(); 2].map(|_| input.next().unwrap());
     let mut combination_rem = [[0; MAX + 2]; MAX + 2];
 
     for i in 0..=k + 1 {
@@ -54,8 +53,4 @@ fn pow_rem(base: i64, exp: i64) -> i64 {
 
 fn mod_inverse_rem(n: i64, modular: i64) -> i64 {
     pow_rem(n, modular - 2)
-}
-
-fn parse_int_vec(buf: &str) -> Vec<usize> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

@@ -1,27 +1,36 @@
 use std::collections::VecDeque;
 use std::io;
 
+const ZONE_MAX: usize = 50;
+const SIZE_MAX: usize = 500;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
     let mut input = || input.next().unwrap();
 
-    let danger_zones: Vec<_> = (0..input())
-        .map(|_| get_sorted_coords([(); 4].map(|_| input())))
-        .collect();
-    let kill_zones: Vec<_> = (0..input())
-        .map(|_| get_sorted_coords([(); 4].map(|_| input())))
-        .collect();
-    const SIZE: i32 = 500;
+    let danger_zones_len = input() as usize;
+    let mut danger_zones = [[0; 4]; ZONE_MAX];
 
-    let mut visited = [[false; SIZE as usize + 1]; SIZE as usize + 1];
+    for i in 0..danger_zones_len {
+        danger_zones[i] = get_sorted_coords([(); 4].map(|_| input()));
+    }
+
+    let kill_zones_len = input() as usize;
+    let mut kill_zones = [[0; 4]; ZONE_MAX];
+
+    for i in 0..kill_zones_len {
+        kill_zones[i] = get_sorted_coords([(); 4].map(|_| input()));
+    }
+
+    let mut visited = [[false; SIZE_MAX + 1]; SIZE_MAX + 1];
     visited[0][0] = true;
 
     let mut min_count = i32::MAX;
     let mut queue = VecDeque::from([((0, 0), 0)]);
 
     while let Some(((r, c), loss_count)) = queue.pop_front() {
-        if (r, c) == (SIZE, SIZE) {
+        if (r, c) == (SIZE_MAX as i32, SIZE_MAX as i32) {
             min_count = loss_count.min(min_count);
             continue;
         }
@@ -29,13 +38,13 @@ fn main() {
         let adjacents = [
             ((r - 1).max(0), c),
             (r, (c - 1).max(0)),
-            ((r + 1).min(SIZE), c),
-            (r, (c + 1).min(SIZE)),
+            ((r + 1).min(SIZE_MAX as i32), c),
+            (r, (c + 1).min(SIZE_MAX as i32)),
         ];
 
         for (adj_r, adj_c) in adjacents {
             if visited[adj_r as usize][adj_c as usize]
-                || kill_zones
+                || kill_zones[..kill_zones_len]
                     .iter()
                     .any(|&kill| is_point_inside_rect((adj_r, adj_c), kill))
             {
@@ -44,7 +53,7 @@ fn main() {
 
             visited[adj_r as usize][adj_c as usize] = true;
 
-            if danger_zones
+            if danger_zones[..danger_zones_len]
                 .iter()
                 .any(|&danger| is_point_inside_rect((adj_r, adj_c), danger))
             {

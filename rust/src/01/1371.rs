@@ -12,13 +12,12 @@ fn main() {
     }
 
     let max_count = counts.iter().max().unwrap();
-    let mut max_counts: Vec<_> = counts
-        .iter()
-        .enumerate()
-        .filter_map(|(ch, count)| (count == max_count).then_some(ch as u8 + offset))
-        .collect();
+    let max_letters = String::from_iter(
+        counts
+            .iter()
+            .enumerate()
+            .filter_map(|(ch, count)| (count == max_count).then_some((ch as u8 + offset) as char)),
+    );
 
-    max_counts.sort();
-
-    println!("{}", String::from_utf8(max_counts).unwrap());
+    println!("{max_letters}");
 }

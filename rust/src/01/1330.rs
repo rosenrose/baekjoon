@@ -1,12 +1,13 @@
 use std::cmp::Ordering;
+use std::io;
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let nums: Vec<i32> = buf.split_whitespace().flat_map(str::parse).collect();
+    let [a, b] = [(); 2].map(|_| input.next().unwrap());
 
-    match nums[0].cmp(&nums[1]) {
+    match a.cmp(&b) {
         Ordering::Less => println!("<"),
         Ordering::Equal => println!("=="),
         Ordering::Greater => println!(">"),
