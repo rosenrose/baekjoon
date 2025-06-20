@@ -1,18 +1,19 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let input: Vec<_> = buf.trim().split(['+', '=']).map(get_coef_counts).collect();
-    let [m1, m2, m3] = input[..] else { return };
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.trim().split(['+', '=']).map(get_coef_counts);
+
+    let [m1, m2, m3] = [(); 3].map(|_| input.next().unwrap());
     // println!("{m1:?} {m2:?} {m3:?}");
     for x1 in 1..=10 {
-        let m1: Vec<_> = m1.iter().map(|m| m * x1).collect();
+        let m1 = m1.map(|m| m * x1);
 
         for x2 in 1..=10 {
-            let m2: Vec<_> = m2.iter().map(|m| m * x2).collect();
+            let m2 = m2.map(|m| m * x2);
 
             for x3 in 1..=10 {
-                let m3: Vec<_> = m3.iter().map(|m| m * x3).collect();
+                let m3 = m3.map(|m| m * x3);
 
                 if m1
                     .iter()

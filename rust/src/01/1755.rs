@@ -1,44 +1,43 @@
+use std::io;
+
+const MAX: usize = 99;
+
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let [m, n] = parse_int_vec(&buf)[..] else {
-        return;
-    };
-    let mut num_engs: Vec<_> = (m..=n)
-        .map(|num| {
-            let eng: String = num
-                .to_string()
-                .chars()
-                .map(|c| match c {
-                    '0' => "z",
-                    '1' => "o",
-                    '2' => "tw",
-                    '3' => "th",
-                    '4' => "fo",
-                    '5' => "fi",
-                    '6' => "si",
-                    '7' => "se",
-                    '8' => "e",
-                    '9' => "n",
-                    _ => unreachable!(),
-                })
-                .collect();
+    let [m, n] = [(); 2].map(|_| input.next().unwrap());
+    let nums_len = n - m + 1;
+    let mut num_engs = [(); MAX].map(|_| Default::default());
 
-            (num, eng)
-        })
-        .collect();
+    for num in m..=n {
+        let eng: String = num
+            .to_string()
+            .chars()
+            .map(|c| match c {
+                '0' => "zero",
+                '1' => "one",
+                '2' => "two",
+                '3' => "three",
+                '4' => "four",
+                '5' => "five",
+                '6' => "six",
+                '7' => "seven",
+                '8' => "eight",
+                '9' => "nine",
+                _ => unreachable!(),
+            })
+            .collect();
 
-    num_engs.sort_by(|(_, eng1), (_, eng2)| eng1.cmp(eng2));
+        num_engs[num - m] = (num, eng);
+    }
 
-    for chunk in num_engs.chunks(10) {
+    num_engs[..nums_len].sort_by(|(_, eng1), (_, eng2)| eng1.cmp(eng2));
+
+    for chunk in num_engs[..nums_len].chunks(10) {
         for (num, _) in chunk {
             print!("{num} ");
         }
         println!("");
     }
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i32> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

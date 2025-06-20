@@ -1,30 +1,29 @@
 use std::io;
 
+const MAX: usize = 200;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
 
-    let k: usize = input.next().unwrap().parse().unwrap();
-    let table: Vec<_> = input
-        .next()
-        .unwrap()
-        .as_bytes()
-        .chunks(k)
-        .enumerate()
-        .map(|(i, chunk)| {
-            let mut chunk = chunk.to_vec();
+    let width: usize = input.next().unwrap().parse().unwrap();
+    let encrypted = input.next().unwrap().as_bytes();
+    let height = encrypted.len() / width;
+    let mut table = [(); MAX].map(|_| Vec::new());
 
-            if i % 2 == 1 {
-                chunk.reverse();
-            }
+    for (r, chunk) in encrypted.chunks(width).enumerate() {
+        let mut row = chunk.to_vec();
 
-            chunk
-        })
-        .collect();
+        if r % 2 == 1 {
+            row.reverse();
+        }
 
-    for col in 0..k {
-        for row in &table {
-            print!("{}", row[col] as char);
+        table[r] = row;
+    }
+
+    for c in 0..width {
+        for r in 0..height {
+            print!("{}", table[r][c] as char);
         }
     }
 }

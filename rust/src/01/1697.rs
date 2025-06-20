@@ -1,15 +1,16 @@
 use std::collections::VecDeque;
+use std::io;
+
+const MAX: usize = 100_000 * 2;
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<u32>);
 
-    let [n, k] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+    let [n, k] = [(); 2].map(|_| input.next().unwrap());
     let diff = n.abs_diff(k);
 
-    let mut visited = [false; 200_000];
+    let mut visited = [false; MAX];
     visited[n as usize] = true;
 
     let mut queue = VecDeque::from([(n, 0)]);
@@ -29,8 +30,4 @@ fn main() {
             queue.push_back((adj, time + 1));
         }
     }
-}
-
-fn parse_int_vec(buf: &str) -> Vec<u32> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

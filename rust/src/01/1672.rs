@@ -1,5 +1,6 @@
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Default, Debug)]
 enum DNA {
+    #[default]
     A,
     G,
     C,
@@ -9,27 +10,31 @@ enum DNA {
 use std::io;
 use DNA::*;
 
+const MAX: usize = 1_000_000;
+const TABLE: [[DNA; 4]; 4] = [[A, C, A, G], [C, G, T, A], [A, T, C, G], [G, A, G, T]];
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let mut dna: Vec<_> = buf
-        .lines()
-        .next_back()
-        .unwrap()
-        .chars()
-        .map(|ch| match ch {
+    let mut input = buf.lines();
+
+    let mut n: usize = input.next().unwrap().parse().unwrap();
+    let mut dna = [Default::default(); MAX];
+
+    for (i, ch) in input.next().unwrap().char_indices() {
+        dna[i] = match ch {
             'A' => A,
             'G' => G,
             'C' => C,
             'T' => T,
             _ => unreachable!(),
-        })
-        .collect();
+        };
+    }
 
-    const TABLE: [[DNA; 4]; 4] = [[A, C, A, G], [C, G, T, A], [A, T, C, G], [G, A, G, T]];
+    while n > 1 {
+        let (col, row) = (dna[n - 1], dna[n - 2]);
 
-    while dna.len() > 1 {
-        let (col, row) = (dna.pop().unwrap(), dna.pop().unwrap());
-        dna.push(TABLE[row as usize][col as usize]);
+        n -= 1;
+        dna[n - 1] = TABLE[row as usize][col as usize];
     }
 
     println!("{:?}", dna[0]);

@@ -1,25 +1,29 @@
 use std::io;
 
+const MAX: usize = 20;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace();
 
-    let room: Vec<_> = buf.lines().skip(1).map(str::to_owned).collect();
-    let room_inversed: Vec<String> = (0..room[0].len())
-        .map(|i| {
-            (0..room.len())
-                .flat_map(|j| room[j].chars().nth(i))
-                .collect()
-        })
-        .collect();
+    let [height, width] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
+    let mut room = [(); MAX].map(|_| String::new());
+    let mut room_inversed = [(); MAX].map(|_| String::new());
 
-    let get_words = |row: &String| -> Vec<String> {
-        row.split('#')
-            .filter_map(|s| (s.len() >= 2).then(|| s.to_owned()))
-            .collect()
-    };
+    for (r, row) in input.map(str::to_owned).enumerate() {
+        room[r] = row;
+    }
 
-    let horizontal = room.iter().flat_map(get_words);
-    let vertical = room_inversed.iter().flat_map(get_words);
+    for r in 0..height {
+        room_inversed[r] = (0..width).flat_map(|c| room[c].chars().nth(r)).collect();
+    }
+
+    let horizontal = room[..height].iter().flat_map(get_words);
+    let vertical = room_inversed[..height].iter().flat_map(get_words);
 
     println!("{}", horizontal.chain(vertical).min().unwrap());
+}
+
+fn get_words(row: &String) -> impl Iterator<Item = &str> {
+    row.split('#').filter(|s| s.len() >= 2)
 }

@@ -1,10 +1,10 @@
 use std::io;
 
-struct DisjointSet(Vec<i32>);
+struct DisjointSet<const N: usize>([i32; N]);
 
-impl DisjointSet {
-    fn make(n: i32) -> Self {
-        Self((0..=n).collect())
+impl<const N: usize> DisjointSet<N> {
+    fn make() -> Self {
+        Self(std::array::from_fn(|i| i as i32))
     }
 
     fn find(&mut self, a: i32) -> i32 {
@@ -32,18 +32,24 @@ impl DisjointSet {
     }
 }
 
+const NODES_MAX: usize = 1000 + 1;
+const EDGES_MAX: usize = 100_000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
-    let mut disjoint_set = DisjointSet::make(n);
-    let mut edges: Vec<_> = (0..m).map(|_| [(); 3].map(|_| input())).collect();
+    let [_n, m] = [(); 2].map(|_| input.next().unwrap() as usize);
+    let mut disjoint_set = DisjointSet::<NODES_MAX>::make();
+    let mut edges = [[0; 3]; EDGES_MAX];
 
-    edges.sort_unstable_by_key(|&[.., weight]| weight);
+    for edge in &mut edges[..m] {
+        *edge = [(); 3].map(|_| input.next().unwrap());
+    }
 
-    let min_weight: i32 = edges
+    edges[..m].sort_unstable_by_key(|&[.., weight]| weight);
+
+    let min_weight: i32 = edges[..m]
         .iter()
         .filter_map(|&[a, b, c]| {
             (!disjoint_set.is_same(a, b)).then(|| {

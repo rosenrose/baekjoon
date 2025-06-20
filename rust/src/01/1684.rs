@@ -1,11 +1,19 @@
 use std::io;
 
+const MAX: usize = 1000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let nums: Vec<_> = input.skip(1).collect();
-    let diffs = (1..nums.len()).map(|i| nums[i].abs_diff(nums[i - 1]));
+    let n = input.next().unwrap() as usize;
+    let mut nums = [0; MAX];
+
+    for (i, num) in input.enumerate() {
+        nums[i] = num;
+    }
+
+    let diffs = (1..n).map(|i| nums[i].abs_diff(nums[i - 1]));
 
     println!("{}", get_gcd(diffs));
 }

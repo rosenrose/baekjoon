@@ -1,13 +1,19 @@
 use std::io;
 
+const MAX: usize = 10000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
 
-    let [_, n] = [(); 2].map(|_| input.next().unwrap());
-    let cables: Vec<_> = input.collect();
+    let [k, n] = [(); 2].map(|_| input.next().unwrap());
+    let mut cables = [0; MAX];
 
-    println!("{}", binary_search(&cables, n));
+    for (i, num) in input.enumerate() {
+        cables[i] = num;
+    }
+
+    println!("{}", binary_search(&cables[..k as usize], n));
 }
 
 fn binary_search(cables: &[i64], n: i64) -> i64 {

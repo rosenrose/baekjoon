@@ -1,11 +1,17 @@
 use std::io;
 
+const MAX: usize = 1000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace();
 
-    let [_, m] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
-    let dna_strings: Vec<_> = input.map(str::as_bytes).collect();
+    let [n, m] = [(); 2].map(|_| input.next().unwrap().parse::<usize>().unwrap());
+    let mut dna_strings = [&[0][..]; MAX];
+
+    for dna in &mut dna_strings[..n] {
+        *dna = input.next().unwrap().as_bytes();
+    }
 
     let mut dist_sum = 0;
 
@@ -14,7 +20,7 @@ fn main() {
             let mut max_count = 1;
             let mut acgt_count = [0; 4];
 
-            for dna in &dna_strings {
+            for dna in &dna_strings[..n] {
                 let idx = match dna[i] as char {
                     'A' => 0,
                     'C' => 1,
@@ -42,7 +48,7 @@ fn main() {
                 _ => unreachable!(),
             };
 
-            dist_sum += dna_strings
+            dist_sum += dna_strings[..n]
                 .iter()
                 .filter(|dna| dna[i] != most_char as u8)
                 .count();

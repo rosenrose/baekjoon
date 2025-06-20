@@ -1,6 +1,7 @@
-use std::collections::VecDeque;
 use std::fmt::Write;
 use std::io;
+
+const MAX: usize = 10000 + 1;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
@@ -8,20 +9,49 @@ fn main() {
     let mut input = || input.next().unwrap();
     let mut output = String::new();
 
-    let n = parse_int(input());
-    let mut queue = VecDeque::new();
+    let n: i32 = input().parse().unwrap();
+    let mut queue = [0; MAX];
+    let mut front = 0;
+    let mut back = 1;
+    let len = |front: usize, back: usize| {
+        if front < back {
+            back - front - 1
+        } else {
+            back + (MAX - front) - 1
+        }
+    };
 
     for _ in 0..n {
         let result = match input() {
             "push" => {
-                queue.push_back(parse_int(input()));
+                queue[back] = input().parse().unwrap();
+                back = (back + 1) % MAX;
                 continue;
             }
-            "pop" => queue.pop_front().unwrap_or(-1),
-            "size" => queue.len() as i32,
-            "empty" => queue.is_empty() as i32,
-            "front" => *queue.front().unwrap_or(&-1),
-            "back" => *queue.back().unwrap_or(&-1),
+            "pop" => {
+                if len(front, back) == 0 {
+                    -1
+                } else {
+                    front = (front + 1) % MAX;
+                    queue[front]
+                }
+            }
+            "size" => len(front, back) as i32,
+            "empty" => (len(front, back) == 0) as i32,
+            "front" => {
+                if len(front, back) == 0 {
+                    -1
+                } else {
+                    queue[(front + 1) % MAX]
+                }
+            }
+            "back" => {
+                if len(front, back) == 0 {
+                    -1
+                } else {
+                    queue[(back + MAX - 1) % MAX]
+                }
+            }
             _ => unreachable!(),
         };
 
@@ -29,8 +59,4 @@ fn main() {
     }
 
     print!("{output}");
-}
-
-fn parse_int(buf: &str) -> i32 {
-    buf.parse().unwrap()
 }

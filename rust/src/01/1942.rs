@@ -31,6 +31,7 @@ fn main() {
     }
 }
 
-fn parse_time(s: &str) -> Vec<i32> {
-    s.split(':').flat_map(str::parse).collect()
+fn parse_time(s: &str) -> [i32; 3] {
+    let mut it = s.split(':').flat_map(str::parse::<i32>);
+    std::array::from_fn(|_| it.next().unwrap())
 }
