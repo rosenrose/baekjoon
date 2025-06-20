@@ -1,10 +1,10 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [n, m] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i128>);
+
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
 
     let combination = (1..=m).fold((1, 1), |mut acc, num| {
         acc = (acc.0 * (n - m + num), acc.1 * num);
@@ -24,8 +24,4 @@ fn get_gcd(mut a: i128, mut b: i128) -> i128 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i128> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

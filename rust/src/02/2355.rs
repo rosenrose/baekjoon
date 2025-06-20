@@ -1,16 +1,12 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [a, b] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+
+    let [a, b] = [(); 2].map(|_| input.next().unwrap());
     let (a, b) = (a.min(b), a.max(b));
     let sigma = |n: i64| n * (n + 1) / 2;
 
     println!("{}", sigma(b) - sigma(a - 1));
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i64> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

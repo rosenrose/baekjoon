@@ -8,15 +8,22 @@ fn main() {
     let mut input = buf.split_ascii_whitespace();
 
     let k: usize = input.next().unwrap().parse().unwrap();
-    let operators: Vec<_> = input
-        .map(|op| match op {
+    let mut operators = [Ordering::Equal; MAX - 1];
+
+    for (i, op) in input.enumerate() {
+        operators[i] = match op {
             "<" => Ordering::Less,
             ">" => Ordering::Greater,
             _ => unreachable!(),
-        })
-        .collect();
+        };
+    }
 
-    let (min, max) = permutations(0, &mut [0; MAX][..k + 1], &mut [false; MAX], &operators);
+    let (min, max) = permutations(
+        0,
+        &mut [0; MAX][..k + 1],
+        &mut [false; MAX],
+        &operators[..k],
+    );
 
     println!("{max:0digits$}\n{min:0digits$}", digits = k + 1);
 }

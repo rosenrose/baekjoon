@@ -1,10 +1,10 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [gcd, lcm] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+
+    let [gcd, lcm] = [(); 2].map(|_| input.next().unwrap());
     let pairs = get_pairs(gcd, lcm);
 
     let min_pair = pairs.iter().min_by_key(|(a, b)| a + b).unwrap();
@@ -39,8 +39,4 @@ fn get_gcd(mut a: i64, mut b: i64) -> i64 {
 
         (a, b) = (b, a % b);
     }
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i64> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

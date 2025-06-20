@@ -3,19 +3,16 @@ use std::io;
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
-    let mut input = || input.next().unwrap();
 
-    let k = input();
-
+    let k = input.next().unwrap();
     let mut longest = 0;
-    let mut lengths: Vec<_> = (0..6)
-        .map(|_| {
-            let (_, length) = (input(), input());
-            longest = length.max(longest);
+    let mut lengths = [0; 6];
 
-            length
-        })
-        .collect();
+    for length in &mut lengths {
+        let [_, num] = [(); 2].map(|_| input.next().unwrap());
+        longest = num.max(longest);
+        *length = num;
+    }
 
     while lengths[0] != longest {
         lengths.rotate_left(1);

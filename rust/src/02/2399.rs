@@ -1,16 +1,24 @@
 use std::io;
 
+const MAX: usize = 10000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
 
-    let mut coords: Vec<_> = input.skip(1).collect();
-    coords.sort_unstable();
+    let n = input.next().unwrap();
+    let mut coords = [0; MAX];
 
-    let sum: i64 = coords
+    for (i, num) in input.enumerate() {
+        coords[i] = num;
+    }
+
+    coords[..n].sort_unstable();
+
+    let sum: usize = coords[..n]
         .iter()
         .enumerate()
-        .map(|(i, num)| 2 * num * (i - (coords.len() - i - 1)) as i64)
+        .map(|(i, num)| 2 * num * (i - (n - i - 1)))
         .sum();
 
     println!("{sum}");

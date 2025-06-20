@@ -1,13 +1,19 @@
 use std::io;
 
+const MAX: usize = 64;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines();
 
     let n: usize = input.next().unwrap().parse().unwrap();
-    let video: Vec<_> = input.collect();
+    let mut video = [""; MAX];
 
-    println!("{}", compress(&video, n, 0, 0));
+    for (r, row) in input.enumerate() {
+        video[r] = row;
+    }
+
+    println!("{}", compress(&video[..n], n, 0, 0));
 }
 
 fn compress(video: &[&str], n: usize, x: usize, y: usize) -> String {

@@ -1,14 +1,21 @@
 use std::io;
 
+const MAX: usize = 100;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let score: usize = input
-        .skip(1)
-        .collect::<Vec<_>>()
-        .split(|&c| c == 0)
-        .flat_map(|s| s.iter().enumerate().map(|(i, _)| i + 1))
+    let n = input.next().unwrap() as usize;
+    let mut scores = [0; MAX];
+
+    for (i, score) in input.enumerate() {
+        scores[i] = score;
+    }
+
+    let score: usize = scores[..n]
+        .split(|&s| s == 0)
+        .flat_map(|chunk| chunk.iter().enumerate().map(|(i, _)| i + 1))
         .sum();
 
     println!("{score}");

@@ -1,10 +1,10 @@
-fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+use std::io;
 
-    let [n, m] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+fn main() {
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
+
+    let [n, m] = [(); 2].map(|_| input.next().unwrap());
     let count_2 =
         get_multiple_count(n, 2) - get_multiple_count(n - m, 2) - get_multiple_count(m, 2);
     let count_5 =
@@ -22,8 +22,4 @@ fn get_multiple_count(num: i64, divisor: i64) -> i64 {
     }
 
     count
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i64> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

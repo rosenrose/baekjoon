@@ -1,39 +1,44 @@
 use std::io;
 
+const MAX: usize = 500_000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.lines().flat_map(str::parse::<i32>);
 
-    let len = input.next().unwrap() as usize;
+    let n = input.next().unwrap() as usize;
     let mut sum = 0;
     let mut counts = [0; 8001];
+    let mut nums = [0; MAX];
 
-    let mut arr: Vec<_> = input
-        .map(|num| {
-            sum += num;
-            counts[(num + 4000) as usize] += 1;
+    for (i, num) in input.enumerate() {
+        sum += num;
+        counts[(num + 4000) as usize] += 1;
+        nums[i] = num;
+    }
 
-            num
-        })
-        .collect();
+    nums[..n].sort_unstable();
 
-    arr.sort_unstable();
-
-    let (min, max, middle) = (arr[0], arr[len - 1], arr[len / 2]);
-    let avg = (sum as f64 / len as f64).round() as i32;
+    let (min, max, middle) = (nums[0], nums[n - 1], nums[n / 2]);
+    let avg = (sum as f64 / n as f64).round() as i32;
 
     let max_count = counts.iter().max().unwrap();
-    let mut max_counts: Vec<_> = counts
-        .iter()
-        .enumerate()
-        .filter_map(|(i, c)| (c == max_count).then_some(i as i32 - 4000))
-        .collect();
+    let mut mosts = [None; 2];
 
-    let most = if max_counts.len() > 1 {
-        *max_counts.select_nth_unstable(1).1
-    } else {
-        max_counts[0]
-    };
+    for (i, count) in counts.iter().enumerate() {
+        if count != max_count {
+            continue;
+        }
+
+        if mosts[0].is_none() {
+            mosts[0] = Some(i as i32 - 4000);
+        } else {
+            mosts[1] = Some(i as i32 - 4000);
+            break;
+        }
+    }
+
+    let most = mosts[1].unwrap_or(mosts[0].unwrap());
 
     for value in [avg, middle, most, max - min] {
         println!("{value}");

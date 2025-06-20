@@ -2,7 +2,14 @@ use std::io;
 
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
-    let heights: Vec<_> = buf.lines().flat_map(str::parse::<i32>).collect();
+    let input = buf.lines().flat_map(str::parse::<i32>);
+
+    let mut heights = [0; 9];
+
+    for (i, height) in input.enumerate() {
+        heights[i] = height;
+    }
+
     let sum: i32 = heights.iter().sum();
 
     let mut non_littles = [0; 2];
@@ -17,10 +24,15 @@ fn main() {
         }
     }
 
-    let mut littles: Vec<_> = heights
+    let mut littles = [0; 7];
+
+    for (i, &height) in heights
         .iter()
         .filter(|h| !non_littles.contains(h))
-        .collect();
+        .enumerate()
+    {
+        littles[i] = height;
+    }
 
     littles.sort();
 

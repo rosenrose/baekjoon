@@ -6,10 +6,15 @@ fn main() {
 
     let max_prize = (0..input.next().unwrap())
         .map(|_| {
-            let nums: Vec<_> = input.by_ref().take(4).collect();
+            let mut nums = [0; 4];
+
+            for (i, num) in input.by_ref().take(nums.len()).enumerate() {
+                nums[i] = num;
+            }
+
             let mut counts = [0; 7];
 
-            for &num in &nums {
+            for num in nums {
                 counts[num] += 1;
             }
 

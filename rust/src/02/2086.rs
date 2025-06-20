@@ -1,14 +1,13 @@
 use std::collections::HashMap;
+use std::io;
 
 const M: i64 = 1_000_000_000;
 
 fn main() {
-    let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
+    let buf = io::read_to_string(io::stdin()).unwrap();
+    let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i64>);
 
-    let [a, b] = parse_int_vec(&buf)[..] else {
-        return;
-    };
+    let [a, b] = [(); 2].map(|_| input.next().unwrap());
     let mut memo = HashMap::new();
 
     println!(
@@ -45,8 +44,4 @@ fn fibo_rem(n: i64, memo: &mut HashMap<i64, i64>) -> i64 {
     );
 
     (a % M + b % M) % M
-}
-
-fn parse_int_vec(buf: &str) -> Vec<i64> {
-    buf.split_whitespace().flat_map(str::parse).collect()
 }

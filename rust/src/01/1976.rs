@@ -1,10 +1,10 @@
 use std::io;
 
-struct DisjointSet(Vec<usize>);
+struct DisjointSet<const N: usize>([usize; N]);
 
-impl DisjointSet {
-    fn make(n: usize) -> Self {
-        Self((0..=n).collect())
+impl<const N: usize> DisjointSet<N> {
+    fn make() -> Self {
+        Self(std::array::from_fn(|i| i))
     }
 
     fn find(&mut self, a: usize) -> usize {
@@ -30,13 +30,16 @@ impl DisjointSet {
     }
 }
 
+const CITY_MAX: usize = 200 + 1;
+const PATH_MAX: usize = 1000;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<usize>);
     let mut input = || input.next().unwrap();
 
-    let (n, m) = (input(), input());
-    let mut disjoint_set = DisjointSet::make(n);
+    let [n, m] = [(); 2].map(|_| input());
+    let mut disjoint_set = DisjointSet::<CITY_MAX>::make();
 
     for i in 1..=n {
         for j in 1..=n {
@@ -46,8 +49,13 @@ fn main() {
         }
     }
 
-    let path: Vec<_> = (0..m).map(|_| input()).collect();
-    let is_connected = (1..path.len()).all(|i| disjoint_set.is_same(path[i - 1], path[i]));
+    let mut path = [0; PATH_MAX];
+
+    for p in &mut path[..m] {
+        *p = input();
+    }
+
+    let is_connected = (1..m).all(|i| disjoint_set.is_same(path[i - 1], path[i]));
 
     println!("{}", if is_connected { "YES" } else { "NO" })
 }

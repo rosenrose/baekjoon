@@ -6,12 +6,22 @@ enum Player {
     B,
 }
 
+const CARDS: usize = 10;
+
 fn main() {
     let buf = io::read_to_string(io::stdin()).unwrap();
     let mut input = buf.split_ascii_whitespace().flat_map(str::parse::<i32>);
 
-    let a_cards: Vec<_> = input.by_ref().take(10).collect();
-    let b_cards: Vec<_> = input.collect();
+    let mut a_cards = [0; CARDS];
+    let mut b_cards = [0; CARDS];
+
+    for (i, num) in input.by_ref().take(CARDS).enumerate() {
+        a_cards[i] = num;
+    }
+
+    for (i, num) in input.enumerate() {
+        b_cards[i] = num;
+    }
 
     let mut last_winner = None;
     let (a_score, b_score) = a_cards
